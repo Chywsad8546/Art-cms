@@ -1,4 +1,4 @@
-import "babel-polyfill";
+import 'babel-polyfill';
 import Vue from 'vue';
 import iView from 'iview';
 import { router } from './router/index';
@@ -12,15 +12,15 @@ import agentplugin from '@/libs/agentplugin';
 import apibase from '@/api/api.base';
 import domain from '../build/configdir/domain/domain';
 import valid from '@/libs/valid.js';
-import VueDND from 'awe-dnd'
-import '@/styles/fonts/iconfont.js'
+import VueDND from 'awe-dnd';
+import '@/styles/fonts/iconfont.js';
 
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(agentplugin);
 apibase.interceptors(store);
 
-Vue.use(VueDND)
+Vue.use(VueDND);
 Vue.prototype.$domain = domain;
 Vue.prototype.$valid = valid;
 Vue.prototype.$imgurl = function (url, rule) {

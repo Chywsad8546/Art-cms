@@ -1,0 +1,1 @@
+export const errortip  = true;export const xiangmu = "jingjiren";export default "development";export const qufencity = 2;

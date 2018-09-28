@@ -29,6 +29,7 @@
     "axios": "^0.17.1",
     "babel-cli": "^6.26.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
     "cheerio": "^1.0.0-rc.2",
     "clipboard": "^1.7.1",
     "countup": "^1.8.2",
