@@ -39,7 +39,7 @@ function initInterceptors (store) {
 
     axios.interceptors.response.use(function (response) {
         // 拦截器代码不要改动，现在的架构能满足所有情况。
-        if (response.data.code === 0) {
+        if (response.data.code === "success") {
             return response;
         }
         let title = '';

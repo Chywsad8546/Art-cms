@@ -21,12 +21,12 @@
         </p>
         <div class="login-con">
           <Form ref="loginForm" :model="form" :rules="rules">
-            <FormItem prop="userName">
-              <Input v-model="form.userName" placeholder="请输入用户名">
+            <FormItem prop="username">
+              <Input v-model="form.username" placeholder="请输入用户名">
               </Input>
             </FormItem>
-            <FormItem prop="pswd">
-              <Input type="password" v-model="form.pswd" placeholder="请输入密码">
+            <FormItem prop="password">
+              <Input type="password" v-model="form.password" placeholder="请输入密码">
               </Input>
             </FormItem>
             <Row>
@@ -64,14 +64,14 @@ export default {
   data() {
     return {
       form: {
-        userName: "",
-        pswd: ""
+        username: "",
+        password: ""
       },
       rules: {
-        userName: [
+        username: [
           { required: true, message: "账号不能为空", trigger: "blur" }
         ],
-        pswd: [{ required: true, message: "密码不能为空", trigger: "blur" }]
+        password: [{ required: true, message: "密码不能为空", trigger: "blur" }]
       }
     };
   },
@@ -80,6 +80,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           api.AccountLogin(this.form).then(response => {
+            console.log("response",response);
             this.$router.push({
               name: "home_index"
             });

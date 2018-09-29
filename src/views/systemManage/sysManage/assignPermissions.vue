@@ -19,9 +19,9 @@
 </template>
 <script>
     //企业
-    import {otherRouter as corpOther, appRouter as corpAppRouter} from '@/router/split/corp.router';
+    // import {otherRouter as corpOther, appRouter as corpAppRouter} from '@/router/split/corp.router';
     //经纪人
-    import {otherRouter as jingjirenOther, appRouter as jingjirenAppRouter} from '@/router/split/jingjiren.router';
+    // import {otherRouter as jingjirenOther, appRouter as jingjirenAppRouter} from '@/router/split/jingjiren.router';
     //城市
     import {otherRouter as cityOther, appRouter as cityAppRouter} from '@/router/split/city.router';
 
@@ -47,17 +47,18 @@
                 this.roleName = this.$route.query['roleName'];
                 if (typeof this.roleKey !== 'undefined') {
                     // 接口返回数组
-                    api.getAuthorityInfoByCode({roleKey: this.roleKey, authType: '1'}).then(response => {
-                        this.getInterfaceAuthorityData(response.data.data.data);
-                    });
+                    // api.getAuthorityInfoByCode({roleCode: this.roleKey, authType: '1'}).then(response => {
+                    //     console.log(response.data.data);
+                    //     this.getInterfaceAuthorityData(response.data.data);
+                    // });
 
                     // 数据权限返回数组
-                    api.getAuthorityInfoByCode({roleKey: this.roleKey, authType: '2'}).then(response => {
-                        this.getDataAuthorityTree(response.data.data.data);
-                    });
+                    // api.getAuthorityInfoByCode({roleCode: this.roleKey, authType: '2'}).then(response => {
+                    //     this.getDataAuthorityTree(response.data.data.data);
+                    // });
 
-                    api.getAuthorityInfoByCode({roleKey: this.roleKey, authType: '0'}).then(response => {
-                        this.getAuthorityTreeData(response.data.data.data);
+                    api.getAuthorityInfoByCode({roleCode: this.roleKey, authType: '0'}).then(response => {
+                        this.getAuthorityTreeData(response.data.data);
                     });
                 }
                 // console.log(this.roleKey)
@@ -151,38 +152,38 @@
                     expand: true,
                     disabled: true,
                     children: [
-                        {
-                            title: '经纪人',
-                            disabled: true,
-                                                        expand: true,
-                            //                            disabled: true,
-                            children: [
-                                {
-                                    title:'无菜单',
-                                    children:[]
-                                },
-                                {
-                                    title:'菜单',
-                                    children:[]
-                                }
-                            ]
-                        },
-                        {
-                            title: '企业',
-                            disabled: true,
-                                                        expand: true,
-                            //                            disabled: true,
-                            children: [
-                                {
-                                    title:'无菜单',
-                                    children:[]
-                                },
-                                {
-                                    title:'菜单',
-                                    children:[]
-                                }
-                            ]
-                        },
+                        // {
+                        //     title: '经纪人',
+                        //     disabled: true,
+                        //                                 expand: true,
+                        //     //                            disabled: true,
+                        //     children: [
+                        //         {
+                        //             title:'无菜单',
+                        //             children:[]
+                        //         },
+                        //         {
+                        //             title:'菜单',
+                        //             children:[]
+                        //         }
+                        //     ]
+                        // },
+                        // {
+                        //     title: '企业',
+                        //     disabled: true,
+                        //                                 expand: true,
+                        //     //                            disabled: true,
+                        //     children: [
+                        //         {
+                        //             title:'无菜单',
+                        //             children:[]
+                        //         },
+                        //         {
+                        //             title:'菜单',
+                        //             children:[]
+                        //         }
+                        //     ]
+                        // },
                         {
                             title: '城市',
                             disabled: true,
@@ -204,92 +205,92 @@
 
                 //经纪人
                 // other路由数据
-                var oRLength = jingjirenOther.children.length;
-                for (var i = 0; i < oRLength; i++) {
-                    let level_1 = {title: '⇢ ' + jingjirenOther.children[i].title,rule:1,children:[], name: jingjirenOther.children[i].name};
-                    let level_1i = jingjirenOther.children[i];
-                    let level_moren ={title: '♜ 打开菜单', rule:1, submitData:'y', name: jingjirenOther.children[i].name, checked: Util.oneOf( jingjirenOther.children[i].name, codesJingjiren)};
-                    level_1.children.push(level_moren);
-                    if (typeof level_1i.permissions !== 'undefined' && level_1i.permissions.length > 0){
-                        let level_2 = level_1i.permissions;
-                        for (let l2 = 0; l2<level_2.length;l2++){
-                           let level_2Item ={title: '♜ ' + level_2[l2].title, submitData:'y', rule:1, name: level_2[l2].name, checked: Util.oneOf( level_2[l2].name, codesJingjiren)};
-                            level_1.children.push(level_2Item);
-                        }
-                    }
-                    data2[0].children[0].children[0].children.push(level_1);
-                }
+                // var oRLength = jingjirenOther.children.length;
+                // for (var i = 0; i < oRLength; i++) {
+                //     let level_1 = {title: '⇢ ' + jingjirenOther.children[i].title,rule:1,children:[], name: jingjirenOther.children[i].name};
+                //     let level_1i = jingjirenOther.children[i];
+                //     let level_moren ={title: '♜ 打开菜单', rule:1, submitData:'y', name: jingjirenOther.children[i].name, checked: Util.oneOf( jingjirenOther.children[i].name, codesJingjiren)};
+                //     level_1.children.push(level_moren);
+                //     if (typeof level_1i.permissions !== 'undefined' && level_1i.permissions.length > 0){
+                //         let level_2 = level_1i.permissions;
+                //         for (let l2 = 0; l2<level_2.length;l2++){
+                //            let level_2Item ={title: '♜ ' + level_2[l2].title, submitData:'y', rule:1, name: level_2[l2].name, checked: Util.oneOf( level_2[l2].name, codesJingjiren)};
+                //             level_1.children.push(level_2Item);
+                //         }
+                //     }
+                //     data2[0].children[0].children[0].children.push(level_1);
+                // }
 
-                // app路由数据
-                for (let j = 0; j < jingjirenAppRouter.length; j++) {
-                    let level_1 = {title: '☰ ' + jingjirenAppRouter[j].title, children: [],rule:1, name: jingjirenAppRouter[j].name, checked: Util.oneOf(jingjirenAppRouter.name, codesJingjiren)};
+                // // app路由数据
+                // for (let j = 0; j < jingjirenAppRouter.length; j++) {
+                //     let level_1 = {title: '☰ ' + jingjirenAppRouter[j].title, children: [],rule:1, name: jingjirenAppRouter[j].name, checked: Util.oneOf(jingjirenAppRouter.name, codesJingjiren)};
 
-                    if (typeof jingjirenAppRouter[j].children !== 'undefined' && jingjirenAppRouter[j].children.length > 0) {
-                        let level_2arr = jingjirenAppRouter[j].children;
+                //     if (typeof jingjirenAppRouter[j].children !== 'undefined' && jingjirenAppRouter[j].children.length > 0) {
+                //         let level_2arr = jingjirenAppRouter[j].children;
 
-                        for (let child = 0; child < level_2arr.length; child++) {
+                //         for (let child = 0; child < level_2arr.length; child++) {
 
-                            let level_2 = {children:[],title: '☰ '+level_2arr[child].title, rule:1, name: level_2arr[child].name}
-                            let level_3arr = [{title: ' 显示菜单', submitData:'y', rule:1, name: level_2.name, checked: Util.oneOf(level_2.name, codesJingjiren)}]
-                            if(typeof level_2arr[child].permissions !== 'undefined' && level_2arr[child].permissions.length > 0){
-                                level_3arr = [...level_3arr,...level_2arr[child].permissions]
+                //             let level_2 = {children:[],title: '☰ '+level_2arr[child].title, rule:1, name: level_2arr[child].name}
+                //             let level_3arr = [{title: ' 显示菜单', submitData:'y', rule:1, name: level_2.name, checked: Util.oneOf(level_2.name, codesJingjiren)}]
+                //             if(typeof level_2arr[child].permissions !== 'undefined' && level_2arr[child].permissions.length > 0){
+                //                 level_3arr = [...level_3arr,...level_2arr[child].permissions]
 
-                            }
-                            for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
-                                let level_3 = level_3arr[thirdI];
-                                level_2.children.push({title: '♜'+ level_3.title, submitData:'y', rule:1, name: level_3.name, checked: Util.oneOf(level_3.name, codesJingjiren)});
-                            }
-                            level_1.children.push(level_2);
-                        }
-                    }
-                    data2[0].children[0].children[1].children.push(level_1);
-                }
+                //             }
+                //             for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
+                //                 let level_3 = level_3arr[thirdI];
+                //                 level_2.children.push({title: '♜'+ level_3.title, submitData:'y', rule:1, name: level_3.name, checked: Util.oneOf(level_3.name, codesJingjiren)});
+                //             }
+                //             level_1.children.push(level_2);
+                //         }
+                //     }
+                //     data2[0].children[0].children[1].children.push(level_1);
+                // }
 
-                //企业
-                // other路由数据
-                var oRLength = corpOther.children.length;
-                for (var i = 0; i < oRLength; i++) {
-                    let level_1 = {title: '⇢ ' + corpOther.children[i].title,rule:2,children:[], name: corpOther.children[i].name};
+                // //企业
+                // // other路由数据
+                // var oRLength = corpOther.children.length;
+                // for (var i = 0; i < oRLength; i++) {
+                //     let level_1 = {title: '⇢ ' + corpOther.children[i].title,rule:2,children:[], name: corpOther.children[i].name};
 
-                    let level_1i = corpOther.children[i];
-                    let level_moren ={title: '♜ 打开菜单', rule:2,submitData:'y', name: corpOther.children[i].name, checked: Util.oneOf( corpOther.children[i].name, codesJingjiren)};
-                    level_1.children.push(level_moren);
-                    if (typeof level_1i.permissions !== 'undefined' && level_1i.permissions.length > 0){
-                        let level_2 = level_1i.permissions;
-                        for (let l2 = 0; l2<level_2.length;l2++){
-                            let level_2Item ={title: '♜ ' + level_2[l2].title,submitData:'y', rule:2, name: level_2[l2].name, checked: Util.oneOf( level_2[l2].name, codesJingjiren)};
-                            level_1.children.push(level_2Item);
-                        }
-                    }
+                //     let level_1i = corpOther.children[i];
+                //     let level_moren ={title: '♜ 打开菜单', rule:2,submitData:'y', name: corpOther.children[i].name, checked: Util.oneOf( corpOther.children[i].name, codesJingjiren)};
+                //     level_1.children.push(level_moren);
+                //     if (typeof level_1i.permissions !== 'undefined' && level_1i.permissions.length > 0){
+                //         let level_2 = level_1i.permissions;
+                //         for (let l2 = 0; l2<level_2.length;l2++){
+                //             let level_2Item ={title: '♜ ' + level_2[l2].title,submitData:'y', rule:2, name: level_2[l2].name, checked: Util.oneOf( level_2[l2].name, codesJingjiren)};
+                //             level_1.children.push(level_2Item);
+                //         }
+                //     }
 
-                    data2[0].children[1].children[0].children.push(level_1);
-                }
+                //     data2[0].children[1].children[0].children.push(level_1);
+                // }
 
-                // app路由数据
-                for (var j = 0; j < corpAppRouter.length; j++) {
-                    let level_1 = {title: '☰ ' + corpAppRouter[j].title, children: [],rule:2, name: corpAppRouter[j].name, checked: Util.oneOf(corpAppRouter.name, codesQiye)};
+                // // app路由数据
+                // for (var j = 0; j < corpAppRouter.length; j++) {
+                //     let level_1 = {title: '☰ ' + corpAppRouter[j].title, children: [],rule:2, name: corpAppRouter[j].name, checked: Util.oneOf(corpAppRouter.name, codesQiye)};
 
-                    if (typeof corpAppRouter[j].children !== 'undefined' && corpAppRouter[j].children.length > 0) {
-                        let level_2arr = corpAppRouter[j].children;
+                //     if (typeof corpAppRouter[j].children !== 'undefined' && corpAppRouter[j].children.length > 0) {
+                //         let level_2arr = corpAppRouter[j].children;
 
-                        for (let child = 0; child < level_2arr.length; child++) {
+                //         for (let child = 0; child < level_2arr.length; child++) {
 
-                            let level_2 = {children:[],title: '☰ '+level_2arr[child].title, rule:2, name: level_2arr[child].name}
-                            let level_3arr = [{title: ' 显示菜单',submitData:'y', rule:2, name: level_2.name, checked: Util.oneOf(level_2.name, codesQiye)}]
-                            if(typeof level_2arr[child].permissions !== 'undefined' && level_2arr[child].permissions.length > 0){
-                                level_3arr = [...level_3arr,...level_2arr[child].permissions]
+                //             let level_2 = {children:[],title: '☰ '+level_2arr[child].title, rule:2, name: level_2arr[child].name}
+                //             let level_3arr = [{title: ' 显示菜单',submitData:'y', rule:2, name: level_2.name, checked: Util.oneOf(level_2.name, codesQiye)}]
+                //             if(typeof level_2arr[child].permissions !== 'undefined' && level_2arr[child].permissions.length > 0){
+                //                 level_3arr = [...level_3arr,...level_2arr[child].permissions]
 
-                            }
-                            for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
-                                let level_3 = level_3arr[thirdI];
-                                level_2.children.push({title: '♜'+ level_3.title, rule:2,submitData:'y', name: level_3.name, checked: Util.oneOf(level_3.name, codesQiye)});
-                            }
-                            level_1.children.push(level_2);
-                        }
-                    }
+                //             }
+                //             for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
+                //                 let level_3 = level_3arr[thirdI];
+                //                 level_2.children.push({title: '♜'+ level_3.title, rule:2,submitData:'y', name: level_3.name, checked: Util.oneOf(level_3.name, codesQiye)});
+                //             }
+                //             level_1.children.push(level_2);
+                //         }
+                //     }
 
-                    data2[0].children[1].children[1].children.push(level_1);
-                }
+                //     data2[0].children[1].children[1].children.push(level_1);
+                // }
 
                 //城市
                 // other路由数据
@@ -308,7 +309,7 @@
                         }
                     }
 
-                    data2[0].children[2].children[0].children.push(level_1);
+                    data2[0].children[0].children[0].children.push(level_1);
                 }
 
                 // app路由数据
@@ -334,7 +335,7 @@
                         }
                     }
 
-                    data2[0].children[2].children[1].children.push(level_1);
+                    data2[0].children[0].children[1].children.push(level_1);
                 }
 
                 this.data4 = data2;

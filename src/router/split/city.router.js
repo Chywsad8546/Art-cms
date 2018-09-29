@@ -6,6 +6,17 @@ export const otherRouter = {
     redirect: '/home',
     component: Main,
     children: [
+        {
+            path: 'cityManageSystem/companyDetailtest',
+            title: '企业详情test',
+            name: 'companyDetail_city_test',
+            meta: {
+                keepalive: true,
+                multipage: true
+            },
+            component: () =>
+                import('@/views/cityManageSystem/companyManage/companyDetail.vue')
+        },
         //城市管理员
         {
             path: 'cityManageSystem/companyDetail',

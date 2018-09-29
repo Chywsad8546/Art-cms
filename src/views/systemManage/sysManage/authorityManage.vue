@@ -18,7 +18,7 @@
             return {
                 columns: [
                     {
-                        key: 'roleId',
+                        key: 'id',
                         title: '角色Id',
                         width: 100
                     },
@@ -27,7 +27,7 @@
                         title:'创建日期'
                     },
                     {
-                        key: 'roleKey',
+                        key: 'roleCode',
                         title: '角色编码'
                     },
                     {
@@ -35,11 +35,8 @@
                         title:'角色描述'
                     },
                     {
-                        key:'roleValue',
+                        key:'roleName',
                         title:'角色名称'
-                    },{
-                        key:'updateTime',
-                        title:'更新时间'
                     },
                     {
                         title: '管理',
@@ -62,7 +59,7 @@
                                             click: () => {
                                                 this.$router.push({
                                                     name: 'assignPermissions',
-                                                    query: {roleKey: params.row.roleKey,roleName:params.row.roleValue}
+                                                    query: {roleKey: params.row.roleCode,roleName:params.row.roleName}
                                                 });
                                             }
                                         }
@@ -85,9 +82,9 @@
         methods: {
             init(){
                 api.getAuthorityList().then(response => {
-                //console.log(response.data.data.data);
-                this.total=response.data.data.total;
-                this.data=response.data.data.data;
+                //console.log(response.data.data);
+                this.total=response.data.count;
+                this.data=response.data.data;
                 });
             },
             handleSearch () {

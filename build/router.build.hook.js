@@ -1,4 +1,4 @@
-import router from '@/router/split/jingjiren.router'
+import router from '@/router/split/city.router'
 export const loginRouter = router.loginRouter;
 export const homeRouter = router.homeRouter;
 export const otherRouter  = router.otherRouter;

@@ -64,6 +64,7 @@ router.beforeEach((to, from, next) => {
                 if (to.meta && to.meta.requireAuth === false) {
                     requireAuth = false;
                 }
+               
                 if (requireAuth && !isdev) { // 需要判断权限的路由
                     if (Util.showThisRoute(store.state.app.fontPermission, to.name)) {
                         Util.toDefaultPage([otherRouter, ...appRouter], to, router, next); // 如果在地址栏输入的是一级菜单则默认打开其第一个二级菜单的页面

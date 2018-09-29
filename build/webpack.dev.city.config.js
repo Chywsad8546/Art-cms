@@ -69,11 +69,11 @@ module.exports = merge(webpackBaseConfig, {
         stats: { colors: true },
         proxy: {
             //匹配代理的url
-            '/v1.0.0': {
+            '/cmsapi': {
                 // 目标服务器地址
-                target: 'http://city.test.toutiaofangchan.com/',
+                target: 'http://192.168.1.42:8083/',
                 //路径重写
-                pathRewrite: {'^/v1.0.0' : '/v1.0.0'},
+                pathRewrite: {'^/cmsapi' : '/cmsapi'},
                 changeOrigin: true
             }
         }

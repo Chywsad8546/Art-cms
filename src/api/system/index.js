@@ -10,11 +10,11 @@ export default {
     },
     //权限列表/v1.0.0/adminmgm/listSysRoleInfo
     getAuthorityList(){
-        return http.get('/v1.0.0/adminmgm/listSysRoleInfo');
+        return http.get('/cmsapi/sys/listSysRoleInfo');
     },
     //根据角色code和功能类型获取权限信息 v1.0.0/adminmgm/listSysRoleInfo
     getAuthorityInfoByCode(params){
-        return http.get('/v1.0.0/adminmgm/sysRoleAuthByRoleCodeAndAuthType',{params: params});
+        return http.get('/cmsapi/sys/sysRoleAuthByRoleCodeAndAuthType',{params: params});
     },
     //保存菜单权限
     saveMenuRoleAuth(params){
