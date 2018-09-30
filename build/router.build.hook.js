@@ -4,4 +4,4 @@ export const homeRouter = router.homeRouter;
 export const otherRouter  = router.otherRouter;
 export const appRouter  = router.appRouter;
 export const aloneRouter  = router.aloneRouter;
-export const isdev = true;
+export const isdev = false;

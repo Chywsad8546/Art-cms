@@ -18,6 +18,6 @@ export default {
     },
     //保存菜单权限
     saveMenuRoleAuth(params){
-        return http.postJson('/v1.0.0/adminmgm/saveRoleAuth',params);
+        return http.postJson('/cmsapi/sys/saveRoleAuth',params);
     },
 }

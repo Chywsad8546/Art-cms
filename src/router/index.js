@@ -48,23 +48,21 @@ router.beforeEach((to, from, next) => {
             store.commit('setFontPermission', []);
             // store.commit('clearMenus');
             // 前端认为没登录的时候，让服务器端再判断一次
-            getCurrentUser().then(function (response) {
+            getCurrentUser().then(function (response) {             
                 store.commit('setUserName', response.data.data.userName || '未知');
-                store.commit('setCityId', response.data.data.cityId || 12);
+               // store.commit('setCityId', response.data.data.cityId || 12);
                 let salerShow = '';
-                if (response.data.data.salerName && response.data.data.salerPhone) {
-                    salerShow = '端口顾问 ' + response.data.data.salerName + ':' + response.data.data.salerPhone
+                if (response.data.data.salerName) {
+                    salerShow = '端口顾问 ' + response.data.data.salerName
                 }
                 store.commit('setSalerPhone', salerShow);
                 store.commit('setFontPermission', response.data.data.menus || []);
-                console.log('updatemenu_fresh')
                 store.commit('updateMenulist', true);
                 // const curRouterObj = Util.getRouterObjByName([otherRouter, ...appRouter], to.name);
                 let requireAuth = true;
                 if (to.meta && to.meta.requireAuth === false) {
                     requireAuth = false;
                 }
-               
                 if (requireAuth && !isdev) { // 需要判断权限的路由
                     if (Util.showThisRoute(store.state.app.fontPermission, to.name)) {
                         Util.toDefaultPage([otherRouter, ...appRouter], to, router, next); // 如果在地址栏输入的是一级菜单则默认打开其第一个二级菜单的页面

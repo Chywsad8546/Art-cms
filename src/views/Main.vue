@@ -186,7 +186,6 @@
                 } else if (name === "天津") {
                     this.cityId = 14;
                 }
-                console.log(this.cityId);
                 api.updateLoginCityChange({"cityId": this.cityId}).then(response => {
                     location.reload();
                 });

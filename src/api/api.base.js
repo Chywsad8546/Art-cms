@@ -44,32 +44,13 @@ function initInterceptors (store) {
         }
         let title = '';
         let message = '-';
-        if (response.data.code === 20001 || response.data.code === 20020) {
+        if (response.data.code === "fail") {
             store.commit('setUserName', false);
             store.commit('setFontPermission', []);
             router.push({
                 name: 'login'
             });
-            title = '未登录';
-        } else if (response.data.code === 20002) {
-            title = '未开放此功能';
-        } else if (response.data.code === 20003) {
-            title = '你没有系统角色';
-        } else if (response.data.code === 20004) {
-            title = '没有权限';
-            message = response.data.msg;
-        } else if (response.data.code === 10001) {
-            title = '请求错误';
-            message = response.data.data;
-        } else if (response.data.code === 10002) {
-            title = '请求错误';
-            message = response.data.data;
-        } else if (response.data.code === 100003) {
-            title = '请求地址错误';
-            message = response.data.data;
-        } else if (response.data.code === 100004) {
-            title = '服务器异常';
-            message = response.data.data;
+            title = response.msg;
         }
         if (title !== '' && config.errortip) {
             Vue.prototype.$Notice.error({

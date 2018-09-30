@@ -189,22 +189,105 @@ export const appRouter = [
         path: '/cityManageSystem',
         icon: 'social-buffer',
         name: 'personManage',
-        title: '人员管理',
+        title: '广告管理',
         component: Main,
         children: [{
-            path: 'agentList',
-            name: 'agentList',
-            title: '经纪人管理',
-            meta: {
-                keepalive: true
-            },
+            path: 'yihaoyuan',
+            name: 'yihaoyuan',
+            title: '北京壹号院',
+            // meta: {
+            //     keepalive: true
+            // },
             component: () =>
                 import('@/views/cityManageSystem/personManage/agentList.vue')
         },
         {
-            path: 'agentTableDown',
-            name: 'agentTableDown',
-            title: '操作表下载',
+            path: 'guanggapwei',
+            name: 'guanggapwei',
+            title: '广告位',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'chuangyibiao',
+            name: 'chuangyibiao',
+            title: '创意列表',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'luodiye',
+            name: 'luodiye',
+            title: '落地页',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'guanggaoyonghuliebiao',
+            name: 'guanggaoyonghuliebiao',
+            title: '广告用户列表',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'apppushlist',
+            name: 'apppushlist',
+            title: '推送列表',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'manyplotad',
+            name: 'manyplotad',
+            title: '多楼盘广告配置',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'manyplotadlist',
+            name: 'manyplotadlist',
+            title: '多楼盘广告',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'openscreenpage',
+            name: 'openscreenpage',
+            title: 'APP开屏广告',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        },
+        {
+            path: 'openscreenpagelist',
+            name: 'openscreenpagelist',
+            title: 'APP开屏广告列表',
+            // meta: {
+            //     keepalive: true
+            // },
             component: () =>
                 import('@/views/cityManageSystem/personManage/agentTableDown.vue')
         },
@@ -215,247 +298,6 @@ export const appRouter = [
             //     component: () =>
             //         import ('@/views/cityManageSystem/personManage/ownerList.vue')
             // },
-        ]
-    },
-    //身份认证
-    {
-        path: '/cityManageSystem',
-        icon: 'social-buffer',
-        name: 'roleCert',
-        title: '身份认证',
-        component: Main,
-        children: [{
-            path: 'pendingCert',
-            name: 'pendingCert',
-            title: '名片认证',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/cityManageSystem/roleCert/pendingCert.vue')
-        },
-        {
-            path: 'auditedCert',
-            name: 'auditedCert',
-            title: '身份证认证',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/cityManageSystem/roleCert/auditedCert.vue')
-        }, {
-            path: 'qualificationCardAuthWaitList',
-            name: 'qualificationCardAuthWaitList',
-            title: '信息卡认证',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/cityManageSystem/roleCert/qualificationCardAuthWaitList.vue')
-        }
-        ]
-    },
-    //支付管理
-    {
-        path: '/payManage',
-        icon: 'social-buffer',
-        name: 'payManage',
-        title: '支付管理',
-        component: Main,
-        children: [{
-            path: 'payOpen',
-            name: 'payOpen',
-            title: '付费开通',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/payManage/payOpen.vue')
-        },
-        {
-            path: 'accountClose',
-            name: 'accountClose',
-            title: '经纪人账户',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/payManage/accountClose.vue')
-        },
-        {
-            path: 'recommendPay',
-            name: 'recommendPay',
-            title: '优推开通',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/payManage/recommendPay.vue')
-        },
-        {
-            path: 'salerJoin',
-            name: 'salerJoin',
-            title: '销售关联',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/payManage/salerJoin.vue')
-        }]
-    },
-    //楼盘管理
-    {
-        path: '/projExpertManage',
-        icon: 'social-buffer',
-        name: 'projExpertManage',
-        title: '楼盘管理',
-        component: Main,
-        children: [{
-            path: 'projList',
-            name: 'projList',
-            title: '楼盘信息列表',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/customerManage/projList.vue')
-        },
-        {
-            path: 'downloadProjExpert',
-            name: 'downloadProjExpert',
-            title: '楼盘专家下载',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/customerManage/downloadProjExpert.vue')
-        }
-        ]
-    },
-    //城市管理账户路由地址
-    {
-        path: '/cityManageSystem',
-        icon: 'social-buffer',
-        name: 'cityManageSystem',
-        title: '企业管理',
-        component: Main,
-        children: [{
-            path: 'companyList',
-            name: 'companyList',
-            title: '企业列表',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/companyList.vue')
-        },
-        {
-            path: 'addCompany',
-            name: 'addCompany',
-            title: '新建企业',
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/addCompany.vue'),
-        }
-        ]
-    },
-    //房源管理
-    {
-        path: '/cityManageSystem',
-        icon: 'social-buffer',
-        name: 'HouseManage',
-        title: '房源管理',
-        component: Main,
-        children: [{
-            path: 'rentHouseManage_city',
-            name: 'rentHouseManage_city',
-            title: '出租房源',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/houseManage/rentHouseManage_city.vue')
-        },
-        {
-            path: 'esfHouseManage_city',
-            name: 'esfHouseManage_city',
-            title: '出售房源',
-            component: () =>
-                import('@/views/cityManageSystem/houseManage/esfHouseManage_city.vue')
-        }
-        ]
-    },
-    //客户管理
-    {
-        path: '/cityManageSystem',
-        icon: 'social-buffer',
-        name: 'CustomerManage',
-        title: '客户管理',
-        component: Main,
-        children: [{
-            path: 'customerList',
-            name: 'customerList',
-            title: '用户管理',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/customerManage/customerList.vue')
-        },
-        {
-            path: 'OperationDownload',
-            name: 'OperationDownload',
-            title: '操作流水下载',
-            component: () =>
-                import('@/views/cityManageSystem/customerManage/operationDownload.vue')
-        },
-        {
-            path: 'invitationCodeList',
-            name: 'invitationCodeList',
-            title: '邀请码管理',
-            meta: {
-                keepalive: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/customerManage/invitationCodeList.vue')
-        },
-        {
-            path: 'newHouseCoupon',
-            name: 'newHouseCoupon',
-            title: '新房优惠',
-            component: () =>
-                import('@/views/cityManageSystem/houseManage/newHouseCoupon.vue')
-        }
-        ]
-    },
-    //统计中心
-    {
-        path: '/cityManageSystem',
-        icon: 'lock-combination',
-        title: '统计中心',
-        name: 'dataCenter',
-        component: Main,
-        children: [{
-            path: 'clickStatis',
-            title: '房源点击统计',
-            name: 'clickStatis',
-            component: () =>
-                import('@/views/cityManageSystem/dataCenter/clickStatis.vue')
-        },
-        // { path: 'topHouseStatis', title: '置顶购买统计', name: 'topHouseStatis', component: () => import('@/views/cityManageSystem/dataCenter/topHouseStatis.vue') },
-        {
-            path: 'tradeRecord',
-            title: '支付流水记录',
-            name: 'tradeRecord',
-            component: () =>
-                import('@/views/cityManageSystem/dataCenter/tradeRecord.vue')
-        },
-            // {
-            //     path: 'searchStatis',
-            //     title: '搜索统计',
-            //     name: 'searchStatis',
-            //     component: () =>
-            //         import ('@/views/cityManageSystem/dataCenter/searchStatis.vue')
-            // }
         ]
     },
     //系统管理
@@ -469,42 +311,13 @@ export const appRouter = [
             path: 'authorityManage',
             name: 'authorityManage',
             title: '权限管理',
-            meta: {
-                requireAuth: true
-            },
+            // meta: {
+            //     requireAuth: true
+            // },
             component: () =>
                 import('@/views/systemManage/sysManage/authorityManage.vue')
         }]
-    },
-    {
-        path: '/cityManageSystem',
-        icon: 'social-buffer',
-        name: 'inforCenter',
-        title: '账户设置',
-        component: Main,
-        children: [{
-            path: 'Infor',
-            name: 'Infor',
-            title: '账户资料',
-            component: () =>
-                import('@/views/cityManageSystem/inforCenter/Infor.vue')
-        },
-        {
-            path: 'modifyPassword',
-            name: 'modifyPassword',
-            title: '修改密码',
-            component: () =>
-                import('@/views/cityManageSystem/inforCenter/modifyPassword.vue')
-        },
-        {
-            path: 'modifyTel',
-            name: 'modifyTel',
-            title: '修改安全手机',
-            component: () =>
-                import('@/views/cityManageSystem/inforCenter/modifyTel.vue')
-        },
-        ]
-    },
+    }
     // {
     //     path: '/cityManageSystem',
     //     icon: 'lock-combination',

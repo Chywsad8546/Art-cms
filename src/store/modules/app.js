@@ -59,7 +59,6 @@ const app = {
             state.menuList.splice(0, state.menuList.length);
         },
         updateMenulist (state, apicheck) {
-            console.log('updatemenu')
             let accessCode = state.fontPermission;
             let menuList = [];
             appRouter.forEach((item, index) => {

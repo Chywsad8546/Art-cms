@@ -70,7 +70,7 @@
                 //console.log(authorityTreeData)
 
                 var saveAuthrityData = {
-                    roleKey: this.roleKey,
+                    roleCode: this.roleKey,
                     authType: 0,
                     authCodeInfo: []
                 };
@@ -78,7 +78,7 @@
                     var authCodeInfoItem = {};
                     if (typeof authorityTreeData[i].name !== 'undefined' && authorityTreeData[i].submitData !=='undefined') {
                         if( authorityTreeData[i].submitData ==='y'){
-                            authCodeInfoItem[authorityTreeData[i].name] = authorityTreeData[i].rule;
+                            authCodeInfoItem[authorityTreeData[i].name] = authorityTreeData[i].titleName;
                             saveAuthrityData.authCodeInfo.push(authCodeInfoItem);
                         }
                     }
@@ -133,18 +133,11 @@
 
             // 获取router权限tree
             getAuthorityTreeData (existdata) {
-                console.log(existdata)
                 let codesJingjiren = [];
                 let codesQiye=[];
                 let codesCity=[];
                 for (let i = 0; i < existdata.length; i++) {
-                    if(existdata[i].authRules ==  1){
-                        codesJingjiren.push(existdata[i].authCode);
-                    }else if (existdata[i].authRules ==  2){
-                        codesQiye.push(existdata[i].authCode);
-                    }else if (existdata[i].authRules ==  3){
                         codesCity.push(existdata[i].authCode);
-                    }
                 }
 
                 var data2 = [{
@@ -187,7 +180,7 @@
                         {
                             title: '城市',
                             disabled: true,
-                                                        expand: true,
+                            expand: true,
                             //                            disabled: true,
                             children: [
                                 {
@@ -313,31 +306,28 @@
                 }
 
                 // app路由数据
-                for (var j = 0; j < cityAppRouter.length; j++) {
+                for (var j = 0; j < cityAppRouter.length; j++) {                  
                     let level_1 = {title: '☰ ' + cityAppRouter[j].title, children: [],rule:3, name: cityAppRouter[j].name, checked: Util.oneOf(cityAppRouter.name, codesCity)};
 
                     if (typeof cityAppRouter[j].children !== 'undefined' && cityAppRouter[j].children.length > 0) {
                         let level_2arr = cityAppRouter[j].children;
 
                         for (let child = 0; child < level_2arr.length; child++) {
-
                             let level_2 = {children:[],title: '☰ '+level_2arr[child].title, rule:3, name: level_2arr[child].name}
-                            let level_3arr = [{title: ' 显示菜单',submitData:'y', rule:3, name: level_2.name, checked: Util.oneOf(level_2.name, codesCity)}]
+                            let level_3arr = [{title: ' 显示菜单',submitData:'y', rule:3, name: level_2.name, checked: Util.oneOf(level_2.name, codesCity),titleName:level_2arr[child].title}]
                             if(typeof level_2arr[child].permissions !== 'undefined' && level_2arr[child].permissions.length > 0){
                                 level_3arr = [...level_3arr,...level_2arr[child].permissions]
 
                             }
                             for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
                                 let level_3 = level_3arr[thirdI];
-                                level_2.children.push({title: '♜'+level_3.title,submitData:'y', rule:3, name: level_3.name, checked: Util.oneOf(level_3.name, codesCity)});
+                                level_2.children.push({title: '♜'+level_3.title,submitData:'y', rule:3, name: level_3.name, checked: Util.oneOf(level_3.name, codesCity),titleName:level_3.titleName});
                             }
                             level_1.children.push(level_2);
                         }
                     }
-
                     data2[0].children[0].children[1].children.push(level_1);
                 }
-
                 this.data4 = data2;
             },
 
