@@ -71,7 +71,7 @@ module.exports = merge(webpackBaseConfig, {
             //匹配代理的url
             '/cmsapi': {
                 // 目标服务器地址
-                target: 'http://192.168.1.42:8083/',
+                target: 'http://city.test.toutiaofangchan.com/',
                 //路径重写
                 pathRewrite: {'^/cmsapi' : '/cmsapi'},
                 changeOrigin: true
