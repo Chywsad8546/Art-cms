@@ -95,7 +95,7 @@
                         key:'modifyAt',
                         title:'验证日期'
                     },
-                    {
+                    /*{
                         title: '管理',
                         key: 'action',
                         width: 130,
@@ -125,7 +125,7 @@
                                 )
                             ]);
                         }
-                    }
+                    }*/
                 ],
                 searchData: {
                     title: '',
