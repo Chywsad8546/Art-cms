@@ -300,6 +300,142 @@ export const appRouter = [
             // },
         ]
     },
+    //新闻管理
+    {
+        path: '/cmsNewsManage',
+        icon: 'social-buffer',
+        name: 'newsmanage',
+        title: '新闻管理',
+        component: Main,
+        children: [{
+            path: 'releaseArticle',
+            name: 'releaseArticle',
+            title: '发表文章',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/newsManage/contentManage/articleAdd.vue')
+        },
+        {
+            path: 'imageArticle',
+            name: 'imageArticle',
+            title: '发表图文',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/newsManage/contentManage/imageArticleAdd.vue')
+        },
+        {
+            path: 'videoArticle',
+            name: 'videoArticle',
+            title: '发表视频',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/newsManage/contentManage/videoArticleAdd.vue')
+        },
+        {
+            path: 'contentmanage',
+            name: 'contentmanage',
+            title: '内容管理',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/newsManage/contentManage/contentmanageList.vue')
+        },
+        // {
+        //     path: 'chuangyibiao',
+        //     name: 'chuangyibiao',
+        //     title: '创意列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'luodiye',
+        //     name: 'luodiye',
+        //     title: '落地页',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'guanggaoyonghuliebiao',
+        //     name: 'guanggaoyonghuliebiao',
+        //     title: '广告用户列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'apppushlist',
+        //     name: 'apppushlist',
+        //     title: '推送列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'manyplotad',
+        //     name: 'manyplotad',
+        //     title: '多楼盘广告配置',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'manyplotadlist',
+        //     name: 'manyplotadlist',
+        //     title: '多楼盘广告',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'openscreenpage',
+        //     name: 'openscreenpage',
+        //     title: 'APP开屏广告',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        // {
+        //     path: 'openscreenpagelist',
+        //     name: 'openscreenpagelist',
+        //     title: 'APP开屏广告列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+        // },
+        //     // {
+        //     //     path: 'ownerList',
+        //     //     name: 'ownerList',
+        //     //     title: '业主管理',
+        //     //     component: () =>
+        //     //         import ('@/views/cityManageSystem/personManage/ownerList.vue')
+        //     // },
+        ]
+    },
     //系统管理
     {
         path: '/systemManage',
