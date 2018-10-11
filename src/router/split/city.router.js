@@ -179,6 +179,17 @@ export const otherRouter = {
             },
             component: () =>
                 import('@/views/cityManageSystem/customerManage/projExpertList.vue')
+        },
+        {
+            path: 'blankPage',
+            title: '空白页',
+            name: 'blankPage',
+            meta: {
+                requireAuth: false,
+                multipage: true
+            },
+            component: () =>
+                import('@/views/cityManageSystem/blankPage.vue')
         }
     ]
 };
@@ -199,7 +210,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentList.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'guanggapwei',
@@ -209,7 +220,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'chuangyibiao',
@@ -219,7 +230,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'luodiye',
@@ -229,7 +240,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'guanggaoyonghuliebiao',
@@ -239,7 +250,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'apppushlist',
@@ -249,7 +260,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'manyplotad',
@@ -259,7 +270,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'manyplotadlist',
@@ -269,7 +280,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'openscreenpage',
@@ -279,7 +290,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'openscreenpagelist',
@@ -289,7 +300,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
             // {
             //     path: 'ownerList',
