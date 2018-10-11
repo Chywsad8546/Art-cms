@@ -72,6 +72,11 @@
                 <FormItem label="标签内容" prop="title">
                     <Input v-model.trim="updateCahnnelValue.desc" style="width:140px"></Input>
                 </FormItem>
+                <FormItem label="栏目icon" prop="icon">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传icon</Button>
+                    </Upload>
+                </FormItem>
                 <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
                                 <Select v-model="searchData.businessCardAuth" style="width:140px">
                                     <Option value="">全部</Option>
@@ -216,6 +221,7 @@
             getImgFileName(response, file, fileList){
                 console.log(response.data);
                 this.addNewsChannelModal.icon = response.data;
+                this.updateCahnnelValue.icon = response.data;
             },
             pageChange (page) {
                 this.searchData.pageNum = page;
