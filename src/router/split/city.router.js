@@ -7,40 +7,6 @@ export const otherRouter = {
     component: Main,
     children: [
         {
-            path: 'cityManageSystem/companyDetailtest',
-            title: '企业详情test',
-            name: 'companyDetail_city_test',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/companyDetail.vue')
-        },
-        //城市管理员
-        {
-            path: 'cityManageSystem/companyDetail',
-            title: '企业详情',
-            name: 'companyDetail_city',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/companyDetail.vue')
-        }, //公司详情
-        {
-            path: 'cityManageSystem/storeDetail',
-            title: '门店详情',
-            name: 'storeDetail_city',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/storeDetail.vue')
-        }, //门店详情
-        {
             path: 'cityManageSystem/org',
             title: '组织架构',
             name: 'org',
@@ -54,13 +20,6 @@ export const otherRouter = {
             component: () =>
                 import('@/views/cityManageSystem/inforCenter/modifyTel.vue')
         }, //修改安全手机
-        {
-            path: 'cityManageSystem/agentDetail',
-            title: '经纪人详情',
-            name: 'agentDetail',
-            component: () =>
-                import('@/views/cityManageSystem/personManage/agentDetail.vue')
-        }, //经纪人详情
         {
             path: 'cityManageSystem/pendingDetail',
             title: '待审核详情',
@@ -152,7 +111,7 @@ export const otherRouter = {
             title: '分配权限',
             name: 'assignPermissions',
             meta: {
-                requireAuth: false,
+
                 multipage: true
             },
             component: () =>
@@ -199,7 +158,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentList.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'guanggapwei',
@@ -209,7 +168,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'chuangyibiao',
@@ -219,7 +178,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'luodiye',
@@ -229,7 +188,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'guanggaoyonghuliebiao',
@@ -239,7 +198,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'apppushlist',
@@ -249,7 +208,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'manyplotad',
@@ -259,7 +218,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'manyplotadlist',
@@ -269,7 +228,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'openscreenpage',
@@ -279,7 +238,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
         {
             path: 'openscreenpagelist',
@@ -289,7 +248,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/personManage/agentTableDown.vue')
+                import('@/views/cityManageSystem/blankPage.vue')
         },
             // {
             //     path: 'ownerList',
@@ -453,9 +412,37 @@ export const appRouter = [
             component: () =>
                 import('@/views/systemManage/sysManage/authorityManage.vue')
         }]
+    },
+    //系统管理
+    {
+        path: '/dictionary',
+        icon: 'social-buffer',
+        name: 'dictionary',
+        title: '字典',
+        component: Main,
+        children: [{
+            path: 'channelDictionary',
+            name: 'channelDictionary',
+            title: '栏目字典',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/dictionary/channelDictionary.vue')
+        },{
+            path: 'tagDictionary',
+            name: 'tagDictionary',
+            title: '标签字典',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/dictionary/tagDictionary.vue')
+        }
+        ]
     }
     // {
-    //     path: '/cityManageSystem',
+    //     path: '/cityManageSystem',    5
     //     icon: 'lock-combination',
     //     title: '店铺设置',
     //     name: 'shopSetting',
