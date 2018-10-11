@@ -7,40 +7,6 @@ export const otherRouter = {
     component: Main,
     children: [
         {
-            path: 'cityManageSystem/companyDetailtest',
-            title: '企业详情test',
-            name: 'companyDetail_city_test',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/companyDetail.vue')
-        },
-        //城市管理员
-        {
-            path: 'cityManageSystem/companyDetail',
-            title: '企业详情',
-            name: 'companyDetail_city',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/companyDetail.vue')
-        }, //公司详情
-        {
-            path: 'cityManageSystem/storeDetail',
-            title: '门店详情',
-            name: 'storeDetail_city',
-            meta: {
-                keepalive: true,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/companyManage/storeDetail.vue')
-        }, //门店详情
-        {
             path: 'cityManageSystem/org',
             title: '组织架构',
             name: 'org',
@@ -54,13 +20,6 @@ export const otherRouter = {
             component: () =>
                 import('@/views/cityManageSystem/inforCenter/modifyTel.vue')
         }, //修改安全手机
-        {
-            path: 'cityManageSystem/agentDetail',
-            title: '经纪人详情',
-            name: 'agentDetail',
-            component: () =>
-                import('@/views/cityManageSystem/personManage/agentDetail.vue')
-        }, //经纪人详情
         {
             path: 'cityManageSystem/pendingDetail',
             title: '待审核详情',
