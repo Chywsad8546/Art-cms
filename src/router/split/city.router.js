@@ -152,7 +152,7 @@ export const otherRouter = {
             title: '分配权限',
             name: 'assignPermissions',
             meta: {
-                requireAuth: false,
+
                 multipage: true
             },
             component: () =>
