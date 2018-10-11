@@ -28,7 +28,8 @@
                 labelArrNum:[],
                 labelName:"",
                 isshow: false,
-                assnArr:[]
+                assnArr:[],
+                labelCallArr:[{"arr1":"","arr2":""}]
             }
         },
         created() {
@@ -39,10 +40,17 @@
                 this.isshow = false;
                 this.labelArrList.push(obj.title);
                 this.labelArrNum.push(obj.id);
+                this.labelCallArr[0].arr1 = this.labelArrList;
+                this.labelCallArr[0].arr2 = this.labelArrNum;
+                //this.labelCallArr.push({"arr1":this.labelArrList,"arr2":this.labelArrNum});
+                this.$emit("labelArr-event",this.labelCallArr);
             },
             closeLabel(index) {
                 this.labelArrList.splice(index, 1);
-                this.labelArrNum.push(index,1);
+                this.labelArrNum.splice(index,1);
+                this.labelCallArr[0].arr1 = this.labelArrList;
+                this.labelCallArr[0].arr2 = this.labelArrNum;
+                this.$emit("labelArr-event",this.labelCallArr);
             },
             newsTagsList() {
                 api.newsTagsList().then(response => {

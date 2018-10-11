@@ -50,12 +50,12 @@
         </el-col>
         </el-row>
         <FormItem label="栏目">
-            <CheckboxGroup v-model="form.topicName">
-                <Checkbox v-for="list,index in chaneeljmList" :label="list.title"></Checkbox>
+            <CheckboxGroup v-model="form.topic" @on-change="lanmuChange">
+                <Checkbox v-for="list,index in chaneeljmList" :label="list.id">{{list.title}}</Checkbox>
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
-            <labelList></labelList>
+            <labelList @labelArr-event="callBacklabelFun"></labelList>
         </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -64,14 +64,13 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <div class="acticleSubmit">
-            <el-button type="primary" @click="releaseNews">发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px" @click="timingRelease">定时发布</el-button>
-            <el-button>预览</el-button>
-            <el-button>存为草稿</el-button>
+            <el-button type="primary" @click="releaseNews(1)">发布</el-button>
+            <el-button type="ghost" style="margin-left: 8px" @click="timingSubRelease">定时发布</el-button>
+            <el-button @click="releaseNews(2)">存为草稿</el-button>
         </div>
   
     </div>
-    <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
+    <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
 </Form>
 <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
    <!-- <div class="el-message-box__wrapper">
@@ -139,7 +138,7 @@
                     listImg: [], //封面图片数组
                     type: 0,    //内容类型(0:图文,1:图集,2:视频)
                     author: '',//作者
-                    topic: '',   //栏目
+                    topic: [],   //栏目
                     topicName:[] //栏目名称
                 },
                  rules: {
@@ -166,7 +165,7 @@
                                         //   quill.insertEmbed(length, 'image', 'http://file.dafy.com.cn/OSS/20180926/1634109cff964de698f2969dec05c045.jpg')
                                         //   // 调整光标到最后
                                         //   quill.setSelection(length + 1)
-                                    document.querySelector('#iviewUp input').click();
+                                    document.querySelector('#iviewUp2 input').click();
                                 } else {
                                     this.quill.format('image', false);
                                 }
@@ -185,12 +184,27 @@
         },
         computed: {},
         methods: {
+            lanmuChange(ids){
+                this.form.topicName=[];
+                ids.forEach(id => {
+                    this.chaneeljmList.forEach(item=>{
+                        if(item.id==id){
+                            this.form.topicName.push(item.title);
+                        }
+                    });
+                });
+                console.log(this.form.topic,this.form.topicName)
+            },
             // 上传文件到七牛云
             upqiniu (req) {
                 this.uploadFun(req);
             },
             ceshidem() {
                 console.log(1111);
+            },
+            callBacklabelFun(data){
+                this.form.tagsName = data[0].arr1;
+                this.form.tags = data[0].arr2;
             },
             uploadFun (req){
               //  console.log(req.file);
@@ -250,13 +264,14 @@
             
             },
             callBackTime(time) {
-                console.log(time);
+                this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
+                this.releaseNews(0);
             },
             callBackTimeCancel() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
             },
-            timingRelease() {
+            timingSubRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
             },
             newsChaneelList() {
@@ -349,7 +364,7 @@
             //       self.uploadimgList.push({"url":surl,"isActive":false});          
             //   });
             },
-            releaseNews() {//发布按钮
+            releaseNews(type) {//发布按钮
                 if (this.form.title==="") {
                     this.$Notice.warning({
                         title: "请输入标题"
@@ -362,7 +377,7 @@
                     });
                     return false;
                 }
-                this.form.isPublish = 1;
+                this.form.isPublish = type;
 
                 if(this.form.listType === 1){
                     this.form.listImg = this.coverImgOne;
@@ -378,6 +393,9 @@
                         this.$Modal.success({
                             title: '',
                             content: "发布成功"
+                        });
+                        this.$router.push({
+                            name: "contentmanage"
                         });
                 }).catch(response => {
                     this.$Notice.warning({

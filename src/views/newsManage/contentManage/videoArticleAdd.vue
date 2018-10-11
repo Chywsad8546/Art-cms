@@ -14,15 +14,15 @@
             </Upload>
         </div> -->
     </div>
+    <Form :model="form" :label-width="80">
+        <FormItem label="标题">
+            <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
 
-    <i-form :model="formItem" :label-width="80">
-        <Form-item label="标题">
-            <i-input :value.sync="formItem.input" placeholder="请输入标题"></i-input>
-        </Form-item>
-        <Form-item label="视频简介">
-            <i-input :value.sync="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-        </Form-item>
-        <Form-item label="视频">
+        <FormItem label="视频简介">
+            <Input v-model="form.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
+        </FormItem>
+        <FormItem label="视频">
                 <div class="fmslt">
                     <Upload 
                             :show-upload-list="false"
@@ -37,23 +37,29 @@
                     </Upload>
                 </div>
                 
-        </Form-item>
-        <Form-item label="封面">
+        </FormItem>
+        <FormItem label="封面">
                 <div class="fmslt">
                     <img ref="videoCoverThum" @click="fmImgSetupFun" src="./img/suoluetu.png"/>
                     <el-button type="primary" @click="fmImgSetupFun">设置视频封面</el-button>
                 </div>
                 
-        </Form-item>
-        <Form-item label="栏目">
+        </FormItem>
+        <FormItem label="播放方式">
+            <el-radio-group v-model="form.type">
+                        <el-radio :label="2">横屏模式</el-radio>
+                        <el-radio :label="3">竖屏模式</el-radio>
+            </el-radio-group>
+        </FormItem>
+        <FormItem label="栏目">
             <el-checkbox-group v-model="columnList">
                 <el-checkbox label="栏目1"></el-checkbox>
                 <el-checkbox label="栏目2"></el-checkbox>
                 <el-checkbox label="栏目3"></el-checkbox>
             </el-checkbox-group>
-        </Form-item>
-        <Form-item label="标签">
-          <labelList></labelList>
+        </FormItem>
+        <FormItem label="标签">
+          <labelList @labelArr-event="callBacklabelFun"></labelList>
             <!-- <div class="labelreact">
                 <el-input style="width:200px"  placeholder="请输入2-6个字"></el-input>
                 <ul class="positrelater" style="display:none">
@@ -73,21 +79,21 @@
                    
                 </ul>
             </div> -->
-        </Form-item>
-        <Form-item label="来源">
-            <i-input :value.sync="formItem.input" placeholder="请输入标题"></i-input>
-        </Form-item>
-        <Form-item label="作者">
-            <i-input :value.sync="formItem.input" placeholder="请输入标题"></i-input>
-        </Form-item>
-        <Form-item>
-            <el-button type="primary" @click="contentRelease">发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px" @click="timingRelease">定时发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px">草稿箱</el-button>
-        </Form-item>
-    </i-form>
+        </FormItem>
+        <FormItem label="来源">
+            <Input v-model="form.source" placeholder="请输入来源"></Input>
+        </FormItem>
+        <FormItem label="作者">
+            <Input v-model="form.author" placeholder="请输入作者"></Input>
+        </FormItem>
+        <FormItem>
+            <el-button type="primary" @click="contentRelease(1)">发布</el-button>
+            <el-button type="ghost" style="margin-left: 8px" @click="timingSubRelease">定时发布</el-button>
+            <el-button type="ghost" style="margin-left: 8px" @click="contentRelease(2)">草稿箱</el-button>
+        </FormItem>
+    </Form>
     <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
-    <timingRelease @confirm-event = "callBackTime" @cancel-event = "timingRelease" v-show="vshowTimeSelect"></timingRelease>
+    <timingRelease @confirm-event = "callBackTime" @cancel-event = "timingSubRelease" v-show="vshowTimeSelect"></timingRelease>
 </div>
 </template>
 <script>
@@ -104,22 +110,27 @@
         },
         data () {
             return {
-                formItem: {
-                    input: '',
-                    select: '',
-                    radio: 'male',
-                    checkbox: [],
-                    switch: true,
-                    date: '',
-                    time: '',
-                    slider: [20, 50],
-                    textarea: ''
+                form: {
+                    title: '',
+                    content: [],
+                    isPublish: 0,
+                    listType: 3,
+                    source: '',
+                    publishAt: '',
+                    tags: [],
+                    tagsName: [],
+                    listImg: [],
+                    type:2,
+                    author:'',
+                    topic:[],
+                    topicName:[],
+                    textarea:""
                 },
                 uplopopDisplay: false,
                 imgVideoDom: "",
                 columnList: [],
                 vshowTimeSelect: false,
-                labelArrList:["标签5","标签2"]
+                labelArrList:[]
             }
         },
         methods: {
@@ -132,7 +143,8 @@
             apiuploadVideo (pas){
                 api.uploadVideo(pas).then(response => {
                     this.$refs.videoUpDom.src = response.data.data.coverURL;
-                    console.log("response",response);
+                    let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
+                    this.form.content.push(arr);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: response.msg
@@ -148,6 +160,11 @@
             parEvent(data) {
                 this.uplopopDisplay = !this.uplopopDisplay;
                 this.$refs.videoCoverThum.src = data;
+                if(this.form.listImg.length>0){
+                    this.form.listImg.splice(0,1,data);
+                }else{
+                    this.form.listImg.push(data);
+                }           
                 //this.imgVideoDom.src=data;
             },
             fmImgSetupFun() {
@@ -161,14 +178,62 @@
             cancleCallBack() {
                 this.uplopopDisplay = !this.uplopopDisplay;
             },
-            contentRelease() {
-                console.log(this.checkList);
+            contentRelease(type) {
+                if (this.form.title==="") {
+                    this.$Notice.warning({
+                        title: "请输入标题"
+                    });
+                    return false;
+                }
+                if(this.form.content.length===0){
+                    this.$Notice.warning({
+                        title: "请上传视频"
+                    });
+                    return false;
+                }
+                this.form.content = JSON.stringify(this.form.content);
+                this.form.isPublish = type;
+
+                if(this.form.listType === 1){
+                    this.form.listImg = this.coverImgOne;
+                }else if(this.form.listType === 2){
+                    this.form.listImg = this.coverImgTrue;
+                }else{
+                    this.form.listImg = [];
+                }            
+                // for(let s = 0;s<this.form.topicName.length;s++){
+                //     console.log(this.form.topicName[s]);
+                // }
+                api.addArticle(this.form).then(response => {
+                        this.$Modal.success({
+                            title: '',
+                            content: "发布成功"
+                        });
+                        this.$router.push({
+                            name: "contentmanage"
+                        });
+                }).catch(response => {
+                    this.$Notice.warning({
+                        title: "发布失败"
+                    });
+                }) 
             },
-            timingRelease() {
+            timingSubRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
             },
-            callBackTime() {
-
+            callBackTime(time) {
+                this.form.publishAt = time;
+                this.vshowTimeSelect = !this.vshowTimeSelect;
+                this.releaseNews(0);
+            },
+            callBacklabelFun(data){
+                this.form.tagsName = data[0].arr1;
+                this.form.tags = data[0].arr2;
+            },
+            callBackTime(time) {
+                this.form.publishAt = time;
+                this.vshowTimeSelect = !this.vshowTimeSelect;
+                this.releaseNews(0);
             }
         }
     }

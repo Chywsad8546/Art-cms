@@ -19,6 +19,9 @@
         <Upload id="iviewUp" action="/cmsapi/sys/uploadImg" :on-success="successPreview" v-show="uploadFlag">
             <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
         </Upload>
+        <Upload id="iviewUp2" action="/cmsapi/sys/uploadImg" :on-success="successPreviewTrue">
+            <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
+        </Upload>
         <div class="articlePopupBack" @click="uploadImg"></div>
 
     </div>  
@@ -45,6 +48,7 @@
                         obj.isActive = false;
                     });
                     this.$emit("child-event",this.selectImgSrc);
+                    this.selectImgSrc = "";
                 }else{
                     this.$Notice.warning({
                         title: "请选择图片"
@@ -69,6 +73,11 @@
                 // selfQuill.insertEmbed(length, 'image', file.data);
                 // // 调整光标到最后
                 // selfQuill.setSelection(length + 1)                
+            },
+            successPreviewTrue(file) {
+                let fileArr = {"url":file.data,"isActive":false};
+                this.uploadimgList.push(fileArr);
+                this.$emit("uploadEditorSuccess-event",file);
             },
             selectSort(data) {
                 this.uploadimgList.forEach(function(obj){
