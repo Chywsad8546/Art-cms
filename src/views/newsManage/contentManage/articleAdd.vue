@@ -136,6 +136,17 @@
                 form: {
                     title: '',
                     content: '',
+                    isPublish: 0,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿) 是
+                    listType:0,//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
+                    source:'',//文章来源 否
+                    publishAt:'',//发布时间 否
+                    tags:'',  //标签1,2,3  否
+                    tagsName: '',
+                    listImg: [], //封面图片数组
+                    type: 0,    //内容类型(0:图文,1:图集,2:视频)
+                    author: '',//作者
+                    topic: '',   //栏目
+                    topicName:'' //栏目名称
                 },
                 editorOption: {
                     placeholder: '',
@@ -293,15 +304,14 @@
               });
             },
             releaseNews() {
-                console.log(this.form);
-                //  api.addArticle(pas).then(response => {
+                 api.addArticle(this.form).then(response => {
 
-                //     console.log("response",response);
-                // }).catch(response => {
-                //     this.$Notice.warning({
-                //         title: response.msg
-                //     });
-                // })               
+                    console.log("response",response);
+                }).catch(response => {
+                    this.$Notice.warning({
+                        title: response.msg
+                    });
+                })               
             }
         },
         // created() {
