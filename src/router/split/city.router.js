@@ -179,17 +179,6 @@ export const otherRouter = {
             },
             component: () =>
                 import('@/views/cityManageSystem/customerManage/projExpertList.vue')
-        },
-        {
-            path: 'blankPage',
-            title: '空白页',
-            name: 'blankPage',
-            meta: {
-                requireAuth: false,
-                multipage: true
-            },
-            component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
         }
     ]
 };
