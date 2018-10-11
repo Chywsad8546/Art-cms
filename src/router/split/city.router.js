@@ -319,7 +319,7 @@ export const appRouter = [
         }]
     }
     // {
-    //     path: '/cityManageSystem',
+    //     path: '/cityManageSystem',    5
     //     icon: 'lock-combination',
     //     title: '店铺设置',
     //     name: 'shopSetting',
