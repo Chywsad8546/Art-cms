@@ -41,6 +41,9 @@
         methods: {
             confirmxz() {
                 if(this.selectImgSrc){
+                    this.uploadimgList.forEach(function(obj){
+                        obj.isActive = false;
+                    });
                     this.$emit("child-event",this.selectImgSrc);
                 }else{
                     this.$Notice.warning({
@@ -49,6 +52,9 @@
                 }               
             },
             cancelFun() {
+                this.uploadimgList.forEach(function(obj){
+                    obj.isActive = false;
+                });
                 this.$emit("cancel-event","");
             },
             uplaqloadImg() {
@@ -57,6 +63,7 @@
             successPreview(file) {
                 let fileArr = {"url":file.data,"isActive":false};
                 this.uploadimgList.push(fileArr);
+                this.$emit("uploadSuccess-event",file);
                 // let selfQuill = this.$refs.myQuillEditor.quill;
                 // let length = selfQuill.getSelection().index;
                 // selfQuill.insertEmbed(length, 'image', file.data);
@@ -158,6 +165,7 @@
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 2100;
     opacity: .5;
     background: #000;
 }

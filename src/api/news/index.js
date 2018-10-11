@@ -12,5 +12,10 @@ export default {
             params: params
         });
     },
-    
+    newsChaneelList(params) {
+        return http.post('/cmsapi/newsChannelDictionary/newsChaneelList', params);
+    },
+    newsTagsList(params) {
+        return http.post('/cmsapi/newsTagDictionary/newsTagsList', params);
+    }
 }

@@ -3,7 +3,7 @@
             <div class="labelreact">
                 <el-input style="width:200px" ref="labelInput" v-model="labelName" placeholder="请输入2-6个字"></el-input>
                 <ul class="positrelater" v-show="isshow">
-                    <li v-for="assns,index in assnArr" @click="selectclLabel(assns)">{{assns}}</li>
+                    <li v-for="assns,index in assnArr" @click="selectclLabel(assns)">{{assns.title}}</li>
                 </ul>
             </div>
             <div class="selectLabel">
@@ -17,16 +17,18 @@
 
 
 <script>
+     import api from '../../../../api/news/index.js';
      export default {
         props: {
             
         },
         data () {
             return {
-                labelArrList:["标签5","标签2"],
+                labelArrList:[],
+                labelArrNum:[],
                 labelName:"",
                 isshow: false,
-                assnArr:["标签1","标签2","标签3","标签4"]
+                assnArr:[]
             }
         },
         created() {
@@ -35,12 +37,22 @@
         methods: {
             selectclLabel(obj) {
                 this.isshow = false;
-                this.labelArrList.push(obj);
-                //this.$refs.labelInput.value = "111";
-                console.log(obj);
+                this.labelArrList.push(obj.title);
+                this.labelArrNum.push(obj.id);
             },
             closeLabel(index) {
                 this.labelArrList.splice(index, 1);
+                this.labelArrNum.push(index,1);
+            },
+            newsTagsList() {
+                api.newsTagsList().then(response => {
+                    this.assnArr = response.data.data;
+                    console.log("response",response.data.data);
+                }).catch(response => {
+                    this.$Notice.warning({
+                        title: "标签获取失败"
+                    });
+                })
             }
         },
         watch:{
@@ -49,6 +61,7 @@
                     this.isshow = false;
                 }else{
                     this.isshow = true;
+                    this.newsTagsList();
                 }
             }
         }

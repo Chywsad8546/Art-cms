@@ -1,13 +1,12 @@
 <template>
 <div class="articleContainer">
-    <el-form ref="form" :model="form" label-width="80px">
+    <Form ref="formInline" :model="form" :rules="rules" :label-width="80">
+
     <div class="publictop">
         <div class="articleTitle">发表文章</div>
-        <div class="syl-editor-input">
-            <span class="tui2-input-wrapper">
-                <el-input v-model="form.title"  placeholder="请输入文章标题（5-30个汉字）"></el-input>
-            </span>
-        </div>
+        <FormItem label="标题">
+            <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
         <quill-editor v-model="form.content"
                 ref="myQuillEditor" 
                 :options="editorOption"
@@ -20,41 +19,50 @@
         <el-col :span="2"><div class="grid-content bg-purple fmtitle">封面</div></el-col>
         <el-col :span="22">
             <div class="grid-content bg-purple-light">
-                <el-radio-group v-model="radio2">
+                <el-radio-group v-model="form.listType">
                     <el-radio :label="1">单图</el-radio>
                     <el-radio :label="2">三图</el-radio>
-                    <el-radio :label="3">无</el-radio>
+                    <el-radio :label="0">无</el-radio>
                 </el-radio-group>      
             </div>
-            <div v-show="radio2===1">
-                    <div class="avatar-uploader">                    
-                            <img @click="uploadImg" src="./img/suoluetu.png"/>
-                    </div>
+            <div v-show="form.listType===1">
+                <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
+                    <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
+                </div>
+                 <div class="avatar-uploader" v-else>                    
+                    <img @click="coverUpImg" src="./img/suoluetu.png"/>
+                </div>               
             </div>
-            <div v-show="radio2===2">
-                    <div class="avatar-uploader">                    
-                            <img @click="uploadImg" src="./img/suoluetu.png"/>
-                    </div>
-                    <div class="avatar-uploader">                    
-                            <img @click="uploadImg" src="./img/suoluetu.png"/>
-                    </div>
-                    <div class="avatar-uploader">                    
-                            <img @click="uploadImg" src="./img/suoluetu.png"/>
-                    </div>      
+            <div v-show="form.listType===2">
+                <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
+                    <img @click="coverEditUpImg(index)" :src="imgOne"/>
+                </div>
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 1">                    
+                        <img @click="coverUpImg" src="./img/suoluetu.png"/>
+                </div>
+                <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">                    
+                        <img @click="coverUpImg" src="./img/suoluetu.png"/>
+                </div>
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 3">                    
+                        <img @click="coverUpImg" src="./img/suoluetu.png"/>
+                </div>      
             </div>
         </el-col>
         </el-row>
-        <el-form-item label="栏目">
-            <el-checkbox-group v-model="columnList">
-                <el-checkbox label="栏目1"></el-checkbox>
-                <el-checkbox label="栏目2"></el-checkbox>
-                <el-checkbox label="栏目3"></el-checkbox>
-            </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="标签">
+        <FormItem label="栏目">
+            <CheckboxGroup v-model="form.topicName">
+                <Checkbox v-for="list,index in chaneeljmList" :label="list.title"></Checkbox>
+            </CheckboxGroup>
+        </FormItem>
+        <FormItem label="标签">
             <labelList></labelList>
-        </el-form-item>
-
+        </FormItem>
+        <FormItem label="来源" style="width:200px;">
+            <Input v-model="form.source" placeholder="请输入来源"></Input>
+        </FormItem>
+        <FormItem label="作者" style="width:200px;">
+            <Input v-model="form.author" placeholder="请输入作者"></Input>
+        </FormItem>
         <div class="acticleSubmit">
             <el-button type="primary" @click="releaseNews">发布</el-button>
             <el-button type="ghost" style="margin-left: 8px" @click="timingRelease">定时发布</el-button>
@@ -63,28 +71,8 @@
         </div>
   
     </div>
-
-    <el-upload
-      id="iviewUp"
-      class="avatar-uploader"
-      :action= domain
-      list-type="picture-card"
-      :on-preview="handlePictureCardPreview"
-      :on-success="successPreview"
-      :on-remove="handleRemove" v-show="uploadFlag">
-    </el-upload>
-    <div class="articlecontentPopup" v-if="uploadimgFlag">
-        <ul class="uploadimg-list">
-            <li v-for="uploadimgLists in uploadimgList" :class="{checked:uploadimgLists.isActive}"><img @click="selectSort(uploadimgLists)" :src="uploadimgLists.url" /></li>
-        </ul>
-
-        <div class="botton">
-            <el-button type="primary" @click="confirmxz()">确定</el-button>
-            <el-button @click="cancelFun()">取消</el-button>
-        </div>
-    </div>
-    <div class="articlePopupBack" @click="uploadImg" v-if="uploadimgFlag"></div>
-</el-form>
+    <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
+</Form>
 <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
    <!-- <div class="el-message-box__wrapper">
         <div class="uploadModal"></div>
@@ -95,6 +83,7 @@
     import api from '../../../api/news/index.js';
     import timingRelease from './components/timingRelease.vue';
     import labelList from './components/labelLiat.vue';
+    import uploadzhImg from './components/uploadzhImg.vue';
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
@@ -115,13 +104,13 @@
         name: 'articleAdd',
         components: {
             timingRelease,
-            labelList
+            labelList,
+            uploadzhImg
         },
         data() {
             return {
                 content:null,
                 uploadFlag: false,
-                radio2: 3,
                 dialogImageUrl: '',
                 dialogVisible: false,
                 uploadimgFlag: false,
@@ -129,10 +118,15 @@
                 selectImgSrc: "",
                 columnList: [],
                 LabelList: [],
+                uplopopDisplay: false,
                 // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
                 domain: '/cmsapi/sys/uploadImg',
                 uploadimgList: [],
                 vshowTimeSelect: false,
+                coverImgIndex: 0,
+                coverImgOne: [],
+                coverImgTrue: [],
+                chaneeljmList: [],
                 form: {
                     title: '',
                     content: '',
@@ -146,8 +140,13 @@
                     type: 0,    //内容类型(0:图文,1:图集,2:视频)
                     author: '',//作者
                     topic: '',   //栏目
-                    topicName:'' //栏目名称
+                    topicName:[] //栏目名称
                 },
+                 rules: {
+                        title: [
+                            { required: true, message: '请输入标题', trigger: 'blur' }
+                        ]
+                    },
                 editorOption: {
                     placeholder: '',
                     theme: 'snow',  // or 'bubble'
@@ -178,6 +177,9 @@
                 }
             };
         },
+        created() {
+            this.newsChaneelList();
+        },
         watch: {
 
         },
@@ -186,6 +188,9 @@
             // 上传文件到七牛云
             upqiniu (req) {
                 this.uploadFun(req);
+            },
+            ceshidem() {
+                console.log(1111);
             },
             uploadFun (req){
               //  console.log(req.file);
@@ -254,6 +259,16 @@
             timingRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
             },
+            newsChaneelList() {
+                api.newsChaneelList().then(response => {
+                    this.chaneeljmList = response.data.data;
+                    console.log("response",response.data.data);
+                }).catch(response => {
+                    this.$Notice.warning({
+                        title: "栏目获取失败"
+                    });
+                })                
+            },
             selectSort(data) {
                 this.uploadimgList.forEach(function(obj){
                     obj.isActive = false;
@@ -269,22 +284,32 @@
                 console.log(this.dialogImageUrl);
                 this.dialogVisible = true;
             },
-            successPreview(file) {
-                console.log(file.data);
-                let selfQuill = this.$refs.myQuillEditor.quill;
-                let length = selfQuill.getSelection().index;
-                selfQuill.insertEmbed(length, 'image', file.data);
-                // 调整光标到最后
-                selfQuill.setSelection(length + 1)                
+            successPreview(file) {               
+                    let selfQuill = this.$refs.myQuillEditor.quill;
+                    if(selfQuill){
+                        let length = selfQuill.getSelection().index;
+                        selfQuill.insertEmbed(length, 'image', file.data);
+                        // 调整光标到最后
+                        selfQuill.setSelection(length + 1) 
+                    }    
             },
-            uploadImg() {
-                this.uploadimgFlag = !this.uploadimgFlag;
-                this.uploadimgList.forEach(function(obj){
-                    obj.isActive = false;
-                });
-                var el = event.currentTarget;
-                this.imgDom = el;
+            // uploadImg() {
+            //     this.uploadimgFlag = !this.uploadimgFlag;
+            //     this.uploadimgList.forEach(function(obj){
+            //         obj.isActive = false;
+            //     });
+            //     var el = event.currentTarget;
+            //     this.imgDom = el;
+            // },
+            coverUpImg() {
+                this.editorUploadFlag = false;
+                this.uplopopDisplay = !this.uplopopDisplay;
             },
+            coverEditUpImg(index) {
+                this.editorUploadFlag = false;
+                this.uplopopDisplay = !this.uplopopDisplay;
+                this.coverImgIndex = index;
+            },          
             confirmxz() {
                 this.uploadimgFlag = !this.uploadimgFlag;
                 this.imgDom.src = this.selectImgSrc;
@@ -292,24 +317,71 @@
             cancelFun() {
                 this.uploadimgFlag = !this.uploadimgFlag;
             },
-            onEditorChange(event) {
-             // console.log(event.html)
-              var img = event.html.match(/<img[^>]+>/g); // 利用正则，取出所有img标签，数据格式为数组
-              let self = this;
-              self.uploadimgList = [];
-              img.forEach(function(obj){
-                  var reg = /(?<=(src="))[^"]*?(?=")/ig;
-                  var surl=obj.match(reg);
-                  self.uploadimgList.push({"url":surl,"isActive":false});          
-              });
+            confirmParEvent(data) {//弹框确定事件
+                this.uplopopDisplay = !this.uplopopDisplay;
+                if(this.form.listType === 1){
+                    if(this.coverImgOne.length>0){
+                           // this.pitchImgArr.splice(index, 1);
+                           this.coverImgOne.splice(this.coverImgIndex,1,data);
+                    }else{
+                        this.coverImgOne.push(data);
+                    }                  
+                }else if(this.form.listType === 2){
+                    if(this.coverImgTrue.length>2){
+                           // this.pitchImgArr.splice(index, 1);
+                           this.coverImgTrue.splice(this.coverImgIndex,1,data);
+                    }else{
+                        this.coverImgTrue.push(data);
+                    }
+                }
             },
-            releaseNews() {
-                 api.addArticle(this.form).then(response => {
+            cancleCallBack() {//弹框取消事件
+                this.uplopopDisplay = !this.uplopopDisplay;
+            },
+            onEditorChange(event) {
+              console.log(event.html)
+            //   var img = event.html.match(/<img[^>]+>/g); // 利用正则，取出所有img标签，数据格式为数组
+            //   let self = this;
+            //   self.uploadimgList = [];
+            //   img.forEach(function(obj){
+            //       var reg = /(?<=(src="))[^"]*?(?=")/ig;
+            //       var surl=obj.match(reg);
+            //       self.uploadimgList.push({"url":surl,"isActive":false});          
+            //   });
+            },
+            releaseNews() {//发布按钮
+                if (this.form.title==="") {
+                    this.$Notice.warning({
+                        title: "请输入标题"
+                    });
+                    return false;
+                }
+                if(this.form.content===""){
+                    this.$Notice.warning({
+                        title: "请输入图文"
+                    });
+                    return false;
+                }
+                this.form.isPublish = 1;
 
-                    console.log("response",response);
+                if(this.form.listType === 1){
+                    this.form.listImg = this.coverImgOne;
+                }else if(this.form.listType === 2){
+                    this.form.listImg = this.coverImgTrue;
+                }else{
+                    this.form.listImg = [];
+                }            
+                // for(let s = 0;s<this.form.topicName.length;s++){
+                //     console.log(this.form.topicName[s]);
+                // }
+                api.addArticle(this.form).then(response => {
+                        this.$Modal.success({
+                            title: '',
+                            content: "发布成功"
+                        });
                 }).catch(response => {
                     this.$Notice.warning({
-                        title: response.msg
+                        title: "发布失败"
                     });
                 })               
             }
@@ -373,15 +445,7 @@
     line-height: 50px;
     padding-left: 15px;
 }
-.articlePopupBack {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: .5;
-    background: #000;
-}
+
 .fmtitle {
     font-size: 16px;
     text-align: center;
@@ -452,13 +516,17 @@
     padding-bottom: 20px;
 }
 .avatar-uploader {
-  display: inline;
+  display: block;
+  float: left;
+  width: 182px;
+  height: 183px;
+  margin-right: 10px;
+}
+.avatar-uploader img {
+    width: 100%;
 }
 .el-radio-group {
   line-height: 50px;
-}
-.ql-toolbar.ql-snow {
-        border: 0px solid #FFFFFF;
 }
 .syl-editor-input .editor-title {
     border: 0;
@@ -498,13 +566,5 @@
     height: 178px;
     display: block;
   }
-  .el-input__inner {
-      border-top:0px solid #dcdfe6; 
-      border-left:0px solid #dcdfe6; 
-      border-right:0px solid #dcdfe6; 
-      border-bottom:1px solid #dcdfe6; 
-  }
-  .ql-container.ql-snow {
-      border: 0px;
-  }
+
 </style>
