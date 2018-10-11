@@ -317,6 +317,34 @@ export const appRouter = [
             component: () =>
                 import('@/views/systemManage/sysManage/authorityManage.vue')
         }]
+    },
+    //系统管理
+    {
+        path: '/dictionary',
+        icon: 'social-buffer',
+        name: 'dictionary',
+        title: '字典',
+        component: Main,
+        children: [{
+            path: 'channelDictionary',
+            name: 'channelDictionary',
+            title: '栏目字典',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/dictionary/channelDictionary.vue')
+        },{
+            path: 'tagDictionary',
+            name: 'tagDictionary',
+            title: '标签字典',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/dictionary/tagDictionary.vue')
+        }
+        ]
     }
     // {
     //     path: '/cityManageSystem',    5
