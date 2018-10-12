@@ -11,8 +11,6 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 import VueI18n from 'vue-i18n';
 import agentplugin from '@/libs/agentplugin';
 import apibase from '@/api/api.base';
@@ -25,7 +23,6 @@ import '@/styles/fonts/iconfont.js'
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(agentplugin);
-Vue.use(ElementUI);
 Vue.use(VueQuillEditor)
 Vue.use(VueDND)
 apibase.interceptors(store);

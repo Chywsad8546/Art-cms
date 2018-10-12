@@ -15,17 +15,15 @@
                 @change="onEditorChange($event)"
                 >
         </quill-editor>
-        <el-row>
-        <el-col :span="2"><div class="grid-content bg-purple fmtitle">封面</div></el-col>
-        <el-col :span="22">
+        <FormItem label="封面">
             <div class="grid-content bg-purple-light">
-                <el-radio-group v-model="form.listType">
-                    <el-radio :label="1">单图</el-radio>
-                    <el-radio :label="2">三图</el-radio>
-                    <el-radio :label="0">无</el-radio>
-                </el-radio-group>      
+                <RadioGroup v-model="form.listType">
+                    <Radio label='1'>单图</Radio>
+                    <Radio label='2'>三图</Radio>
+                    <Radio label='0'>无</Radio>
+                </RadioGroup>     
             </div>
-            <div v-show="form.listType===1">
+            <div v-show="form.listType==='1'">
                 <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
                     <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -33,7 +31,7 @@
                     <img @click="coverUpImg" src="./img/suoluetu.png"/>
                 </div>               
             </div>
-            <div v-show="form.listType===2">
+            <div v-show="form.listType==='2'">
                 <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
                     <img @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -47,8 +45,7 @@
                         <img @click="coverUpImg" src="./img/suoluetu.png"/>
                 </div>      
             </div>
-        </el-col>
-        </el-row>
+        </FormItem>
         <FormItem label="栏目">
             <CheckboxGroup v-model="form.topic" @on-change="lanmuChange">
                 <Checkbox v-for="list,index in chaneeljmList" :label="list.id">{{list.title}}</Checkbox>
@@ -64,9 +61,9 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <div class="acticleSubmit">
-            <el-button type="primary" @click="releaseNews(1)">发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px" @click="timingSubRelease">定时发布</el-button>
-            <el-button @click="releaseNews(2)">存为草稿</el-button>
+            <Button type="primary" @click="releaseNews(1)">发布</Button>
+            <Button style="margin-left: 8px" @click="timingSubRelease">定时发布</Button>
+            <Button style="margin-left: 8px" @click="releaseNews(2)">存为草稿</Button>
         </div>
   
     </div>
@@ -130,7 +127,7 @@
                     title: '',
                     content: '',
                     isPublish: 0,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿) 是
-                    listType:0,//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
+                    listType:'0',//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
                     source:'',//文章来源 否
                     publishAt:'',//发布时间 否
                     tags:'',  //标签1,2,3  否
@@ -333,15 +330,16 @@
                 this.uploadimgFlag = !this.uploadimgFlag;
             },
             confirmParEvent(data) {//弹框确定事件
+                console.log(data);
                 this.uplopopDisplay = !this.uplopopDisplay;
-                if(this.form.listType === 1){
+                if(this.form.listType === '1'){
                     if(this.coverImgOne.length>0){
                            // this.pitchImgArr.splice(index, 1);
                            this.coverImgOne.splice(this.coverImgIndex,1,data);
                     }else{
                         this.coverImgOne.push(data);
                     }                  
-                }else if(this.form.listType === 2){
+                }else if(this.form.listType === '2'){
                     if(this.coverImgTrue.length>2){
                            // this.pitchImgArr.splice(index, 1);
                            this.coverImgTrue.splice(this.coverImgIndex,1,data);

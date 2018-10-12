@@ -1,7 +1,7 @@
 <template>
     <div>
             <div class="labelreact">
-                <el-input style="width:200px" ref="labelInput" v-model="labelName" placeholder="请输入2-6个字"></el-input>
+                <Input style="width:200px" v-model="labelName" placeholder="请输入2-6个字"></Input>
                 <ul class="positrelater" v-show="isshow">
                     <li v-for="assns,index in assnArr" @click="selectclLabel(assns)">{{assns.title}}</li>
                 </ul>

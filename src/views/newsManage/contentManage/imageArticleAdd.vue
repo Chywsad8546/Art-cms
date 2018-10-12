@@ -21,30 +21,28 @@
                         <img :src="ImgArr.img"/>
                     </div>                
                     </el-col>
-                <el-col :span="16">  
-                    <el-input type="textarea" class="tuptextareaClass" v-model="ImgArr.describe" placeholder="图片说明（不超过200个子）"></el-input>                     
+                <el-col :span="16"> 
+                    <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />             
                 </el-col>
                 <el-col :span="4" class="imglistleft">
-                    <i-button type="primary" @click="editUpimg(index)">换图</i-button>
-                    <i-button type="ghost" @click="removeImg(index)">删除</i-button>               
+                    <Button type="primary" @click="editUpimg(index)">换图</Button>
+                    <Button  @click="removeImg(index)">删除</Button>              
                 </el-col>
             </el-row>
         </div>
         </div>
         <div class="imagesBotton">
-            <el-button type="primary" @click="showPopupClick(3)">添加图片</el-button>
+            <Button type="primary" @click="showPopupClick(3)">添加图片</Button>
         </div>
-        <el-row>
-        <el-col :span="2"><div class="grid-content bg-purple fmtitle">封面</div></el-col>
-        <el-col :span="22">
+        <FormItem label="封面">
             <div class="grid-content bg-purple-light">
-                 <el-radio-group v-model="form.listType">
-                    <el-radio :label="1">单图</el-radio>
-                    <el-radio :label="2">三图</el-radio>
-                    <el-radio :label="0">无图</el-radio>
-                </el-radio-group>   
+                <RadioGroup v-model="form.listType">
+                    <Radio label='1'>单图</Radio>
+                    <Radio label='2'>三图</Radio>
+                    <Radio label='0'>无</Radio>
+                </RadioGroup>    
             </div>
-            <div v-show="form.listType===1">
+            <div v-show="form.listType==='1'">
                 <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
                     <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -52,7 +50,7 @@
                     <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>               
             </div>
-            <div v-show="form.listType===2">
+            <div v-show="form.listType==='2'">
                 <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
                     <img @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -66,9 +64,7 @@
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>      
             </div>
-
-        </el-col>
-        </el-row>
+        </FormItem>
         <FormItem label="栏目">
             <CheckboxGroup v-model="form.topicName">
                 <Checkbox v-for="list,index in chaneeljmList" :label="list.title"></Checkbox>
@@ -162,7 +158,7 @@
                     title: '',
                     content: '',
                     isPublish: 1,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿)
-                    listType: 1,//封面样式(0:大标题,1:单图,2:多图,3:视频)
+                    listType: '1',//封面样式(0:大标题,1:单图,2:多图,3:视频)
                     source: '', //文章来源
                     publishAt: '',
                     tags: [],
@@ -261,14 +257,14 @@
                     return false;
                 }
                 if(this.upState === 2){
-                    if(this.form.listType === 1){
+                    if(this.form.listType === '1'){
                         if(this.coverImgOne.length>0){
                             // this.pitchImgArr.splice(index, 1);
                             this.coverImgOne.splice(this.coverImgIndex,1,data);
                         }else{
                             this.coverImgOne.push(data);
                         }                  
-                    }else if(this.form.listType === 2){
+                    }else if(this.form.listType === '2'){
                         if(this.coverImgTrue.length>2){
                             // this.pitchImgArr.splice(index, 1);
                             this.coverImgTrue.splice(this.coverImgIndex,1,data);
