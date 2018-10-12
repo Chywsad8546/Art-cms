@@ -235,62 +235,64 @@
                                 }
                             }
                             if(this.$hasAuth('button_setIsTop')) {
-                                if (params.row.isTop == 0) {
-                                    guanliOpration.push(h(
-                                        'Button',
-                                        {
-                                            props: {
-                                                type: 'primary',
-                                                size: 'small'
-                                            },
-                                            style: {
-                                                marginRight: '5px'
-                                            },
-                                            on: {
-                                                click: () => {
-                                                    apiNewsManageme.setArticleIsTop({id: params.row.id}).then(response => {
-                                                        if (response.data.code == "success") {
-                                                            this.$Message.success('添加置顶成功');
+                                if (params.row.isPublish == 1){
+                                    if (params.row.isTop == 0) {
+                                        guanliOpration.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        apiNewsManageme.setArticleIsTop({id: params.row.id}).then(response => {
+                                                            if (response.data.code == "success") {
+                                                                this.$Message.success('添加置顶成功');
+                                                                this.init();
+                                                            }
+                                                        }).catch(error => {
+                                                            this.$Message.error(error.response.data.msg);
+                                                            //this.$Message.error(error.msg);
                                                             this.init();
-                                                        }
-                                                    }).catch(error => {
-                                                        this.$Message.error(error.response.data.msg);
-                                                        //this.$Message.error(error.msg);
-                                                        this.init();
-                                                    });
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        '置顶'
-                                    ));
-                                } else if (params.row.isTop == 1) {
-                                    guanliOpration.push(h(
-                                        'Button',
-                                        {
-                                            props: {
-                                                type: 'primary',
-                                                size: 'small'
                                             },
-                                            style: {
-                                                marginRight: '5px'
-                                            },
-                                            on: {
-                                                click: () => {
-                                                    apiNewsManageme.removeArticleIsTop({id: params.row.id}).then(response => {
-                                                        if (response.data.code == "success") {
-                                                            this.$Message.success('取消置顶成功');
+                                            '置顶'
+                                        ));
+                                    } else if (params.row.isTop == 1) {
+                                        guanliOpration.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        apiNewsManageme.removeArticleIsTop({id: params.row.id}).then(response => {
+                                                            if (response.data.code == "success") {
+                                                                this.$Message.success('取消置顶成功');
+                                                                this.init();
+                                                            }
+                                                        }).catch(error => {
+                                                            this.$Message.error(error.response.data.msg);
+                                                            console.log(error.response.data.msg);
                                                             this.init();
-                                                        }
-                                                    }).catch(error => {
-                                                        this.$Message.error(error.response.data.msg);
-                                                        console.log(error.response.data.msg);
-                                                        this.init();
-                                                    });
+                                                        });
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        '取消置顶'
-                                    ));
+                                            },
+                                            '取消置顶'
+                                        ));
+                                    }
                                 }
                             }
                             if(this.$hasAuth('button_removeArticle')) {
