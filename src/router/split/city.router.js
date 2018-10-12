@@ -413,7 +413,25 @@ export const appRouter = [
                 import('@/views/systemManage/sysManage/authorityManage.vue')
         }]
     },
-    //系统管理
+    //资讯管理
+    {
+        path: '/newsManage',
+        icon: 'social-buffer',
+        name: 'newsManage',
+        title: '资讯管理',
+        component: Main,
+        children: [{
+            path: 'newsManageList',
+            name: 'newsManageList',
+            title: '资讯列表',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/newsManage/newsManageList.vue')
+        }]
+    },
+    //字典管理
     {
         path: '/dictionary',
         icon: 'social-buffer',
