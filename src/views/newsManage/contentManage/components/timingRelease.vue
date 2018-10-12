@@ -1,9 +1,25 @@
 <template>
     <div>
-        <el-form ref="form" label-width="120px">
             <div class="articlezjcontentPopup">
                 <div class="timingclassfb">定时发表</div>
-                <el-form-item  label="请选择发表时间">
+                <!-- <FormItem label="请选择发表时间">
+                    <Select v-model="dateValue" style="width:200px" @change="dateEvent">
+                        <Option v-for="item in dateoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem> -->
+                <div style="padding-left:80px">
+                    请选择发表时间：
+                    <Select v-model="dateValue"  style="width:100px">
+                        <Option v-for="item in dateoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="timeValue" style="width:100px">
+                        <Option v-for="item in timeoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>时
+                    <Select v-model="branchValue"  style="width:100px">
+                        <Option v-for="item in branchoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>分
+                </div>
+                <!-- <el-form-item  label="请选择发表时间">
                     <el-select v-model="dateValue" style="width:150px;" @change="dateEvent" placeholder="请选择">
                         <el-option
                         v-for="item in dateoptions"
@@ -28,16 +44,15 @@
                         :value="item.value">
                         </el-option>
                     </el-select>分
-                </el-form-item>
+                </el-form-item> -->
                 <p>(只能选择2小时-7天范围内的时间)</p>    
                 <p>本文将于 {{stryear}} 年 {{dateExhibition}} {{timeValue > 9  ? timeValue : "0"+timeValue}}:{{branchValue > 9 ? branchValue : "0"+branchValue }} 发表  </p>                  
                 <div class="botton">
-                    <el-button type="primary" @click="confirmxz()">确定</el-button>
-                    <el-button @click="cancelFun()">取消</el-button>
+                    <Button type="primary" @click="confirmxz()">确定</Button>
+                    <Button @click="cancelFun()">取消</Button>
                 </div>
             </div>  
             <div class="articlezjPopupBack" @click="uploadImg"></div>
-        </el-form>
     </div>  
 </template>
 
@@ -53,8 +68,8 @@
                 timeoptions: [],
                 branchoptions: [],
                     dateValue: '',
-                    timeValue: "0",
-                    branchValue: "0",
+                    timeValue: 0,
+                    branchValue: 0,
                     dateExhibition: "0",
                     stryear: "",
                     dateArr: []

@@ -7,13 +7,13 @@
             </ul>
             
             <div class="popupUploadImg" v-if="uploadimgList.length<=0">
-                    <el-button type="primary" @click="uplaqloadImg">选择图片</el-button>
+                    <Button type="primary" @click="uplaqloadImg">选择图片</Button>
                     <p>支持绝大多数图片格式，单张图片最大支持5MB</p>
             </div>
         
             <div class="botton">
-                <el-button type="primary" @click="confirmxz()">确定</el-button>
-                <el-button @click="cancelFun()">取消</el-button>
+                <Button type="primary" @click="confirmxz()">确定</Button>
+                <Button @click="cancelFun()">取消</Button>
             </div>
         </div>  
         <Upload id="iviewUp" action="/cmsapi/sys/uploadImg" :on-success="successPreview" v-show="uploadFlag">
