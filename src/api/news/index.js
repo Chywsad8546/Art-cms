@@ -26,6 +26,4 @@ export default {
     editArticle(params) {
         return http.post('/cmsapi/article/editArticle', params);
     }
-
-     
 }

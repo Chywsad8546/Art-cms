@@ -2,11 +2,6 @@
     <div>
             <div class="articlezjcontentPopup">
                 <div class="timingclassfb">定时发表</div>
-                <!-- <FormItem label="请选择发表时间">
-                    <Select v-model="dateValue" style="width:200px" @change="dateEvent">
-                        <Option v-for="item in dateoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
-                </FormItem> -->
                 <div style="padding-left:80px">
                     请选择发表时间：
                     <Select v-model="dateValue"  style="width:100px">
@@ -19,32 +14,6 @@
                         <Option v-for="item in branchoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>分
                 </div>
-                <!-- <el-form-item  label="请选择发表时间">
-                    <el-select v-model="dateValue" style="width:150px;" @change="dateEvent" placeholder="请选择">
-                        <el-option
-                        v-for="item in dateoptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                    <el-select v-model="timeValue" style="width:60px;" placeholder="请选择">
-                        <el-option
-                        v-for="item in timeoptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>时
-                    <el-select v-model="branchValue" style="width:60px;" placeholder="请选择">
-                        <el-option 
-                        v-for="item in branchoptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>分
-                </el-form-item> -->
                 <p>(只能选择2小时-7天范围内的时间)</p>    
                 <p>本文将于 {{stryear}} 年 {{dateExhibition}} {{timeValue > 9  ? timeValue : "0"+timeValue}}:{{branchValue > 9 ? branchValue : "0"+branchValue }} 发表  </p>                  
                 <div class="botton">
@@ -84,7 +53,6 @@
             let strmyDate = this.dateArr[0].strmyDate;//日
             for(let i = 0;i < 7; i++){
                 this.dateoptions.push({"value":strMonth+"/"+(strmyDate+i),"label":strMonth+"月"+(strmyDate+i)+"日"});
-                console.log(i);
             }
             for(let k=0;k<24;k++){
                 this.timeoptions.push({"value":k,"label":k});
@@ -93,15 +61,11 @@
                 this.branchoptions.push({"value":j,"label":j});
             }
             this.dateValue = strMonth+"/"+strmyDate;
-           // console.log(strMonth+"/"+strmyDate);
             this.forArrFun(strMonth+"/"+strmyDate);
-           // this.strbranch = this.branchValue > 9 ? this.branchValue : "0"+this.branchValue
-           // this.timeValue = this.timeValue > 9 ? this.timeValue : "0"+this.timeValue;
         },
         methods: {
             confirmxz() {
                 let callBackTime = this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue);
-               // console.log(this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue));
                 this.$emit("confirm-event",callBackTime);
             },
             transformTime(time) {
@@ -117,11 +81,9 @@
             dateEvent(selVal) {
                 this.forArrFun(selVal);
             },
-            forArrFun(selVal) {
-                
+            forArrFun(selVal) {            
                 let self = this;
-                this.dateoptions.forEach(function(obj){ 
-                    console.log(obj.value == selVal);              
+                this.dateoptions.forEach(function(obj){             
                     if(obj.value == selVal){
                        self.dateExhibition = obj.label;
                     }
@@ -134,7 +96,6 @@
                 let strmyDate = myDate.getDate(); //获取当前日(1-31)
                 let arr = {"strYear":strYear,"strMonth":strMonth,"strmyDate":strmyDate};
                 this.dateArr.push(arr);
-                //console.log(this.dateArr);
             }
         }
     }

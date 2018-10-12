@@ -36,9 +36,6 @@
            // console.log(this.parentlabelMsg);
         },
         methods: {
-            getSrcList(val){
-                console.log(val);
-            },
             selectclLabel(obj) {
                 this.isshow = false;
                 this.labelArrList.push(obj.title);
@@ -58,7 +55,6 @@
             newsTagsList() {
                 api.newsTagsList().then(response => {
                     this.assnArr = response.data.data;
-                    console.log("response",response.data.data);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: "标签获取失败"

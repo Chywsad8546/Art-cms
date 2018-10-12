@@ -3,9 +3,6 @@
     <Form ref="formInline" :model="form" :rules="rules" :label-width="80">
     <div class="publictop">
         <div class="articleTitle">发表图集</div>
-        <!-- <div class="imagesBotton"  v-if="pitchImgArr.length<=0">
-            <el-button type="primary" @click="uploadImg">选择图片</el-button>
-        </div> -->
     <div>
         <FormItem label="标题">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
@@ -14,10 +11,7 @@
         <div 
             class="color-item" 
             v-for="ImgArr,index in pitchImgArr" v-dragging="{ item: ImgArr, list: pitchImgArr, group: 'ImgArr' }"
-            :key="ImgArr.img">
-            
-
-    
+            :key="ImgArr.img">  
                     <div class="gallery-img">
                         <img :src="ImgArr.img"/>
                     </div>                
@@ -79,46 +73,16 @@
         <FormItem label="作者" style="width:200px;">
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
-        <div class="acticleSubmit">
-            <Button type="primary" @click="releaseNews(1)">发布</Button>
-            <Button @click="timingSubRelease">定时发布</Button>
-            <Button @click="releaseNews(2)">存为草稿</Button>
-        </div>
+        <FormItem>
+            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
+            <Button @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+            <Button @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
+        </FormItem>
  </div> 
     </div>
 <!-- 上传图片组件 -->
     <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
-    <!-- <el-upload
-      id="iviewUp"
-      class="avatar-uploader"
-      :action= domain
-      list-type="picture-card"
-      :on-preview="handlePictureCardPreview"
-      :on-success="successPreview"
-      :on-remove="handleRemove" v-show="uploadFlag">
-    </el-upload>
-    <div class="articlecontentPopup" v-if="uploadimgFlag">
-        <ul class="uploadimg-list">
-            <li v-for="uploadimgLists in uploadimgList" :class="{checked:uploadimgLists.isActive}"><img @click="selectSort(uploadimgLists)" :src="uploadimgLists.url" /></li>
-            <li v-if="uploadimgList.length>0"><img @click="uplaqloadImg" src="./img/suoluetu.png" /></li>
-        </ul>
-        <div class="popupUploadImg" v-if="uploadimgList.length<=0">
-                <el-button type="primary" @click="uplaqloadImg">选择图片</el-button>
-                <p>支持绝大多数图片格式，单张图片最大支持5MB</p>
-        </div>
-       
-        <div class="botton">
-            <el-button type="primary" @click="confirmxz()">确定</el-button>
-            <el-button @click="cancelFun()">取消</el-button>
-        </div>
-    </div>
-    
-    <div class="articlePopupBack" @click="uploadImg" v-if="uploadimgFlag"></div> -->
-
-   <!-- <div class="el-message-box__wrapper">
-        <div class="uploadModal"></div>
-    </div> -->
 </Form>
 </div>
 </template>
@@ -156,6 +120,7 @@
                 vshowTimeSelect:false,
                 parentlabelMsg: [],
                 Lid: {},
+                isDisable: false,
                 form: {
                     title: '',
                     content: [],
@@ -197,18 +162,27 @@
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
-                    this.form.content = response.data.data.content;
-                    console.log(JSON.parse(response.data.data.content));
-                    this.pitchImgArr = JSON.parse(response.data.data.content);
-                    this.form.topic = response.data.data.topic;
-                    this.parentlabelMsg = response.data.data.tagsName;
+                    if(response.data.data.content){
+                        this.form.content = response.data.data.content;
+                        this.pitchImgArr = JSON.parse(response.data.data.content);
+                    }
+                    if(response.data.data.topic){
+                        this.form.topic = response.data.data.topic;
+                    }
+                    if(response.data.data.tagsName){
+                        this.parentlabelMsg = response.data.data.tagsName;
+                    }                 
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
                     if(this.form.listType === 1 || this.form.listType === '1'){
-                        this.coverImgOne = response.data.data.listImg;
+                        if(response.data.data.listImg){
+                            this.coverImgOne = response.data.data.listImg;
+                        }                    
                     }else if(this.form.listType === 2 || this.form.listType === '2'){
-                        this.coverImgTrue = response.data.data.listImg;
+                        if(response.data.data.listImg){
+                            this.coverImgTrue = response.data.data.listImg;
+                        }                    
                     }
                 })
             },
@@ -246,14 +220,12 @@
                 });
                 data.isActive = !data.isActive;
                 this.selectImgSrc = data.url;
-                console.log(this.selectImgSrc);
+
             },
             handleRemove(file, fileList) {
-                console.log(file, fileList);
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
-                console.log(this.dialogImageUrl);
                 this.dialogVisible = true;
             },
             successPreview(file) {
@@ -328,7 +300,6 @@
                 this.upState = 1;
                 this.imgIndex = index;
                 this.uplopopDisplay = !this.uplopopDisplay;
-                console.log(this.pitchImgArr);
             },
             confirmxz() {
                 if(this.selectImgSrc){
@@ -362,7 +333,6 @@
             newsChaneelList() {
                 api.newsChaneelList().then(response => {
                     this.chaneeljmList = response.data.data;
-                    console.log("response",response.data.data);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: "栏目获取失败"
@@ -394,6 +364,10 @@
                     });
                     return false;
                 }
+                this.isDisable = true
+                setTimeout(() => {
+                    this.isDisable = false
+                }, 1000)
                 this.form.isPublish = type;
 
                 if(this.form.listType === '1'){
@@ -414,9 +388,7 @@
                                 title: '',
                                 content: "修改成功"
                             });
-                            this.$router.push({
-                                name: "newsManageList"
-                            });
+                            this.setJumpFun();
                     }) 
                 }else{
                     api.addArticle(this.form).then(response => {
@@ -424,11 +396,16 @@
                                 title: '',
                                 content: "发布成功"
                             });
-                            this.$router.push({
-                                name: "newsManageList"
-                            });
+                            this.setJumpFun();
                     }) 
                 }            
+            },
+            setJumpFun(){
+                setTimeout(()=>{
+                    this.$router.push({
+                        name: "newsManageList"
+                    });
+                },1000);
             }
         },
         // created() {

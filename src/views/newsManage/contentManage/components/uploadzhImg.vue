@@ -67,12 +67,7 @@
             successPreview(file) {
                 let fileArr = {"url":file.data,"isActive":false};
                 this.uploadimgList.push(fileArr);
-                this.$emit("uploadSuccess-event",file);
-                // let selfQuill = this.$refs.myQuillEditor.quill;
-                // let length = selfQuill.getSelection().index;
-                // selfQuill.insertEmbed(length, 'image', file.data);
-                // // 调整光标到最后
-                // selfQuill.setSelection(length + 1)                
+                this.$emit("uploadSuccess-event",file);            
             },
             successPreviewTrue(file) {
                 let fileArr = {"url":file.data,"isActive":false};
@@ -85,7 +80,6 @@
                 });
                 data.isActive = !data.isActive;
                 this.selectImgSrc = data.url;
-                console.log(this.selectImgSrc);
             },
             uploadImg() {
                 this.$emit("backColor-event","");

@@ -2,17 +2,6 @@
 <div class="articleContainer">
     <div class="publictop">
         <div class="articleTitle">上传视频</div>
-        <!-- <div class="imagesBotton">
-           <Upload 
-                    :show-upload-list="false"
-                    :on-success="handleSuccess"
-                    :format="['mp4']"
-                    :on-format-error="handleFormatError"
-                    action="/cmsapi/sys/uploadVideo" 
-                    >
-                <i-button type="primary">上传视频</i-button>
-            </Upload>
-        </div> -->
     </div>
     <Form :model="form" :label-width="80">
         <FormItem label="标题">
@@ -63,25 +52,6 @@
         </FormItem>
         <FormItem label="标签">
           <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
-            <!-- <div class="labelreact">
-                <el-input style="width:200px"  placeholder="请输入2-6个字"></el-input>
-                <ul class="positrelater" style="display:none">
-                    <li>标签1</li>
-                    <li>标签2</li>
-                    <li>标签1</li>
-                    <li>标签2</li>
-                    <li>标签1</li>
-                    <li>标签2</li>
-                    <li>标签1</li>
-                    <li>标签2</li>
-                </ul>
-            </div>
-            <div class="selectLabel">
-                <ul>
-                    <li v-for="labelList in labelArrList"><div class="labelLi"><span class="className">{{labelList}}</span><span @click="" class="classClose">×</span></div></li>
-                   
-                </ul>
-            </div> -->
         </FormItem>
         <FormItem label="来源">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -90,9 +60,9 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="contentRelease(1)">发布</Button>
-            <Button @click="timingSubRelease">定时发布</Button>
-            <Button @click="contentRelease(2)">草稿箱</Button>
+            <Button type="primary" @click="contentRelease(1)" :disabled="isDisable">发布</Button>
+            <Button @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+            <Button @click="contentRelease(2)" :disabled="isDisable">草稿箱</Button>
         </FormItem>
     </Form>
     <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
@@ -137,7 +107,8 @@
                 chaneeljmList:[],
                 Lid: {},
                 parentlabelMsg: [],
-                loadingFlag: false
+                loadingFlag: false,
+                isDisable: false
             }
         },
         created() {
@@ -151,7 +122,6 @@
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
-                   // this.form.content = response.data.data.content;
                     let jsonContent = JSON.parse(response.data.data.content);
                     this.form.textarea = jsonContent.textarea;
                     this.$refs.videoCoverThum.src=response.data.data.listImg[0];
@@ -174,12 +144,6 @@
                     if(response.data.data.listImg){
                         this.form.listImg = response.data.data.listImg;
                     }
-                  //  this.pitchImgArr = JSON.parse(response.data.data.content);
-                  //  this.form.topic = response.data.data.topic;
-                 //   this.parentlabelMsg = response.data.data.tagsName;
-                 ///   this.form.source = response.data.data.source;
-                 //   this.form.author = response.data.data.author;
-                 //   this.form.listType = response.data.data.listType+'';
                 })
             },
             lanmuChange(ids){
@@ -202,7 +166,6 @@
             newsChaneelList() {
                 api.newsChaneelList().then(response => {
                     this.chaneeljmList = response.data.data;
-                    console.log("response",response.data.data);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: "栏目获取失败"
@@ -217,8 +180,6 @@
                     this.form.content.playURL = response.data.data.playURL;
                     this.form.content.size = response.data.data.size;
                     this.loadingFlag = false;
-                    // let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
-                    // this.form.content.push(arr);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: response.msg
@@ -265,42 +226,38 @@
                     });
                     return false;
                 }
+                this.isDisable = true
+                setTimeout(() => {
+                    this.isDisable = false
+                }, 1000)
                 this.form.content.textarea = this.form.textarea;
                 this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
-              //  this.form.listImg = this.coverImgOne;
-                // if(this.form.listType === 1){
-                //     this.form.listImg = this.coverImgOne;
-                // }else if(this.form.listType === 2){
-                //     this.form.listImg = this.coverImgTrue;
-                // }else{
-                //     this.form.listImg = [];
-                // }            
-                // for(let s = 0;s<this.form.topicName.length;s++){
-                //     console.log(this.form.topicName[s]);
-                // }
-              if(this.Lid.id != undefined){
-                    this.form.id = this.Lid.id;
-                    api.editArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "修改成功"
-                            });
-                            this.$router.push({
-                                name: "newsManageList"
-                            });
-                    }) 
-                }else{
-                    api.addArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "发布成功"
-                            });
-                            this.$router.push({
-                                name: "newsManageList"
-                            });
-                    }) 
-                }    
+                if(this.Lid.id != undefined){
+                        this.form.id = this.Lid.id;
+                        api.editArticle(this.form).then(response => {
+                                this.$Modal.success({
+                                    title: '',
+                                    content: "修改成功"
+                                });
+                                this.setJumpFun();
+                        }) 
+                    }else{
+                        api.addArticle(this.form).then(response => {
+                                this.$Modal.success({
+                                    title: '',
+                                    content: "发布成功"
+                                });
+                                this.setJumpFun();
+                        }) 
+                    }    
+            },
+            setJumpFun(){
+                setTimeout(()=>{
+                    this.$router.push({
+                        name: "newsManageList"
+                    });
+                },1000);
             },
             timingSubRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
