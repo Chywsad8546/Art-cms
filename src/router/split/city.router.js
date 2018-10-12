@@ -428,7 +428,21 @@ export const appRouter = [
             //     requireAuth: true
             // },
             component: () =>
-                import('@/views/newsManage/newsManageList.vue')
+                import('@/views/newsManage/newsManageList.vue'),
+            permissions: [
+                {
+                    name: 'button_newsmodify',
+                    title: '修改权限'
+                },
+                {
+                    name: 'button_setIsTop',
+                    title: '置顶权限'
+                },
+                {
+                    name: 'button_removeArticle',
+                    title: '撤稿权限'
+                },
+            ]
         }]
     },
     //字典管理

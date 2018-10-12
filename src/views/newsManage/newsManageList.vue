@@ -5,26 +5,50 @@
                 <p slot="title">标签列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="标签内容" prop="title">
-                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
+                        <FormItem label="编辑" prop="creator">
+                            <Select v-model="searchData.creator" style="width:140px" >
+                                <Option value="">全部</Option>
+                                <Option v-for="item in allAuthor" v-bind:value="item.id">{{item.userName}}</Option>
+                            </Select>
                         </FormItem>
-
-                        <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                        <Select v-model="searchData.businessCardAuth" style="width:140px">
+                        <FormItem label="开始时间"  prop="starTime">
+                            <DatePicker type="date" v-model="searchData.starTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        </FormItem>
+                        <FormItem label="结束时间"  prop="endTime">
+                            <DatePicker type="date" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        </FormItem>
+                        <FormItem label="类别筛选" prop="type">
+                            <Select v-model="searchData.type" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option value="0">图文</Option>
+                                <Option value="1">图集</Option>
+                                <Option value="2">横版视频</Option>
+                                <Option value="3">竖版视频</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="栏目筛选" prop="topic">
+                            <CheckboxGroup v-model="searchData.topic">
+                                <Checkbox  v-bind:label="item.id"  v-for="item in channelDatas"><span>{{item.title}}</span></Checkbox>
+                            </CheckboxGroup>
+                        </FormItem>
+                        <FormItem label="标签筛选" prop="tags">
+                            <Select v-model="searchData.tags" style="width:140px" >
+                                <Option value="">全部</Option>
+                                <Option v-for="item in tagDatas" v-bind:value="item.id">{{item.title}}</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="发布状态" prop="businessCardAuth">
+                                        <Select v-model="searchData.isPublish" style="width:140px">
                                             <Option value="">全部</Option>
-                                            <Option value="0">未认证</Option>
-                                            <Option value="1">认证中</Option>
-                                            <Option value="2">认证通过</Option>
-                                            <Option value="3">认证不通过</Option>
+                                            <Option value="0">待发布</Option>
+                                            <Option value="1">已发布</Option>
+                                            <Option value="2">已撤稿</Option>
+                                            <Option value="3">草稿</Option>
                                         </Select>
-                                    </FormItem>-->
+                                    </FormItem>
                         <FormItem>
-                            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
+                            <Button  type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
-                        </FormItem>
-
-                        <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
                         </FormItem>
                     </Form>
 
@@ -34,65 +58,13 @@
             </Card>
 
         </Col>
-
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
-            <Form  ref="addNewsChannelModal" :model="addNewsChannelModal" inline :label-width="120">
-                <FormItem label="栏目标题" prop="title">
-                    <Input v-model.trim="addNewsChannelModal.title" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="栏目内容" prop="desc">
-                    <Input v-model.trim="addNewsChannelModal.desc" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="icon名称" prop="title">
-                    <Input v-model.trim="addNewsChannelModal.icon" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="栏目icon" prop="icon">
-                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
-                        <Button type="ghost" icon="ios-cloud-upload-outline">上传icon</Button>
-                    </Upload>
-                </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
-            </Form>
-        </Modal>
-
-        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
-            <Form  ref="updateCahnnelValue" :model="updateCahnnelValue" inline :label-width="120">
-                <FormItem label="标签标题" prop="title">
-                    <input v-model.trim="updateCahnnelValue.id" hidden />
-                    <Input v-model.trim="updateCahnnelValue.title" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="标签内容" prop="title">
-                    <Input v-model.trim="updateCahnnelValue.desc" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="栏目icon" prop="icon">
-                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
-                        <Button type="ghost" icon="ios-cloud-upload-outline">上传icon</Button>
-                    </Upload>
-                </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
-            </Form>
-        </Modal>
     </Row>
 </template>
 <script>
     import api from '../../api/system/index.js';
-    import apiDictionary from '../../api/newsManageme/newsManageme.js';
+    import apiNewsManageme from '../../api/newsManageme/newsManageme.js';
+    import apiDictionary from '../../api/dictionary/channelDictionary.js';
+    import apiTagDictionary from '../../api/dictionary/tagDictionary.js';
     export default {
         data() {
             return {
@@ -192,83 +164,136 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
-                            var guanliOpration=[h(
-                                'Button',
-                                {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$router.push({
-                                                name: 'releaseArticle',
-                                                query: {newsId: params.row.id}
-                                            });
-                                        }
-                                    }
-                                },
-                                '修改'
-                            )];
-                            if(params.row.isTop == 0){
-                                guanliOpration.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                apiDictionary.setArticleIsTop({id:params.row.id}).then(response => {
-                                                    if (response.data.code == "success"){
-                                                        this.$Message.success('添加置顶成功');
-                                                        this.init();
-                                                    }
-                                                }).catch(error =>{
-                                                    console.log(error);
-                                                    //this.$Message.error(error.msg);
-                                                    this.init();
-                                                });
+                            var guanliOpration=[];
+                            if(this.$hasAuth('button_newsmodify')) {
+                                if (params.row.type == 0) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.$router.push({
+                                                        name: 'releaseArticle',
+                                                        query: {newsId: params.row.id}
+                                                    });
+                                                }
                                             }
-                                        }
-                                    },
-                                    '置顶'
-                                ));
-                            }else if (params.row.isTop == 1){
-                                guanliOpration.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
                                         },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                apiDictionary.removeArticleIsTop({id:params.row.id}).then(response => {
-                                                    if (response.data.code == "success"){
-                                                        this.$Message.success('取消置顶成功');
-                                                        this.init();
-                                                    }
-                                                }).catch(error =>{
-                                                    console.log(error);
-                                                    this.init();
-                                                });
+                                        '修改'
+                                    ));
+                                } else if (params.row.type == 1) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.$router.push({
+                                                        name: 'imageArticle',
+                                                        query: {newsId: params.row.id}
+                                                    });
+                                                }
                                             }
-                                        }
-                                    },
-                                    '取消置顶'
-                                ));
+                                        },
+                                        '修改'
+                                    ))
+                                } else {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.$router.push({
+                                                        name: 'videoArticle',
+                                                        query: {newsId: params.row.id}
+                                                    });
+                                                }
+                                            }
+                                        },
+                                        '修改'
+                                    ))
+                                }
                             }
+                            if(this.$hasAuth('button_setIsTop')) {
+                                if (params.row.isTop == 0) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    apiNewsManageme.setArticleIsTop({id: params.row.id}).then(response => {
+                                                        if (response.data.code == "success") {
+                                                            this.$Message.success('添加置顶成功');
+                                                            this.init();
+                                                        }
+                                                    }).catch(error => {
+                                                        this.$Message.error(error.response.data.msg);
+                                                        //this.$Message.error(error.msg);
+                                                        this.init();
+                                                    });
+                                                }
+                                            }
+                                        },
+                                        '置顶'
+                                    ));
+                                } else if (params.row.isTop == 1) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    apiNewsManageme.removeArticleIsTop({id: params.row.id}).then(response => {
+                                                        if (response.data.code == "success") {
+                                                            this.$Message.success('取消置顶成功');
+                                                            this.init();
+                                                        }
+                                                    }).catch(error => {
+                                                        this.$Message.error(error.response.data.msg);
+                                                        console.log(error.response.data.msg);
+                                                        this.init();
+                                                    });
+                                                }
+                                            }
+                                        },
+                                        '取消置顶'
+                                    ));
+                                }
+                            }
+                            if(this.$hasAuth('button_removeArticle')) {
                              if (params.row.isPublish != 2){
                                       guanliOpration.push(h(
                                           'Button',
@@ -282,7 +307,7 @@
                                               },
                                               on: {
                                                   click: () => {
-                                                      apiDictionary.removePublishArticle({id:params.row.id,isPublish:2}).then(response => {
+                                                      apiNewsManageme.removePublishArticle({id:params.row.id,isPublish:2}).then(response => {
                                                           if (response.data.code == "success"){
                                                               this.$Message.success('添加置顶成功');
                                                               this.init();
@@ -292,8 +317,9 @@
                                               }
                                           },
                                           '撤稿'
-                                      ))
+                                      ));
                              }
+                            }
                             return h('div',guanliOpration);
                         }
                     }
@@ -307,37 +333,27 @@
                 modal2: false,
                 isTrueAddTag:false,
                 modal_loading: false,
-                updateCahnnelValue:{
-                    title: '',
-                },
-                addNewsChannelModal:{
-                    title: '',
-                },
+                channelDatas:[],
+                tagDatas:[],
+                allAuthor:[]
             };
         },
         methods: {
             init(){
-                apiDictionary.getNewsManagemeList(this.searchData).then(response => {
+                apiNewsManageme.getAllAuthor().then(response =>{
+                    this.allAuthor = response.data.data
+                })
+                apiTagDictionary.getTagDictionaryList().then(response => {
+                    this.tagDatas = response.data.data
+                })
+                apiDictionary.getChannelDictionaryList().then(response => {
+                    this.channelDatas = response.data.data
+                })
+                apiNewsManageme.getNewsManagemeList(this.searchData).then(response => {
                     //console.log(response.data.data);
                     this.total=response.data.count;
                     this.data=response.data.data;
                     //console.log(response.data.data);
-                });
-            },
-            addNewsChannel(addChannelValue){
-                apiDictionary.addNewsChannelApi(addChannelValue).then(response => {
-                    if (response.data.data > 0){
-                        this.$Message.success('添加成功');
-                        this.init();
-                    }
-                });
-            },
-            updateChannel(updateCahnnelValue){
-                apiDictionary.updataNewsChannelApi(updateCahnnelValue).then(response => {
-                    if (response.data.data > 0){
-                        this.$Message.success('修改成功');
-                        this.init();
-                    }
                 });
             },
             handleSearch () {
@@ -348,11 +364,6 @@
                 this.$refs[name].resetFields();
                 this.searchData.pageNum = 1;
                 this.init();
-            },
-            getImgFileName(response, file, fileList){
-                console.log(response.data);
-                this.addNewsChannelModal.icon = response.data;
-                this.updateCahnnelValue.icon = response.data;
             },
             pageChange (page) {
                 this.searchData.pageNum = page;
