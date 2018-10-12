@@ -67,7 +67,7 @@
             // router权限保存
             saveAuthorityData () {
                 var authorityTreeData = this.$refs.authorityTree.getCheckedNodes();
-                //console.log(authorityTreeData)
+                console.log(authorityTreeData)
 
                 var saveAuthrityData = {
                     roleCode: this.roleKey,
@@ -306,7 +306,7 @@
                 }
 
                 // app路由数据
-                for (var j = 0; j < cityAppRouter.length; j++) {                  
+                for (var j = 0; j < cityAppRouter.length; j++) {
                     let level_1 = {title: '☰ ' + cityAppRouter[j].title, children: [],rule:3, name: cityAppRouter[j].name, checked: Util.oneOf(cityAppRouter.name, codesCity)};
 
                     if (typeof cityAppRouter[j].children !== 'undefined' && cityAppRouter[j].children.length > 0) {
@@ -321,6 +321,9 @@
                             }
                             for(let thirdI = 0;thirdI<level_3arr.length;thirdI++){
                                 let level_3 = level_3arr[thirdI];
+                                if (!level_3.titleName){
+                                    level_3.titleName = level_3.title;
+                                }
                                 level_2.children.push({title: '♜'+level_3.title,submitData:'y', rule:3, name: level_3.name, checked: Util.oneOf(level_3.name, codesCity),titleName:level_3.titleName});
                             }
                             level_1.children.push(level_2);
