@@ -7,14 +7,16 @@
         <FormItem label="标题">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
-        <quill-editor v-model="form.content"
-                ref="myQuillEditor" 
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @change="onEditorChange($event)"
-                >
-        </quill-editor>
+        <FormItem label="内容">
+            <quill-editor v-model="form.content"
+                    ref="myQuillEditor" 
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)"
+                    @focus="onEditorFocus($event)"
+                    @change="onEditorChange($event)"
+                    >
+            </quill-editor>
+        </FormItem>
         <FormItem label="封面">
             <div class="grid-content bg-purple-light">
                 <RadioGroup v-model="form.listType">
@@ -81,20 +83,15 @@
     import labelList from './components/labelLiat.vue';
     import uploadzhImg from './components/uploadzhImg.vue';
     const toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['blockquote', 'code-block'],
-        [{'header': 1}, {'header': 2}],               // custom button values
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
-        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+        ['code-block'],
+        [{'list': 'bullet'}],
         [{'direction': 'rtl'}],                         // text direction
         [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
         [{'header': [1, 2, 3, 4, 5, 6, false]}],
         [{'color': []}, {'background': []}],          // dropdown with defaults from theme
         [{'font': []}],
         [{'align': []}],
-        ['link', 'image', 'video'],
-        ['clean']                                      // remove formatting button
+        ['link', 'image']                                  // remove formatting button
     ]
     export default {
         name: 'articleAdd',
@@ -190,7 +187,6 @@
                         }
                     });
                 });
-                console.log(this.form.topic,this.form.topicName)
             },
             // 上传文件到七牛云
             upqiniu (req) {
@@ -330,7 +326,6 @@
                 this.uploadimgFlag = !this.uploadimgFlag;
             },
             confirmParEvent(data) {//弹框确定事件
-                console.log(data);
                 this.uplopopDisplay = !this.uplopopDisplay;
                 if(this.form.listType === '1'){
                     if(this.coverImgOne.length>0){

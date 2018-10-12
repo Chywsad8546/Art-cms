@@ -15,20 +15,20 @@
             class="color-item" 
             v-for="ImgArr,index in pitchImgArr" v-dragging="{ item: ImgArr, list: pitchImgArr, group: 'ImgArr' }"
             :key="ImgArr.img">
-            <el-row>
-                <el-col :span="4">
+            
+
+    
                     <div class="gallery-img">
                         <img :src="ImgArr.img"/>
                     </div>                
-                    </el-col>
-                <el-col :span="16"> 
-                    <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />             
-                </el-col>
-                <el-col :span="4" class="imglistleft">
-                    <Button type="primary" @click="editUpimg(index)">换图</Button>
-                    <Button  @click="removeImg(index)">删除</Button>              
-                </el-col>
-            </el-row>
+                    <div class="areainput">
+                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />             
+                    </div>
+                    <div class="czCon">
+                        <Button type="primary" @click="editUpimg(index)">换图</Button>
+                        <Button  @click="removeImg(index)">删除</Button>  
+                        <Button >拖动排序</Button>             
+                    </div>
         </div>
         </div>
         <div class="imagesBotton">
@@ -66,8 +66,8 @@
             </div>
         </FormItem>
         <FormItem label="栏目">
-            <CheckboxGroup v-model="form.topicName">
-                <Checkbox v-for="list,index in chaneeljmList" :label="list.title"></Checkbox>
+            <CheckboxGroup v-model="form.topic" @on-change="lanmuChange">
+                <Checkbox v-for="list,index in chaneeljmList" :label="list.id">{{list.title}}</Checkbox>
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
@@ -80,9 +80,9 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <div class="acticleSubmit">
-            <el-button type="primary" @click="releaseNews(1)">发表</el-button>
-            <el-button @click="timingSubRelease">定时发布</el-button>
-            <el-button @click="releaseNews(2)">存为草稿</el-button>
+            <Button type="primary" @click="releaseNews(1)">发布</Button>
+            <Button @click="timingSubRelease">定时发布</Button>
+            <Button @click="releaseNews(2)">存为草稿</Button>
         </div>
  </div> 
     </div>
@@ -188,6 +188,16 @@
         },
         computed: {},
         methods: {
+            lanmuChange(ids){
+                this.form.topicName=[];
+                ids.forEach(id => {
+                    this.chaneeljmList.forEach(item=>{
+                        if(item.id==id){
+                            this.form.topicName.push(item.title);
+                        }
+                    });
+                });
+            },
             // 验证文件合法性
             beforeUpload (file) {
                 const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
@@ -428,11 +438,29 @@
     height: 78px;
     text-align: center;
     margin: 0 auto;
+    float: left;
+    margin-right: 10px;
     overflow: hidden;
 }
 .gallery-img img{
     width: 100%;
     height: 100%;
+}
+.areainput {
+    width: 60%;
+    overflow: hidden;
+    float: left;
+    margin-right: 10px;
+}
+.czCon {
+    width: 24%;
+    float: left;
+    padding-top: 20px;
+    overflow: hidden;
+}
+.color-list {
+    width: 100%;
+    overflow: hidden;
 }
 .imagesBotton {
     width: 100%;
@@ -576,9 +604,6 @@
 .el-radio-group {
   line-height: 50px;
 }
-.ql-toolbar.ql-snow {
-        border: 0px solid #FFFFFF;
-}
 .syl-editor-input .editor-title {
     border: 0;
     width: 100%;
@@ -617,14 +642,11 @@
     height: 178px;
     display: block;
   }
-
-  .ql-container.ql-snow {
-      border: 0px;
-  }
   .color-item{
     border:1px solid #f1f1f1;
     padding:10px 5px;
     margin:5px 0;
     border-radius: 4px;
+    overflow: hidden;
   }
 </style>
