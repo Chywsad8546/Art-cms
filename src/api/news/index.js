@@ -17,5 +17,15 @@ export default {
     },
     newsTagsList(params) {
         return http.post('/cmsapi/newsTagDictionary/newsTagsList', params);
+    },
+    getNewsDetail(params) {
+        return http.get('/cmsapi/article/getNewsDetail', {
+            params: params
+        });
+    },
+    editArticle(params) {
+        return http.post('/cmsapi/article/editArticle', params);
     }
+
+     
 }

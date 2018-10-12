@@ -71,7 +71,7 @@
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
-            <labelList @labelArr-event="callBacklabelFun"></labelList>
+            <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
         </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -154,9 +154,11 @@
                 coverImgTrue: [],
                 chaneeljmList: [],
                 vshowTimeSelect:false,
+                parentlabelMsg: [],
+                Lid: {},
                 form: {
                     title: '',
-                    content: '',
+                    content: [],
                     isPublish: 1,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿)
                     listType: '1',//封面样式(0:大标题,1:单图,2:多图,3:视频)
                     source: '', //文章来源
@@ -185,9 +187,31 @@
         },
         created() {
             this.newsChaneelList();
+            this.Lid.id = this.$route.query.newsId;
+            if(this.Lid.id != undefined){
+                this.getNewsDetail();
+            }
         },
         computed: {},
         methods: {
+            getNewsDetail() {
+                api.getNewsDetail(this.Lid).then(response => {
+                    this.form.title = response.data.data.title;
+                    this.form.content = response.data.data.content;
+                    console.log(JSON.parse(response.data.data.content));
+                    this.pitchImgArr = JSON.parse(response.data.data.content);
+                    this.form.topic = response.data.data.topic;
+                    this.parentlabelMsg = response.data.data.tagsName;
+                    this.form.source = response.data.data.source;
+                    this.form.author = response.data.data.author;
+                    this.form.listType = response.data.data.listType+'';
+                    if(this.form.listType === 1 || this.form.listType === '1'){
+                        this.coverImgOne = response.data.data.listImg;
+                    }else if(this.form.listType === 2 || this.form.listType === '2'){
+                        this.coverImgTrue = response.data.data.listImg;
+                    }
+                })
+            },
             lanmuChange(ids){
                 this.form.topicName=[];
                 ids.forEach(id => {
@@ -372,9 +396,9 @@
                 }
                 this.form.isPublish = type;
 
-                if(this.form.listType === 1){
+                if(this.form.listType === '1'){
                     this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === 2){
+                }else if(this.form.listType === '2'){
                     this.form.listImg = this.coverImgTrue;
                 }else{
                     this.form.listImg = [];
@@ -382,19 +406,29 @@
                 // for(let s = 0;s<this.form.topicName.length;s++){
                 //     console.log(this.form.topicName[s]);
                 // }
-                api.addArticle(this.form).then(response => {
-                        this.$Modal.success({
-                            title: '',
-                            content: "发布成功"
-                        });
-                        this.$router.push({
-                            name: "contentmanage"
-                        });
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: "发布失败"
-                    });
-                })               
+
+               if(this.Lid.id != undefined){
+                    this.form.id = this.Lid.id;
+                    api.editArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "修改成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }else{
+                    api.addArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "发布成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }            
             }
         },
         // created() {

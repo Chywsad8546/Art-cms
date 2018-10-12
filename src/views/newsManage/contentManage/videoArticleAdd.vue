@@ -22,7 +22,15 @@
             <Input v-model="form.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
         </FormItem>
         <FormItem label="视频">
-                <div class="fmslt">
+                <Row v-if="loadingFlag">
+                    <Col class="demo-spin-col" span="8">
+                        <Spin fix>
+                            <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+                            <div>Loading</div>
+                        </Spin>
+                    </Col>
+                </Row>
+                <div class="fmslt" v-show="loadingFlag===false">
                     <Upload 
                             :show-upload-list="false"
                             :on-success="handleSuccess"
@@ -54,7 +62,7 @@
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
-          <labelList @labelArr-event="callBacklabelFun"></labelList>
+          <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
             <!-- <div class="labelreact">
                 <el-input style="width:200px"  placeholder="请输入2-6个字"></el-input>
                 <ul class="positrelater" style="display:none">
@@ -126,13 +134,54 @@
                 columnList: [],
                 vshowTimeSelect: false,
                 labelArrList:[],
-                chaneeljmList:[]
+                chaneeljmList:[],
+                Lid: {},
+                parentlabelMsg: [],
+                loadingFlag: false
             }
         },
         created() {
             this.newsChaneelList();
+            this.Lid.id = this.$route.query.newsId;
+            if(this.Lid.id != undefined){
+                this.getNewsDetail();
+            }
         },
         methods: {
+            getNewsDetail() {
+                api.getNewsDetail(this.Lid).then(response => {
+                    this.form.title = response.data.data.title;
+                   // this.form.content = response.data.data.content;
+                    let jsonContent = JSON.parse(response.data.data.content);
+                    this.form.textarea = jsonContent.textarea;
+                    this.$refs.videoCoverThum.src=response.data.data.listImg[0];
+                    this.$refs.videoUpDom.src = jsonContent.coverURL;
+                    this.form.content.duration = jsonContent.duration;
+                    this.form.content.coverURL = jsonContent.coverURL;
+                    this.form.content.playURL = jsonContent.playURL;
+                    this.form.content.size = jsonContent.size;
+                    this.parentlabelMsg = response.data.data.tagsName;
+                    this.form.type = response.data.data.type+'';
+                    if(response.data.data.topic){
+                        this.form.topic = response.data.data.topic;
+                    }
+                    if(response.data.data.source){
+                        this.form.source = response.data.data.source;
+                    }                   
+                    if(response.data.data.author){
+                       this.form.author = response.data.data.author;                       
+                    }
+                    if(response.data.data.listImg){
+                        this.form.listImg = response.data.data.listImg;
+                    }
+                  //  this.pitchImgArr = JSON.parse(response.data.data.content);
+                  //  this.form.topic = response.data.data.topic;
+                 //   this.parentlabelMsg = response.data.data.tagsName;
+                 ///   this.form.source = response.data.data.source;
+                 //   this.form.author = response.data.data.author;
+                 //   this.form.listType = response.data.data.listType+'';
+                })
+            },
             lanmuChange(ids){
                 this.form.topicName=[];
                 ids.forEach(id => {
@@ -145,6 +194,7 @@
             },
             handleSuccess (res, file) {
                 let self = this;
+                this.loadingFlag = true;
                 setTimeout(function(){
                     self.apiuploadVideo(file.response.data);
                 }, 6000);
@@ -166,6 +216,7 @@
                     this.form.content.coverURL = response.data.data.coverURL;
                     this.form.content.playURL = response.data.data.playURL;
                     this.form.content.size = response.data.data.size;
+                    this.loadingFlag = false;
                     // let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
                     // this.form.content.push(arr);
                 }).catch(response => {
@@ -217,29 +268,39 @@
                 this.form.content.textarea = this.form.textarea;
                 this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
-                if(this.form.listType === 1){
-                    this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === 2){
-                    this.form.listImg = this.coverImgTrue;
-                }else{
-                    this.form.listImg = [];
-                }            
+              //  this.form.listImg = this.coverImgOne;
+                // if(this.form.listType === 1){
+                //     this.form.listImg = this.coverImgOne;
+                // }else if(this.form.listType === 2){
+                //     this.form.listImg = this.coverImgTrue;
+                // }else{
+                //     this.form.listImg = [];
+                // }            
                 // for(let s = 0;s<this.form.topicName.length;s++){
                 //     console.log(this.form.topicName[s]);
                 // }
-                api.addArticle(this.form).then(response => {
-                        this.$Modal.success({
-                            title: '',
-                            content: "发布成功"
-                        });
-                        this.$router.push({
-                            name: "contentmanage"
-                        });
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: "发布失败"
-                    });
-                }) 
+              if(this.Lid.id != undefined){
+                    this.form.id = this.Lid.id;
+                    api.editArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "修改成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }else{
+                    api.addArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "发布成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }    
             },
             timingSubRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
@@ -247,7 +308,7 @@
             callBackTime(time) {
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
-                this.releaseNews(0);
+                this.contentRelease(0);
             },
             callBacklabelFun(data){
                 this.form.tagsName = data[0].arr1;
@@ -256,7 +317,7 @@
             callBackTime(time) {
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
-                this.releaseNews(0);
+                this.contentRelease(0);
             }
         }
     }
@@ -287,5 +348,18 @@
     height: 100px;
     line-height: 100px;
     text-align: center;
+}
+.demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+}
+.demo-spin-col{
+    height: 100px;
+    position: relative;
+    border: 1px solid #eee;
 }
 </style>
