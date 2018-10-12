@@ -22,7 +22,15 @@
             <Input v-model="form.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
         </FormItem>
         <FormItem label="视频">
-                <div class="fmslt">
+                <Row v-if="loadingFlag">
+                    <Col class="demo-spin-col" span="8">
+                        <Spin fix>
+                            <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+                            <div>Loading</div>
+                        </Spin>
+                    </Col>
+                </Row>
+                <div class="fmslt" v-show="loadingFlag===false">
                     <Upload 
                             :show-upload-list="false"
                             :on-success="handleSuccess"
@@ -128,7 +136,8 @@
                 labelArrList:[],
                 chaneeljmList:[],
                 Lid: {},
-                parentlabelMsg: []
+                parentlabelMsg: [],
+                loadingFlag: false
             }
         },
         created() {
@@ -185,6 +194,7 @@
             },
             handleSuccess (res, file) {
                 let self = this;
+                this.loadingFlag = true;
                 setTimeout(function(){
                     self.apiuploadVideo(file.response.data);
                 }, 6000);
@@ -206,6 +216,7 @@
                     this.form.content.coverURL = response.data.data.coverURL;
                     this.form.content.playURL = response.data.data.playURL;
                     this.form.content.size = response.data.data.size;
+                    this.loadingFlag = false;
                     // let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
                     // this.form.content.push(arr);
                 }).catch(response => {
@@ -297,7 +308,7 @@
             callBackTime(time) {
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
-                this.releaseNews(0);
+                this.contentRelease(0);
             },
             callBacklabelFun(data){
                 this.form.tagsName = data[0].arr1;
@@ -306,7 +317,7 @@
             callBackTime(time) {
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
-                this.releaseNews(0);
+                this.contentRelease(0);
             }
         }
     }
@@ -337,5 +348,18 @@
     height: 100px;
     line-height: 100px;
     text-align: center;
+}
+.demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+}
+.demo-spin-col{
+    height: 100px;
+    position: relative;
+    border: 1px solid #eee;
 }
 </style>
