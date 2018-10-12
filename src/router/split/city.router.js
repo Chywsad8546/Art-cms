@@ -279,7 +279,7 @@ export const appRouter = [
         {
             path: 'imageArticle',
             name: 'imageArticle',
-            title: '发表图文',
+            title: '发表图集',
             // meta: {
             //     keepalive: true
             // },

@@ -32,8 +32,8 @@
             <div class="grid-content bg-purple-light">
                 <RadioGroup v-model="form.listType">
                     <Radio label='1'>单图</Radio>
-                    <Radio label='2'>三图</Radio>
-                    <Radio label='0'>无</Radio>
+                    <!-- <Radio label='2'>三图</Radio>
+                    <Radio label='0'>无</Radio> -->
                 </RadioGroup>    
             </div>
             <div v-show="form.listType==='1'">
@@ -357,30 +357,37 @@
                     });
                     return false;
                 }
-                this.form.content = JSON.stringify(this.pitchImgArr);
-                if(this.form.content.length <= 0){
+                if(this.pitchImgArr.length <= 0){
                     this.$Notice.warning({
-                        title: "请输入图文"
+                        title: "请添加图片"
                     });
                     return false;
+                }
+               if(this.form.listType === '1' || this.form.listType === 1){
+                    if(this.coverImgOne.length<=0){
+                        this.$Notice.warning({
+                            title: "请上传封面"
+                        });
+                        return false;
+                    }
+                    this.form.listImg = this.coverImgOne;
+                }else if(this.form.listType === '2'|| this.form.listType === 2){
+                    if(this.coverImgTrue.length < 3){
+                        this.$Notice.warning({
+                            title: "请上传三封面"
+                        });
+                        return false;
+                    }
+                    this.form.listImg = this.coverImgTrue;
+                }else{
+                    this.form.listImg = [];
                 }
                 this.isDisable = true
                 setTimeout(() => {
                     this.isDisable = false
-                }, 1000)
+                }, 1000);
+                this.form.content = JSON.stringify(this.pitchImgArr);
                 this.form.isPublish = type;
-
-                if(this.form.listType === '1'){
-                    this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === '2'){
-                    this.form.listImg = this.coverImgTrue;
-                }else{
-                    this.form.listImg = [];
-                }            
-                // for(let s = 0;s<this.form.topicName.length;s++){
-                //     console.log(this.form.topicName[s]);
-                // }
-
                if(this.Lid.id != undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {

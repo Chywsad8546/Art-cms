@@ -315,6 +315,22 @@
                     });
                     return false;
                 }
+                if(this.form.listType === '1' || this.form.listType === 1){
+                    if(this.coverImgOne.length<=0){
+                        this.$Notice.warning({
+                            title: "请上传封面"
+                        });
+                        return false;
+                    }
+                }
+                if(this.form.listType === '2' || this.form.listType === 2){
+                    if(this.coverImgTrue.length<3){
+                        this.$Notice.warning({
+                            title: "请上传三张封面"
+                        });
+                        return false;
+                    }
+                }
                 this.isDisable = true
                 setTimeout(() => {
                     this.isDisable = false

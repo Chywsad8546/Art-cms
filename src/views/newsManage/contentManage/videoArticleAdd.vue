@@ -220,9 +220,15 @@
                     });
                     return false;
                 }
-                if(this.form.content.length===0){
+                if(JSON.stringify(this.form.content) == "{}"){
                     this.$Notice.warning({
                         title: "请上传视频"
+                    });
+                    return false;
+                }
+                if(this.form.listImg.length == 0){
+                    this.$Notice.warning({
+                        title: "请上传封面"
                     });
                     return false;
                 }
