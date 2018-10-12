@@ -156,7 +156,7 @@
                 vshowTimeSelect:false,
                 form: {
                     title: '',
-                    content: '',
+                    content: [],
                     isPublish: 1,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿)
                     listType: '1',//封面样式(0:大标题,1:单图,2:多图,3:视频)
                     source: '', //文章来源
@@ -372,9 +372,9 @@
                 }
                 this.form.isPublish = type;
 
-                if(this.form.listType === 1){
+                if(this.form.listType === '1'){
                     this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === 2){
+                }else if(this.form.listType === '2'){
                     this.form.listImg = this.coverImgTrue;
                 }else{
                     this.form.listImg = [];
