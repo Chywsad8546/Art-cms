@@ -33,7 +33,7 @@
                             >
                         
                         <img ref="videoUpDom" src="./img/suoluetu.png"/>
-                        <el-button type="primary">上传视频</el-button>
+                        <Button type="primary">上传视频</Button>
                     </Upload>
                 </div>
                 
@@ -41,7 +41,7 @@
         <FormItem label="封面">
                 <div class="fmslt">
                     <img ref="videoCoverThum" @click="fmImgSetupFun" src="./img/suoluetu.png"/>
-                    <el-button type="primary" @click="fmImgSetupFun">设置视频封面</el-button>
+                    <Button type="primary"  @click="fmImgSetupFun">设置视频封面</Button>
                 </div>
                 
         </FormItem>
