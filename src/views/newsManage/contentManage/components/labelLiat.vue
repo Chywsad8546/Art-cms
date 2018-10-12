@@ -19,9 +19,9 @@
 <script>
      import api from '../../../../api/news/index.js';
      export default {
-        props: {
-            
-        },
+        props: [
+            "parentlabelMsg"
+        ],
         data () {
             return {
                 labelArrList:[],
@@ -33,9 +33,12 @@
             }
         },
         created() {
-
+           // console.log(this.parentlabelMsg);
         },
         methods: {
+            getSrcList(val){
+                console.log(val);
+            },
             selectclLabel(obj) {
                 this.isshow = false;
                 this.labelArrList.push(obj.title);
@@ -71,7 +74,10 @@
                     this.isshow = true;
                     this.newsTagsList();
                 }
-            }
+            },
+            parentlabelMsg(curVal,oldVal){
+                this.labelArrList=curVal;
+            },
         }
     }
 </script>

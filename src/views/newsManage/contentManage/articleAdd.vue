@@ -25,7 +25,7 @@
                     <Radio label='0'>无</Radio>
                 </RadioGroup>     
             </div>
-            <div v-show="form.listType==='1'">
+            <div v-show="form.listType==='1' || form.listType===1">
                 <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
                     <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -33,7 +33,7 @@
                     <img @click="coverUpImg" src="./img/suoluetu.png"/>
                 </div>               
             </div>
-            <div v-show="form.listType==='2'">
+            <div v-show="form.listType==='2' || form.listType===2">
                 <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
                     <img @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
@@ -54,7 +54,7 @@
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
-            <labelList @labelArr-event="callBacklabelFun"></labelList>
+            <labelList ref="tabelArrList" @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
         </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -111,6 +111,8 @@
                 selectImgSrc: "",
                 columnList: [],
                 LabelList: [],
+                parentlabelMsg: [],
+                Lid: {},
                 uplopopDisplay: false,
                 // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
                 domain: '/cmsapi/sys/uploadImg',
@@ -172,6 +174,10 @@
         },
         created() {
             this.newsChaneelList();
+            this.Lid.id = this.$route.query.newsId;
+            if(this.Lid.id != undefined){
+                this.getNewsDetail();
+            }
         },
         watch: {
 
@@ -192,8 +198,22 @@
             upqiniu (req) {
                 this.uploadFun(req);
             },
-            ceshidem() {
-                console.log(1111);
+            getNewsDetail() {
+                api.getNewsDetail(this.Lid).then(response => {
+                    this.form.title = response.data.data.title;
+                    console.log(response.data.data.title);
+                    this.form.content = response.data.data.content;
+                    this.form.topic = response.data.data.topic;
+                    this.parentlabelMsg = response.data.data.tagsName;
+                    this.form.source = response.data.data.source;
+                    this.form.author = response.data.data.author;
+                    this.form.listType = response.data.data.listType+'';
+                    if(this.form.listType === 1 || this.form.listType === '1'){
+                        this.coverImgOne = response.data.data.listImg;
+                    }else if(this.form.listType === 2 || this.form.listType === '2'){
+                        this.coverImgTrue = response.data.data.listImg;
+                    }
+                })
             },
             callBacklabelFun(data){
                 this.form.tagsName = data[0].arr1;
@@ -327,14 +347,14 @@
             },
             confirmParEvent(data) {//弹框确定事件
                 this.uplopopDisplay = !this.uplopopDisplay;
-                if(this.form.listType === '1'){
+                if(this.form.listType === '1' || this.form.listType === 1){
                     if(this.coverImgOne.length>0){
                            // this.pitchImgArr.splice(index, 1);
                            this.coverImgOne.splice(this.coverImgIndex,1,data);
                     }else{
                         this.coverImgOne.push(data);
                     }                  
-                }else if(this.form.listType === '2'){
+                }else if(this.form.listType === '2' || this.form.listType === 2){
                     if(this.coverImgTrue.length>2){
                            // this.pitchImgArr.splice(index, 1);
                            this.coverImgTrue.splice(this.coverImgIndex,1,data);
@@ -372,9 +392,9 @@
                 }
                 this.form.isPublish = type;
 
-                if(this.form.listType === 1){
+                if(this.form.listType === '1' || this.form.listType === 1){
                     this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === 2){
+                }else if(this.form.listType === '2' || this.form.listType === 2){
                     this.form.listImg = this.coverImgTrue;
                 }else{
                     this.form.listImg = [];
@@ -382,19 +402,29 @@
                 // for(let s = 0;s<this.form.topicName.length;s++){
                 //     console.log(this.form.topicName[s]);
                 // }
-                api.addArticle(this.form).then(response => {
-                        this.$Modal.success({
-                            title: '',
-                            content: "发布成功"
-                        });
-                        this.$router.push({
-                            name: "contentmanage"
-                        });
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: "发布失败"
-                    });
-                })               
+                if(this.Lid.id != undefined){
+                    this.form.id = this.Lid.id;
+                    api.editArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "修改成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }else{
+                    api.addArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "发布成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }
+          
             }
         },
         // created() {

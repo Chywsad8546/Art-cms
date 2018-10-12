@@ -54,7 +54,7 @@
             </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
-          <labelList @labelArr-event="callBacklabelFun"></labelList>
+          <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
             <!-- <div class="labelreact">
                 <el-input style="width:200px"  placeholder="请输入2-6个字"></el-input>
                 <ul class="positrelater" style="display:none">
@@ -126,13 +126,53 @@
                 columnList: [],
                 vshowTimeSelect: false,
                 labelArrList:[],
-                chaneeljmList:[]
+                chaneeljmList:[],
+                Lid: {},
+                parentlabelMsg: []
             }
         },
         created() {
             this.newsChaneelList();
+            this.Lid.id = this.$route.query.newsId;
+            if(this.Lid.id != undefined){
+                this.getNewsDetail();
+            }
         },
         methods: {
+            getNewsDetail() {
+                api.getNewsDetail(this.Lid).then(response => {
+                    this.form.title = response.data.data.title;
+                   // this.form.content = response.data.data.content;
+                    let jsonContent = JSON.parse(response.data.data.content);
+                    this.form.textarea = jsonContent.textarea;
+                    this.$refs.videoCoverThum.src=response.data.data.listImg[0];
+                    this.$refs.videoUpDom.src = jsonContent.coverURL;
+                    this.form.content.duration = jsonContent.duration;
+                    this.form.content.coverURL = jsonContent.coverURL;
+                    this.form.content.playURL = jsonContent.playURL;
+                    this.form.content.size = jsonContent.size;
+                    this.parentlabelMsg = response.data.data.tagsName;
+                    this.form.type = response.data.data.type+'';
+                    if(response.data.data.topic){
+                        this.form.topic = response.data.data.topic;
+                    }
+                    if(response.data.data.source){
+                        this.form.source = response.data.data.source;
+                    }                   
+                    if(response.data.data.author){
+                       this.form.author = response.data.data.author;                       
+                    }
+                    if(response.data.data.listImg){
+                        this.form.listImg = response.data.data.listImg;
+                    }
+                  //  this.pitchImgArr = JSON.parse(response.data.data.content);
+                  //  this.form.topic = response.data.data.topic;
+                 //   this.parentlabelMsg = response.data.data.tagsName;
+                 ///   this.form.source = response.data.data.source;
+                 //   this.form.author = response.data.data.author;
+                 //   this.form.listType = response.data.data.listType+'';
+                })
+            },
             lanmuChange(ids){
                 this.form.topicName=[];
                 ids.forEach(id => {
@@ -217,29 +257,39 @@
                 this.form.content.textarea = this.form.textarea;
                 this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
-                if(this.form.listType === 1){
-                    this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === 2){
-                    this.form.listImg = this.coverImgTrue;
-                }else{
-                    this.form.listImg = [];
-                }            
+              //  this.form.listImg = this.coverImgOne;
+                // if(this.form.listType === 1){
+                //     this.form.listImg = this.coverImgOne;
+                // }else if(this.form.listType === 2){
+                //     this.form.listImg = this.coverImgTrue;
+                // }else{
+                //     this.form.listImg = [];
+                // }            
                 // for(let s = 0;s<this.form.topicName.length;s++){
                 //     console.log(this.form.topicName[s]);
                 // }
-                api.addArticle(this.form).then(response => {
-                        this.$Modal.success({
-                            title: '',
-                            content: "发布成功"
-                        });
-                        this.$router.push({
-                            name: "contentmanage"
-                        });
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: "发布失败"
-                    });
-                }) 
+              if(this.Lid.id != undefined){
+                    this.form.id = this.Lid.id;
+                    api.editArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "修改成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }else{
+                    api.addArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "发布成功"
+                            });
+                            this.$router.push({
+                                name: "newsManageList"
+                            });
+                    }) 
+                }    
             },
             timingSubRelease() {
                 this.vshowTimeSelect = !this.vshowTimeSelect;
