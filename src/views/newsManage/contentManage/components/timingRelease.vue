@@ -2,7 +2,7 @@
     <div>
             <div class="articlezjcontentPopup">
                 <div class="timingclassfb">定时发表</div>
-                <div style="padding-left:80px">
+                <div style="padding-left:80px;margin-top:20px;margin-bottom:20px;">
                     请选择发表时间：
                     <Select v-model="dateValue"  style="width:100px">
                         <Option v-for="item in dateoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -65,7 +65,7 @@
         },
         methods: {
             confirmxz() {
-                let callBackTime = this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue);
+                let callBackTime = this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
                 this.$emit("confirm-event",callBackTime);
             },
             transformTime(time) {
@@ -131,7 +131,8 @@
     text-align: center;
 }
 .articlezjcontentPopup p{
-    text-align: center
+    text-align: center;
+    line-height: 25px;
 }
 .uploadimg-list {
     overflow: hidden;
