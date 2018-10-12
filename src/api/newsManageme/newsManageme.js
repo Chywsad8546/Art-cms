@@ -16,4 +16,8 @@ export default {
     removePublishArticle(params) {
         return http.post('/cmsapi/article/publishArticle', params);
     },
+    //获取所有编辑姓名
+    getAllAuthor(){
+        return http.get('/cmsapi/news/creator');
+    }
 };
