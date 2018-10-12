@@ -296,16 +296,6 @@ export const appRouter = [
             component: () =>
                 import('@/views/newsManage/contentManage/videoArticleAdd.vue')
         },
-        {
-            path: 'contentmanage',
-            name: 'contentmanage',
-            title: '内容管理',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/newsManage/contentManage/contentmanageList.vue')
-        },
         // {
         //     path: 'chuangyibiao',
         //     name: 'chuangyibiao',
