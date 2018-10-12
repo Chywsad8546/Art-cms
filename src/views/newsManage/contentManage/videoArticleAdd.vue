@@ -18,7 +18,6 @@
         <FormItem label="标题">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
-
         <FormItem label="视频简介">
             <Input v-model="form.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
         </FormItem>
@@ -30,13 +29,11 @@
                             :format="['mp4']"
                             :on-format-error="handleFormatError"
                             action="/cmsapi/sys/uploadVideo" 
-                            >
-                        
+                            >                      
                         <img ref="videoUpDom" src="./img/suoluetu.png"/>
                         <Button type="primary">上传视频</Button>
                     </Upload>
-                </div>
-                
+                </div>             
         </FormItem>
         <FormItem label="封面">
                 <div class="fmslt">
@@ -46,17 +43,15 @@
                 
         </FormItem>
         <FormItem label="播放方式">
-            <el-radio-group v-model="form.type">
-                        <el-radio :label="2">横屏模式</el-radio>
-                        <el-radio :label="3">竖屏模式</el-radio>
-            </el-radio-group>
+            <RadioGroup v-model="form.type">
+                <Radio label="2">横屏模式</Radio>
+                <Radio label="3">竖屏模式</Radio>
+            </RadioGroup>
         </FormItem>
         <FormItem label="栏目">
-            <el-checkbox-group v-model="columnList">
-                <el-checkbox label="栏目1"></el-checkbox>
-                <el-checkbox label="栏目2"></el-checkbox>
-                <el-checkbox label="栏目3"></el-checkbox>
-            </el-checkbox-group>
+            <CheckboxGroup v-model="form.topic" @on-change="lanmuChange">
+                <Checkbox v-for="list,index in chaneeljmList" :label="list.id">{{list.title}}</Checkbox>
+            </CheckboxGroup>
         </FormItem>
         <FormItem label="标签">
           <labelList @labelArr-event="callBacklabelFun"></labelList>
@@ -87,9 +82,9 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <FormItem>
-            <el-button type="primary" @click="contentRelease(1)">发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px" @click="timingSubRelease">定时发布</el-button>
-            <el-button type="ghost" style="margin-left: 8px" @click="contentRelease(2)">草稿箱</el-button>
+            <Button type="primary" @click="contentRelease(1)">发布</Button>
+            <Button @click="timingSubRelease">定时发布</Button>
+            <Button @click="contentRelease(2)">草稿箱</Button>
         </FormItem>
     </Form>
     <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
@@ -112,7 +107,7 @@
             return {
                 form: {
                     title: '',
-                    content: [],
+                    content: {},
                     isPublish: 0,
                     listType: 3,
                     source: '',
@@ -120,7 +115,7 @@
                     tags: [],
                     tagsName: [],
                     listImg: [],
-                    type:2,
+                    type:'2',
                     author:'',
                     topic:[],
                     topicName:[],
@@ -130,21 +125,49 @@
                 imgVideoDom: "",
                 columnList: [],
                 vshowTimeSelect: false,
-                labelArrList:[]
+                labelArrList:[],
+                chaneeljmList:[]
             }
         },
+        created() {
+            this.newsChaneelList();
+        },
         methods: {
+            lanmuChange(ids){
+                this.form.topicName=[];
+                ids.forEach(id => {
+                    this.chaneeljmList.forEach(item=>{
+                        if(item.id==id){
+                            this.form.topicName.push(item.title);
+                        }
+                    });
+                });
+            },
             handleSuccess (res, file) {
                 let self = this;
                 setTimeout(function(){
                     self.apiuploadVideo(file.response.data);
                 }, 6000);
             },
+            newsChaneelList() {
+                api.newsChaneelList().then(response => {
+                    this.chaneeljmList = response.data.data;
+                    console.log("response",response.data.data);
+                }).catch(response => {
+                    this.$Notice.warning({
+                        title: "栏目获取失败"
+                    });
+                })                
+            },
             apiuploadVideo (pas){
                 api.uploadVideo(pas).then(response => {
                     this.$refs.videoUpDom.src = response.data.data.coverURL;
-                    let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
-                    this.form.content.push(arr);
+                    this.form.content.duration = response.data.data.duration;
+                    this.form.content.coverURL = response.data.data.coverURL;
+                    this.form.content.playURL = response.data.data.playURL;
+                    this.form.content.size = response.data.data.size;
+                    // let arr = {"duration":response.data.data.duration,"coverURL":response.data.data.coverURL,"playURL":response.data.data.playURL,"size":response.data.data.size};
+                    // this.form.content.push(arr);
                 }).catch(response => {
                     this.$Notice.warning({
                         title: response.msg
@@ -191,9 +214,9 @@
                     });
                     return false;
                 }
+                this.form.content.textarea = this.form.textarea;
                 this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
-
                 if(this.form.listType === 1){
                     this.form.listImg = this.coverImgOne;
                 }else if(this.form.listType === 2){
