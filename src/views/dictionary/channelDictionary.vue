@@ -5,6 +5,13 @@
                 <p slot="title">标签列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
+                        <FormItem label="标签分类" prop="type">
+                            <Select v-model="searchData.type" style="width:140px">
+                                <Option value="政策市场">政策市场</Option>
+                                <Option value="买房助手">买房助手</Option>
+                                <Option value="轻松一刻">轻松一刻</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem label="标签内容" prop="title">
                             <Input v-model.trim="searchData.title" style="width:140px"></Input>
                         </FormItem>
@@ -40,12 +47,18 @@
                 <FormItem label="栏目标题" prop="title">
                     <Input v-model.trim="addNewsChannelModal.title" style="width:140px"></Input>
                 </FormItem>
+                    <FormItem label="标签分类" prop="type">
+                        <Select v-model="addNewsChannelModal.type" style="width:140px">
+                            <Option value="政策市场">政策市场</Option>
+                            <Option value="买房助手">买房助手</Option>
+                            <Option value="轻松一刻">轻松一刻</Option>
+                        </Select>
+                    </FormItem>
+
                 <FormItem label="栏目内容" prop="desc">
                     <Input v-model.trim="addNewsChannelModal.desc" style="width:140px"></Input>
                 </FormItem>
-                <FormItem label="icon名称" prop="title">
-                   <Input v-model.trim="addNewsChannelModal.icon" style="width:140px"></Input>
-                </FormItem>
+                   <Input type="hidden" v-model.trim="addNewsChannelModal.icon" style="width:140px"></Input>
                 <FormItem label="栏目icon" prop="icon">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传icon</Button>
@@ -68,6 +81,13 @@
                 <FormItem label="标签标题" prop="title">
                     <input v-model.trim="updateCahnnelValue.id" hidden />
                     <Input v-model.trim="updateCahnnelValue.title" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="标签分类" prop="type">
+                    <Select v-model="updateCahnnelValue.type" style="width:140px">
+                        <Option value="政策市场">政策市场</Option>
+                        <Option value="买房助手">买房助手</Option>
+                        <Option value="轻松一刻">轻松一刻</Option>
+                    </Select>
                 </FormItem>
                 <FormItem label="标签内容" prop="title">
                     <Input v-model.trim="updateCahnnelValue.desc" style="width:140px"></Input>
@@ -102,6 +122,10 @@
                         key: 'id',
                         title: '标签Id',
                         width: 100
+                    },
+                    {
+                        key: 'type',
+                        title: '栏目分类',
                     },
                     {
                         key:'title',
@@ -169,6 +193,7 @@
                 ],
                 searchData: {
                     title: '',
+                    type:'',
                 },
                 data: [],
                 initTable: [],
@@ -178,9 +203,11 @@
                 modal_loading: false,
                 updateCahnnelValue:{
                     title: '',
+                    type:'',
                 },
                 addNewsChannelModal:{
                     title: '',
+                    type:'',
                 },
             };
         },
