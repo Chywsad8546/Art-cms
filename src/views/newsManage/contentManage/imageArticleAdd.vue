@@ -74,9 +74,10 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
-            <Button @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
+            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>        
+            <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+            <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
+            <Button v-show="isDraftFlag" @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
         </FormItem>
  </div> 
     </div>
@@ -84,6 +85,16 @@
     <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
 </Form>
+    <Modal v-model="qrcodeModal" width="240">
+        <p slot="header" style="color:#f60;text-align:center">
+            <span>扫描二维码预览</span>
+        </p>
+        <div style="text-align:center">
+            <p class="qrcode" id="qrcode"></p>
+        </div>
+        <div slot="footer">
+        </div>
+    </Modal>
 </div>
 </template>
 <script>
@@ -91,6 +102,7 @@
     import labelList from './components/labelLiat.vue';
     import uploadzhImg from './components/uploadzhImg.vue';
     import timingRelease from './components/timingRelease.vue';
+    import QRCode from 'qrcodejs2';
     export default {
         name: 'articleAdd',
         components: {
@@ -121,9 +133,13 @@
                 parentlabelMsg: [],
                 Lid: {},
                 isDisable: false,
+                qrcodeModal: false,
+                isTimeFlag:true,//控制定时发布按钮显示
+                isDraftFlag:true,//控制草稿按钮显示
                 form: {
                     title: '',
                     content: [],
+                    preContent:[],
                     isPublish: 1,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿)
                     listType: '1',//封面样式(0:大标题,1:单图,2:多图,3:视频)
                     source: '', //文章来源
@@ -171,7 +187,14 @@
                     }
                     if(response.data.data.tagsName){
                         this.parentlabelMsg = response.data.data.tagsName;
-                    }                 
+                    }
+                    let isPublish = response.data.data.isPublish;
+                    if(isPublish === 3 || isPublish === '3'){
+                        this.isTimeFlag = false;
+                    }
+                    if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
+                        this.isDraftFlag = false;
+                    }       
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
@@ -351,41 +374,11 @@
                 this.vshowTimeSelect = !this.vshowTimeSelect;
             },
             releaseNews(type) {//发布按钮
-                if (this.form.title==="") {
-                    this.$Notice.warning({
-                        title: "请输入标题"
-                    });
+                if(this.verification() == false){
                     return false;
                 }
-                if(this.pitchImgArr.length <= 0){
-                    this.$Notice.warning({
-                        title: "请添加图片"
-                    });
-                    return false;
-                }
-               if(this.form.listType === '1' || this.form.listType === 1){
-                    if(this.coverImgOne.length<=0){
-                        this.$Notice.warning({
-                            title: "请上传封面"
-                        });
-                        return false;
-                    }
-                    this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === '2'|| this.form.listType === 2){
-                    if(this.coverImgTrue.length < 3){
-                        this.$Notice.warning({
-                            title: "请上传三封面"
-                        });
-                        return false;
-                    }
-                    this.form.listImg = this.coverImgTrue;
-                }else{
-                    this.form.listImg = [];
-                }
-                this.isDisable = true
-                setTimeout(() => {
-                    this.isDisable = false
-                }, 1000);
+                this.typeKeepArr();
+                this.preventRepeatClick();
                 this.form.content = JSON.stringify(this.pitchImgArr);
                 this.form.isPublish = type;
                if(this.Lid.id != undefined){
@@ -407,12 +400,81 @@
                     }) 
                 }            
             },
+            preventRepeatClick() {
+                this.isDisable = true;
+                setTimeout(() => {
+                    this.isDisable = false
+                }, 1000)
+            },
+            typeKeepArr() {
+                if(this.form.listType === '1' || this.form.listType === 1){
+                    this.form.listImg = this.coverImgOne;
+                }else if(this.form.listType === '2' || this.form.listType === 2){
+                    this.form.listImg = this.coverImgTrue;
+                }else{
+                    this.form.listImg = [];
+                }
+            },
+            verification() {//验证方法
+                if (this.form.title==="") {
+                    this.$Notice.warning({
+                        title: "请输入标题"
+                    });
+                    return false;
+                }
+                if(this.pitchImgArr.length <= 0){
+                    this.$Notice.warning({
+                        title: "请添加图片"
+                    });
+                    return false;
+                }
+               if(this.form.listType === '1' || this.form.listType === 1){
+                    if(this.coverImgOne.length<=0){
+                        this.$Notice.warning({
+                            title: "请上传封面"
+                        });
+                        return false;
+                    }
+                }else if(this.form.listType === '2'|| this.form.listType === 2){
+                    if(this.coverImgTrue.length < 3){
+                        this.$Notice.warning({
+                            title: "请上传三封面"
+                        });
+                        return false;
+                    }
+                }
+            },
             setJumpFun(){
                 setTimeout(()=>{
                     this.$router.push({
                         name: "newsManageList"
                     });
                 },1000);
+            },
+            previewFun() {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                this.form.content = JSON.stringify(this.pitchImgArr);
+                this.form.preContent = JSON.stringify(this.pitchImgArr);
+                api.addPreview(this.form).then(response => {
+                    this.form.id = response.data.data.id;
+                    this.qrcodeModal = !this.qrcodeModal;
+                    document.getElementById("qrcode").innerHTML = "";
+                    this.qrcode();
+                });
+            },
+            qrcode () {
+                let qrcode = new QRCode('qrcode', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: 'http://appdev.toutiaofangchan.com/#/look/news' // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         },
         // created() {
@@ -425,7 +487,7 @@
                 console.log(value.item)
                 console.log(value.list)
                 console.log(value.group)
-            })
+            });
         }
     };
 </script>
@@ -463,6 +525,11 @@
 .gallery-img img{
     width: 100%;
     height: 100%;
+}
+.qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
 }
 .areainput {
     width: 60%;

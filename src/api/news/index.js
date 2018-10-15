@@ -25,5 +25,8 @@ export default {
     },
     editArticle(params) {
         return http.post('/cmsapi/article/editArticle', params);
+    },
+    addPreview(params) {
+        return http.post('/cmsapi/article/addPreview', params);
     }
 }
