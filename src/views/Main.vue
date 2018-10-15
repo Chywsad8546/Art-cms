@@ -25,32 +25,6 @@
                     </Button>
                 </div>
 
-                <div class="header-middle-con">
-                    <div class="main-breadcrumb">
-                        <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-                    </div>
-                    <div style="padding-bottom:10px;position:absolute;right:100px;bottom:0px">{{ salerPhone }}&nbsp;&nbsp;客服专线：010-56028711</div>
-                </div>
-
-                <div class="header-middle-con" v-if="qufencity==1">
-                    <div class="main-breadcrumb">
-                        <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-                    </div>
-                    <div style="padding-bottom:10px;position:absolute;right:0;bottom:0px">
-                        <Dropdown transfer @on-click="updateLoginCity">
-                            <a href="javascript:void(0)">
-                                {{city}}
-                                <Icon type="arrow-down-b"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem name="北京">北京</DropdownItem>
-                                <DropdownItem name="上海">上海</DropdownItem>
-                                <DropdownItem name="天津">天津</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                </div>
-
                 <div class="header-middle-con" v-if="qufencity==2">
                     <div class="main-breadcrumb">
                         <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
@@ -177,19 +151,6 @@
                 // this.checkTag(this.$route.name);
                 this.$store.commit("setMessageCount", 32);
             },
-            updateLoginCity(name) {
-                this.city = name;
-                if (name === "北京") {
-                    this.cityId = 12;
-                } else if (name === "上海") {
-                    this.cityId = 13;
-                } else if (name === "天津") {
-                    this.cityId = 14;
-                }
-                api.updateLoginCityChange({"cityId": this.cityId}).then(response => {
-                    location.reload();
-                });
-            },
             toggleClick() {
                 this.shrink = !this.shrink;
             },
@@ -232,15 +193,6 @@
             handleSubmenuChange(val) {
                 // console.log(val)
             },
-            loadCity(cityid) {
-                if (cityid === 12) {
-                    this.city = "北京";
-                } else if (cityid === 13) {
-                    this.city = "上海";
-                } else if (cityid === 14) {
-                    this.city = "天津";
-                }
-            },
             beforePush(name) {
                 return true;
             },
@@ -263,7 +215,6 @@
             this.init();
         },
         created() {
-            this.loadCity(this.cityId);
             this.qufencity = configConst.qufencity;
             // 显示打开的页面的列表
             // this.$store.commit('setOpenedList');

@@ -267,6 +267,29 @@ export const appRouter = [
         title: '新闻管理',
         component: Main,
         children: [{
+                path: 'newsManageList',
+                name: 'newsManageList',
+                title: '资讯列表',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/newsManage/newsManageList.vue'),
+                permissions: [
+                    {
+                        name: 'button_newsmodify',
+                        title: '修改权限'
+                    },
+                    {
+                        name: 'button_setIsTop',
+                        title: '置顶权限'
+                    },
+                    {
+                        name: 'button_removeArticle',
+                        title: '撤稿权限'
+                    },
+                ]
+            },{
             path: 'releaseArticle',
             name: 'releaseArticle',
             title: '发表文章',
@@ -401,38 +424,6 @@ export const appRouter = [
             // },
             component: () =>
                 import('@/views/systemManage/sysManage/authorityManage.vue')
-        }]
-    },
-    //资讯管理
-    {
-        path: '/newsManage',
-        icon: 'social-buffer',
-        name: 'newsManage',
-        title: '资讯管理',
-        component: Main,
-        children: [{
-            path: 'newsManageList',
-            name: 'newsManageList',
-            title: '资讯列表',
-            // meta: {
-            //     requireAuth: true
-            // },
-            component: () =>
-                import('@/views/newsManage/newsManageList.vue'),
-            permissions: [
-                {
-                    name: 'button_newsmodify',
-                    title: '修改权限'
-                },
-                {
-                    name: 'button_setIsTop',
-                    title: '置顶权限'
-                },
-                {
-                    name: 'button_removeArticle',
-                    title: '撤稿权限'
-                },
-            ]
         }]
     },
     //字典管理

@@ -2,7 +2,7 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">标签列表管理</p>
+                <p slot="title">资讯列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="编辑" prop="creator">
