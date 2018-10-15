@@ -270,9 +270,9 @@ export const appRouter = [
             path: 'releaseArticle',
             name: 'releaseArticle',
             title: '发表文章',
-            meta: {
-                keepalive: true
-            },
+            // meta: {
+            //     keepalive: true
+            // },
             component: () =>
                 import('@/views/newsManage/contentManage/articleAdd.vue')
         },
@@ -280,9 +280,9 @@ export const appRouter = [
             path: 'imageArticle',
             name: 'imageArticle',
             title: '发表图集',
-            meta: {
-                keepalive: true
-            },
+            // meta: {
+            //     keepalive: true
+            // },
             component: () =>
                 import('@/views/newsManage/contentManage/imageArticleAdd.vue')
         },
@@ -290,9 +290,9 @@ export const appRouter = [
             path: 'videoArticle',
             name: 'videoArticle',
             title: '发表视频',
-            meta: {
-                keepalive: true
-            },
+            // meta: {
+            //     keepalive: true
+            // },
             component: () =>
                 import('@/views/newsManage/contentManage/videoArticleAdd.vue')
         },
