@@ -12,6 +12,7 @@
                         :options="editorOption"
                         @blur="onEditorBlur($event)"
                         @focus="onEditorFocus($event)"
+                        @change="onEditorChange($event)"
                         >
                 </quill-editor>
             </FormItem>
@@ -62,14 +63,26 @@
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
-                <Button style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-                <Button style="margin-left: 8px" @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
+                <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+                <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
+                <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
     
         </div>
         <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
     </Form>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
+
+    <Modal v-model="qrcodeModal" width="240">
+        <p slot="header" style="color:#f60;text-align:center">
+            <span>扫描二维码预览</span>
+        </p>
+        <div style="text-align:center">
+            <p class="qrcode" id="qrcode"></p>
+        </div>
+        <div slot="footer">
+        </div>
+    </Modal>
     </div>
 </template>
 <script>
@@ -77,6 +90,7 @@
     import timingRelease from './components/timingRelease.vue';
     import labelList from './components/labelLiat.vue';
     import uploadzhImg from './components/uploadzhImg.vue';
+    import QRCode from 'qrcodejs2';
     import { setTimeout } from 'timers';
     const toolbarOptions = [
         ['code-block'],
@@ -108,7 +122,7 @@
                 columnList: [],
                 LabelList: [],
                 parentlabelMsg: [],
-                Lid: {},
+                Lid: {},//修改文章用到
                 uplopopDisplay: false,
                 uploadimgList: [],
                 vshowTimeSelect: false,
@@ -117,9 +131,13 @@
                 coverImgTrue: [],
                 chaneeljmList: [],
                 isDisable: false,
+                qrcodeModal: false,//二维码弹框
+                isTimeFlag:true,//控制定时发布按钮显示
+                isDraftFlag:true,//控制草稿按钮显示
                 form: {
                     title: '',
                     content: '',
+                    preContent:'',
                     isPublish: 0,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿) 是
                     listType:'0',//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
                     source:'',//文章来源 否
@@ -188,7 +206,14 @@
                     }
                     if(response.data.data.tagsName){
                         this.parentlabelMsg = response.data.data.tagsName;
-                    }                
+                    }              
+                    let isPublish = response.data.data.isPublish;
+                    if(isPublish === 3 || isPublish === '3'){
+                        this.isTimeFlag = false;
+                    }
+                    if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
+                        this.isDraftFlag = false;
+                    }
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
@@ -302,7 +327,51 @@
             cancleCallBack() {//弹框取消事件
                 this.uplopopDisplay = !this.uplopopDisplay;
             },
+            onEditorChange() {
+                this.form.preContent = this.form.content;           
+            },
             releaseNews(type) {//发布按钮
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
+                if(this.Lid.id != undefined){
+                    this.form.id = this.Lid.id;
+                    api.editArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "修改成功"
+                            });
+                            this.setJumpFun();
+                    }) 
+                }else{
+                    api.addArticle(this.form).then(response => {
+                            this.$Modal.success({
+                                title: '',
+                                content: "发布成功"
+                            });
+                            this.setJumpFun();
+                    })
+                }        
+            },
+            preventRepeatClick() {
+                this.isDisable = true;
+                setTimeout(() => {
+                    this.isDisable = false
+                }, 1000)
+            },
+            typeKeepArr() {
+                if(this.form.listType === '1' || this.form.listType === 1){
+                    this.form.listImg = this.coverImgOne;
+                }else if(this.form.listType === '2' || this.form.listType === 2){
+                    this.form.listImg = this.coverImgTrue;
+                }else{
+                    this.form.listImg = [];
+                }
+            },
+            verification() {//验证方法
                 if (this.form.title==="") {
                     this.$Notice.warning({
                         title: "请输入标题"
@@ -331,37 +400,6 @@
                         return false;
                     }
                 }
-                this.isDisable = true
-                setTimeout(() => {
-                    this.isDisable = false
-                }, 1000)
-                this.form.isPublish = type;
-
-                if(this.form.listType === '1' || this.form.listType === 1){
-                    this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === '2' || this.form.listType === 2){
-                    this.form.listImg = this.coverImgTrue;
-                }else{
-                    this.form.listImg = [];
-                }
-                if(this.Lid.id != undefined){
-                    this.form.id = this.Lid.id;
-                    api.editArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "修改成功"
-                            });
-                            this.setJumpFun();
-                    }) 
-                }else{
-                    api.addArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "发布成功"
-                            });
-                            this.setJumpFun();
-                    })
-                }        
             },
             setJumpFun(){
                 setTimeout(()=>{
@@ -369,10 +407,32 @@
                         name: "newsManageList"
                     });
                 },1000);
+            },
+            previewFun() {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                api.addPreview(this.form).then(response => {
+                    this.form.id = response.data.data.id;
+                    this.qrcodeModal = !this.qrcodeModal;
+                    document.getElementById("qrcode").innerHTML = "";
+                    this.qrcode();
+                });
+            },
+            qrcode () {
+                let qrcode = new QRCode('qrcode', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: 'http://appdev.toutiaofangchan.com/#/look/news' // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         },
         mounted() {
-
         }
     };
 </script>
@@ -398,6 +458,11 @@
     margin-right: 10px;
     margin-bottom: 10px;
     position: relative;
+}
+.qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
 }
 .uploadimg-list .checked:before {
     content: "";

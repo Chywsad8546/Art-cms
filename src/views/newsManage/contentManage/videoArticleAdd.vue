@@ -8,7 +8,7 @@
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
         <FormItem label="视频简介">
-            <Input v-model="form.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
+            <Input v-model="form.content.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
         </FormItem>
         <FormItem label="视频">
                 <Row v-if="loadingFlag">
@@ -61,12 +61,23 @@
         </FormItem>
         <FormItem>
             <Button type="primary" @click="contentRelease(1)" :disabled="isDisable">发布</Button>
-            <Button @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button @click="contentRelease(2)" :disabled="isDisable">草稿箱</Button>
+            <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+            <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
+            <Button v-show="isDraftFlag" @click="contentRelease(2)" :disabled="isDisable">草稿箱</Button>
         </FormItem>
     </Form>
     <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "timingSubRelease" v-show="vshowTimeSelect"></timingRelease>
+    <Modal v-model="qrcodeModal" width="240">
+        <p slot="header" style="color:#f60;text-align:center">
+            <span>扫描二维码预览</span>
+        </p>
+        <div style="text-align:center">
+            <p class="qrcode" id="qrcode"></p>
+        </div>
+        <div slot="footer">
+        </div>
+    </Modal>
 </div>
 </template>
 <script>
@@ -75,6 +86,7 @@
     import uploadzhImg from './components/uploadzhImg.vue';
     import timingRelease from './components/timingRelease.vue';
     import labelList from './components/labelLiat.vue';
+    import QRCode from 'qrcodejs2';
      export default {
         components: {
             uploadzhImg,
@@ -85,7 +97,8 @@
             return {
                 form: {
                     title: '',
-                    content: {},
+                    content: {textarea:''},
+                    preContent:{},
                     isPublish: 0,
                     listType: 3,
                     source: '',
@@ -108,7 +121,10 @@
                 Lid: {},
                 parentlabelMsg: [],
                 loadingFlag: false,
-                isDisable: false
+                isDisable: false,
+                qrcodeModal: false,
+                isTimeFlag:true,//控制定时发布按钮显示
+                isDraftFlag:true,//控制草稿按钮显示
             }
         },
         created() {
@@ -144,6 +160,13 @@
                     if(response.data.data.listImg){
                         this.form.listImg = response.data.data.listImg;
                     }
+                    let isPublish = response.data.data.isPublish;
+                    if(isPublish === 3 || isPublish === '3'){
+                        this.isTimeFlag = false;
+                    }
+                    if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
+                        this.isDraftFlag = false;
+                    }   
                 })
             },
             lanmuChange(ids){
@@ -214,29 +237,11 @@
                 this.uplopopDisplay = !this.uplopopDisplay;
             },
             contentRelease(type) {
-                if (this.form.title==="") {
-                    this.$Notice.warning({
-                        title: "请输入标题"
-                    });
+                if(this.verification() == false){
                     return false;
                 }
-                if(JSON.stringify(this.form.content) == "{}"){
-                    this.$Notice.warning({
-                        title: "请上传视频"
-                    });
-                    return false;
-                }
-                if(this.form.listImg.length == 0){
-                    this.$Notice.warning({
-                        title: "请上传封面"
-                    });
-                    return false;
-                }
-                this.isDisable = true
-                setTimeout(() => {
-                    this.isDisable = false
-                }, 1000)
-                this.form.content.textarea = this.form.textarea;
+                this.preventRepeatClick();
+               // this.form.content.textarea = this.form.textarea;
                 this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
                 if(this.Lid.id != undefined){
@@ -257,6 +262,32 @@
                                 this.setJumpFun();
                         }) 
                     }    
+            },
+            verification() {//验证方法
+                if (this.form.title==="") {
+                    this.$Notice.warning({
+                        title: "请输入标题"
+                    });
+                    return false;
+                }
+                if(JSON.stringify(this.form.content) == "{}"){
+                    this.$Notice.warning({
+                        title: "请上传视频"
+                    });
+                    return false;
+                }
+                if(this.form.listImg.length == 0){
+                    this.$Notice.warning({
+                        title: "请上传封面"
+                    });
+                    return false;
+                }
+            },
+            preventRepeatClick() {
+                this.isDisable = true;
+                setTimeout(() => {
+                    this.isDisable = false
+                }, 1000)
             },
             setJumpFun(){
                 setTimeout(()=>{
@@ -281,6 +312,46 @@
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
                 this.contentRelease(0);
+            },
+            previewFun() {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+             //   this.form.content.textarea = this.form.textarea;
+                this.form.content = JSON.stringify(this.form.content);
+                this.form.preContent = this.form.content;
+                api.addPreview(this.form).then(response => {
+                    this.form.content = JSON.parse(this.form.content);
+                    this.form.id = response.data.data.id;
+                    this.qrcodeModal = !this.qrcodeModal;
+                    let pre = response.data.data.pre;
+                    let sign = response.data.data.sign;
+                    let id = response.data.data.id;
+                    let timestamp = response.data.data.id;
+                    let url = '';
+                    if(this.form.type === 2 || this.form.type === '2'){
+                        url = 'http://appdev.toutiaofangchan.com/#/look/hvideo?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    }else if(this.form.type === 3 || this.form.type === '3'){
+                        url = 'http://appdev.toutiaofangchan.com/#/look/vvideo?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    }else{
+                        this.$Notice.warning({
+                            title: "请选择播放模式"
+                        });
+                    }
+                    document.getElementById("qrcode").innerHTML = "";
+                    this.qrcode(url);
+                });
+            },
+            qrcode (url) {
+                let qrcode = new QRCode('qrcode', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: url // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         }
     }
@@ -300,6 +371,11 @@
     overflow: hidden;
     position: relative;
     padding-bottom: 20px;
+}
+.qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
 }
 .articleTitle {
     height: 50px;

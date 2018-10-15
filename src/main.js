@@ -7,17 +7,17 @@ import store from './store';
 import App from './app.vue';
 import '@/locale';
 import 'iview/dist/styles/iview.css';
-import VueQuillEditor from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
+import VueQuillEditor from 'vue-quill-editor';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
 import VueI18n from 'vue-i18n';
 import agentplugin from '@/libs/agentplugin';
 import apibase from '@/api/api.base';
 import domain from '../build/configdir/domain/domain';
 import valid from '@/libs/valid.js';
-import VueDND from 'awe-dnd'
-import '@/styles/fonts/iconfont.js'
+import VueDND from 'awe-dnd';
+import '@/styles/fonts/iconfont.js';
 
 
 Vue.use(VueI18n);
