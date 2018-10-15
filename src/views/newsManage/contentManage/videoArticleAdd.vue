@@ -184,7 +184,7 @@
                 this.loadingFlag = true;
                 setTimeout(function(){
                     self.apiuploadVideo(file.response.data);
-                }, 6000);
+                }, 3000);
             },
             newsChaneelList() {
                 api.newsChaneelList().then(response => {
@@ -196,17 +196,22 @@
                 })                
             },
             apiuploadVideo (pas){
-                api.uploadVideo(pas).then(response => {
+                api.uploadVideo(pas).then(response => {                  
+                    var arr = Object.keys(response.data.data);
+                    if(arr.length==0){
+                        let _self = this;
+                        setTimeout(function(){
+                            console.log(11111);
+                            _self.apiuploadVideo(pas);
+                        }, 3000);
+                        return false;
+                    }
                     this.$refs.videoUpDom.src = response.data.data.coverURL;
                     this.form.content.duration = response.data.data.duration;
                     this.form.content.coverURL = response.data.data.coverURL;
                     this.form.content.playURL = response.data.data.playURL;
                     this.form.content.size = response.data.data.size;
                     this.loadingFlag = false;
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: response.msg
-                    });
                 })
             },
             handleFormatError (file) {
