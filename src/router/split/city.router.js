@@ -408,30 +408,12 @@ export const appRouter = [
         //     // },
         ]
     },
-    //系统管理
-    {
-        path: '/systemManage',
-        icon: 'social-buffer',
-        name: 'sysManage',
-        title: '系统管理',
-        component: Main,
-        children: [{
-            path: 'authorityManage',
-            name: 'authorityManage',
-            title: '权限管理',
-            // meta: {
-            //     requireAuth: true
-            // },
-            component: () =>
-                import('@/views/systemManage/sysManage/authorityManage.vue')
-        }]
-    },
     //字典管理
     {
         path: '/dictionary',
         icon: 'social-buffer',
         name: 'dictionary',
-        title: '字典',
+        title: '字典管理',
         component: Main,
         children: [{
             path: 'channelDictionary',
@@ -453,6 +435,24 @@ export const appRouter = [
                 import('@/views/dictionary/tagDictionary.vue')
         }
         ]
+    },
+    //系统管理
+    {
+        path: '/systemManage',
+        icon: 'social-buffer',
+        name: 'sysManage',
+        title: '系统管理',
+        component: Main,
+        children: [{
+            path: 'authorityManage',
+            name: 'authorityManage',
+            title: '权限管理',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/systemManage/sysManage/authorityManage.vue')
+        }]
     }
     // {
     //     path: '/cityManageSystem',    5
