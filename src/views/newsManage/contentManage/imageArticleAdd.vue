@@ -477,15 +477,20 @@
                 api.addPreview(this.form).then(response => {
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
+                    let pre = response.data.data.pre;
+                    let sign = response.data.data.sign;
+                    let id = response.data.data.id;
+                    let timestamp = response.data.data.timestamp;
+                    let url = 'http://appdev.toutiaofangchan.com/#/look/images?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     document.getElementById("qrcode").innerHTML = "";
-                    this.qrcode();
+                    this.qrcode(url);
                 });
             },
-            qrcode () {
+            qrcode (url) {
                 let qrcode = new QRCode('qrcode', {
                     width: 200,
                     height: 200, // 高度
-                    text: 'http://appdev.toutiaofangchan.com/#/look/news' // 二维码内容
+                    text: url // 二维码内容
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
