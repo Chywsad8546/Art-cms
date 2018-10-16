@@ -34,7 +34,7 @@
                             <Button type="primary" @click="isTrueAddTag = true">添加</Button>
                         </FormItem>
                     </Form>-->
-
+                    <Button type="primary" @click="isTrueAddTag = true">添加</Button>
                     <Table border :columns="columns" :data="data"></Table>
                     <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
                 </Row>
@@ -176,7 +176,7 @@
                                                 this.updateCahnnelValue.userPwd = params.row.userPwd;
 
                                                 //弹窗弹出
-                                               // i.modal2 = true;
+                                                i.modal2 = true;
                                             }
                                         }
                                     },
@@ -219,7 +219,7 @@
                 });
             },
             updateChannel(updateCahnnelValue){
-                apiDictionary.updataNewsChannelApi(updateCahnnelValue).then(response => {
+                api.addUser(updateCahnnelValue).then(response => {
                     if (response.data.data > 0){
                         this.$Message.success('修改成功');
                         this.init();

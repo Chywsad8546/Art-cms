@@ -26,6 +26,14 @@
                                 <Option value="3">竖版视频</Option>
                             </Select>
                         </FormItem>
+                        <FormItem label="级别筛选" prop="type">
+                            <Select v-model="searchData.recommendLevel" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option value="1">一级</Option>
+                                <Option value="2">二级</Option>
+                                <Option value="3">三级</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem label="栏目筛选" prop="topic">
                             <CheckboxGroup v-model="searchData.topic">
                                 <Checkbox  v-bind:label="item.id"  v-for="item in channelDatas"><span>{{item.title}}</span></Checkbox>
@@ -78,6 +86,25 @@
                     {
                         key: 'title',
                         title: '标题'
+                    },
+                    {
+                        title: '级别',
+                        render: (h, params) => {
+                            var type = params.row.recommendLevel;
+                            if (type == 1){
+                                return h('div', [
+                                    "一级"
+                                ]);
+                            }else  if (type == 2){
+                                return h('div', [
+                                    "二级"
+                                ]);
+                            }else  if (type == 3){
+                                return h('div', [
+                                    "三级"
+                                ]);
+                            }
+                        }
                     },
                     {
                         title: '标题',
