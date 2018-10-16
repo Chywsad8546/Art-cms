@@ -55,6 +55,13 @@
             <FormItem label="标签">
                 <labelList ref="tabelArrList" @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
             </FormItem>
+            <FormItem label="级别">
+                     <RadioGroup v-model="form.recommendLevel">
+                        <Radio label='1'>1级</Radio>
+                        <Radio label='2'>2级</Radio>
+                        <Radio label='3'>3级</Radio>
+                    </RadioGroup>                
+            </FormItem>
             <FormItem label="来源" style="width:200px;">
                 <Input v-model="form.source" placeholder="请输入来源"></Input>
             </FormItem>
@@ -97,7 +104,7 @@
         [{'list': 'bullet'}],
         [{'direction': 'rtl'}],                         // text direction
         [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+        [{'header': [1, false]}],
         [{'color': []}, {'background': []}],          // dropdown with defaults from theme
         [{'font': []}],
         [{'align': []}],
@@ -148,7 +155,8 @@
                     type: 0,    //内容类型(0:图文,1:图集,2:视频)
                     author: '',//作者
                     topic: [],   //栏目
-                    topicName:[] //栏目名称
+                    topicName:[], //栏目名称
+                    recommendLevel:''//1  2 3 级
                 },
                  rules: {
                         title: [
@@ -214,6 +222,7 @@
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
                         this.isDraftFlag = false;
                     }
+                    this.form.recommendLevel = response.data.data.recommendLevel+'';
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
@@ -400,6 +409,12 @@
                         return false;
                     }
                 }
+                if(this.form.recommendLevel == ''){
+                        this.$Notice.warning({
+                            title: "请选择图文级别"
+                        });
+                        return false;
+                }
             },
             setJumpFun(){
                 setTimeout(()=>{
@@ -417,15 +432,20 @@
                 api.addPreview(this.form).then(response => {
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
+                    let pre = response.data.data.pre;
+                    let sign = response.data.data.sign;
+                    let id = response.data.data.id;
+                    let timestamp = response.data.data.timestamp;
+                    let url = 'http://appdev.toutiaofangchan.com/#/look/news?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     document.getElementById("qrcode").innerHTML = "";
-                    this.qrcode();
+                    this.qrcode(url);
                 });
             },
-            qrcode () {
+            qrcode (url) {
                 let qrcode = new QRCode('qrcode', {
                     width: 200,
                     height: 200, // 高度
-                    text: 'http://appdev.toutiaofangchan.com/#/look/news' // 二维码内容
+                    text: url // 二维码内容
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
