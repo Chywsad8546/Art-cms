@@ -14,6 +14,37 @@
                         @focus="onEditorFocus($event)"
                         @change="onEditorChange($event)"
                         >
+                    <div id="toolbar" slot="toolbar">
+                        <span class="ql-formats" title="H1标题"><button type="button" class="ql-header" value="1"></button></span>
+                        <span class="ql-formats" title="加粗"><button type="button" class="ql-bold"></button></span>
+                        <span class="ql-formats" title="引用"><button type="button" class="ql-blockquote"></button></span>
+                        <span class="ql-formats" title="有序列表"><button type="button" class="ql-list" value="ordered"></button></span>
+                        <span class="ql-formats" title="无序列表"><button type="button" class="ql-list" value="bullet"></button></span>
+                        <span class="ql-formats" title="代码块"><button type="button" class="ql-code-block"></button></span>   
+                        <span class="ql-formats" title="上传图片">
+                            <button type="button" @click="imgClick">
+                                <svg viewBox="0 0 18 18">
+                                    <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
+                                    <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
+                                    <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+                                </svg>
+                            </button>
+                        </span>
+                        <span class="ql-formats" title="文章链接">
+                            <button type="button" class="ql-link"></button>
+                        </span>
+                        <span class="ql-formats" title="清楚格式">
+                            <button type="button" class="ql-clean"></button>
+                        </span>
+                        <span class="ql-formats" title="对齐方式">
+                            <select class="ql-align">
+                            <option selected="selected"></option>
+                            <option value="center"></option>
+                            <option value="right"></option>
+                            <option value="justify"></option>
+                        </select>
+                        </span>
+                    </div>
                 </quill-editor>
             </FormItem>
             <FormItem label="封面">
@@ -100,15 +131,19 @@
     import QRCode from 'qrcodejs2';
     import { setTimeout } from 'timers';
     const toolbarOptions = [
+        ['cssh1'],
         ['code-block'],
-        [{'list': 'bullet'}],
-        [{'direction': 'rtl'}],                         // text direction
-        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, false]}],
-        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
-        [{'font': []}],
+        ['bold'],
+        ['blockquote'],
+        [{'list': 'bullet'}],      
+        // [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        // [{'header': [1, false]}],
+        // [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        // [{'font': []}],
         [{'align': []}],
-        ['link', 'image']                                  // remove formatting button
+        ['link', 'image'],
+        ['clean'],
+                                          // remove formatting button
     ]
     export default {
         name: 'articleAdd',
@@ -167,18 +202,22 @@
                     placeholder: '',
                     theme: 'snow',  // or 'bubble'
                     modules: {
-                            toolbar: {
-                            container: toolbarOptions,  // 工具栏
-                            handlers: {
-                                'image': function (value) {
-                                if (value) {
-                                    document.querySelector('#iviewUp2 input').click();
-                                } else {
-                                    this.quill.format('image', false);
-                                }
-                                }
-                            }
-                            }
+                            toolbar: '#toolbar'
+                            // toolbar: {
+                            // container: toolbarOptions,  // 工具栏
+                            // handlers: {
+                            //     'image': function (value) {
+                            //         if (value) {
+                            //             document.querySelector('#iviewUp2 input').click();
+                            //         } else {
+                            //             this.quill.format('image', false);
+                            //         }
+                            //     },
+                            //     'cssh1': function (value) {
+                            //         console.log(11111);
+                            //     }
+                            // }
+                            // }
                     }
                 }
             };
@@ -204,6 +243,9 @@
                         }
                     });
                 });
+            },
+            imgClick() {
+                document.querySelector('#iviewUp2 input').click();
             },
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
@@ -292,6 +334,7 @@
             },
             successPreview(file) {               
                 let selfQuill = this.$refs.myQuillEditor.quill;
+                selfQuill.focus();
                 if(selfQuill){
                     let length = selfQuill.getSelection().index;
                     selfQuill.insertEmbed(length, 'image', file.data);
