@@ -2,33 +2,18 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">推送列表管理</p>
+                <p slot="title">开屏广告列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="消息标题" prop="title">
-                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
-                        </FormItem>
-
-                        <FormItem label="推送状态" prop="isPush">
-                            <Select v-model="searchData.isPush" style="width:140px">
-                                <Option value="0">未推送</Option>
-                                <Option value="1">推送成功</Option>
-                                <Option value="2">推送失败</Option>
-                            </Select>
-                        </FormItem>
-
-                        <FormItem label="政策类型" prop="pushType">
-                            <Select v-model="searchData.pushType" style="width:140px">
-                                <Option value="1">政策知识</Option>
-                                <Option value="2">热点新闻</Option>
-                            </Select>
+                        <FormItem label="广告标题" prop="titleName">
+                            <Input v-model.trim="searchData.titleName" style="width:140px"></Input>
                         </FormItem>
 
                         <FormItem label="开始时间"  prop="starTime">
-                            <DatePicker type="date" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                            <DatePicker type="date" v-model="searchData.startTime" format="yyyy-MM-dd" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem label="结束时间"  prop="endTime">
-                            <DatePicker type="date" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                            <DatePicker type="date" v-model="searchData.endTime" format="yyyy-MM-dd" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                         </FormItem>
 
                         <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
@@ -58,34 +43,56 @@
         </Col>
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
-            <Form  ref="addNewsChannelModal" :model="addNewsChannelModal" inline :label-width="120">
-                <FormItem label="消息标题" prop="title">
-                    <Input v-model.trim="addNewsChannelModal.title" style="width:140px"></Input>
+            <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
+                <FormItem label="广告标题" prop="adName">
+                    <Input v-model.trim="addNewsChannelModal.adName" style="width:140px"></Input>
                     <input v-model.trim="addNewsChannelModal.positionId" hidden></input>
                 </FormItem>
 
-                <FormItem label="推送时间"  prop="starTime">
-                    <DatePicker type="datetime" format="yyyy-MM-dd HH:mm:ss" v-model="addNewsChannelModal.pushTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                <FormItem label="开始时间"  prop="startTime">
+                    <DatePicker type="date" v-model="addNewsChannelModal.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                </FormItem>
+                <FormItem label="结束时间"  prop="endTime">
+                    <DatePicker type="date" v-model="addNewsChannelModal.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                 </FormItem>
 
-                <FormItem label="推送类型" prop="type">
-                    <Select v-model="addNewsChannelModal.pushType" style="width:140px">
-                        <Option value="1">政策知识</Option>
-                        <Option value="2">热点新闻</Option>
-                    </Select>
+
+                <FormItem label="跳转链接" prop="url">
+                    <Input v-model.trim="addNewsChannelModal.url" style="width:140px"></Input>
                 </FormItem>
 
-                <FormItem label="跳转链接" prop="desc">
-                    <Input v-model.trim="addNewsChannelModal.pushLink" style="width:140px"></Input>
+                <FormItem label="持续时间" prop="continued">
+                    <InputNumber  v-model.trim="addNewsChannelModal.continued" :min="1"></InputNumber>
                 </FormItem>
-                <FormItem label="图片" prop="icon">
-                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+
+                <FormItem label="640*1136" prop="imgurl_640">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName1"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
                 </FormItem>
 
-                <FormItem label="摘要" prop="desc">
-                    <Input type="textarea" v-model.trim="addNewsChannelModal.summary"></Input>
+                <FormItem label="1080*1920" prop="imgurl_1080">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName2"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="1242*2208" prop="imgurl_1242">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName3"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="480*800" prop="imgurl_480">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName4"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="750*1624" prop="imgurl_750">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName5"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
                 </FormItem>
                 <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
                                 <Select v-model="searchData.businessCardAuth" style="width:140px">
@@ -100,34 +107,48 @@
         </Modal>
 
         <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
-            <Form  ref="updateCahnnelValue" :model="updateCahnnelValue" inline :label-width="120">
-                <FormItem label="消息标题" prop="title">
-                    <Input v-model.trim="updateCahnnelValue.title" style="width:140px"></Input>
+            <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
+                <FormItem label="广告标题" prop="adName">
+                    <Input v-model.trim="updateCahnnelValue.adName" style="width:140px"></Input>
                     <input v-model.trim="updateCahnnelValue.positionId" hidden></input>
                 </FormItem>
 
-                <FormItem label="推送时间"  prop="pushTime">
-                    <DatePicker type="datetime" format="yyyy-MM-dd HH:mm:ss" v-model="updateCahnnelValue.pushTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                <FormItem label="跳转链接" prop="url">
+                    <Input v-model.trim="updateCahnnelValue.url" style="width:140px"></Input>
                 </FormItem>
 
-                <FormItem label="推送类型" prop="pushType">
-                    <Select v-model="updateCahnnelValue.pushType" style="width:140px">
-                        <Option :value=1>政策知识</Option>
-                        <Option :value=2>热点新闻</Option>
-                    </Select>
+                <FormItem label="持续时间" prop="continued">
+                    <InputNumber  v-model.trim="updateCahnnelValue.continued" :min="1"></InputNumber>
                 </FormItem>
 
-                <FormItem label="跳转链接" prop="desc">
-                    <Input v-model.trim="updateCahnnelValue.pushLink" style="width:140px"></Input>
-                </FormItem>
-                <FormItem label="图片" prop="icon">
-                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                <FormItem label="640*1136" prop="imgurl_640">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName1"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
                 </FormItem>
 
-                <FormItem label="摘要" prop="desc">
-                    <Input type="textarea" v-model.trim="updateCahnnelValue.summary"></Input>
+                <FormItem label="1080*1920" prop="imgurl_1080">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName2"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="1242*2208" prop="imgurl_1242">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName3"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="480*800" prop="imgurl_480">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName4"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="750*1624" prop="imgurl_750">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName5"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
                 </FormItem>
             </Form>
         </Modal>
@@ -136,7 +157,6 @@
 <script>
     import api from '../../api/advertisement/openScreen.js';
     import dutil from '../../libs/util.js';
-    import apiDictionary from '../../api/dictionary/channelDictionary.js';
     export default {
         data() {
             return {
@@ -148,62 +168,28 @@
                         width: 100
                     },
                     {
-                        key: 'title',
-                        title: '标题'
+                        key: 'adName',
+                        title: '广告标题'
                     },
                     {
-                        key: 'pushTime',
-                        title: '推送日期'
+                        key: 'startTime',
+                        title: '起始时间'
                     },
                     {
-                        key: 'createTime',
-                        title: '创建日期'
+                        key: 'endTime',
+                        title: '结束时间'
                     },
                     {
                         title: '推送装态',
-                        key: 'isPush',
+                        key: 'isDel',
                         width: 130,
                         align: 'center',
                         render: (h, params) => {
-                            if (params.row.isPush == 0){
-                                return h('div', ["未推送"]);
-                            }else if (params.row.isPush == 1) {
-                                return h('div', ["成功"]);
-                            }else if (params.row.isPush == 2){
-                                return h('div', ["失败"]);
+                            if (params.row.isDel == 0){
+                                return h('div', ["发布"]);
+                            }else if (params.row.isDel == 1) {
+                                return h('div', ["未发布"]);
                             }
-                        }
-                    },
-                    {
-                        title: '推送类型',
-                        key: 'pushType',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            if (params.row.pushType == 1) {
-                                return h('div', ["政策知识"]);
-                            }else if (params.row.pushType == 2){
-                                return h('div', ["热点新闻"]);
-                            }
-                        }
-                    },
-                    {
-                        title: '图标',
-                        key: 'action',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('img', {
-                                    attrs: {
-                                        src: this.$imgurl(params.row.imgurl,"")
-                                    },
-                                    style: {
-                                        width: '40px',
-                                        height: '40px'
-                                    }
-                                }),
-                            ]);
                         }
                     },
                     {
@@ -213,6 +199,12 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            var uisDel = 0;
+                            if (params.row.isDel == 0){
+                                uisDel = 1;
+                            } else if (params.row.isDel == 1){
+                                uisDel = 0;
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -226,16 +218,29 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue.title = params.row.title;
-                                                this.updateCahnnelValue.desc = params.row.desc;
+                                                this.updateIsPush(params.row.id, uisDel);
+                                                this.init();
+                                            }
+                                        }
+                                    },
+                                    '更改状态'
+                                ),
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
                                                 this.updateCahnnelValue.id = params.row.id;
-                                                this.updateCahnnelValue.pushTime = params.row.pushTime;
-                                                this.updateCahnnelValue.pushType = params.row.pushType;
-                                                this.updateCahnnelValue.imgurl = params.row.imgurl;
-                                                this.updateCahnnelValue.pushLink = params.row.pushLink;
-                                                this.updateCahnnelValue.summary = params.row.summary;
+                                                this.updateCahnnelValue.startTime = params.row.startTime;
+                                                this.updateCahnnelValue.endTime = params.row.endTime;
                                                 i.modal2 = true;
-
                                             }
                                         }
                                     },
@@ -253,14 +258,33 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
+                addNewsChannelModal: {
+                    positionId: 999,
+                    adName: '',
+                    startTime: '',
+                    endTime: '',
+                    imgurl_640: '',
+                    imgurl_1080: '',
+                    imgurl_1242: '',
+                    imgurl_480: '',
+                    imgurl_750: ''
+                },
                 updateCahnnelValue: {
                     title: '',
                     type: ''
                 },
-                addNewsChannelModal: {
-                    title: '',
-                    type: '',
-                    positionId:900
+                ruleValidate: {
+                    adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
+                    startTime: [{ required: true, type: 'date', message: '请输入开始时间', trigger: 'change' }],
+                    endTime: [{ required: true, type: 'date', message: '请输入结束时间', trigger: 'change' }],
+                    imgurl_640: [{ required: true, message: '请上传640尺寸图片!', trigger: 'change' }],
+                    imgurl_1080: [{ required: true, message: '请上传1080尺寸图片!', trigger: 'change' }],
+                    imgurl_1242: [{ required: true, message: '请上传1242尺寸图片!', trigger: 'change' }],
+                    imgurl_480: [{ required: true, message: '请上传480尺寸图片!', trigger: 'change' }],
+                    imgurl_750: [{ required: true, message: '请上传750尺寸图片!', trigger: 'change' }]
+                },
+                updateruleValidate: {
+                    adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
                 }
             };
         },
@@ -273,26 +297,63 @@
                     //console.log(response.data.data);
                 });
             },
-            addNewsChannel(addChannelValue){
-                addChannelValue.pushTime = dutil.dateformat(addChannelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
-                api.addAppPush(addChannelValue).then(response => {
-                    if (response.data.data > 0){
-                        this.$Message.success('添加成功');
+            updateIsPush(id, isDel) {
+                api.updateOpenScreen({id: id, isDel: isDel}).then(response => {
+                    if (response.data.data > 0) {
+                        this.$Message.success('更改成功！');
                         this.init();
                     }
                 });
             },
+            addNewsChannel(addChannelValue){
+                this.$refs['addNewsChannelModalform'].validate((valid) => {
+                    if (valid) {
+                        addChannelValue.startTime = dutil.dateformat(addChannelValue.startTime,'yyyy-MM-dd hh:mm:ss');
+                        addChannelValue.endTime = dutil.dateformat(addChannelValue.endTime,'yyyy-MM-dd hh:mm:ss');
+                        api.addOpenScreen(addChannelValue).then(response => {
+                            if (response.data.data > 0){
+                                this.$Message.success('添加成功');
+                                this.init();
+                            }else{
+                                this.$Message.error("已存在，添加失败");
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
+                    } else {
+                        this.$Message.error('表单验证失败!');
+                    }
+                });
+
+            },
             updateChannel(updateCahnnelValue){
-                updateCahnnelValue.pushTime = dutil.dateformat(updateCahnnelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
-                console.log(updateCahnnelValue)
-                api.updateAppPush(updateCahnnelValue).then(response => {
-                    if (response.data.data > 0){
-                        this.$Message.success('修改成功');
-                        this.init();
+                this.$refs['updateCahnnelValuefrom'].validate((valid) => {
+                    if (valid) {
+                        api.addOpenScreen(updateCahnnelValue).then(response => {
+                            if (response.data.data > 0){
+                                this.$Message.success('更改成功！');
+                                this.init();
+                            }else{
+                                this.$Message.error("更改失败！");
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
+                    } else {
+                        this.$Message.error('表单验证失败!');
                     }
                 });
             },
             handleSearch () {
+                if (typeof this.searchData.startTime != "string"){
+                    this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
+                }
+
+                if (typeof this.searchData.endTime != "string"){
+                    this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
+                }
                 this.searchData.page = 1;
                 this.init();
             },
@@ -301,11 +362,35 @@
                 this.searchData.page = 1;
                 this.init();
             },
-            getImgFileName(response, file, fileList){
+            getImgFileName1(response, file, fileList){
                 console.log(response.data);
                 this.$Message.success('上传成功');
-                this.addNewsChannelModal.imgurl = response.data;
-                this.updateCahnnelValue.imgurl = response.data;
+                this.addNewsChannelModal.imgurl_640 = response.data;
+                this.updateCahnnelValue.imgurl_640 = response.data;
+            },
+            getImgFileName2(response, file, fileList){
+                console.log(response.data);
+                this.$Message.success('上传成功');
+                this.addNewsChannelModal.imgurl_1080 = response.data;
+                this.updateCahnnelValue.imgurl_1080 = response.data;
+            },
+            getImgFileName3(response, file, fileList){
+                console.log(response.data);
+                this.$Message.success('上传成功');
+                this.addNewsChannelModal.imgurl_1242 = response.data;
+                this.updateCahnnelValue.imgurl_1242 = response.data;
+            },
+            getImgFileName4(response, file, fileList){
+                console.log(response.data);
+                this.$Message.success('上传成功');
+                this.addNewsChannelModal.imgurl_480 = response.data;
+                this.updateCahnnelValue.imgurl_480 = response.data;
+            },
+            getImgFileName5(response, file, fileList){
+                console.log(response.data);
+                this.$Message.success('上传成功');
+                this.addNewsChannelModal.imgurl_750 = response.data;
+                this.updateCahnnelValue.imgurl_750 = response.data;
             },
             pageChange (page) {
                 this.searchData.page = page;
