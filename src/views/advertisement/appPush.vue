@@ -134,7 +134,7 @@
     </Row>
 </template>
 <script>
-    import api from '../../api/appPush/pushApi.js';
+    import api from '../../api/advertisement/pushApi.js';
     import dutil from '../../libs/util.js';
     import apiDictionary from '../../api/dictionary/channelDictionary.js';
     export default {

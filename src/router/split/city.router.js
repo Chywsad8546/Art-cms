@@ -208,7 +208,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/appPush/appPush.vue')
+                import('@/views/advertisement/appPush.vue')
         },
         {
             path: 'manyplotad',
@@ -248,7 +248,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
+                import('@/views/advertisement/openScreen.vue')
         },
             // {
             //     path: 'ownerList',
