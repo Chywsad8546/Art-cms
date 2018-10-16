@@ -210,7 +210,6 @@
                     if(arr.length==0){
                         let _self = this;
                         setTimeout(function(){
-                            console.log(11111);
                             _self.apiuploadVideo(pas);
                         }, 3000);
                         return false;
