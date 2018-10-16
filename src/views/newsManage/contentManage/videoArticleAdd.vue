@@ -53,6 +53,13 @@
         <FormItem label="标签">
           <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
         </FormItem>
+        <FormItem label="级别">
+            <RadioGroup v-model="form.recommendLevel">
+                <Radio label='1'>1级</Radio>
+                <Radio label='2'>2级</Radio>
+                <Radio label='3'>3级</Radio>
+            </RadioGroup>                
+        </FormItem>
         <FormItem label="来源">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
         </FormItem>
@@ -110,7 +117,8 @@
                     author:'',
                     topic:[],
                     topicName:[],
-                    textarea:""
+                    textarea:"",
+                    recommendLevel:''
                 },
                 uplopopDisplay: false,
                 imgVideoDom: "",
@@ -148,6 +156,7 @@
                     this.form.content.size = jsonContent.size;
                     this.parentlabelMsg = response.data.data.tagsName;
                     this.form.type = response.data.data.type+'';
+                    this.form.recommendLevel = response.data.data.recommendLevel+'';
                     if(response.data.data.topic){
                         this.form.topic = response.data.data.topic;
                     }
@@ -287,6 +296,12 @@
                     });
                     return false;
                 }
+                if(this.form.recommendLevel == ''){
+                    this.$Notice.warning({
+                        title: "请选择视频级别"
+                    });
+                    return false;
+                }
             },
             preventRepeatClick() {
                 this.isDisable = true;
@@ -333,7 +348,7 @@
                     let pre = response.data.data.pre;
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
-                    let timestamp = response.data.data.id;
+                    let timestamp = response.data.data.timestamp;
                     let url = '';
                     if(this.form.type === 2 || this.form.type === '2'){
                         url = 'http://appdev.toutiaofangchan.com/#/look/hvideo?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;

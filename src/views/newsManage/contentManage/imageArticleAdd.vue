@@ -67,6 +67,13 @@
         <FormItem label="标签">
             <labelList @labelArr-event="callBacklabelFun" v-bind:parentlabelMsg="parentlabelMsg"></labelList>
         </FormItem>
+        <FormItem label="级别">
+            <RadioGroup v-model="form.recommendLevel">
+                <Radio label='1'>1级</Radio>
+                <Radio label='2'>2级</Radio>
+                <Radio label='3'>3级</Radio>
+            </RadioGroup>               
+        </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
         </FormItem>
@@ -150,7 +157,8 @@
                     type:1,//内容类型(0:图文,1:图集,2:视频)
                     author:'',
                     topic:[],
-                    topicName:[]  //栏目数组
+                    topicName:[],  //栏目数组
+                    recommendLevel:''//1 2 3 级
                 },
                 rules: {
                     name: [
@@ -194,7 +202,8 @@
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
                         this.isDraftFlag = false;
-                    }       
+                    }
+                    this.form.recommendLevel = response.data.data.recommendLevel+'';       
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
@@ -442,6 +451,12 @@
                         });
                         return false;
                     }
+                }
+                if(this.form.recommendLevel == ''){
+                        this.$Notice.warning({
+                            title: "请选择图集级别"
+                        });
+                        return false;
                 }
             },
             setJumpFun(){
