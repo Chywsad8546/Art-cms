@@ -292,12 +292,12 @@
                     let level_1 = {title: '⇢ ' + cityOther.children[i].title,rule:3,children:[], name: cityOther.children[i].name};
 
                     let level_1i = cityOther.children[i];
-                    let level_moren ={title: '♜ 打开菜单', rule:3,submitData:'y', name: cityOther.children[i].name, checked: Util.oneOf( cityOther.children[i].name, codesCity)};
+                    let level_moren ={title: '♜ 打开菜单', rule:3,submitData:'y', name: cityOther.children[i].name,titleName: cityOther.children[i].title, checked: Util.oneOf( cityOther.children[i].name, codesCity)};
                     level_1.children.push(level_moren);
                     if (typeof level_1i.permissions !== 'undefined' && level_1i.permissions.length > 0){
                         let level_2 = level_1i.permissions;
                         for (let l2 = 0; l2<level_2.length;l2++){
-                            let level_2Item ={title: '♜ ' + level_2[l2].title,submitData:'y', rule:3, name: level_2[l2].name, checked: Util.oneOf( level_2[l2].name, codesCity)};
+                            let level_2Item ={title: '♜ ' + level_2[l2].title,submitData:'y', rule:3, name: level_2[l2].name,titleName:level_2[l2].title, checked: Util.oneOf( level_2[l2].name, codesCity)};
                             level_1.children.push(level_2Item);
                         }
                     }

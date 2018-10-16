@@ -20,4 +20,12 @@ export default {
     saveMenuRoleAuth(params){
         return http.postJson('/cmsapi/sys/saveRoleAuth',params);
     },
+    //获取用户列表
+    getUserList(params){
+        return http.postJson('/cmsapi/userlist',params);
+    },
+    //添加用户
+    addUser(params){
+        return http.post('/cmsapi/user/increase',params);
+    }
 }

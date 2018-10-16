@@ -208,7 +208,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
+                import('@/views/appPush/appPush.vue')
         },
         {
             path: 'manyplotad',
@@ -452,7 +452,17 @@ export const appRouter = [
             // },
             component: () =>
                 import('@/views/systemManage/sysManage/authorityManage.vue')
-        }]
+        },
+            {
+                path: 'userManage',
+                name: 'userManage',
+                title: '用户管理',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/systemManage/sysManage/userManage.vue')
+            }]
     }
     // {
     //     path: '/cityManageSystem',    5
