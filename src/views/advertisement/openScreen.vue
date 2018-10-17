@@ -237,11 +237,18 @@
                                         },
                                         on: {
                                             click: () => {
+                                                var urlS = dutil.StringtoJson(params.row.adDetail);
+                                                console.log(urlS)
                                                 this.updateCahnnelValue.id = params.row.id;
                                                 this.updateCahnnelValue.startTime = params.row.startTime;
                                                 this.updateCahnnelValue.endTime = params.row.endTime;
                                                 this.updateCahnnelValue.url = params.row.url;
                                                 this.updateCahnnelValue.adName = params.row.adName;
+                                                this.updateCahnnelValue.imgurl_480 = urlS.imgurl_480;
+                                                this.updateCahnnelValue.imgurl_640 = urlS.imgurl_640;
+                                                this.updateCahnnelValue.imgurl_750 = urlS.imgurl_750;
+                                                this.updateCahnnelValue.imgurl_1080 = urlS.imgurl_1080;
+                                                this.updateCahnnelValue.imgurl_1242 = urlS.imgurl_1242;
                                                 i.modal2 = true;
                                             }
                                         }
@@ -262,28 +269,18 @@
                 modal_loading: false,
                 addNewsChannelModal: {
                     positionId: 999,
-                    adName: '',
-                    startTime: '',
-                    endTime: '',
-                    imgurl_640: '',
-                    imgurl_1080: '',
-                    imgurl_1242: '',
-                    imgurl_480: '',
-                    imgurl_750: ''
                 },
                 updateCahnnelValue: {
-                    title: '',
-                    type: ''
                 },
                 ruleValidate: {
                     adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
                     startTime: [{ required: true, type: 'date', message: '请输入开始时间', trigger: 'change' }],
                     endTime: [{ required: true, type: 'date', message: '请输入结束时间', trigger: 'change' }],
-                    imgurl_640: [{ required: true, message: '请上传640尺寸图片!', trigger: 'change' }],
+          /*          imgurl_640: [{ required: true, message: '请上传640尺寸图片!', trigger: 'change' }],
                     imgurl_1080: [{ required: true, message: '请上传1080尺寸图片!', trigger: 'change' }],
                     imgurl_1242: [{ required: true, message: '请上传1242尺寸图片!', trigger: 'change' }],
                     imgurl_480: [{ required: true, message: '请上传480尺寸图片!', trigger: 'change' }],
-                    imgurl_750: [{ required: true, message: '请上传750尺寸图片!', trigger: 'change' }]
+                    imgurl_750: [{ required: true, message: '请上传750尺寸图片!', trigger: 'change' }]*/
                 },
                 updateruleValidate: {
                     adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
