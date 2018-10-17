@@ -234,7 +234,6 @@
                                                 this.updateCahnnelValue.pushLink = params.row.pushLink;
                                                 this.updateCahnnelValue.summary = params.row.summary;
                                                 i.modal2 = true;
-
                                             }
                                         }
                                     },

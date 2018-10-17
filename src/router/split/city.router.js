@@ -288,6 +288,14 @@ export const appRouter = [
                         name: 'button_removeArticle',
                         title: '撤稿权限'
                     },
+                    {
+                        name: 'button_ArticleSetSort',
+                        title: '排序权限'
+                    },
+                    {
+                        name: 'button_pushArticle',
+                        title: '发布权限'
+                    },
                 ]
             },{
             path: 'releaseArticle',

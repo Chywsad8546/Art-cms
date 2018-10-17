@@ -19,5 +19,10 @@ export default {
     //获取所有编辑姓名
     getAllAuthor(){
         return http.get('/cmsapi/news/creator');
-    }
+    },
+    //排序
+    setSort(params){
+        return http.post('/cmsapi/article/articleSort',params);
+    },
+
 };
