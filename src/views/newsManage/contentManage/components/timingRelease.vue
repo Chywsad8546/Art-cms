@@ -41,7 +41,8 @@
                     branchValue: 0,
                     dateExhibition: "0",
                     stryear: "",
-                    dateArr: []
+                    dateArr: [],
+                    dateCallValue:''
             }
         },
         created() {
@@ -61,11 +62,12 @@
                 this.branchoptions.push({"value":j,"label":j});
             }
             this.dateValue = strMonth+"/"+strmyDate;
+            this.dateCallValue = strMonth+"-"+strmyDate;
             this.forArrFun(strMonth+"/"+strmyDate);
         },
         methods: {
             confirmxz() {
-                let callBackTime = this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
+                let callBackTime = this.stryear+"-"+this.dateCallValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
                 this.$emit("confirm-event",callBackTime);
             },
             transformTime(time) {

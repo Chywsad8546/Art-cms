@@ -69,22 +69,36 @@
         <FormItem>
             <Button type="primary" @click="contentRelease(1)" :disabled="isDisable">发布</Button>
             <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
+            <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
             <Button v-show="isDraftFlag" @click="contentRelease(2)" :disabled="isDisable">草稿箱</Button>
         </FormItem>
+        <Modal v-model="qrcodeModal" width="500">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span></span>
+            </p>
+            <Tabs type="card">
+                <TabPane label="WEB预览">
+                    <div style="text-align:center">
+                        <p class="qrcode" id="qrcode"></p>
+                    </div>
+                </TabPane>
+                <TabPane label="APP预览">    
+                    <div class="appcodePop">      
+                        <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
+                        <FormItem>
+                            <Button type="primary" @click="previewFun(2)">保存</Button>
+                        </FormItem>
+                    </div>
+                </TabPane>
+            </Tabs>
+            <div slot="footer">
+            </div>
+        </Modal>
+
+
     </Form>
     <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "timingSubRelease" v-show="vshowTimeSelect"></timingRelease>
-    <Modal v-model="qrcodeModal" width="240">
-        <p slot="header" style="color:#f60;text-align:center">
-            <span>扫描二维码预览</span>
-        </p>
-        <div style="text-align:center">
-            <p class="qrcode" id="qrcode"></p>
-        </div>
-        <div slot="footer">
-        </div>
-    </Modal>
 </div>
 </template>
 <script>
@@ -118,7 +132,17 @@
                     topic:[],
                     topicName:[],
                     textarea:"",
-                    recommendLevel:''
+                    recommendLevel:'',
+                    tagsJson:{
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                    },
+                    appCode:''
                 },
                 uplopopDisplay: false,
                 imgVideoDom: "",
@@ -133,19 +157,34 @@
                 qrcodeModal: false,
                 isTimeFlag:true,//控制定时发布按钮显示
                 isDraftFlag:true,//控制草稿按钮显示
+                tagsJson:{//保存标签全局json用
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                },
             }
         },
         created() {
             this.newsChaneelList();
             this.Lid.id = this.$route.query.newsId;
             if(this.Lid.id != undefined){
-                this.getNewsDetail();
+                setTimeout(()=>{
+                    this.getNewsDetail();
+                },500);
             }
         },
         methods: {
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
+                    if(response.data.data.tagsJson){
+                        this.tagsJson = JSON.parse(response.data.data.tagsJson);
+                        this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
+                    }
                     let jsonContent = JSON.parse(response.data.data.content);
                     this.form.textarea = jsonContent.textarea;
                     this.$refs.videoCoverThum.src=response.data.data.listImg[0];
@@ -154,7 +193,6 @@
                     this.form.content.coverURL = jsonContent.coverURL;
                     this.form.content.playURL = jsonContent.playURL;
                     this.form.content.size = jsonContent.size;
-                    this.parentlabelMsg = response.data.data.tagsName;
                     this.form.type = response.data.data.type+'';
                     this.form.recommendLevel = response.data.data.recommendLevel+'';
                     if(response.data.data.topic){
@@ -254,8 +292,9 @@
                     return false;
                 }
                 this.preventRepeatClick();
+                this.keepArray();
                // this.form.content.textarea = this.form.textarea;
-                this.form.content = JSON.stringify(this.form.content);
+                //this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
@@ -324,22 +363,37 @@
                 this.contentRelease(0);
             },
             callBacklabelFun(data){
-                this.form.tagsName = data[0].arr1;
-                this.form.tags = data[0].arr2;
+                this.form.tags = [];
+                this.form.tagsName = [];
+                let arr = ["1","2","3","4","5","6","7"];  
+                arr.forEach(key => {
+                    this.tagsJson[key] = [];
+                    data[key].forEach(item=> {                       
+                        this.form.tags.push(item.value);
+                        this.form.tagsName.push(item.label);
+                        this.tagsJson[key].push(item.value);
+                    })               
+                });
             },
             callBackTime(time) {
                 this.form.publishAt = time;
                 this.vshowTimeSelect = !this.vshowTimeSelect;
                 this.contentRelease(0);
             },
-            previewFun() {//预览事件
+            keepArray(){
+                this.form.content = JSON.stringify(this.form.content);
+                this.form.tagsJson = JSON.stringify(this.tagsJson);
+                this.form.preContent = this.form.content;
+            },
+            previewFun(type) {//预览事件
                 if(this.verification() == false){
                     return false;
                 }
                 this.preventRepeatClick();
-             //   this.form.content.textarea = this.form.textarea;
-                this.form.content = JSON.stringify(this.form.content);
-                this.form.preContent = this.form.content;
+                this.keepArray();
+                if(this.Lid.id != undefined){
+                        this.form.id = this.Lid.id;
+                }
                 api.addPreview(this.form).then(response => {
                     this.form.content = JSON.parse(this.form.content);
                     this.form.id = response.data.data.id;
@@ -357,6 +411,12 @@
                         this.$Notice.warning({
                             title: "请选择播放模式"
                         });
+                    }
+                    if(type == 2){
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });                     
                     }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
@@ -376,7 +436,11 @@
     }
 </script>
 <style>
-
+.appcodePop {
+    width: 170px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 .fmslt {
     width: 166px;
     overflow: hidden;
