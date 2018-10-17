@@ -268,8 +268,8 @@
                                     ))
                                 }
                             }
+                            if (params.row.isPublish == 1){
                             if(this.$hasAuth('button_setIsTop')) {
-                                if (params.row.isPublish == 1){
                                     if (params.row.isTop == 0) {
                                         guanliOpration.push(h(
                                             'Button',
@@ -328,8 +328,7 @@
                                         ));
                                     }
                                 }
-                            }
-                                    if(this.$hasAuth('button_removeArticle')) {
+                                if(this.$hasAuth('button_removeArticle')) {
                                     guanliOpration.push(h(
                                         'Button',
                                         {
@@ -353,7 +352,8 @@
                                         },
                                         '撤稿'
                                     ));
-                                    }
+                                }
+
                                 if(this.$hasAuth('button_ArticleSetSort')) {
                                     guanliOpration.push(h(
                                         'Button',
@@ -375,10 +375,8 @@
                                         '修改排序'
                                     ));
                                 }
-
-
+                            }
                             if (params.row.isPublish == 2){
-
                                 if(this.$hasAuth('button_pushArticle')) {
                                  guanliOpration.push(h(
                                      'Button',
