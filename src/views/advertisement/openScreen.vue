@@ -31,7 +31,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
+                            <Button type="primary" @click="addModeButton">添加</Button>
                         </FormItem>
                     </Form>
 
@@ -69,30 +69,35 @@
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName1"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu640" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="1080*1920" prop="imgurl_1080">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName2"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu1080" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="1242*2208" prop="imgurl_1242">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName3"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu1242" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="480*800" prop="imgurl_480">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName4"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu480" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="750*1624" prop="imgurl_750">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName5"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu750" :stroke-width="5"></Progress>
                 </FormItem>
                 <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
                                 <Select v-model="searchData.businessCardAuth" style="width:140px">
@@ -125,30 +130,35 @@
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName1"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu640" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="1080*1920" prop="imgurl_1080">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName2"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu1080" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="1242*2208" prop="imgurl_1242">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName3"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu1242" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="480*800" prop="imgurl_480">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName4"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu480" :stroke-width="5"></Progress>
                 </FormItem>
 
                 <FormItem label="750*1624" prop="imgurl_750">
                     <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName5"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
                         <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
                     </Upload>
+                    <Progress :percent="adjindu750" :stroke-width="5"></Progress>
                 </FormItem>
             </Form>
         </Modal>
@@ -160,6 +170,11 @@
     export default {
         data() {
             return {
+                adjindu640: 0,
+                adjindu1080: 0,
+                adjindu1242: 0,
+                adjindu480: 0,
+                adjindu750: 0,
                 defaultList: [],
                 columns: [
                     {
@@ -185,10 +200,10 @@
                         width: 130,
                         align: 'center',
                         render: (h, params) => {
-                            if (params.row.isDel == 0){
-                                return h('div', ["发布"]);
-                            }else if (params.row.isDel == 1) {
-                                return h('div', ["未发布"]);
+                            if (params.row.isDel == 0) {
+                                return h('div', ['发布']);
+                            } else if (params.row.isDel == 1) {
+                                return h('div', ['未发布']);
                             }
                         }
                     },
@@ -200,9 +215,9 @@
                         render: (h, params) => {
                             var i = this;
                             var uisDel = 0;
-                            if (params.row.isDel == 0){
+                            if (params.row.isDel == 0) {
                                 uisDel = 1;
-                            } else if (params.row.isDel == 1){
+                            } else if (params.row.isDel == 1) {
                                 uisDel = 0;
                             }
                             return h('div', [
@@ -238,7 +253,8 @@
                                         on: {
                                             click: () => {
                                                 var urlS = dutil.StringtoJson(params.row.adDetail);
-                                                console.log(urlS)
+                                                console.log(urlS);
+                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.id = params.row.id;
                                                 this.updateCahnnelValue.startTime = params.row.startTime;
                                                 this.updateCahnnelValue.endTime = params.row.endTime;
@@ -249,6 +265,11 @@
                                                 this.updateCahnnelValue.imgurl_750 = urlS.imgurl_750;
                                                 this.updateCahnnelValue.imgurl_1080 = urlS.imgurl_1080;
                                                 this.updateCahnnelValue.imgurl_1242 = urlS.imgurl_1242;
+                                                this.adjindu640 = 0;
+                                                this.adjindu1080 = 0;
+                                                this.adjindu1242 = 0;
+                                                this.adjindu480 = 0;
+                                                this.adjindu750 = 0;
                                                 i.modal2 = true;
                                             }
                                         }
@@ -268,32 +289,52 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 addNewsChannelModal: {
-                    positionId: 999,
+                    positionId: 999
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
                     startTime: [{ required: true, type: 'date', message: '请输入开始时间', trigger: 'change' }],
-                    endTime: [{ required: true, type: 'date', message: '请输入结束时间', trigger: 'change' }],
-          /*          imgurl_640: [{ required: true, message: '请上传640尺寸图片!', trigger: 'change' }],
+                    endTime: [{ required: true, type: 'date', message: '请输入结束时间', trigger: 'change' }]
+                    /*          imgurl_640: [{ required: true, message: '请上传640尺寸图片!', trigger: 'change' }],
                     imgurl_1080: [{ required: true, message: '请上传1080尺寸图片!', trigger: 'change' }],
                     imgurl_1242: [{ required: true, message: '请上传1242尺寸图片!', trigger: 'change' }],
                     imgurl_480: [{ required: true, message: '请上传480尺寸图片!', trigger: 'change' }],
-                    imgurl_750: [{ required: true, message: '请上传750尺寸图片!', trigger: 'change' }]*/
+                    imgurl_750: [{ required: true, message: '请上传750尺寸图片!', trigger: 'change' }] */
                 },
                 updateruleValidate: {
-                    adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
+                    adName: [{ required: true, message: '标题不能为空！', trigger: 'blur' }]
                 }
             };
         },
         methods: {
-            init(){
+            addModeButton(){
+                this.addNewsChannelModal = {
+                    positionId: 999
+                };
+                this.adjindu640 = 0;
+                this.adjindu1080 = 0;
+                this.adjindu1242 = 0;
+                this.adjindu480 = 0;
+                this.adjindu750 = 0;
+                this.isTrueAddTag = true;
+            },
+            init() {
+                this.addNewsChannelModal = {
+                    positionId: 999
+                };
+                this.updateCahnnelValue = {};
+                this.adjindu640 = 0;
+                this.adjindu1080 = 0;
+                this.adjindu1242 = 0;
+                this.adjindu480 = 0;
+                this.adjindu750 = 0;
                 api.getOpenScreenList(this.searchData).then(response => {
-                    //console.log(response.data.data);
-                    this.total=response.data.count;
-                    this.data=response.data.data;
-                    //console.log(response.data.data);
+                    // console.log(response.data.data);
+                    this.total = response.data.count;
+                    this.data = response.data.data;
+                    // console.log(response.data.data);
                 });
             },
             updateIsPush(id, isDel) {
@@ -304,17 +345,17 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue){
+            addNewsChannel(addChannelValue) {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        addChannelValue.startTime = dutil.dateformat(addChannelValue.startTime,'yyyy-MM-dd hh:mm:ss');
-                        addChannelValue.endTime = dutil.dateformat(addChannelValue.endTime,'yyyy-MM-dd hh:mm:ss');
+                        addChannelValue.startTime = dutil.dateformat(addChannelValue.startTime, 'yyyy-MM-dd hh:mm:ss');
+                        addChannelValue.endTime = dutil.dateformat(addChannelValue.endTime, 'yyyy-MM-dd hh:mm:ss');
                         api.addOpenScreen(addChannelValue).then(response => {
-                            if (response.data.data > 0){
+                            if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
-                            }else{
-                                this.$Message.error("已存在，添加失败");
+                            } else {
+                                this.$Message.error('已存在，添加失败');
                             }
                         }).catch(error => {
                             this.$Message.error(error.response.data.msg);
@@ -324,17 +365,16 @@
                         this.$Message.error('表单验证失败!');
                     }
                 });
-
             },
-            updateChannel(updateCahnnelValue){
+            updateChannel(updateCahnnelValue) {
                 this.$refs['updateCahnnelValuefrom'].validate((valid) => {
                     if (valid) {
                         api.addOpenScreen(updateCahnnelValue).then(response => {
-                            if (response.data.data > 0){
+                            if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
                                 this.init();
-                            }else{
-                                this.$Message.error("更改失败！");
+                            } else {
+                                this.$Message.error('更改失败！');
                             }
                         }).catch(error => {
                             this.$Message.error(error.response.data.msg);
@@ -346,11 +386,11 @@
                 });
             },
             handleSearch () {
-                if (typeof this.searchData.startTime != "string"){
+                if (typeof this.searchData.startTime !== 'string') {
                     this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
                 }
 
-                if (typeof this.searchData.endTime != "string"){
+                if (typeof this.searchData.endTime !== 'string') {
                     this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
                 }
                 this.searchData.page = 1;
@@ -361,31 +401,36 @@
                 this.searchData.page = 1;
                 this.init();
             },
-            getImgFileName1(response, file, fileList){
+            getImgFileName1(response, file, fileList) {
+                this.adjindu640 = 100;
                 console.log(response.data);
                 this.$Message.success('上传成功');
                 this.addNewsChannelModal.imgurl_640 = response.data;
                 this.updateCahnnelValue.imgurl_640 = response.data;
             },
-            getImgFileName2(response, file, fileList){
+            getImgFileName2(response, file, fileList) {
+                this.adjindu1080 = 100;
                 console.log(response.data);
                 this.$Message.success('上传成功');
                 this.addNewsChannelModal.imgurl_1080 = response.data;
                 this.updateCahnnelValue.imgurl_1080 = response.data;
             },
-            getImgFileName3(response, file, fileList){
+            getImgFileName3(response, file, fileList) {
+                this.adjindu1242 = 100;
                 console.log(response.data);
                 this.$Message.success('上传成功');
                 this.addNewsChannelModal.imgurl_1242 = response.data;
                 this.updateCahnnelValue.imgurl_1242 = response.data;
             },
-            getImgFileName4(response, file, fileList){
+            getImgFileName4(response, file, fileList) {
+                this.adjindu480 = 100;
                 console.log(response.data);
                 this.$Message.success('上传成功');
                 this.addNewsChannelModal.imgurl_480 = response.data;
                 this.updateCahnnelValue.imgurl_480 = response.data;
             },
-            getImgFileName5(response, file, fileList){
+            getImgFileName5(response, file, fileList) {
+                this.adjindu750 = 100;
                 console.log(response.data);
                 this.$Message.success('上传成功');
                 this.addNewsChannelModal.imgurl_750 = response.data;
@@ -400,7 +445,7 @@
                 this.init();
             }
         },
-        created(){
+        created() {
             this.init();
         }
     };
