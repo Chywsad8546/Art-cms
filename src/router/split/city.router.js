@@ -477,7 +477,16 @@ export const appRouter = [
 ];
 
 export const aloneRouter = [
-
+    {
+        path: '/wysiwyg',
+        name: 'wysiwygmain',
+        meta: {
+            requireAuth:false,
+            title: '编辑器主页面'
+        },
+        component: () =>
+            import ('@/views/wysiwyg/main.vue')
+    }
 ];
 
 export default {

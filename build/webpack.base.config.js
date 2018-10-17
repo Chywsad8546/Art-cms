@@ -1,3 +1,4 @@
+const stage_template_Loader = require.resolve('../src/libs/stage-template-loader.js')
 const path = require('path');
 const os = require('os');
 const webpack = require('webpack');
@@ -26,7 +27,8 @@ module.exports = {
                 options: {
                     loaders: {
                         css: 'vue-style-loader!css-loader',
-                        less: 'vue-style-loader!css-loader!less-loader'
+                        less: 'vue-style-loader!css-loader!less-loader',
+                        'stage-template': stage_template_Loader
                     },
                     postLoaders: {
                         html: 'babel-loader'
