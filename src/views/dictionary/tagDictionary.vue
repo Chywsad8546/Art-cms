@@ -1,79 +1,91 @@
 <template>
     <Row>
         <Col span="100">
-            <Card>
-                <p slot="title">标签列表管理</p>
-                <Row class="margin-top-10 searchable-table-con1">
-                    <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="标签内容" prop="title">
-                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
-                        </FormItem>
+        <Card>
+            <p slot="title">标签列表管理</p>
+            <Row class="margin-top-10 searchable-table-con1">
+                <Form ref="searchData" :model="searchData" inline :label-width="120">
+                    <FormItem label="标签内容" prop="title">
+                        <Input v-model.trim="searchData.title" style="width:140px"></Input>
+                    </FormItem>
 
-            <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                            <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                <Option value="">全部</Option>
-                                <Option value="0">未认证</Option>
-                                <Option value="1">认证中</Option>
-                                <Option value="2">认证通过</Option>
-                                <Option value="3">认证不通过</Option>
-                            </Select>
-                        </FormItem>-->
-                        <FormItem>
-                            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
-                            <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
-                        </FormItem>
+                    <FormItem>
+                        <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
+                        <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
+                    </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
-                        </FormItem>
-                    </Form>
+                    <FormItem>
+                        <Button type="primary" @click="isTrueAddTag = true">添加</Button>
+                    </FormItem>
+                </Form>
 
-                    <Table border :columns="columns" :data="data"></Table>
-                    <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
-                </Row>
-            </Card>
+                <Table border :columns="columns" :data="data"></Table>
+                <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange"
+                      style="margin-top:10px; text-align:right"></Page>
+            </Row>
+        </Card>
 
         </Col>
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsTag(addNewsTagModal)">
-            <Form  ref="addNewsTagModal" :model="addNewsTagModal" inline :label-width="120">
-                <FormItem label="标签内容" prop="title">
+            <Form ref="addNewsTagModal" :model="addNewsTagModal" inline :label-width="120">
+                <FormItem label="标签类型" prop="title">
+                    <Select v-model="addNewsTagModal.type" style="width:140px">
+                        <Option value="1">房产类型</Option>
+                        <Option value="2">城市</Option>
+                        <Option value="3">区县</Option>
+                        <Option value="4">房企</Option>
+                        <Option value="5">户型</Option>
+                        <Option value="6">定向匹配</Option>
+                        <Option value="7">内容关键词</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="城市" v-show="addNewsTagModal.type == 3">
+                    <Select v-model="addNewsTagModal.parentId" style="width:140px">
+                        <Option v-for="item in cityData" :value="item.id">{{ item.title }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="标签内容">
                     <Input v-model.trim="addNewsTagModal.title" style="width:140px"></Input>
                 </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
             </Form>
         </Modal>
 
         <Modal v-model="modal2" width="360" @on-ok="updateTag(updateTagValue)">
-            <Form  ref="updateTagValue" :model="updateTagValue" inline :label-width="120">
-                <FormItem label="标签内容" prop="title">
-                    <input v-model.trim="updateTagValue.id" hidden />
-                    <Input v-model.trim="updateTagValue.title" style="width:140px"></Input>
+            <Form ref="updateTagValue" :model="updateTagValue" inline :label-width="120">
+                <FormItem label="标签类型" prop="title">
+                    <Select v-model="addNewsTagModal.type" style="width:140px">
+                        <Option value="1">房产类型</Option>
+                        <Option value="2">城市</Option>
+                        <Option value="3">区县</Option>
+                        <Option value="4">房企</Option>
+                        <Option value="5">户型</Option>
+                        <Option value="6">定向匹配</Option>
+                        <Option value="7">内容关键词</Option>
+                    </Select>
                 </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
+                <FormItem label="城市" v-show="addNewsTagModal.type == 3">
+                    <Select v-model="addNewsTagModal.parentId" style="width:140px">
+                        <Option value="1">房产类型</Option>
+                        <Option value="2">城市</Option>
+                        <Option value="3">区县</Option>
+                        <Option value="4">房企</Option>
+                        <Option value="5">户型</Option>
+                        <Option value="6">定向匹配</Option>
+                        <Option value="7">内容关键词</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="标签内容" prop="title">
+                    <input v-model.trim="updateTagValue.id" hidden/>
+                    <input v-model.trim="updateTagValue.title" style="width:140px"></input>
+                </FormItem>
             </Form>
         </Modal>
     </Row>
 </template>
 <script>
-    import api from '../../api/system/index.js';
     import apiDictionary from '../../api/dictionary/tagDictionary.js';
+
     export default {
         data() {
             return {
@@ -84,110 +96,87 @@
                         width: 100
                     },
                     {
-                        key:'title',
-                        title:'标签内容'
+                        key: 'title',
+                        title: '标签内容'
                     },
                     {
                         key: 'createAt',
                         title: '创建日期'
                     },
                     {
-                        key:'modifyAt',
-                        title:'验证日期'
-                    },
-                    /*{
-                        title: '管理',
-                        key: 'action',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            var i = this;
-                            return h('div', [
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.updateTagValue.title = params.row.title;
-                                                this.updateTagValue.id = params.row.id;
-                                              i.modal2 = true;
-                                            }
-                                        }
-                                    },
-                                    '修改'
-                                )
-                            ]);
-                        }
-                    }*/
+                        title: '操作'
+                    }
                 ],
                 searchData: {
                     title: '',
+                    pageNum: 1,
+                    pageSize: 10
                 },
                 data: [],
+                cityData: [],
                 initTable: [],
                 total: 0,
                 modal2: false,
-                isTrueAddTag:false,
+                isTrueAddTag: false,
                 modal_loading: false,
-                updateTagValue:{
+                updateTagValue: {
+                    id: 0,
                     title: '',
+                    type: 0,
+                    parentId: 0
                 },
-                addNewsTagModal:{
+                addNewsTagModal: {
                     title: '',
-                },
+                    type: 0,
+                    parentId: 0
+                }
             };
         },
         methods: {
-            init(){
+            init() {
                 apiDictionary.getTagDictionaryList(this.searchData).then(response => {
-                    //console.log(response.data.data);
-                    this.total=response.data.count;
-                    this.data=response.data.data;
-                    //console.log(response.data.data);
+                    this.total = response.data.count;
+                    this.data = response.data.data;
+                });
+                apiDictionary.getTagDictionaryList({type: 2}).then(response => {
+                    this.cityData = response.data.data;
                 });
             },
-            addNewsTag(addTagValue){
+            addNewsTag(addTagValue) {
                 apiDictionary.addNewsTagApi(addTagValue).then(response => {
-                    if (response.data.data > 0){
+                    if (response.data.data > 0) {
                         this.$Message.success('添加成功');
                         this.init();
                     }
                 });
             },
-            updateTag(updateTagValue){
+            updateTag(updateTagValue) {
                 apiDictionary.updateTagById(updateTagValue).then(response => {
-                    if (response.data.data > 0){
+                    if (response.data.data > 0) {
                         this.$Message.success('修改成功');
                         this.init();
                     }
                 });
             },
-            handleSearch () {
+            handleSearch() {
                 this.searchData.pageNum = 1;
                 this.init();
             },
-            handleCancel (name) {
+            handleCancel(name) {
                 this.$refs[name].resetFields();
                 this.searchData.pageNum = 1;
                 this.init();
             },
-            pageChange (page) {
+            pageChange(page) {
                 this.searchData.pageNum = page;
                 this.init();
             },
-            sizeChange (size) {
+            sizeChange(size) {
                 this.searchData.pageSize = size;
                 this.init();
             }
         },
-        created(){
+        created() {
             this.init();
         }
     };
