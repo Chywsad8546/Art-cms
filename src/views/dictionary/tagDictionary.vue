@@ -40,7 +40,7 @@
                         <Option value="7">内容关键词</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="城市" v-show="addNewsTagModal.type == 3">
+                <FormItem label="城市" v-show="addNewsTagModal.type === '3'">
                     <Select v-model="addNewsTagModal.parentId" style="width:140px">
                         <Option v-for="item in cityData" :value="item.id">{{ item.title }}</Option>
                     </Select>
@@ -54,7 +54,7 @@
         <Modal v-model="modal2" width="360" @on-ok="updateTag(updateTagValue)">
             <Form ref="updateTagValue" :model="updateTagValue" inline :label-width="120">
                 <FormItem label="标签类型" prop="title">
-                    <Select v-model="addNewsTagModal.type" style="width:140px">
+                    <Select v-model="updateTagValue.type" style="width:140px">
                         <Option value="1">房产类型</Option>
                         <Option value="2">城市</Option>
                         <Option value="3">区县</Option>
@@ -64,15 +64,9 @@
                         <Option value="7">内容关键词</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="城市" v-show="addNewsTagModal.type == 3">
-                    <Select v-model="addNewsTagModal.parentId" style="width:140px">
-                        <Option value="1">房产类型</Option>
-                        <Option value="2">城市</Option>
-                        <Option value="3">区县</Option>
-                        <Option value="4">房企</Option>
-                        <Option value="5">户型</Option>
-                        <Option value="6">定向匹配</Option>
-                        <Option value="7">内容关键词</Option>
+                <FormItem label="城市" v-show="updateTagValue.type === '3'">
+                    <Select v-model="updateTagValue.parentId" style="width:140px">
+                        <Option v-for="item in cityData" :value="item.id">{{ item.title }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="标签内容" prop="title">
@@ -104,7 +98,21 @@
                         title: '创建日期'
                     },
                     {
-                        title: '操作'
+                        title: '操作',
+                        render: (h, params) => {
+                            return h(
+                                'a', {
+                                    on: {
+                                        click: () => {
+                                            this.selectTag({
+                                                id: params.row.id
+                                            });
+                                        }
+                                    }
+                                },
+                                '修改'
+                            );
+                        }
                     }
                 ],
                 searchData: {
@@ -156,6 +164,15 @@
                         this.$Message.success('修改成功');
                         this.init();
                     }
+                });
+            },
+            selectTag(updateTagValue) {
+                // alert(updateTagValue);
+                apiDictionary.getTagDictionaryDetail(updateTagValue).then(response => {
+                    this.updateTagValue = response.data.data;
+                    this.updateTagValue.type = this.updateTagValue.type.toString();
+                    this.updateTagValue.parentId = this.updateTagValue.parentId.toString();
+                    this.modal2 = true;
                 });
             },
             handleSearch() {
