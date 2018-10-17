@@ -14,22 +14,23 @@
                         <Option v-for="item in branchoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>分
                 </div>
-                <p>(只能选择2小时-7天范围内的时间)</p>    
-                <p>本文将于 {{stryear}} 年 {{dateExhibition}} {{timeValue > 9  ? timeValue : "0"+timeValue}}:{{branchValue > 9 ? branchValue : "0"+branchValue }} 发表  </p>                  
+                <p>(只能选择2小时-7天范围内的时间)</p>
+                <p>本文将于 {{stryear}} 年 {{dateExhibition}} {{timeValue > 9  ? timeValue : "0"+timeValue}}:{{branchValue > 9 ? branchValue : "0"+branchValue }} 发表  </p>
                 <div class="botton">
                     <Button type="primary" @click="confirmxz()">确定</Button>
                     <Button @click="cancelFun()">取消</Button>
                 </div>
-            </div>  
+            </div>
             <div class="articlezjPopupBack" @click="uploadImg"></div>
-    </div>  
+    </div>
 </template>
 
 
 <script>
+     import dutil from '../../../../libs/util.js';
      export default {
         props: {
-            
+
         },
         data () {
             return {
@@ -45,7 +46,7 @@
             }
         },
         created() {
-            
+
             this.getMySplitDate();
             this.stryear = this.dateArr[0].strYear;
             let stryear = this.dateArr[0].strYear;//年份
@@ -66,7 +67,17 @@
         methods: {
             confirmxz() {
                 let callBackTime = this.stryear+"/"+this.dateValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
-                this.$emit("confirm-event",callBackTime);
+                let dateInput = dutil.stringToDate(callBackTime);
+                let dateNow = new Date();
+                //console.log(dateInput.getTime() , dateNow.getTime())
+                if (dateInput.getTime() > dateNow.getTime()){
+                    this.$emit("confirm-event",callBackTime);
+                }else {
+                    this.$Modal.error({
+                        title: '',
+                        content: "输入时间必须大于当前时间！"
+                    });
+                }
             },
             transformTime(time) {
                 let strTime = time>9 ? time : "0"+time;
@@ -81,9 +92,9 @@
             dateEvent(selVal) {
                 this.forArrFun(selVal);
             },
-            forArrFun(selVal) {            
+            forArrFun(selVal) {
                 let self = this;
-                this.dateoptions.forEach(function(obj){             
+                this.dateoptions.forEach(function(obj){
                     if(obj.value == selVal){
                        self.dateExhibition = obj.label;
                     }
@@ -110,7 +121,7 @@
     line-height: 80px;
     padding-left: 10px;
     font-size: 24px;
-    border-bottom:1px solid #e0dada; 
+    border-bottom:1px solid #e0dada;
 }
 .articlezjcontentPopup {
     background: #fff;
