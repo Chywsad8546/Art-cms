@@ -58,13 +58,13 @@
         </Col>
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
-            <Form  ref="addNewsChannelModal" :model="addNewsChannelModal" inline :label-width="120">
+            <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="消息标题" prop="title">
                     <Input v-model.trim="addNewsChannelModal.title" style="width:140px"></Input>
                     <input v-model.trim="addNewsChannelModal.positionId" hidden></input>
                 </FormItem>
 
-                <FormItem label="推送时间"  prop="starTime">
+                <FormItem label="推送时间"  prop="pushTime">
                     <DatePicker type="datetime" format="yyyy-MM-dd HH:mm:ss" v-model="addNewsChannelModal.pushTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                 </FormItem>
 
@@ -103,7 +103,6 @@
             <Form  ref="updateCahnnelValue" :model="updateCahnnelValue" inline :label-width="120">
                 <FormItem label="消息标题" prop="title">
                     <Input v-model.trim="updateCahnnelValue.title" style="width:140px"></Input>
-                    <input v-model.trim="updateCahnnelValue.positionId" hidden></input>
                 </FormItem>
 
                 <FormItem label="推送时间"  prop="pushTime">
@@ -235,7 +234,6 @@
                                                 this.updateCahnnelValue.pushLink = params.row.pushLink;
                                                 this.updateCahnnelValue.summary = params.row.summary;
                                                 i.modal2 = true;
-
                                             }
                                         }
                                     },
@@ -261,6 +259,10 @@
                     title: '',
                     type: '',
                     positionId:900
+                },
+                ruleValidate: {
+                    title: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
+                    pushTime: [{ required: true, type: 'date', message: '请输入推送时间', trigger: 'change' }],
                 }
             };
         },
@@ -273,12 +275,18 @@
                     //console.log(response.data.data);
                 });
             },
-            addNewsChannel(addChannelValue){
-                addChannelValue.pushTime = dutil.dateformat(addChannelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
-               api.addAppPush(addChannelValue).then(response => {
-                    if (response.data.data > 0){
-                        this.$Message.success('添加成功');
-                        this.init();
+            addNewsChannel(addChannelValue) {
+                this.$refs['addNewsChannelModalform'].validate((valid) => {
+                    if (valid) {
+                        addChannelValue.pushTime = dutil.dateformat(addChannelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
+                        api.addAppPush(addChannelValue).then(response => {
+                            if (response.data.data > 0){
+                                this.$Message.success('添加成功');
+                                this.init();
+                            }
+                        });
+                    }else {
+                        this.$Message.error('Fail!');
                     }
                 });
             },
