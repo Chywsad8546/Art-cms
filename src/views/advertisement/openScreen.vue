@@ -240,6 +240,8 @@
                                                 this.updateCahnnelValue.id = params.row.id;
                                                 this.updateCahnnelValue.startTime = params.row.startTime;
                                                 this.updateCahnnelValue.endTime = params.row.endTime;
+                                                this.updateCahnnelValue.url = params.row.url;
+                                                this.updateCahnnelValue.adName = params.row.adName;
                                                 i.modal2 = true;
                                             }
                                         }
