@@ -18,6 +18,9 @@ export default {
     newsTagsList(params) {
         return http.post('/cmsapi/newsTagDictionary/newsTagsList', params);
     },
+    tagsList(params) {
+        return http.post('/cmsapi/newsTagDictionary/tagsList', params);
+    },
     getNewsDetail(params) {
         return http.get('/cmsapi/article/getNewsDetail', {
             params: params

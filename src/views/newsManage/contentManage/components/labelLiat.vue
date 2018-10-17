@@ -1,21 +1,63 @@
 <template>
     <div>
-            <div class="labelreact">
-                <Input style="width:200px" v-model="labelName" placeholder="请输入2-6个字"></Input>
-                <ul class="positrelater" v-show="isshow">
-                    <li v-for="assns,index in assnArr" @click="selectclLabel(assns)">{{assns.title}}</li>
-                </ul>
+        <div class="roomContiner">
+            <div class="room">房产类型:</div>
+            <div class="roomSelect">
+                <Select  v-model="modelhouse" style="width:100px" :label-in-value = "true" @on-change = "houseSelectFun">
+                    <Option v-for="item in houseTypeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </div> 
+            <div class="room">           
+                城市:
             </div>
-            <div class="selectLabel">
-                <ul>
-                    <li v-for="labelList,index in labelArrList"><div class="labelLi"><span class="className">{{labelList}}</span><span @click="closeLabel(index)" class="classClose">×</span></div></li>
-                    <!-- <li><div class="labelLi"><span class="className">标签2</span><span class="classClose">×</span></div></li> -->
-                </ul>
+            <div class="roomSelect">
+                <Select  style="width:100px" v-model="modelCity" :label-in-value = "true" @on-change = "citySelectFun">
+                    <Option v-for="item in cityChoiceList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </div>
+            <div class="room">
+                区县:
+            </div>
+            <div class="roomSelect">
+                <Select style="width:100px" v-model="modelCounty" :label-in-value = "true" @on-change = "districtSelectFun">
+                    <Option v-for="item in districtList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                </Select>
+            </div>
+                </div>
+            <div class="roomContiner">
+                <div class="room">房企:</div>
+                <div class="roomList">
+                    <CheckboxGroup class="labeldxk" v-model="modelfq" @on-change = "fqSelectFun">
+                                <Checkbox  v-for="item in enterpriseList" :label="item.id">{{item.name}}</Checkbox>
+                    </CheckboxGroup>
+                </div>
+            </div>
+            <div class="roomContiner">
+                <div class="room">户型:</div>
+                <div class="roomList">
+                    <CheckboxGroup class="labeldxk" v-model="modelhx" @on-change = "hxdxFun">
+                                <Checkbox  v-for="item in huxingList" :label="item.id">{{item.name}}</Checkbox>
+                    </CheckboxGroup>
+                </div>
+            </div>
+            <div class="roomContiner">
+                <div class="room">定向匹配:</div>
+                <div class="roomList">
+                    <CheckboxGroup class="labeldxk" v-model="modeldxpp" @on-change = "orientFun">
+                                <Checkbox  v-for="item in orientList" :label="item.id">{{item.name}}</Checkbox>
+                    </CheckboxGroup> 
+                </div>
+            </div>
+            <div class="roomContiner">
+                <div class="room">内容关键词:</div>
+                <div class="roomList">
+                    <CheckboxGroup class="labeldxk" v-model="modelkeyword" @on-change = "keywordFun">
+                                <Checkbox  v-for="item in keywordList" :label="item.id">{{item.name}}</Checkbox>
+                    </CheckboxGroup>
+                </div>
             </div>
     </div>  
 </template>
-
-
 <script>
      import api from '../../../../api/news/index.js';
      export default {
@@ -29,21 +71,183 @@
                 labelName:"",
                 isshow: false,
                 assnArr:[],
-                labelCallArr:[{"arr1":"","arr2":""}]
+                labelCallArr:[{"arr1":"","arr2":""}],
+                houseTypeList:[],
+                cityChoiceList:[],
+                districtList:[],
+                enterpriseList:[],
+                huxingList:[],
+                orientList:[],
+                keywordList:[],
+                modelhouse:"",
+                modelCity: "",
+                modelCounty:"",
+                modelfq:[],
+                modelhx:[],
+                modeldxpp:[],
+                modelkeyword:[],
+                callBackJson:{},
+                callBackid:{},
+                callBackname:{},
+                callbackArr1:[],
+                callbackArr2:[],
+                callbackArr3:[],
+                callbackArr4:[],
+                callbackArr5:[],
+                callbackArr6:[],
+                callbackArr7:[],
+                cityList: []
             }
         },
         created() {
-           // console.log(this.parentlabelMsg);
+            this.tagsList();//获取标签服务
         },
         methods: {
+            tagsList() {
+                api.tagsList().then(response => {
+                    this.cityList = response.data.data;
+                    this.houseTypeList = this.cityList[0].data; //获取房产类型
+                    this.cityChoiceList = this.cityList[1].data; //获取城市数组
+                    this.enterpriseList = this.cityList[2].data; //获取房企数组
+                    this.huxingList = this.cityList[3].data; //获取户型数组
+                    this.orientList = this.cityList[4].data; //获取定向数组
+                    this.keywordList = this.cityList[5].data; //获取关键词数组
+                });
+            },
             selectclLabel(obj) {
                 this.isshow = false;
                 this.labelArrList.push(obj.title);
                 this.labelArrNum.push(obj.id);
                 this.labelCallArr[0].arr1 = this.labelArrList;
                 this.labelCallArr[0].arr2 = this.labelArrNum;
-                //this.labelCallArr.push({"arr1":this.labelArrList,"arr2":this.labelArrNum});
                 this.$emit("labelArr-event",this.labelCallArr);
+            },
+            citySelectFun(obj) {
+                this.districtList = [];
+                let city = this.cityList[1].data;
+                city.forEach((item, index) =>{
+                    if(item.id == obj.value){
+                        this.districtList = item.districtList;
+                    }                 
+                });
+                this.modelCounty = "";
+                this.callbackArr2 = [];
+                let arr = {"value":obj.value,"label":obj.label};
+                this.callbackArr2.push(arr);
+                console.log(this.callbackArr2);
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);
+            },
+            houseSelectFun(obj){
+                this.callbackArr1 = [];
+                let arr = {"value":obj.value,"label":obj.label};
+                this.callbackArr1.push(arr);
+               
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);             
+            },
+            districtSelectFun(obj){              
+                if(obj != undefined){
+                    this.callbackArr3 = [];
+                    let arr = {"value":obj.value,"label":obj.label};
+                    this.callbackArr3.push(arr);
+                    this.callBackJson["1"] = this.callbackArr1;
+                    this.callBackJson["2"] = this.callbackArr2;
+                    this.callBackJson["3"] = this.callbackArr3;
+                    this.callBackJson["4"] = this.callbackArr4;
+                    this.callBackJson["5"] = this.callbackArr5;
+                    this.callBackJson["6"] = this.callbackArr6;
+                    this.callBackJson["7"] = this.callbackArr7;
+                    this.$emit("labelArr-event",this.callBackJson);
+                }
+            },
+            fqSelectFun(cid){
+                this.callbackArr4 = [];
+                cid.forEach(id => {
+                    this.enterpriseList.forEach(item =>{
+                         if(item.id == id){
+                             var arr = {"value":item.id,"label":item.name};
+                             this.callbackArr4.push(arr);
+                         }                    
+                    }) 
+                })
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);
+            },
+            hxdxFun(cid){
+                this.callbackArr5 = [];
+                cid.forEach(id => {
+                    this.huxingList.forEach(item =>{
+                         if(item.id == id){
+                             var arr = {"value":item.id,"label":item.name};
+                             this.callbackArr5.push(arr);
+                         }                    
+                    }) 
+                })     
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);     
+            },
+            orientFun(cid){
+                this.callbackArr6 = [];
+                cid.forEach(id => {
+                    this.orientList.forEach(item =>{
+                         if(item.id == id){
+                             var arr = {"value":item.id,"label":item.name};
+                             this.callbackArr6.push(arr);
+                         }                    
+                    }) 
+                })
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);
+            },
+            keywordFun(cid){
+                this.callbackArr7 = [];
+                cid.forEach(id => {
+                    this.keywordList.forEach(item =>{
+                         if(item.id == id){
+                             var arr = {"value":item.id,"label":item.name};
+                             this.callbackArr7.push(arr);
+                         }                    
+                    }) 
+                })
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);
             },
             closeLabel(index) {
                 this.labelArrList.splice(index, 1);
@@ -51,36 +255,100 @@
                 this.labelCallArr[0].arr1 = this.labelArrList;
                 this.labelCallArr[0].arr2 = this.labelArrNum;
                 this.$emit("labelArr-event",this.labelCallArr);
-            },
-            newsTagsList() {
-                api.newsTagsList().then(response => {
-                    this.assnArr = response.data.data;
-                }).catch(response => {
-                    this.$Notice.warning({
-                        title: "标签获取失败"
-                    });
-                })
             }
         },
         watch:{
-            labelName:function(val, oldVal){
-                if(val.length==0){
-                    this.isshow = false;
-                }else{
-                    this.isshow = true;
-                    this.newsTagsList();
-                }
-            },
             parentlabelMsg(curVal,oldVal){
-                this.labelArrList=curVal;
+                this.modelhouse = curVal[1][0];
+                this.modelCity = curVal[2][0];
+                this.districtList = [];
+                let city = this.cityList[1].data;
+                city.forEach((item, index) =>{
+                    if(item.id == curVal[2][0]){
+                        this.districtList = item.districtList;
+                    }                 
+                });
+
+                let arrDate = ['1','2','3','4','5','6','7'];
+                arrDate.forEach(key => {
+                    curVal[key].forEach(item => {
+                        this.cityList[0].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr1.push(xfarr);
+                            }                           
+                        }) 
+                         this.cityList[1].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr2.push(xfarr);
+                            }                           
+                        }) 
+                        this.districtList.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr3.push(xfarr);
+                            }                           
+                        }) 
+                        this.cityList[2].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr4.push(xfarr);
+                            }                           
+                        }) 
+                        this.cityList[3].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr5.push(xfarr);
+                            }                           
+                        }) 
+                        this.cityList[4].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr6.push(xfarr);
+                            }                           
+                        })  
+                        this.cityList[5].data.forEach(cityItem => {
+                            if(cityItem.id == item){
+                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                this.callbackArr7.push(xfarr);
+                            }                           
+                        })                                             
+                    })                  
+                });
+                this.modelCounty = curVal[3][0];
+                this.modelfq = curVal[4];
+                this.modelhx = curVal[5];
+                this.modeldxpp = curVal[6];
+                this.modelkeyword = curVal[7];
             },
         }
     }
 </script>
 <style scoped>
+    .room {
+        width: 120px;
+        overflow: hidden;
+        float: left;
+        text-align: right;
+        padding-right: 10px;
+    }
+    .roomList {
+        width: 80%;
+        overflow: hidden;
+        float: left;
+    }
+    .roomSelect {
+        overflow: hidden;
+        float: left;        
+    }
+    .roomContiner {
+        width: 100%;
+        overflow: hidden;
+    }
     .labelreact {
         position: relative;
-        width: 200px;
+        width: 100%;
         height: 50px;
     }
     .positrelater {
@@ -117,5 +385,8 @@
         font-size: 30px;
         display: block;
         float: left;
+    }
+    .labeldxk {
+        display: inline;
     }
 </style>

@@ -19,7 +19,7 @@
         <Upload id="iviewUp" action="/cmsapi/sys/uploadImg" :on-success="successPreview" v-show="uploadFlag">
             <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
         </Upload>
-        <Upload id="iviewUp2" action="/cmsapi/sys/uploadImg" :on-success="successPreviewTrue">
+        <Upload id="iviewUp2" action="/cmsapi/sys/uploadImg" :on-success="successPreviewTrue" v-show="uploadFlag">
             <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
         </Upload>
         <div class="articlePopupBack" @click="uploadImg"></div>
@@ -90,8 +90,8 @@
 <style>
 .articlecontentPopup {
     background: #fff;
-    width: 668px;
-    height: 608px;
+    width: 568px;
+    height: 408px;
     z-index: 2200;
     top: 25%;
     left: 30%;
@@ -116,7 +116,7 @@
     float: left;
     width: 16.66%;
     text-align: center;
-    height: 120px;
+    height: 93px;
     line-height: 120px;
     color: #666;
     font-size: 13px;

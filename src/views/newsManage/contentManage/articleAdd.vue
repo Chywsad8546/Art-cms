@@ -38,11 +38,11 @@
                         </span>
                         <span class="ql-formats" title="对齐方式">
                             <select class="ql-align">
-                            <option selected="selected"></option>
-                            <option value="center"></option>
-                            <option value="right"></option>
-                            <option value="justify"></option>
-                        </select>
+                                <option selected="selected"></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
                         </span>
                     </div>
                 </quill-editor>
@@ -102,25 +102,38 @@
             <FormItem>
                 <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
                 <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-                <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
+                <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
                 <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
     
         </div>
         <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
-    </Form>
-    <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
-
-    <Modal v-model="qrcodeModal" width="240">
+    
+    <Modal v-model="qrcodeModal" width="500">
         <p slot="header" style="color:#f60;text-align:center">
-            <span>扫描二维码预览</span>
+            <span></span>
         </p>
-        <div style="text-align:center">
-            <p class="qrcode" id="qrcode"></p>
-        </div>
+        <Tabs type="card">
+            <TabPane label="WEB预览">
+                <div style="text-align:center">
+                    <p class="qrcode" id="qrcode"></p>
+                </div>
+            </TabPane>
+            <TabPane label="APP预览">    
+                <div class="appcodePop">      
+                    <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
+                    <FormItem>
+                         <Button type="primary" @click="previewFun(2)">保存</Button>
+                    </FormItem>
+                </div>
+            </TabPane>
+        </Tabs>
         <div slot="footer">
         </div>
     </Modal>
+    
+    </Form>
+    <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
     </div>
 </template>
 <script>
@@ -173,9 +186,19 @@
                 coverImgTrue: [],
                 chaneeljmList: [],
                 isDisable: false,
+                tabs: 2,
                 qrcodeModal: false,//二维码弹框
                 isTimeFlag:true,//控制定时发布按钮显示
                 isDraftFlag:true,//控制草稿按钮显示
+                tagsJson:{//保存标签全局json用
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                },
                 form: {
                     title: '',
                     content: '',
@@ -184,14 +207,24 @@
                     listType:'0',//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
                     source:'',//文章来源 否
                     publishAt:'',//发布时间 否
-                    tags:'',  //标签1,2,3  否
-                    tagsName: '',
+                    tags:[],  //标签1,2,3  否
+                    tagsName: [],
                     listImg: [], //封面图片数组
                     type: 0,    //内容类型(0:图文,1:图集,2:视频)
                     author: '',//作者
                     topic: [],   //栏目
                     topicName:[], //栏目名称
-                    recommendLevel:''//1  2 3 级
+                    recommendLevel:'',//1  2 3 级
+                    tagsJson:{
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                    },
+                    appCode:''
                 },
                  rules: {
                         title: [
@@ -226,7 +259,9 @@
             this.newsChaneelList();
             this.Lid.id = this.$route.query.newsId;
             if(this.Lid.id != undefined){
-                this.getNewsDetail();
+                setTimeout(()=>{
+                    this.getNewsDetail();
+                },500);             
             }
         },
         watch: {
@@ -254,8 +289,9 @@
                     if(response.data.data.topic){
                         this.form.topic = response.data.data.topic;
                     }
-                    if(response.data.data.tagsName){
-                        this.parentlabelMsg = response.data.data.tagsName;
+                    if(response.data.data.tagsJson){
+                        this.tagsJson = JSON.parse(response.data.data.tagsJson);
+                        this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
                     }              
                     let isPublish = response.data.data.isPublish;
                     if(isPublish === 3 || isPublish === '3'){
@@ -280,8 +316,18 @@
                 })
             },
             callBacklabelFun(data){
-                this.form.tagsName = data[0].arr1;
-                this.form.tags = data[0].arr2;
+                this.form.tags = [];
+                this.form.tagsName = [];
+                let arr = ["1","2","3","4","5","6","7"];  
+                arr.forEach(key => {
+                    this.tagsJson[key] = [];
+                    data[key].forEach(item=> {                       
+                        this.form.tags.push(item.value);
+                        this.form.tagsName.push(item.label);
+                        //console.log(item);
+                        this.tagsJson[key].push(item.value);
+                    })               
+                });
             },
             // 验证文件合法性
             beforeUpload (file) {
@@ -422,6 +468,7 @@
                 }else{
                     this.form.listImg = [];
                 }
+                this.form.tagsJson = JSON.stringify(this.tagsJson);
             },
             verification() {//验证方法
                 if (this.form.title==="") {
@@ -466,12 +513,15 @@
                     });
                 },1000);
             },
-            previewFun() {//预览事件
+            previewFun(type) {//预览事件
                 if(this.verification() == false){
                     return false;
                 }
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
+                if(this.Lid.id != undefined) {
+                    this.form.id = this.Lid.id;
+                }
                 api.addPreview(this.form).then(response => {
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
@@ -480,6 +530,12 @@
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
                     let url = 'http://appdev.toutiaofangchan.com/#/look/news?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    if(type == 2){
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });                     
+                    }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
                 });
@@ -500,7 +556,11 @@
     };
 </script>
 <style>
-
+.appcodePop {
+    width: 170px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 .uploadimg-list {
     overflow: hidden;
     list-style: none;
