@@ -429,7 +429,7 @@
                 apiNewsManageme.getAllAuthor().then(response =>{
                     this.allAuthor = response.data.data
                 })
-                apiTagDictionary.getTagDictionaryList().then(response => {
+                apiTagDictionary.getTagDictionaryList({pageSize: 1000}).then(response => {
                     this.tagDatas = response.data.data
                 })
                 apiDictionary.getChannelDictionaryList().then(response => {
