@@ -66,6 +66,13 @@
             </Card>
 
         </Col>
+        <Modal v-model="sortModal" width="360" @on-ok="updateSort(updateSortValue)">
+            <Form  ref="updateSortForm" :model="updateSortValue" inline :label-width="120">
+                <FormItem label="排序"  prop="sort">
+                <InputNumber :precision="0" v-model="updateSortValue.sort" :min="1" ></InputNumber>
+                </FormItem>
+            </Form>
+        </Modal>
     </Row>
 </template>
 <script>
@@ -322,33 +329,83 @@
                                     }
                                 }
                             }
-                            if(this.$hasAuth('button_removeArticle')) {
-                             if (params.row.isPublish != 2){
-                                      guanliOpration.push(h(
-                                          'Button',
-                                          {
-                                              props: {
-                                                  type: 'primary',
-                                                  size: 'small'
-                                              },
-                                              style: {
-                                                  marginRight: '5px'
-                                              },
-                                              on: {
-                                                  click: () => {
-                                                      apiNewsManageme.removePublishArticle({id:params.row.id,isPublish:2}).then(response => {
-                                                          if (response.data.code == "success"){
-                                                              this.$Message.success('添加置顶成功');
-                                                              this.init();
-                                                          }
-                                                      });
-                                                  }
-                                              }
-                                          },
-                                          '撤稿'
-                                      ));
+                                    if(this.$hasAuth('button_removeArticle')) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    apiNewsManageme.removePublishArticle({id:params.row.id,isPublish:2}).then(response => {
+                                                        if (response.data.code == "success"){
+                                                            this.$Message.success('撤稿成功！');
+                                                            this.init();
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        },
+                                        '撤稿'
+                                    ));
+                                    }
+                                if(this.$hasAuth('button_ArticleSetSort')) {
+                                    guanliOpration.push(h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.updateSortValue.id = params.row.id;
+                                                    this.sortModal = true;
+                                                }
+                                            }
+                                        },
+                                        '修改排序'
+                                    ));
+                                }
+
+
+                            if (params.row.isPublish == 2){
+
+                                if(this.$hasAuth('button_pushArticle')) {
+                                 guanliOpration.push(h(
+                                     'Button',
+                                     {
+                                         props: {
+                                             type: 'primary',
+                                             size: 'small'
+                                         },
+                                         style: {
+                                             marginRight: '5px'
+                                         },
+                                         on: {
+                                             click: () => {
+                                                 apiNewsManageme.removePublishArticle({id:params.row.id,isPublish:1}).then(response => {
+                                                     if (response.data.code == "success"){
+                                                         this.$Message.success('发布成功！');
+                                                         this.init();
+                                                     }
+                                                 });
+                                             }
+                                         }
+                                     },
+                                     '发布'
+                                 ));
                              }
                             }
+
                             return h('div',guanliOpration);
                         }
                     }
@@ -364,7 +421,9 @@
                 modal_loading: false,
                 channelDatas:[],
                 tagDatas:[],
-                allAuthor:[]
+                allAuthor:[],
+                updateSortValue:{},
+                sortModal:false
             };
         },
         methods: {
@@ -383,6 +442,14 @@
                     this.total=response.data.count;
                     this.data=response.data.data;
                     //console.log(response.data.data);
+                });
+            },
+            updateSort(item){
+                apiNewsManageme.setSort(item).then(response => {
+                    if (response.data.data == "成功"){
+                        this.$Message.success('修改排序成功');
+                        this.init();
+                    }
                 });
             },
             handleSearch () {
