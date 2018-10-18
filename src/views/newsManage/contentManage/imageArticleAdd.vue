@@ -8,20 +8,20 @@
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
         <div class="color-list">
-        <div 
-            class="color-item" 
+        <div
+            class="color-item"
             v-for="ImgArr,index in pitchImgArr" v-dragging="{ item: ImgArr, list: pitchImgArr, group: 'ImgArr' }"
-            :key="ImgArr.img">  
+            :key="ImgArr.img">
                     <div class="gallery-img">
                         <img :src="ImgArr.img"/>
-                    </div>                
+                    </div>
                     <div class="areainput">
-                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />             
+                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />
                     </div>
                     <div class="czCon">
                         <Button type="primary" @click="editUpimg(index)">换图</Button>
-                        <Button  @click="removeImg(index)">删除</Button>  
-                        <Button >拖动排序</Button>             
+                        <Button  @click="removeImg(index)">删除</Button>
+                        <Button >拖动排序</Button>
                     </div>
         </div>
         </div>
@@ -34,29 +34,29 @@
                     <Radio label='1'>单图</Radio>
                     <!-- <Radio label='2'>三图</Radio>
                     <Radio label='0'>无</Radio> -->
-                </RadioGroup>    
+                </RadioGroup>
             </div>
             <div v-show="form.listType==='1'">
-                <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
+                <div class="avatar-uploader" v-if="coverImgOne.length > 0">
                     <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
-                 <div class="avatar-uploader" v-else>                    
+                 <div class="avatar-uploader" v-else>
                     <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
-                </div>               
+                </div>
             </div>
             <div v-show="form.listType==='2'">
-                <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">
                     <img @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
-                <div class="avatar-uploader" v-if="coverImgTrue.length < 1">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 1">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>
-                <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">                    
+                <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>
-                <div class="avatar-uploader" v-if="coverImgTrue.length < 3">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 3">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
-                </div>      
+                </div>
             </div>
         </FormItem>
         <FormItem label="栏目">
@@ -72,7 +72,7 @@
                 <Radio label='1'>1级</Radio>
                 <Radio label='2'>2级</Radio>
                 <Radio label='3'>3级</Radio>
-            </RadioGroup>               
+            </RadioGroup>
         </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -81,12 +81,12 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>        
+            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
             <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
             <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
             <Button v-show="isDraftFlag" @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
         </FormItem>
- </div> 
+ </div>
     </div>
 <!-- 上传图片组件 -->
     <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  v-show="uplopopDisplay"></uploadzhImg>
@@ -102,8 +102,8 @@
                     <p class="qrcode" id="qrcode"></p>
                 </div>
             </TabPane>
-            <TabPane label="APP预览">    
-                <div class="appcodePop">      
+            <TabPane label="APP预览">
+                <div class="appcodePop">
                     <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                     <FormItem>
                          <Button type="primary" @click="previewFun(2)">保存</Button>
@@ -212,7 +212,7 @@
             if(this.Lid.id != undefined){
                 setTimeout(()=>{
                      this.getNewsDetail();
-                },500); 
+                },500);
             }
         },
         computed: {},
@@ -238,18 +238,18 @@
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
                         this.isDraftFlag = false;
                     }
-                    this.form.recommendLevel = response.data.data.recommendLevel+'';       
+                    this.form.recommendLevel = response.data.data.recommendLevel+'';
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
                     if(this.form.listType === 1 || this.form.listType === '1'){
                         if(response.data.data.listImg){
                             this.coverImgOne = response.data.data.listImg;
-                        }                    
+                        }
                     }else if(this.form.listType === 2 || this.form.listType === '2'){
                         if(response.data.data.listImg){
                             this.coverImgTrue = response.data.data.listImg;
-                        }                    
+                        }
                     }
                 })
             },
@@ -275,11 +275,11 @@
                 }
                 return isJPG && isLt2M
             },
-            onEditorBlur(){//失去焦点事件              
+            onEditorBlur(){//失去焦点事件
                 console.log(this.content);
             },
             onEditorFocus(){//获得焦点事件
-            
+
             },
             selectSort(data) {
                 this.uploadimgList.forEach(function(obj){
@@ -302,7 +302,7 @@
                 // let length = selfQuill.getSelection().index;
                 // selfQuill.insertEmbed(length, 'image', file.data);
                 // // 调整光标到最后
-                // selfQuill.setSelection(length + 1)                
+                // selfQuill.setSelection(length + 1)
             },
             uploadImg() {
                 this.upState = 0;
@@ -318,7 +318,7 @@
                 });
                 this.uploadimgFlag = !this.uploadimgFlag;
                 var el = event.currentTarget;
-                this.imgDom = el;               
+                this.imgDom = el;
             },
             uplaqloadImg() {
                  document.querySelector('#iviewUp input').click();
@@ -336,7 +336,7 @@
                             this.coverImgOne.splice(this.coverImgIndex,1,data);
                         }else{
                             this.coverImgOne.push(data);
-                        }                  
+                        }
                     }else if(this.form.listType === '2'){
                         if(this.coverImgTrue.length>2){
                             // this.pitchImgArr.splice(index, 1);
@@ -358,7 +358,7 @@
                 this.upState = 2;
                 this.uplopopDisplay = !this.uplopopDisplay;
                 this.coverImgIndex = index;
-            },   
+            },
             showPopupClick(state) {//弹框取消事件
                 this.upState = state;
                 this.uplopopDisplay = !this.uplopopDisplay;
@@ -396,14 +396,14 @@
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
-                let arr = ["1","2","3","4","5","6","7"];  
+                let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
-                    data[key].forEach(item=> {                       
+                    data[key].forEach(item=> {
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         this.tagsJson[key].push(item.value);
-                    })               
+                    })
                 });
             },
             newsChaneelList() {
@@ -413,7 +413,7 @@
                     this.$Notice.warning({
                         title: "栏目获取失败"
                     });
-                })                
+                })
             },
             callBackTime(time) {
                 this.form.publishAt = time;
@@ -442,7 +442,7 @@
                                 content: "修改成功"
                             });
                             this.setJumpFun();
-                    }) 
+                    })
                 }else{
                     api.addArticle(this.form).then(response => {
                             this.$Modal.success({
@@ -450,8 +450,8 @@
                                 content: "发布成功"
                             });
                             this.setJumpFun();
-                    }) 
-                }            
+                    })
+                }
             },
             preventRepeatClick() {
                 this.isDisable = true;
@@ -533,9 +533,9 @@
                         this.$Modal.success({
                             title: '',
                             content: "保存成功请在APP上预览"
-                        });                     
+                        });
                     }
-                    let url = 'http://appdev.toutiaofangchan.com/#/look/images?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomainimg+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
                 });
@@ -718,7 +718,7 @@
     overflow: hidden;
 }
 
-/* 
+/*
 .articlecontentPopup {
     background: #fff;
     width: 668px;

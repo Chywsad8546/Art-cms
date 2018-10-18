@@ -20,24 +20,24 @@
                     </Col>
                 </Row>
                 <div class="fmslt" v-show="loadingFlag===false">
-                    <Upload 
+                    <Upload
                             :show-upload-list="false"
                             :on-success="handleSuccess"
                             :format="['mp4']"
                             :on-format-error="handleFormatError"
-                            action="/cmsapi/sys/uploadVideo" 
-                            >                      
+                            action="/cmsapi/sys/uploadVideo"
+                            >
                         <img ref="videoUpDom" src="./img/suoluetu.png"/>
                         <Button type="primary">上传视频</Button>
                     </Upload>
-                </div>             
+                </div>
         </FormItem>
         <FormItem label="封面">
                 <div class="fmslt">
                     <img ref="videoCoverThum" @click="fmImgSetupFun" src="./img/suoluetu.png"/>
                     <Button type="primary"  @click="fmImgSetupFun">设置视频封面</Button>
                 </div>
-                
+
         </FormItem>
         <FormItem label="播放方式">
             <RadioGroup v-model="form.type">
@@ -58,7 +58,7 @@
                 <Radio label='1'>1级</Radio>
                 <Radio label='2'>2级</Radio>
                 <Radio label='3'>3级</Radio>
-            </RadioGroup>                
+            </RadioGroup>
         </FormItem>
         <FormItem label="来源">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -82,8 +82,8 @@
                         <p class="qrcode" id="qrcode"></p>
                     </div>
                 </TabPane>
-                <TabPane label="APP预览">    
-                    <div class="appcodePop">      
+                <TabPane label="APP预览">
+                    <div class="appcodePop">
                         <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                         <FormItem>
                             <Button type="primary" @click="previewFun(2)">保存</Button>
@@ -200,9 +200,9 @@
                     }
                     if(response.data.data.source){
                         this.form.source = response.data.data.source;
-                    }                   
+                    }
                     if(response.data.data.author){
-                       this.form.author = response.data.data.author;                       
+                       this.form.author = response.data.data.author;
                     }
                     if(response.data.data.listImg){
                         this.form.listImg = response.data.data.listImg;
@@ -213,7 +213,7 @@
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
                         this.isDraftFlag = false;
-                    }   
+                    }
                 })
             },
             lanmuChange(ids){
@@ -240,10 +240,10 @@
                     this.$Notice.warning({
                         title: "栏目获取失败"
                     });
-                })                
+                })
             },
             apiuploadVideo (pas){
-                api.uploadVideo(pas).then(response => {                  
+                api.uploadVideo(pas).then(response => {
                     var arr = Object.keys(response.data.data);
                     if(arr.length==0){
                         let _self = this;
@@ -273,7 +273,7 @@
                     this.form.listImg.splice(0,1,data);
                 }else{
                     this.form.listImg.push(data);
-                }           
+                }
                 //this.imgVideoDom.src=data;
             },
             fmImgSetupFun() {
@@ -304,7 +304,7 @@
                                     content: "修改成功"
                                 });
                                 this.setJumpFun();
-                        }) 
+                        })
                     }else{
                         api.addArticle(this.form).then(response => {
                                 this.$Modal.success({
@@ -312,8 +312,8 @@
                                     content: "发布成功"
                                 });
                                 this.setJumpFun();
-                        }) 
-                    }    
+                        })
+                    }
             },
             verification() {//验证方法
                 if (this.form.title==="") {
@@ -365,14 +365,14 @@
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
-                let arr = ["1","2","3","4","5","6","7"];  
+                let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
-                    data[key].forEach(item=> {                       
+                    data[key].forEach(item=> {
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         this.tagsJson[key].push(item.value);
-                    })               
+                    })
                 });
             },
             callBackTime(time) {
@@ -404,9 +404,9 @@
                     let timestamp = response.data.data.timestamp;
                     let url = '';
                     if(this.form.type === 2 || this.form.type === '2'){
-                        url = 'http://appdev.toutiaofangchan.com/#/look/hvideo?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                        url = this.$domain.hshipinDomainurl+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     }else if(this.form.type === 3 || this.form.type === '3'){
-                        url = 'http://appdev.toutiaofangchan.com/#/look/vvideo?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                        url = this.$domain.sshipinDomainurl+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     }else{
                         this.$Notice.warning({
                             title: "请选择播放模式"
@@ -416,7 +416,7 @@
                         this.$Modal.success({
                             title: '',
                             content: "保存成功请在APP上预览"
-                        });                     
+                        });
                     }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);

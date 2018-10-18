@@ -8,7 +8,7 @@
             </FormItem>
             <FormItem label="内容">
                 <quill-editor v-model="form.content"
-                        ref="myQuillEditor" 
+                        ref="myQuillEditor"
                         :options="editorOption"
                         @blur="onEditorBlur($event)"
                         @focus="onEditorFocus($event)"
@@ -20,7 +20,7 @@
                         <span class="ql-formats" title="引用"><button type="button" class="ql-blockquote"></button></span>
                         <span class="ql-formats" title="有序列表"><button type="button" class="ql-list" value="ordered"></button></span>
                         <span class="ql-formats" title="无序列表"><button type="button" class="ql-list" value="bullet"></button></span>
-                        <span class="ql-formats" title="代码块"><button type="button" class="ql-code-block"></button></span>   
+                        <span class="ql-formats" title="代码块"><button type="button" class="ql-code-block"></button></span>
                         <span class="ql-formats" title="上传图片">
                             <button type="button" @click="imgClick">
                                 <svg viewBox="0 0 18 18">
@@ -53,29 +53,29 @@
                         <Radio label='1'>单图</Radio>
                         <Radio label='2'>三图</Radio>
                         <Radio label='0'>无</Radio>
-                    </RadioGroup>     
+                    </RadioGroup>
                 </div>
                 <div v-show="form.listType==='1' || form.listType===1">
-                    <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
+                    <div class="avatar-uploader" v-if="coverImgOne.length > 0">
                         <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                     </div>
-                    <div class="avatar-uploader" v-else>                    
+                    <div class="avatar-uploader" v-else>
                         <img @click="coverUpImg" src="./img/suoluetu.png"/>
-                    </div>               
+                    </div>
                 </div>
                 <div v-show="form.listType==='2' || form.listType===2">
-                    <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
+                    <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">
                         <img @click="coverEditUpImg(index)" :src="imgOne"/>
                     </div>
-                    <div class="avatar-uploader" v-if="coverImgTrue.length < 1">                    
+                    <div class="avatar-uploader" v-if="coverImgTrue.length < 1">
                             <img @click="coverUpImg" src="./img/suoluetu.png"/>
                     </div>
-                    <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">                    
+                    <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">
                             <img @click="coverUpImg" src="./img/suoluetu.png"/>
                     </div>
-                    <div class="avatar-uploader" v-if="coverImgTrue.length < 3">                    
+                    <div class="avatar-uploader" v-if="coverImgTrue.length < 3">
                             <img @click="coverUpImg" src="./img/suoluetu.png"/>
-                    </div>      
+                    </div>
                 </div>
             </FormItem>
             <FormItem label="栏目">
@@ -91,7 +91,7 @@
                         <Radio label='1'>1级</Radio>
                         <Radio label='2'>2级</Radio>
                         <Radio label='3'>3级</Radio>
-                    </RadioGroup>                
+                    </RadioGroup>
             </FormItem>
             <FormItem label="来源" style="width:200px;">
                 <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -105,10 +105,10 @@
                 <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
                 <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
-    
+
         </div>
         <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
-    
+
     <Modal v-model="qrcodeModal" width="500">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
@@ -119,8 +119,8 @@
                     <p class="qrcode" id="qrcode"></p>
                 </div>
             </TabPane>
-            <TabPane label="APP预览">    
-                <div class="appcodePop">      
+            <TabPane label="APP预览">
+                <div class="appcodePop">
                     <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                     <FormItem>
                          <Button type="primary" @click="previewFun(2)">保存</Button>
@@ -131,7 +131,7 @@
         <div slot="footer">
         </div>
     </Modal>
-    
+
     </Form>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
     </div>
@@ -148,7 +148,7 @@
         ['code-block'],
         ['bold'],
         ['blockquote'],
-        [{'list': 'bullet'}],      
+        [{'list': 'bullet'}],
         // [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
         // [{'header': [1, false]}],
         // [{'color': []}, {'background': []}],          // dropdown with defaults from theme
@@ -261,7 +261,7 @@
             if(this.Lid.id != undefined){
                 setTimeout(()=>{
                     this.getNewsDetail();
-                },500);             
+                },500);
             }
         },
         watch: {
@@ -292,7 +292,7 @@
                     if(response.data.data.tagsJson){
                         this.tagsJson = JSON.parse(response.data.data.tagsJson);
                         this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
-                    }              
+                    }
                     let isPublish = response.data.data.isPublish;
                     if(isPublish === 3 || isPublish === '3'){
                         this.isTimeFlag = false;
@@ -307,26 +307,26 @@
                     if(this.form.listType === 1 || this.form.listType === '1'){
                         if(response.data.data.listImg){
                             this.coverImgOne = response.data.data.listImg;
-                        }                      
+                        }
                     }else if(this.form.listType === 2 || this.form.listType === '2'){
                         if(response.data.data.listImg){
                             this.coverImgTrue = response.data.data.listImg;
-                        }                       
+                        }
                     }
                 })
             },
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
-                let arr = ["1","2","3","4","5","6","7"];  
+                let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
-                    data[key].forEach(item=> {                       
+                    data[key].forEach(item=> {
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         //console.log(item);
                         this.tagsJson[key].push(item.value);
-                    })               
+                    })
                 });
             },
             // 验证文件合法性
@@ -341,11 +341,11 @@
                 }
                 return isJPG && isLt2M
             },
-            onEditorBlur(){//失去焦点事件              
+            onEditorBlur(){//失去焦点事件
               //  console.log(this.content);
             },
             onEditorFocus(){//获得焦点事件
-            
+
             },
             callBackTime(time) {
                 this.form.publishAt = time;
@@ -365,7 +365,7 @@
                     this.$Notice.warning({
                         title: "栏目获取失败"
                     });
-                })                
+                })
             },
             selectSort(data) {
                 this.uploadimgList.forEach(function(obj){
@@ -378,15 +378,15 @@
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
             },
-            successPreview(file) {               
+            successPreview(file) {
                 let selfQuill = this.$refs.myQuillEditor.quill;
                 selfQuill.focus();
                 if(selfQuill){
                     let length = selfQuill.getSelection().index;
                     selfQuill.insertEmbed(length, 'image', file.data);
                     // 调整光标到最后
-                    selfQuill.setSelection(length + 1) 
-                }    
+                    selfQuill.setSelection(length + 1)
+                }
             },
             coverUpImg() {
                 this.editorUploadFlag = false;
@@ -396,7 +396,7 @@
                 this.editorUploadFlag = false;
                 this.uplopopDisplay = !this.uplopopDisplay;
                 this.coverImgIndex = index;
-            },          
+            },
             confirmxz() {
                 this.uploadimgFlag = !this.uploadimgFlag;
                 this.imgDom.src = this.selectImgSrc;
@@ -412,7 +412,7 @@
                            this.coverImgOne.splice(this.coverImgIndex,1,data);
                     }else{
                         this.coverImgOne.push(data);
-                    }                  
+                    }
                 }else if(this.form.listType === '2' || this.form.listType === 2){
                     if(this.coverImgTrue.length>2){
                            // this.pitchImgArr.splice(index, 1);
@@ -426,7 +426,7 @@
                 this.uplopopDisplay = !this.uplopopDisplay;
             },
             onEditorChange() {
-                this.form.preContent = this.form.content;           
+                this.form.preContent = this.form.content;
             },
             releaseNews(type) {//发布按钮
                 if(this.verification() == false){
@@ -443,7 +443,7 @@
                                 content: "修改成功"
                             });
                             this.setJumpFun();
-                    }) 
+                    })
                 }else{
                     api.addArticle(this.form).then(response => {
                             this.$Modal.success({
@@ -452,7 +452,7 @@
                             });
                             this.setJumpFun();
                     })
-                }        
+                }
             },
             preventRepeatClick() {
                 this.isDisable = true;
@@ -529,12 +529,12 @@
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    let url = 'http://appdev.toutiaofangchan.com/#/look/news?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     if(type == 2){
                         this.$Modal.success({
                             title: '',
                             content: "保存成功请在APP上预览"
-                        });                     
+                        });
                     }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
