@@ -69,7 +69,17 @@
         methods: {
             confirmxz() {
                 let callBackTime = this.stryear+"-"+this.dateCallValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
-                this.$emit("confirm-event",callBackTime);
+                let dateInput = dutil.stringToDate(callBackTime);
+                let dateNow = new Date();
+                //console.log(dateInput.getTime() , dateNow.getTime())
+                if (dateInput.getTime() > dateNow.getTime()){
+                    this.$emit("confirm-event",callBackTime);
+                }else {
+                    this.$Modal.error({
+                        title: '',
+                        content: "输入时间必须大于当前时间！"
+                    });
+                }
             },
             transformTime(time) {
                 let strTime = time>9 ? time : "0"+time;
