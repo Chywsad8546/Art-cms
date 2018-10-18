@@ -296,6 +296,10 @@ export const appRouter = [
                         name: 'button_pushArticle',
                         title: '发布权限'
                     },
+                    {
+                        name: 'button_appPreview',
+                        title: '预览权限'
+                    },
                 ]
             },{
             path: 'releaseArticle',

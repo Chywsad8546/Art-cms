@@ -216,24 +216,26 @@
                         render: (h, params) => {
                             var i = this;
                             var guanliOpration=[];
-                            guanliOpration.push(h(
-                                'Button',
-                                {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.previewFun(params.row.id,params.row.type)
+                            if(this.$hasAuth('button_appPreview')) {
+                                guanliOpration.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.previewFun(params.row.id, params.row.type)
+                                            }
                                         }
-                                    }
-                                },
-                                '预览'
-                            ));
+                                    },
+                                    '预览'
+                                ));
+                            }
                             if(this.$hasAuth('button_newsmodify')) {
                                 if (params.row.type == 0) {
                                     guanliOpration.push(h(
