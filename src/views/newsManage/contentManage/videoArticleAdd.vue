@@ -224,7 +224,7 @@
                         this.form.listImg = response.data.data.listImg;
                     }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 3 || isPublish === '3'){
+                    if(isPublish === 1 || isPublish === '1'){
                         this.isTimeFlag = false;
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
@@ -343,6 +343,12 @@
                     });
                     return false;
                 }
+                if(this.form.title.length > 25){
+                        this.$Notice.warning({
+                            title: "标题不能超过25字"
+                        });
+                        return false;
+                }
                 if(JSON.stringify(this.form.content) == "{}"){
                     this.$Notice.warning({
                         title: "请上传视频"
@@ -352,6 +358,12 @@
                 if(this.form.listImg.length == 0){
                     this.$Notice.warning({
                         title: "请上传封面"
+                    });
+                    return false;
+                }
+                if(this.form.topic.length <= 0){
+                    this.$Notice.warning({
+                        title: "请选择栏目"
                     });
                     return false;
                 }

@@ -12,6 +12,7 @@
             class="color-item"
             v-for="ImgArr,index in pitchImgArr" v-dragging="{ item: ImgArr, list: pitchImgArr, group: 'ImgArr' }"
             :key="ImgArr.img">
+                    <div class="gallery-index">{{index+1}}</div>
                     <div class="gallery-img">
                         <img :src="ImgArr.img"/>
                     </div>
@@ -241,7 +242,7 @@
                         this.form.topic = response.data.data.topic;
                     }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 3 || isPublish === '3'){
+                    if(isPublish === 1 || isPublish === '1'){
                         this.isTimeFlag = false;
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
@@ -488,6 +489,12 @@
                     });
                     return false;
                 }
+                if(this.form.title.length > 25){
+                        this.$Notice.warning({
+                            title: "标题不能超过25字"
+                        });
+                        return false;
+                }
                 if(this.pitchImgArr.length <= 0){
                     this.$Notice.warning({
                         title: "请添加图片"
@@ -508,6 +515,12 @@
                         });
                         return false;
                     }
+                }
+                if(this.form.topic.length <= 0){
+                    this.$Notice.warning({
+                        title: "请选择栏目"
+                    });
+                    return false;
                 }
                 if(this.form.recommendLevel == ''){
                         this.$Notice.warning({
@@ -620,6 +633,18 @@
     line-height: 50px;
     color: #333;
 }
+.gallery-index {
+    position: relative;
+    width: 102px;
+    height: 78px;
+    line-height: 78px;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    float: left;
+    margin-right: 10px;
+    overflow: hidden;
+}
 .gallery-img {
     position: relative;
     width: 102px;
@@ -640,7 +665,7 @@
     margin: 0 auto;
 }
 .areainput {
-    width: 60%;
+    width: 50%;
     overflow: hidden;
     float: left;
     margin-right: 10px;

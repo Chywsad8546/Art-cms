@@ -82,37 +82,6 @@
                     <option value="#3d1466"></option>
                 </select></span>
      </div>
-                    <!-- <div id="toolbar" slot="toolbar">
-                        <span class="ql-formats" title="H1标题"><button type="button" class="ql-header" value="1"></button></span>
-                        <span class="ql-formats" title="加粗"><button type="button" class="ql-bold"></button></span>
-                        <span class="ql-formats" title="引用"><button type="button" class="ql-blockquote"></button></span>
-                        <span class="ql-formats" title="有序列表"><button type="button" class="ql-list" value="ordered"></button></span>
-                        <span class="ql-formats" title="无序列表"><button type="button" class="ql-list" value="bullet"></button></span>
-                        <span class="ql-formats" title="代码块"><button type="button" class="ql-code-block"></button></span>
-                        <span class="ql-formats" title="上传图片">
-                            <button type="button" @click="imgClick">
-                                <svg viewBox="0 0 18 18">
-                                    <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
-                                    <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
-                                    <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
-                                </svg>
-                            </button>
-                        </span>
-                        <span class="ql-formats" title="文章链接">
-                            <button type="button" class="ql-link"></button>
-                        </span>
-                        <span class="ql-formats" title="清除格式">
-                            <button type="button" class="ql-clean"></button>
-                        </span>
-                        <span class="ql-formats" title="对齐方式">
-                            <select class="ql-align">
-                                <option selected="selected"></option>
-                                <option value="center"></option>
-                                <option value="right"></option>
-                                <option value="justify"></option>
-                            </select>
-                        </span>
-                    </div> -->
                 </quill-editor>
             </FormItem>
             <FormItem label="封面">
@@ -363,7 +332,7 @@
                         this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
                     }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 3 || isPublish === '3'){
+                    if(isPublish === 1 || isPublish === '1'){
                         this.isTimeFlag = false;
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
@@ -547,6 +516,12 @@
                     });
                     return false;
                 }
+                if(this.form.title.length > 25){
+                        this.$Notice.warning({
+                            title: "标题不能超过25字"
+                        });
+                        return false;
+                }
                 if(this.form.content===""){
                     this.$Notice.warning({
                         title: "请输入图文"
@@ -568,6 +543,12 @@
                         });
                         return false;
                     }
+                }
+                if(this.form.topic.length <= 0){
+                    this.$Notice.warning({
+                        title: "请选择栏目"
+                    });
+                    return false;
                 }
                 if(this.form.recommendLevel == ''){
                         this.$Notice.warning({
