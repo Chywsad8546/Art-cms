@@ -1,9 +1,9 @@
 <template>
     <div class="articleContainer">
-        <Form ref="formInline" :model="form" :rules="rules" :label-width="80">
+        <Form ref="formInline" :model="form" :rules="ruleValidate" :label-width="80">
         <div class="publictop">
             <div class="articleTitle">发表文章</div>
-            <FormItem label="标题">
+            <FormItem label="标题" prop="title">
                 <Input v-model="form.title" placeholder="请输入标题"></Input>
             </FormItem>
             <FormItem label="内容">
@@ -14,7 +14,75 @@
                         @focus="onEditorFocus($event)"
                         @change="onEditorChange($event)"
                         >
-                    <div id="toolbar" slot="toolbar">
+
+                        <div id="toolbar" slot="toolbar">
+                <span class="ql-formats" title="H1标题"><button type="button" class="ql-header" value="1"></button></span>
+                <span class="ql-formats" title="加粗"><button type="button" class="ql-bold"></button></span>
+                <span class="ql-formats" title="引用"><button type="button" class="ql-blockquote"></button></span>
+                <span class="ql-formats" title="有序列表"><button type="button" class="ql-list" value="ordered"></button></span>
+                <span class="ql-formats" title="无序列表"><button type="button" class="ql-list" value="bullet"></button></span>
+                <span class="ql-formats">
+                    <button type="button" @click="imgClick">
+                        <svg viewBox="0 0 18 18">
+                            <rect class="ql-stroke" height="10" width="12" x="3" y="4"></rect>
+                            <circle class="ql-fill" cx="6" cy="7" r="1"></circle>
+                            <polyline class="ql-even ql-fill" points="5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12"></polyline>
+                        </svg>
+                    </button>
+                </span>
+                <span class="ql-formats">
+                    <button type="button" class="ql-link"></button>
+                </span>
+                <span class="ql-formats">
+                    <button type="button" class="ql-clean"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-align">
+                    <option selected="selected"></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
+                </select>
+                </span>
+                <span class="ql-formats"><select class="ql-color">
+                    <option selected="selected"></option>
+                    <option value="#e60000"></option>
+                    <option value="#ff9900"></option>
+                    <option value="#ffff00"></option>
+                    <option value="#008a00"></option>
+                    <option value="#0066cc"></option>
+                    <option value="#9933ff"></option>
+                    <option value="#ffffff"></option>
+                    <option value="#facccc"></option>
+                    <option value="#ffebcc"></option>
+                    <option value="#ffffcc"></option>
+                    <option value="#cce8cc"></option>
+                    <option value="#cce0f5"></option>
+                    <option value="#ebd6ff"></option>
+                    <option value="#bbbbbb"></option>
+                    <option value="#f06666"></option>
+                    <option value="#ffc266"></option>
+                    <option value="#ffff66"></option>
+                    <option value="#66b966"></option>
+                    <option value="#66a3e0"></option>
+                    <option value="#c285ff"></option>
+                    <option value="#888888"></option>
+                    <option value="#a10000"></option>
+                    <option value="#b26b00"></option>
+                    <option value="#b2b200"></option>
+                    <option value="#006100"></option>
+                    <option value="#0047b2"></option>
+                    <option value="#6b24b2"></option>
+                    <option value="#444444"></option>
+                    <option value="#5c0000"></option>
+                    <option value="#663d00"></option>
+                    <option value="#666600"></option>
+                    <option value="#003700"></option>
+                    <option value="#002966"></option>
+                    <option value="#3d1466"></option>
+                </select></span>
+     </div>
+                    <!-- <div id="toolbar" slot="toolbar">
                         <span class="ql-formats" title="H1标题"><button type="button" class="ql-header" value="1"></button></span>
                         <span class="ql-formats" title="加粗"><button type="button" class="ql-bold"></button></span>
                         <span class="ql-formats" title="引用"><button type="button" class="ql-blockquote"></button></span>
@@ -33,7 +101,7 @@
                         <span class="ql-formats" title="文章链接">
                             <button type="button" class="ql-link"></button>
                         </span>
-                        <span class="ql-formats" title="清楚格式">
+                        <span class="ql-formats" title="清除格式">
                             <button type="button" class="ql-clean"></button>
                         </span>
                         <span class="ql-formats" title="对齐方式">
@@ -44,7 +112,7 @@
                                 <option value="justify"></option>
                             </select>
                         </span>
-                    </div>
+                    </div> -->
                 </quill-editor>
             </FormItem>
             <FormItem label="封面">
@@ -102,14 +170,14 @@
             <FormItem>
                 <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
                 <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-                <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
+                <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
                 <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
 
         </div>
         <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
 
-    <Modal v-model="qrcodeModal" width="500">
+    <Modal v-model="qrcodeModal" width="500" @on-cancel="previewCancel">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
         </p>
@@ -123,7 +191,7 @@
                 <div class="appcodePop">
                     <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                     <FormItem>
-                         <Button type="primary" @click="previewFun(2)">保存</Button>
+                         <Button type="primary" @click="previewAppFun(form.isPublish)">保存</Button>
                     </FormItem>
                 </div>
             </TabPane>
@@ -186,6 +254,7 @@
                 coverImgTrue: [],
                 chaneeljmList: [],
                 isDisable: false,
+                flagPreview: false,
                 tabs: 2,
                 qrcodeModal: false,//二维码弹框
                 isTimeFlag:true,//控制定时发布按钮显示
@@ -226,10 +295,10 @@
                     },
                     appCode:''
                 },
-                 rules: {
-                        title: [
-                            { required: true, message: '请输入标题', trigger: 'blur' }
-                        ]
+                 ruleValidate: {
+                    title: [
+                        { type: 'string', max: 25, message: '已超过25个字', trigger: 'change' }
+                    ],
                 },
                 editorOption: {
                     placeholder: '',
@@ -434,23 +503,24 @@
                 }
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
+                this.flagPreview = false;
                 this.form.isPublish = type;
                 if(this.Lid.id != undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
+                            this.prevResponse(response);
                             this.$Modal.success({
                                 title: '',
                                 content: "修改成功"
                             });
-                            this.setJumpFun();
                     })
                 }else{
                     api.addArticle(this.form).then(response => {
+                            this.prevResponse(response);
                             this.$Modal.success({
                                 title: '',
                                 content: "发布成功"
                             });
-                            this.setJumpFun();
                     })
                 }
             },
@@ -506,23 +576,41 @@
                         return false;
                 }
             },
-            setJumpFun(){
-                setTimeout(()=>{
-                    this.$router.push({
-                        name: "newsManageList"
-                    });
-                },1000);
-            },
             previewFun(type) {//预览事件
                 if(this.verification() == false){
                     return false;
                 }
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
+                this.flagPreview = true;
+                this.form.isPublish = type;
                 if(this.Lid.id != undefined) {
                     this.form.id = this.Lid.id;
                 }
                 api.addPreview(this.form).then(response => {
+                    this.prevResponse(response);
+                });
+            },
+            previewAppFun(type) {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
+                if(this.Lid.id != undefined) {
+                    this.form.id = this.Lid.id;
+                }
+                api.addPreview(this.form).then(response => {
+                    this.prevResponse(response);
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });
+                        this.previewCancel();
+                });
+            },
+            prevResponse(response){
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;
@@ -530,15 +618,17 @@
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
                     let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    if(type == 2){
-                        this.$Modal.success({
-                            title: '',
-                            content: "保存成功请在APP上预览"
-                        });
-                    }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
-                });
+            },
+            previewCancel() {
+                if(this.form.isPublish == 1 && this.flagPreview == false){
+                    setTimeout(()=>{
+                        this.$router.push({
+                            name: "newsManageList"
+                        });
+                    },1000);
+                }
             },
             qrcode (url) {
                 let qrcode = new QRCode('qrcode', {

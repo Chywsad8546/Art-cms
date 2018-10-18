@@ -3,8 +3,8 @@
     <div class="publictop">
         <div class="articleTitle">上传视频</div>
     </div>
-    <Form :model="form" :label-width="80">
-        <FormItem label="标题">
+    <Form :model="form" :rules="ruleValidate" :label-width="80">
+        <FormItem label="标题" prop="title">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
         <FormItem label="视频简介">
@@ -23,7 +23,7 @@
                     <Upload
                             :show-upload-list="false"
                             :on-success="handleSuccess"
-                            :format="['mp4']"
+                            :format="['mp4','rm','rmvb','wma','avi']"
                             :on-format-error="handleFormatError"
                             action="/cmsapi/sys/uploadVideo"
                             >
@@ -69,10 +69,10 @@
         <FormItem>
             <Button type="primary" @click="contentRelease(1)" :disabled="isDisable">发布</Button>
             <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
-            <Button v-show="isDraftFlag" @click="contentRelease(2)" :disabled="isDisable">草稿箱</Button>
+            <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
+            <Button v-show="isDraftFlag" @click="contentRelease(3)" :disabled="isDisable">草稿箱</Button>
         </FormItem>
-        <Modal v-model="qrcodeModal" width="500">
+        <Modal v-model="qrcodeModal" @on-cancel="previewCancel" width="500">
             <p slot="header" style="color:#f60;text-align:center">
                 <span></span>
             </p>
@@ -86,7 +86,7 @@
                     <div class="appcodePop">
                         <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                         <FormItem>
-                            <Button type="primary" @click="previewFun(2)">保存</Button>
+                            <Button type="primary" @click="previewAppFun(form.isPublish)">保存</Button>
                         </FormItem>
                     </div>
                 </TabPane>
@@ -97,7 +97,7 @@
 
 
     </Form>
-    <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay"></uploadzhImg>
+    <uploadzhImg @child-event='parEvent' @cancel-event='cancleCallBack' @backColor-event='colorCallBack' v-show="uplopopDisplay" v-bind:uploadImgMsg="uploadImgMsg" ></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "timingSubRelease" v-show="vshowTimeSelect"></timingRelease>
 </div>
 </template>
@@ -152,11 +152,13 @@
                 chaneeljmList:[],
                 Lid: {},
                 parentlabelMsg: [],
+                uploadImgMsg: '',
                 loadingFlag: false,
                 isDisable: false,
                 qrcodeModal: false,
                 isTimeFlag:true,//控制定时发布按钮显示
                 isDraftFlag:true,//控制草稿按钮显示
+                flagPreview:false,
                 tagsJson:{//保存标签全局json用
                         "1":[],
                         "2":[],
@@ -165,6 +167,11 @@
                         "5":[],
                         "6":[],
                         "7":[]
+                },
+                ruleValidate: {
+                    title: [
+                        { type: 'string', max: 25, message: '已超过25个字', trigger: 'change' }
+                    ],
                 },
             }
         },
@@ -178,6 +185,15 @@
             }
         },
         methods: {
+            previewCancel() {
+                if(this.form.isPublish == 1 && this.flagPreview == false){
+                    setTimeout(()=>{
+                        this.$router.push({
+                            name: "newsManageList"
+                        });
+                    },1000);
+                }
+            },
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
@@ -186,7 +202,7 @@
                         this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
                     }
                     let jsonContent = JSON.parse(response.data.data.content);
-                    this.form.textarea = jsonContent.textarea;
+                    this.form.content.textarea = jsonContent.textarea;
                     this.$refs.videoCoverThum.src=response.data.data.listImg[0];
                     this.$refs.videoUpDom.src = jsonContent.coverURL;
                     this.form.content.duration = jsonContent.duration;
@@ -256,6 +272,9 @@
                     this.form.content.duration = response.data.data.duration;
                     this.form.content.coverURL = response.data.data.coverURL;
                     this.form.content.playURL = response.data.data.playURL;
+                    if(this.form.content.coverURL != null){
+                        this.uploadImgMsg = this.form.content.coverURL;
+                    }
                     this.form.content.size = response.data.data.size;
                     this.loadingFlag = false;
                 })
@@ -299,19 +318,21 @@
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                         api.editArticle(this.form).then(response => {
+                                this.prevResponse(response);
                                 this.$Modal.success({
                                     title: '',
                                     content: "修改成功"
                                 });
-                                this.setJumpFun();
+                               // this.setJumpFun();
                         })
                     }else{
                         api.addArticle(this.form).then(response => {
+                                this.prevResponse(response);
                                 this.$Modal.success({
                                     title: '',
                                     content: "发布成功"
                                 });
-                                this.setJumpFun();
+                             //   this.setJumpFun();
                         })
                     }
             },
@@ -391,10 +412,34 @@
                 }
                 this.preventRepeatClick();
                 this.keepArray();
+                this.form.isPublish = type;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                 }
                 api.addPreview(this.form).then(response => {
+                    this.prevResponse(response);
+                });
+            },
+            previewAppFun(type) {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.keepArray();
+                this.form.isPublish = type;
+                if(this.Lid.id != undefined) {
+                    this.form.id = this.Lid.id;
+                }
+                api.addPreview(this.form).then(response => {
+                        this.prevResponse(response);
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });
+                        this.previewCancel();
+                });
+            },
+            prevResponse(response){
                     this.form.content = JSON.parse(this.form.content);
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
@@ -412,15 +457,8 @@
                             title: "请选择播放模式"
                         });
                     }
-                    if(type == 2){
-                        this.$Modal.success({
-                            title: '',
-                            content: "保存成功请在APP上预览"
-                        });
-                    }
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
-                });
             },
             qrcode (url) {
                 let qrcode = new QRCode('qrcode', {

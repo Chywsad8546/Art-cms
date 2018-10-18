@@ -134,7 +134,6 @@
                 this.callbackArr2 = [];
                 let arr = {"value":obj.value,"label":obj.label};
                 this.callbackArr2.push(arr);
-                console.log(this.callbackArr2);
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
                 this.callBackJson["3"] = this.callbackArr3;
@@ -268,7 +267,7 @@
                         this.districtList = item.districtList;
                     }                 
                 });
-
+                
                 let arrDate = ['1','2','3','4','5','6','7'];
                 arrDate.forEach(key => {
                     curVal[key].forEach(item => {
@@ -284,12 +283,14 @@
                                 this.callbackArr2.push(xfarr);
                             }                           
                         }) 
-                        this.districtList.forEach(cityItem => {
-                            if(cityItem.id == item){
-                                let xfarr = {"value":cityItem.id,"label":cityItem.name};
-                                this.callbackArr3.push(xfarr);
-                            }                           
-                        }) 
+                        if(this.districtList != null){
+                            this.districtList.forEach(cityItem => {
+                                if(cityItem.id == item){
+                                    let xfarr = {"value":cityItem.id,"label":cityItem.name};
+                                    this.callbackArr3.push(xfarr);
+                                }                           
+                            }) 
+                        }
                         this.cityList[2].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};

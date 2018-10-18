@@ -30,9 +30,9 @@
 
 <script>
      export default {
-        props: {
-            
-        },
+        props: [
+            "uploadImgMsg"
+        ],
         data () {
             return {
                 uploadimgList: [],
@@ -84,6 +84,12 @@
             uploadImg() {
                 this.$emit("backColor-event","");
             },
+        },
+        watch:{
+            uploadImgMsg(curVal,oldVal){
+                 let fileArr = {"url":curVal,"isActive":false};
+                 this.uploadimgList.push(fileArr);
+            }
         }
     }
 </script>

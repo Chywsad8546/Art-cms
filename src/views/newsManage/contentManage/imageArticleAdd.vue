@@ -1,10 +1,10 @@
 <template>
 <div class="articleContainer">
-    <Form ref="formInline" :model="form" :rules="rules" :label-width="80">
+    <Form ref="formInline" :model="form" :rules="ruleValidate" :label-width="80">
     <div class="publictop">
         <div class="articleTitle">发表图集</div>
     <div>
-        <FormItem label="标题">
+        <FormItem label="标题" prop="title">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
         <div class="color-list">
@@ -83,8 +83,8 @@
         <FormItem>
             <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
             <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button style="margin-left: 8px" @click="previewFun(1)" :disabled="isDisable">预览</Button>
-            <Button v-show="isDraftFlag" @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
+            <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
+            <Button v-show="isDraftFlag" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
         </FormItem>
  </div>
     </div>
@@ -92,7 +92,7 @@
     <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
 
-    <Modal v-model="qrcodeModal" width="500">
+    <Modal v-model="qrcodeModal" @on-cancel="previewCancel" width="500">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
         </p>
@@ -106,7 +106,7 @@
                 <div class="appcodePop">
                     <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
                     <FormItem>
-                         <Button type="primary" @click="previewFun(2)">保存</Button>
+                         <Button type="primary" @click="previewAppFun(form.isPublish)">保存</Button>
                     </FormItem>
                 </div>
             </TabPane>
@@ -154,6 +154,7 @@
                 Lid: {},
                 isDisable: false,
                 qrcodeModal: false,
+                flagPreview:false,
                 isTimeFlag:true,//控制定时发布按钮显示
                 isDraftFlag:true,//控制草稿按钮显示
                 tagsJson:{//保存标签全局json用
@@ -192,11 +193,10 @@
                     },
                     appCode:''
                 },
-                rules: {
-                    name: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                    ]
+                ruleValidate: {
+                    title: [
+                        { type: 'string', max: 25, message: '已超过25个字', trigger: 'change' }
+                    ],
                 },
                 // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
                 domain: '/cmsapi/sys/uploadImg',
@@ -217,6 +217,15 @@
         },
         computed: {},
         methods: {
+            previewCancel() {
+                if(this.form.isPublish == 1 && this.flagPreview == false){
+                    setTimeout(()=>{
+                        this.$router.push({
+                            name: "newsManageList"
+                        });
+                    },1000);
+                }
+            },
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
@@ -433,23 +442,26 @@
                 this.typeKeepArr();
                 this.preventRepeatClick();
                 this.form.content = JSON.stringify(this.pitchImgArr);
+                this.form.preContent = JSON.stringify(this.pitchImgArr);
                 this.form.isPublish = type;
                if(this.Lid.id != undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
+                            this.prevResponse(response);
                             this.$Modal.success({
                                 title: '',
                                 content: "修改成功"
                             });
-                            this.setJumpFun();
+                           // this.setJumpFun();
                     })
                 }else{
                     api.addArticle(this.form).then(response => {
+                            this.prevResponse(response);
                             this.$Modal.success({
                                 title: '',
                                 content: "发布成功"
                             });
-                            this.setJumpFun();
+                           // this.setJumpFun();
                     })
                 }
             },
@@ -517,28 +529,45 @@
                 }
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                 }
                 this.form.content = JSON.stringify(this.pitchImgArr);
                 this.form.preContent = JSON.stringify(this.pitchImgArr);
                 api.addPreview(this.form).then(response => {
+                    this.prevResponse(response);
+                });
+            },
+            previewAppFun(type) {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
+                if(this.Lid.id != undefined) {
+                    this.form.id = this.Lid.id;
+                }
+                api.addPreview(this.form).then(response => {
+                        this.prevResponse(response);
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });
+                        this.previewCancel();
+                });
+            },
+            prevResponse(response){
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    if(type == 2){
-                        this.$Modal.success({
-                            title: '',
-                            content: "保存成功请在APP上预览"
-                        });
-                    }
                     let url = this.$domain.cityDomainimg+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
-                });
             },
             qrcode (url) {
                 let qrcode = new QRCode('qrcode', {
@@ -637,42 +666,6 @@
     list-style: none;
     padding: 0;
     border-radius: 4px;
-}
-.uploadimg-list li {
-    float: left;
-    width: 16.66%;
-    text-align: center;
-    height: 120px;
-    line-height: 120px;
-    color: #666;
-    font-size: 13px;
-    transition: color .15s linear;
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    position: relative;
-}
-.uploadimg-list .checked:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    background-color: rgba(0,0,0,.5);
-    background-image: url("./img/pitchImg.png");
-    -moz-background-size: 40px 40px;
-    background-size: 40px 40px;
-    background-position: 100% 0;
-    background-repeat: no-repeat;
-    text-align: center;
-    color: #fffacd;
-}
-.uploadimg-list li img {
-    width: 100%;
 }
 .articleTitle {
     height: 50px;
