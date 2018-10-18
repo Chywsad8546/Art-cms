@@ -74,11 +74,11 @@
             </Form>
         </Modal>
 
-        <Modal v-model="qrcodeModal" width="500">
+        <Modal v-model="qrcodeModal" width="230">
             <p slot="header" style="color:#f60;text-align:center">
                 <span></span>
             </p>
-            <Tabs type="card">
+            <Tabs type="card" >
                 <TabPane label="WEB预览">
                     <div style="text-align:center">
                         <p class="qrcode" id="qrcode"></p>
@@ -216,24 +216,26 @@
                         render: (h, params) => {
                             var i = this;
                             var guanliOpration=[];
-                            guanliOpration.push(h(
-                                'Button',
-                                {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.previewFun(params.row.id)
+                            if(this.$hasAuth('button_appPreview')) {
+                                guanliOpration.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.previewFun(params.row.id, params.row.type)
+                                            }
                                         }
-                                    }
-                                },
-                                '预览'
-                            ));
+                                    },
+                                    '预览'
+                                ));
+                            }
                             if(this.$hasAuth('button_newsmodify')) {
                                 if (params.row.type == 0) {
                                     guanliOpration.push(h(
@@ -503,10 +505,24 @@
                 this.init();
             },
             previewFun(id,type) {//预览事件
+                var url;
+                if (type == 0){
+                    url = this.$domain.cityDomain +'?id='+id;
+                }else if (type == 1){
+                    url = this.$domain.cityDomainimg +'?id='+id;
+                } else if (type == 2){
+                    url = this.$domain.hshipinDomainurl +'?id='+id;
+                } else if (type == 3){
+                    url = this.$domain.sshipinDomainurl +'?id='+id;
+                }
                 apiNewsManageme.listAddPreview({id:id}).then(response => {
+                    let pre = response.data.data.pre;
+                    let sign = response.data.data.sign;
+                    let timestamp = response.data.data.timestamp;
                     this.qrcodeModal = !this.qrcodeModal;
-                    let url = this.$domain.cityDomain +'?id='+id;
                     document.getElementById("qrcode").innerHTML = "";
+                    url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    console.log(url);
                     this.qrcode(url);
                 });
             },
