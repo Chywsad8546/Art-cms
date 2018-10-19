@@ -55,7 +55,6 @@
         </div>
     </div>
 </template>
-
 <script>
     import navigation from '@/libs/navigation';
     import util from '@/libs/util';
