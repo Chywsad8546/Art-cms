@@ -449,21 +449,13 @@
                if(this.Lid.id != undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
-                            this.prevResponse(response);
-                            this.$Modal.success({
-                                title: '',
-                                content: "修改成功"
-                            });
-                           // this.setJumpFun();
+                        this.prevResponse(response);
+                        this.$Message.success('修改成功！');
                     })
                 }else{
                     api.addArticle(this.form).then(response => {
-                            this.prevResponse(response);
-                            this.$Modal.success({
-                                title: '',
-                                content: "发布成功"
-                            });
-                           // this.setJumpFun();
+                        this.prevResponse(response);
+                        this.$Message.success('发布成功！');
                     })
                 }
             },
@@ -556,6 +548,12 @@
             },
             previewAppFun(type) {//预览事件
                 if(this.verification() == false){
+                    return false;
+                }
+                if(this.form.appCode == ''){
+                    this.$Notice.warning({
+                        title: "请输入appCode"
+                    });
                     return false;
                 }
                 this.preventRepeatClick();
