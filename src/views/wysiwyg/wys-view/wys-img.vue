@@ -21,10 +21,9 @@
 </template>
 
 <script>
-    import component_stage from '../wys-conf/component-stage';
+
     export default {
         name: 'wys-img',
-        customOption: 'foo',
         data() {
             return {
                 name: 'name123',
@@ -37,16 +36,6 @@
         },
         created: function () {
             // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
-        },
-        watch: {
-            // 如果 `question` 发生改变，这个函数就会运行
-            $data: {
-                handler: function (val, oldVal) {
-                    component_stage.render(val,this.$options.wys_stageTemplate);
-                },
-                deep: true
-            }
-    
         }
     };
 </script>
@@ -56,6 +45,5 @@
 </style>
 
 <stage-template>
-    "zjl'qq"{{@ name }}
-    console.log('测试啊');{{@ searchData.title }}
+    {{@ searchData.title}}
 </stage-template>
