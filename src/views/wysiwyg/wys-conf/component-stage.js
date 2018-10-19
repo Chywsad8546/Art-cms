@@ -71,19 +71,7 @@ export default {
     _currentComponentChangeEvent: function () {},
     currentComponent: null,
     stageComponentsDict: {},
-    render: function (data, component_id, isNew) {
-        var targetStageComponent = this.stageComponentsDict[component_id];
-        var html = 'arttemplate render 错误';
-        try {
-            html = targetStageComponent.editor.arttemplate(data);
-        } catch (e) {}
-        targetStageComponent.dom.html(html);
-        targetStageComponent.data = data;
-        if (isNew) {
-            this._stage.find('.wysi_hold').eq(0).after(targetStageComponent.dom);
-            this._stage.find('.wysi_hold').remove();
-        }
-    },
+
     /*
     创建画布上的站位dom，是一个jquery对象
      */
@@ -112,19 +100,59 @@ export default {
 
         }
     },
+    /**
+     * render方法负责2个事情：
+     *  1，负责对拖拽产生的新组件实例，进行第一次渲染
+     *  2，负责对已经在舞台上的组件进行更新
+     * @param data
+     * @param component_id
+     * @param isCreateEventRender
+     * @param editorRenderTriggerERROR
+     */
+    render: function (data, component_id, isCreateEventRender, editorRenderTriggerERROR) {
+        var targetStageComponent = this.stageComponentsDict[component_id];
+        /*
+        如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
+         */
+        if (editorRenderTriggerERROR) {
+            // todo 给个提示就可用，不要更新data和html
+        } else if (editorRenderTriggerERROR) {
+
+        } else {
+            var html = 'arttemplate render 错误';
+            try {
+                html = targetStageComponent.editor.arttemplate(data);
+            } catch (e) {
+
+            }
+            targetStageComponent.dom.html(html);
+            targetStageComponent.data = data;
+        }
+
+        /*
+        如果是拖拽产生的新组件，第一次要做一个替换站位div
+         */
+        if (isCreateEventRender && targetStageComponent.isDragNew) {
+            this._stage.find('.wysi_hold').eq(0).after(targetStageComponent.dom);
+            this._stage.find('.wysi_hold').remove();
+            targetStageComponent.isDragNew = false;
+        }
+    },
     /*
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, data) {
+    create: function (editor_regid, isDragNew, data,lastSaveHtml) {
         console.log('创建stage组件');
         var newStageComponent = {
             component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
             data: null, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
-            editor: null, // vue组件
-            editor_regid: null, // vue组件的注册id
-            isDragNew: isDragNew
+            editor: null, // vue编辑器组件
+            editor_regid: null, // vue编辑器组件的注册id
+            isDragNew: isDragNew, // 是否是拖拽产生的新建组件
+            canFindEditor: true, // 是否能找到对应的编辑器组件
+            lastSaveHtml: lastSaveHtml || '' // 上一次保存的html
         };
         newStageComponent.editor_regid = editor_regid;
         newStageComponent.editor = this.canUseEditors.getComponent(newStageComponent.editor_regid);
@@ -133,10 +161,14 @@ export default {
             如果可用组件里找不到这个组件，说明组件被下架了，不能再用了。
             然后用disable组件填充编辑器
              */
+            newStageComponent.canFindEditor = false;
             newStageComponent.editor_regid = 'wysHasMiss';
             newStageComponent.editor = this.canUseEditors.getComponent('wysHasMiss');
         }
         newStageComponent.dom = this._createDom(newStageComponent);
+        if (!isDragNew) {
+            newStageComponent.dom.html(newStageComponent.lastSaveHtml);
+        }
         newStageComponent.component_id = this._createComponentId(newStageComponent.editor_regid);
         newStageComponent.data = data || {};
         // this.stageComponents.push(newStageComponent);

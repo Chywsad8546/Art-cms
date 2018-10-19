@@ -108,7 +108,7 @@
             dra.on('drop', function (el, target, source, sibling) {
                 if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
                     var editorregid = $(el).attr('editorregid');
-                    GlobalStage.create(editorregid);
+                    GlobalStage.create(editorregid,true);
                 }
                 else if($(source).attr("id")=='wysiwyg_stage'){
                     $(el).click();
