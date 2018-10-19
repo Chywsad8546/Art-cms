@@ -98,7 +98,6 @@
                 }
             });
             dra.on('drag', function (el, source) {
-                console.log('drag')
                 if ($(source).attr('id') == 'wysiwyg_stage') {
                     dragula_conf.default.copySortSource = true;
                 }
@@ -117,7 +116,7 @@
             });
         },
         created() {
-            console.log('created');
+            // console.log('created');
         }
     };
 </script>

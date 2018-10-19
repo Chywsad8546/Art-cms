@@ -47,3 +47,6 @@
 <stage-template>
     {{@ searchData.title}}
 </stage-template>
+<stage-template>
+    {{@ searchData.isPush}}
+</stage-template>

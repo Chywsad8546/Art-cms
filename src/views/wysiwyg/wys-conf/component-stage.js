@@ -8,8 +8,11 @@ export default {
     canUseEditors: {
         coms: [],
         _comsDict: {},
+        /*
+        初始化可用组件，并挂上mixin钩子
+         */
         init: function () {
-            this.coms.splice(0,this.coms.length);
+            this.coms.splice(0, this.coms.length);
             this._comsDict = {};
             for (var i = 0; i < regComponentConf.stageComponents.length; i++) {
                 var com = regComponentConf.stageComponents[i];
@@ -31,6 +34,7 @@ export default {
                             com.component.mixins.push(wysmixin);
                         }
                     }
+                    // console.log('_.trim(com.component.wys_stageTemplate',_.trim(com.component.wys_stageTemplate))
                     if (_.trim(com.component.wys_stageTemplate)) {
                         com.arttemplate = template.compile(_.trim(com.component.wys_stageTemplate));
                     } else {
@@ -50,10 +54,8 @@ export default {
         }
     },
     init: function (mainPage, editchangeEvent, stageDomElId, Pageid) {
-        console.log('stage engine init', this.canUseEditors);
         // template.defaults.debug=true;
         // template.defaults.bail =false;
-        // todo 检查混入，没混入的话，要初始化失败
         this._mainPage = mainPage;
         this._currentComponentChangeEvent = editchangeEvent;
         this.PageID = Pageid || 0;
@@ -68,7 +70,6 @@ export default {
      */
     _currentComponentChangeEvent: function () {},
     currentComponent: null,
-    stageComponents: [],
     stageComponentsDict: {},
     render: function (data, component_id, isNew) {
         var targetStageComponent = this.stageComponentsDict[component_id];
@@ -91,7 +92,7 @@ export default {
         var dom = $('<div class="comtest"></div>');
         dom.data('stageCompontHook', stageComponent);
         dom.click(function (event) {
-            if ($(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
+            if (that.currentComponent && $(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
                 that.setCurrent($(this).data('stageCompontHook'));
             }
             event.stopPropagation();
@@ -106,12 +107,14 @@ export default {
         this.currentComponent.dom.addClass('wysi_active');
         this._currentComponentChangeEvent(this.currentComponent);
     },
+    save: function () {
+        for (var key in this.stageComponentsDict) {
+
+        }
+    },
     /*
     创建 stageComponent
     @param editor_regid 组件的注册id
-    @param isDragNew
-            true:拖拽创建的
-            false:从数据库取出的
      */
     create: function (editor_regid, isDragNew, data) {
         console.log('创建stage组件');
@@ -121,18 +124,22 @@ export default {
             data: null, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
             editor: null, // vue组件
             editor_regid: null, // vue组件的注册id
-            isDragNew: isDragNew || true
+            isDragNew: isDragNew
         };
         newStageComponent.editor_regid = editor_regid;
         newStageComponent.editor = this.canUseEditors.getComponent(newStageComponent.editor_regid);
         if (!newStageComponent.editor) {
-            newStageComponent.editor_regid = 'wys_wrong';
-            newStageComponent.editor = this.canUseEditors.getComponent(newStageComponent.editor_regid);
+            /*
+            如果可用组件里找不到这个组件，说明组件被下架了，不能再用了。
+            然后用disable组件填充编辑器
+             */
+            newStageComponent.editor_regid = 'wysHasMiss';
+            newStageComponent.editor = this.canUseEditors.getComponent('wysHasMiss');
         }
         newStageComponent.dom = this._createDom(newStageComponent);
         newStageComponent.component_id = this._createComponentId(newStageComponent.editor_regid);
         newStageComponent.data = data || {};
-        this.stageComponents.push(newStageComponent);
+        // this.stageComponents.push(newStageComponent);
         this.stageComponentsDict[newStageComponent.component_id] = newStageComponent;
         this.setCurrent(newStageComponent);
     },

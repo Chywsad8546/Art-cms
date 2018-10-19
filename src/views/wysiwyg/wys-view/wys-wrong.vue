@@ -1,19 +1,12 @@
 <template>
-    <div>这是错误</div>
+    <div>此组件已下架，不能再使用了。不过</div>
 </template>
 
 <script>
     export default {
         name: "wys-wrong",
         data() {
-            return {
-                name: 'name123',
-                age: 'age123',
-                searchData: {
-                    title: 'title123',
-                    isPush: '0'
-                }
-            };
+            return {};
         },
         created: function () {
         }

@@ -1,5 +1,5 @@
 import wys_img from './wys-view/wys-img.vue';
-import wys_wrong from './wys-view/wys-wrong';
+import wysHasMiss from './wys-view/wys-wrong';
 
 export default {
 
@@ -11,8 +11,8 @@ export default {
         },
         {
             icon: 'http://wap-qn.bidewu.com/003a814f-a6d1-11e8-8d43-00cfe03e854e.jpg',
-            component: wys_wrong,
-            id: 'wys_wrong'
+            component: wysHasMiss,
+            id: 'wysHasMiss'
         }
     ]
 };
