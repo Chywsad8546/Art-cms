@@ -90,10 +90,8 @@
             if(window.__drag){
                 window.__drag.destroy();
             }
-            console.log('darg',document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage'));
             var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
             window.__drag=dra;
-            // console.log('drake.containers',dra.containers)
             dra.on('cloned', function (clone, original, type) {
                 if (!$(clone).hasClass('gu-mirror')) {
                     $(clone).addClass('wysi_hold');
