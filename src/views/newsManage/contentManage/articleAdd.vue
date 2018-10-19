@@ -603,7 +603,7 @@
                     this.qrcode(url);
             },
             previewCancel() {
-                if(this.form.isPublish == 1 && this.flagPreview == false){
+                if(this.flagPreview == false){
                     setTimeout(()=>{
                         this.$router.push({
                             name: "newsManageList"
