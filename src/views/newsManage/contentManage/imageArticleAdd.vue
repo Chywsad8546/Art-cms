@@ -442,6 +442,7 @@
                 }
                 this.typeKeepArr();
                 this.preventRepeatClick();
+                this.flagPreview = false;
                 this.form.content = JSON.stringify(this.pitchImgArr);
                 this.form.preContent = JSON.stringify(this.pitchImgArr);
                 this.form.isPublish = type;
@@ -543,6 +544,7 @@
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
                 this.form.isPublish = type;
+                this.flagPreview = true;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                 }

@@ -315,6 +315,7 @@
                // this.form.content.textarea = this.form.textarea;
                 //this.form.content = JSON.stringify(this.form.content);
                 this.form.isPublish = type;
+                this.flagPreview = false;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                         api.editArticle(this.form).then(response => {
@@ -425,6 +426,7 @@
                 this.preventRepeatClick();
                 this.keepArray();
                 this.form.isPublish = type;
+                this.flagPreview = true;
                 if(this.Lid.id != undefined){
                         this.form.id = this.Lid.id;
                 }
