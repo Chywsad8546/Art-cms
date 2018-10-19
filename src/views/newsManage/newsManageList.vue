@@ -96,6 +96,7 @@
     import apiDictionary from '../../api/dictionary/channelDictionary.js';
     import apiTagDictionary from '../../api/dictionary/tagDictionary.js';
     import QRCode from 'qrcodejs2';
+    import dutil from '../../libs/util.js';
     export default {
         data() {
             return {
@@ -446,7 +447,6 @@
                     }
                 ],
                 searchData: {
-
                 },
                 data: [],
                 initTable: [],
@@ -489,6 +489,17 @@
             },
             handleSearch () {
                 this.searchData.pageNum = 1;
+
+                console.log(typeof this.searchData.starTime !== 'string')
+                if (typeof this.searchData.starTime !== 'string') {
+                    this.searchData.starTime = dutil.dateformat(this.searchData.starTime, 'yyyy-MM-dd');
+                }
+
+                console.log(typeof this.searchData.endTime !== 'string')
+                if (typeof this.searchData.endTime !== 'string') {
+                    this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
+                }
+
                 this.init();
             },
             handleCancel (name) {
