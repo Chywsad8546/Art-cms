@@ -170,7 +170,7 @@
                 },
                 ruleValidate: {
                     title: [
-                        { type: 'string', max: 25, message: '已超过25个字', trigger: 'change' }
+                        { type: 'string', max: 50, message: '已超过50个字', trigger: 'change' }
                     ],
                 },
             }
@@ -185,6 +185,9 @@
             }
         },
         methods: {
+            computedByteLen(str) {
+                return str.replace(/[^\x00-\xff]/g, '01').length
+            },
             previewCancel() {
                 if(this.flagPreview == false){
                     setTimeout(()=>{
@@ -336,7 +339,7 @@
                     });
                     return false;
                 }
-                if(this.form.title.length > 25){
+                if(this.computedByteLen(this.form.title) > 50){
                         this.$Notice.warning({
                             title: "标题不能超过25字"
                         });
