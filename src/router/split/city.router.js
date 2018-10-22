@@ -7,6 +7,13 @@ export const otherRouter = {
     component: Main,
     children: [
         {
+            path: 'ad/addetail',
+            title: '广告详情',
+            name: 'ad_addetail',
+            component: () =>
+                import('@/views/advertisement/adDetailView.vue')
+        },
+        {
             path: 'cityManageSystem/org',
             title: '组织架构',
             name: 'org',
@@ -497,7 +504,16 @@ export const appRouter = [
 ];
 
 export const aloneRouter = [
-
+    {
+        path: '/wysiwyg',
+        name: 'wysiwygmain',
+        meta: {
+            requireAuth:false,
+            title: '编辑器主页面'
+        },
+        component: () =>
+            import ('@/views/wysiwyg/main.vue')
+    }
 ];
 
 export default {
