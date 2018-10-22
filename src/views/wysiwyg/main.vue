@@ -49,9 +49,12 @@
             </div>
         </div>
         <div style="position: fixed;right: 0px;top:0px;width: 300px; background-color: white ">
-            <navigation :include="includeIds">
-                <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
-            </navigation>
+
+                    <navigation :include="includeIds">
+                        <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
+                    </navigation>
+
+
         </div>
     </div>
 </template>

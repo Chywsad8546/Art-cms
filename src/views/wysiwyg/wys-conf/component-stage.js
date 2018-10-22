@@ -114,6 +114,7 @@ export default {
         /*
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
+        console.log('render',data, component_id, isCreateEventRender, editorRenderTriggerERROR)
         if (editorRenderTriggerERROR) {
             // todo 给个提示就可用，不要更新data和html
         } else if (editorRenderTriggerERROR) {
@@ -123,7 +124,7 @@ export default {
             try {
                 html = targetStageComponent.editor.arttemplate(data);
             } catch (e) {
-
+                console.error('arttemplate渲染报错',e);
             }
             targetStageComponent.dom.html(html);
             targetStageComponent.data = data;

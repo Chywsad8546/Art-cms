@@ -1,23 +1,30 @@
 <template>
-    <Row class="margin-top-10 searchable-table-con1">
-        <Form  ref="searchData" :model="searchData" inline :label-width="120">
-            <FormItem label="消息标题" prop="title">
-                <Input v-model.trim="searchData.title" style="width:140px"></Input>
-            </FormItem>
+    <Tabs>
+        <TabPane label="内容" >
+            <Form  :label-width="80" >
 
-            <FormItem label="推送状态" prop="isPush">
-                <Select v-model="searchData.isPush" style="width:140px">
-                    <Option value="0">未推送</Option>
-                    <Option value="1">推送成功</Option>
-                    <Option value="2">推送失败</Option>
-                </Select>
-            </FormItem>
+                <FormItem label="" prop="title">
+                    <Upload action="cmsapi/upload/uploadimgNoDomainExt"   :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
+                            :on-format-error="uploadFormatError"
+                            :show-upload-list="false">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">设置图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <!--<FormItem label="推送状态" prop="isPush">-->
+                    <!--<Select v-model="searchData.isPush" >-->
+                        <!--<Option value="0">未推送</Option>-->
+                        <!--<Option value="1">推送成功</Option>-->
+                        <!--<Option value="2">推送失败</Option>-->
+                    <!--</Select>-->
+                <!--</FormItem>-->
 
 
-        </Form>
+            </Form>
+        </TabPane>
 
+    </Tabs>
 
-    </Row>
 </template>
 
 <script>
@@ -26,13 +33,27 @@
         name: 'wys-img',
         data() {
             return {
-                name: 'name123',
-                age: 'age123',
-                searchData: {
-                    title: 'title123',
-                    isPush: '0'
-                }
+                image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png'
             };
+        },
+        methods: {
+            uploadSuccess (res, file) {
+                if (res.code === 'success') {
+                    this.image = this.$imgurl(res.data.url);
+                }
+                else {
+                    this.$Notice.error({
+                        title: '上传失败',
+                        desc: res.data.url
+                    });
+                }
+            },
+            uploadFormatError(file) {
+                this.$Notice.error({
+                    title: '不能上传此格式的文件',
+                    desc: ''
+                });
+            },
         },
         created: function () {
             // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
@@ -45,8 +66,6 @@
 </style>
 
 <stage-template>
-    {{@ searchData.title}}
-</stage-template>
-<stage-template>
-    {{@ searchData.isPush}}
+    <img src="{{@ image}}" />
+
 </stage-template>

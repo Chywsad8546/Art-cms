@@ -130,8 +130,14 @@
                 });
             },
             initWatch(){
+                /**
+                 * 挂载watch钩子，当数据有变化的时候，更新预览显示
+                 */
                 this.$watch('formItem', function (newVal, oldVal) {
                     // 做点什么
+                    console.log('newVal',newVal)
+                },{
+                    deep: true
                 });
             }
         },
@@ -158,6 +164,7 @@
                 }
                 this.$set(this.ruleValidate, item.name, [rule]);
             }
+            this.initWatch();
         }
     };
 </script>
