@@ -85,8 +85,7 @@
                 columns: [
                     {
                         key: 'id',
-                        title: 'id',
-                        width: 100
+                        title: 'id'
                     },
                     {
                         key: 'title',
@@ -112,7 +111,7 @@
                         }
                     },
                     {
-                        title: '标题',
+                        title: '类型',
                         render: (h, params) => {
                             var type = params.row.type;
                             if (type == 0) {
@@ -183,12 +182,12 @@
                     },
                     {
                         key: 'readCount',
-                        width: 80,
+                        width: 40,
                         title: '阅读量'
                     },
                     {
                         key: 'sort',
-                        width: 80,
+                        width: 40,
                         title: '排序'
                     },
                     {
