@@ -7,6 +7,13 @@ export const otherRouter = {
     component: Main,
     children: [
         {
+            path: 'ad/addetail',
+            title: '广告详情',
+            name: 'ad_addetail',
+            component: () =>
+                import('@/views/advertisement/adDetailView.vue')
+        },
+        {
             path: 'cityManageSystem/org',
             title: '组织架构',
             name: 'org',
