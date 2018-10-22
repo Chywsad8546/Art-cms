@@ -470,7 +470,19 @@ export const appRouter = [
                 // },
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
-            }]
+            },
+            {
+                path: 'formtemplate',
+                name: 'formtemplate',
+                title: '模板管理',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/formtemplate.vue')
+            }
+        
+        ]
     }
     // {
     //     path: '/cityManageSystem',    5
