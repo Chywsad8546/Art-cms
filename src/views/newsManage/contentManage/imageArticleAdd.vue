@@ -17,7 +17,7 @@
                         <img :src="ImgArr.img"/>
                     </div>
                     <div class="areainput">
-                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />
+                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个字）" />
                     </div>
                     <div class="czCon">
                         <Button type="primary" @click="editUpimg(index)">换图</Button>
