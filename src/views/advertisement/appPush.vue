@@ -46,7 +46,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
+                            <Button type="primary" @click="addModeButton">添加</Button>
                         </FormItem>
                     </Form>
 
@@ -176,7 +176,6 @@
                     {
                         title: '推送类型',
                         key: 'pushType',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             if (params.row.pushType == 1) {
@@ -187,9 +186,20 @@
                         }
                     },
                     {
+                        title: '推送类型',
+                        key: 'pushType',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isDel == 0) {
+                                return h('div', ["待发布"]);
+                            }else if (params.row.isDel == 1){
+                                return h('div', ["发布"]);
+                            }
+                        }
+                    },
+                    {
                         title: '图标',
                         key: 'action',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -208,11 +218,35 @@
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            var uisDel = 0;
+                            if (params.row.isDel == 0) {
+                                uisDel = 1;
+                            } else if (params.row.isDel == 1) {
+                                uisDel = 0;
+                            }
                             return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.updateIsDel(params.row.id, uisDel);
+                                                this.init();
+                                            }
+                                        }
+                                    },
+                                    '更改发布状态'
+                                ),
                                 h(
                                     'Button',
                                     {
@@ -252,12 +286,8 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 updateCahnnelValue: {
-                    title: '',
-                    type: ''
                 },
                 addNewsChannelModal: {
-                    title: '',
-                    type: '',
                     positionId:900
                 },
                 ruleValidate: {
@@ -267,7 +297,13 @@
             };
         },
         methods: {
+            addModeButton(){
+                this.addNewsChannelModal = {positionId: 900};
+                this.isTrueAddTag = true;
+            },
             init(){
+                this.updateCahnnelValue = {};
+                this.addNewsChannelModal = {positionId: 900};
                 api.getappPushListAll(this.searchData).then(response => {
                     //console.log(response.data.data);
                     this.total=response.data.count;
@@ -322,6 +358,14 @@
             sizeChange (size) {
                 this.searchData.limit = size;
                 this.init();
+            },
+            updateIsDel(id, isDel){
+                api.updateAppPush({id: id, isDel: isDel}).then(response => {
+                    if (response.data.data > 0){
+                        this.$Message.success('修改成功');
+                        this.init();
+                    }
+                });
             }
         },
         created(){

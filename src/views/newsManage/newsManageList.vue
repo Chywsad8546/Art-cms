@@ -77,6 +77,21 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <Modal v-model="qrcodeModal" width="230">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span></span>
+            </p>
+            <Tabs type="card" >
+                <TabPane label="WEB预览">
+                    <div style="text-align:center">
+                        <p class="qrcode" id="qrcode"></p>
+                    </div>
+                </TabPane>
+            </Tabs>
+            <div slot="footer">
+            </div>
+        </Modal>
     </Row>
 </template>
 <script>
@@ -84,11 +99,13 @@
     import apiNewsManageme from '../../api/newsManageme/newsManageme.js';
     import apiDictionary from '../../api/dictionary/channelDictionary.js';
     import apiTagDictionary from '../../api/dictionary/tagDictionary.js';
-
+    import QRCode from 'qrcodejs2';
+    import dutil from '../../libs/util.js';
     export default {
         data() {
             return {
-                defaultList: [],
+                qrcodeModal:false,
+                defaultList:[],
                 columns: [
                     {
                         key: 'id',
@@ -208,8 +225,28 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
-                            var guanliOpration = [];
-                            if (this.$hasAuth('button_newsmodify')) {
+                            var guanliOpration=[];
+                            if(this.$hasAuth('button_appPreview')) {
+                                guanliOpration.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.previewFun(params.row.id, params.row.type)
+                                            }
+                                        }
+                                    },
+                                    '预览'
+                                ));
+                            }
+                            if(this.$hasAuth('button_newsmodify')) {
                                 if (params.row.type == 0) {
                                     guanliOpration.push(h(
                                         'Button',
@@ -419,7 +456,6 @@
                     }
                 ],
                 searchData: {
-
                 },
                 data: [],
                 initTable: [],
@@ -439,7 +475,7 @@
                 apiNewsManageme.getAllAuthor().then(response =>{
                     this.allAuthor = response.data.data
                 })
-                apiTagDictionary.getTagDictionaryList().then(response => {
+                apiTagDictionary.getTagDictionaryList({pageSize: 1000}).then(response => {
                     this.tagDatas = response.data.data
                 })
                 apiDictionary.getChannelDictionaryList().then(response => {
@@ -462,6 +498,17 @@
             },
             handleSearch () {
                 this.searchData.pageNum = 1;
+
+                console.log(typeof this.searchData.starTime !== 'string')
+                if (typeof this.searchData.starTime !== 'string') {
+                    this.searchData.starTime = dutil.dateformat(this.searchData.starTime, 'yyyy-MM-dd');
+                }
+
+                console.log(typeof this.searchData.endTime !== 'string')
+                if (typeof this.searchData.endTime !== 'string') {
+                    this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
+                }
+
                 this.init();
             },
             handleCancel (name) {
@@ -476,6 +523,38 @@
             sizeChange (size) {
                 this.searchData.pageSize = size;
                 this.init();
+            },
+            previewFun(id,type) {//预览事件
+                var url;
+                if (type == 0){
+                    url = this.$domain.cityDomain +'?id='+id;
+                }else if (type == 1){
+                    url = this.$domain.cityDomainimg +'?id='+id;
+                } else if (type == 2){
+                    url = this.$domain.hshipinDomainurl +'?id='+id;
+                } else if (type == 3){
+                    url = this.$domain.sshipinDomainurl +'?id='+id;
+                }
+                apiNewsManageme.listAddPreview({id:id}).then(response => {
+                    let pre = response.data.data.pre;
+                    let sign = response.data.data.sign;
+                    let timestamp = response.data.data.timestamp;
+                    this.qrcodeModal = !this.qrcodeModal;
+                    document.getElementById("qrcode").innerHTML = "";
+                    url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    console.log(url);
+                    this.qrcode(url);
+                });
+            },
+            qrcode (url) {
+                let qrcode = new QRCode('qrcode', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: url // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         },
         created(){
