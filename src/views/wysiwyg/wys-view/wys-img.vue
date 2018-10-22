@@ -33,13 +33,15 @@
         name: 'wys-img',
         data() {
             return {
-                image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png'
+                share:{
+                    image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png'
+                }
             };
         },
         methods: {
             uploadSuccess (res, file) {
                 if (res.code === 'success') {
-                    this.image = this.$imgurl(res.data.url);
+                    this.share.image = this.$imgurl(res.data.url);
                 }
                 else {
                     this.$Notice.error({
@@ -69,3 +71,6 @@
     <img src="{{@ image}}" />
 
 </stage-template>
+<stage-javascript>
+
+</stage-javascript>

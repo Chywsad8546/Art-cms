@@ -42,6 +42,14 @@ export default {
                             return '错误 没有定义stage-template模板内容';
                         };
                     }
+                    if (_.trim(com.component.wys_stageJavascript)) {
+                        com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
+                    } else {
+                        com.artjavascript = function () {
+                            return '';
+                        };
+                    }
+
                     this.coms.push(com);
                 } else {
                     console.log(this._comsDict, regComponentConf.stageComponents);
@@ -114,19 +122,25 @@ export default {
         /*
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
-        console.log('render',data, component_id, isCreateEventRender, editorRenderTriggerERROR)
+        console.log('render', data, component_id, isCreateEventRender, editorRenderTriggerERROR);
         if (editorRenderTriggerERROR) {
             // todo 给个提示就可用，不要更新data和html
         } else if (editorRenderTriggerERROR) {
 
         } else {
             var html = 'arttemplate render 错误';
+            var js = '';
             try {
                 html = targetStageComponent.editor.arttemplate(data);
+                js = targetStageComponent.editor.artjavascript(data);
             } catch (e) {
-                console.error('arttemplate渲染报错',e);
+                console.error('arttemplate渲染报错', e);
             }
             targetStageComponent.dom.html(html);
+            if (_.trim(js)) {
+                $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
+            }
+            targetStageComponent.js = _.trim(js);
             targetStageComponent.data = data;
         }
 
@@ -143,11 +157,12 @@ export default {
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, data,lastSaveHtml) {
+    create: function (editor_regid, isDragNew, data, lastSaveHtml) {
         console.log('创建stage组件');
         var newStageComponent = {
             component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
+            js: '', // 会最终展示出来shi
             data: null, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
             editor: null, // vue编辑器组件
             editor_regid: null, // vue编辑器组件的注册id
