@@ -161,6 +161,26 @@ export const appRouter = [
                 import('@/views/cityManageSystem/blankPage.vue')
         },
         {
+                path: 'formtemplate',
+                name: 'formtemplate',
+                title: '模板添加',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/formtemplate.vue')
+        },
+        {
+                path: 'templateList',
+                name: 'templateList',
+                title: '模板列表',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/templateList.vue')
+        },
+        {
             path: 'guanggapwei',
             name: 'guanggapwei',
             title: '广告位',
@@ -470,18 +490,7 @@ export const appRouter = [
                 // },
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
-            },
-            {
-                path: 'formtemplate',
-                name: 'formtemplate',
-                title: '模板管理',
-                // meta: {
-                //     requireAuth: true
-                // },
-                component: () =>
-                    import('@/views/advertisement/formtemplate.vue')
-            }
-        
+            }     
         ]
     }
     // {

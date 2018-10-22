@@ -71,7 +71,7 @@ module.exports = merge(webpackBaseConfig, {
             //匹配代理的url
             '/cmsapi': {
                 // 目标服务器地址
-                target: 'http://newcms.dev.bidewu.com/',
+                target: 'http://192.168.1.46:8084/',
                 //target: 'http://127.0.0.1:8084/',
                 //路径重写
                 pathRewrite: {'^/cmsapi' : '/cmsapi'},
