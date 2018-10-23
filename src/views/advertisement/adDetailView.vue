@@ -5,11 +5,14 @@
             <p slot="title">广告详情</p>
             <Row >
                 <Col span="12">
+                <Alert type="warning" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
                     <div ref="stage">
 
                     </div>
                 </Col>
-                <Col span="12">
+                <!--<Col span="12" v-if="!isNewSystem">-->
+                <!--</Col>-->
+                <Col span="12" v-if="isNewSystem">
                 <Form ref="commonForm" :model="commonForm" :rules="commonFormRuleValidate" :label-width="80">
                         <FormItem label="甲方公司名称" required prop="adCompany">
                             <Input v-model="commonForm.adCompany" placeholder="请填写内容"></Input>
@@ -115,7 +118,8 @@
                     adName: [
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
-                }
+                },
+                isNewSystem:false
 
             };
         },
@@ -227,20 +231,30 @@
             var that = this;
             if (this.$route.query.id) {
                 ad.getIdea(this.$route.query.id).then(function (res) {
-                    that.typeId = res.data.data.typeId;
-                    let ideares = res.data.data;
-                    let ideaData = JSON.parse(res.data.data.adData);
-                    editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
-                        that.confs = JSON.parse(res.data.data.form);
-                        that.confs.forEach(function (item) {
-                            item.default = ideaData[item.name] || '';
+                    if(res.data.data.isNew) {
+                        that.typeId = res.data.data.typeId;
+                        let ideares = res.data.data;
+                        let ideaData = JSON.parse(res.data.data.adData);
+                        editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
+                            that.confs = JSON.parse(res.data.data.form);
+                            that.confs.forEach(function (item) {
+                                item.default = ideaData[item.name] || '';
+                            });
+                            that.commonForm.adCompany = ideares.adCompany;
+                            that.commonForm.adName = ideares.adName;
+                            that.arttemplate = res.data.data.template;
+                            that.positionId = res.data.data.positionId;
+                            that.init();
+                            that.isNewSystem=true;
                         });
-                        that.commonForm.adCompany = ideares.adCompany;
-                        that.commonForm.adName = ideares.adName;
-                        that.arttemplate = res.data.data.template;
-                        that.positionId = res.data.data.positionId;
-                        that.init();
-                    });
+                    }
+                    /**
+                     * 旧系统录的创意不能编辑了，只能看
+                     */
+                    else {
+                        that.isNewSystem=false;
+                        $(this.$refs['stage']).html(res.data.data.adResource);
+                    }
                 });
             } else {
                 editortemplate.getTemplate(this.$route.query.templateid).then(function (res) {
