@@ -55,8 +55,10 @@
         </Col>
     </Row>
 </template>
+
 <script>
     import navigation from '@/libs/navigation';
+    import _ from 'lodash';
     import regEditor from './adSeniorEditorRouter';
     import defaultEditor from './adSeniorEditor/defaultEditor.vue';
     import util from '@/libs/util';
@@ -68,12 +70,17 @@
             return {
                 includeIds: [],
                 currentEditor: defaultEditor,
-                currentEditorKey: 'adHasMissEditor'
+                currentEditorKey: 'adHasMissEditor',
+                arttemplate: ''
             };
         },
         methods: {
-            sharechange(newVal) {
-
+            sharechange(newVal, id) {
+                if (this.arttemplate) {
+                    var html = template.render(this.arttemplate, {share: newVal});
+                    $(this.$refs['stage']).html(html);
+                }
+                console.log('sharechange', newVal, id);
             },
             /**
              * 混入数据变化监听
@@ -89,7 +96,7 @@
                      */
                         // this.$set(this.share, 'brickid', this.$vnode.key);
                         this.$watch('share', function (newVal, oldVal) {
-                            this.$emit(newVal, this.$vnode.key);
+                            this.$emit('sharechange', newVal, this.$vnode.key);
                         }, {
                             deep: true
                         });
@@ -110,15 +117,19 @@
                     }
                 }
             }
+
         },
         mounted() {
         },
         created() {
+            // console.log('regEditor.editorRouters',regEditor)
             var that = this;
-            regEditor.editorRouters[0].component().then(function (res) {
+            this.$route.query.templateid;
+            regEditor.editorRouters[1].component().then(function (res) {
                 that.hookWatch(res.default);
                 that.currentEditor = res.default;
                 that.currentEditorKey = 'testdemo';
+                that.arttemplate = _.trim(res.default.wys_stageTemplate);
                 console.log('res', res);
             }).catch(function (res) {
                 console.error('error', res);

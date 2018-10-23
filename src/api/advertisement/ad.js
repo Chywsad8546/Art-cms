@@ -32,6 +32,9 @@ export default {
     },
     editIdea(params) {
         return http.post('/cmsapi/idea/editIdea', params);
+    },
+    setDefault(params) {
+        return http.post('/cmsapi/idea/setDefault', params);
     }
 
 };
