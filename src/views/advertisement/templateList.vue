@@ -44,11 +44,12 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$router.push({
-                                                name: 'formtemplate',
-                                                query: {advertId: params.row.id}
-                                            });
-                                            //this.moveUp(params.index,params.row)
+                                            if(params.row.isNew == 1){
+                                                this.$router.push({
+                                                    name: 'formtemplate',
+                                                    query: {advertId: params.row.id}
+                                                });
+                                            }
                                         }
                                     }
                                 }, '编辑'),

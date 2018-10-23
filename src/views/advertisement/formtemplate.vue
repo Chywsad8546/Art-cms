@@ -141,56 +141,7 @@
                     {
                         title: '组件类型',
                         key: 'type'
-                    },
-                    {
-                        title: 'Action',
-                        key: 'action',
-                        width: 240,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.moveUp(params.index,params.row)
-                                        }
-                                    }
-                                }, '上移'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.moveDown(params.index,params.row)
-                                        }
-                                    }
-                                }, '下移'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.confsRemove(params.index)
-                                        }
-                                    }
-                                }, 'Delete')
-                            ]);
-                        }
-                    }
+                    }                   
                 ],
                 confs: [
                     // {
@@ -271,7 +222,6 @@
             }, 
             confsRemove(index){
                     this.confs.splice(index,1);
-                    console.log(this.confs);
             },     
             popupOk () {       
                 let strArr = {
@@ -329,7 +279,6 @@
             getIdeaTypeData(){
                 this.vshowFlag = !this.vshowFlag;
                 api.getIdeaTypeData(this.Lid).then(response => {
-                    console.log(response.data.data);
                     this.formItem.name = response.data.data.name;
                     this.formItem.template = response.data.data.template;
                     this.confs = JSON.parse(response.data.data.form);
@@ -367,6 +316,57 @@
             this.Lid.id = this.$route.query.advertId;
             if(this.Lid.id != undefined){
                 this.getIdeaTypeData();
+            }else{
+                let tableJson = {
+                            title: 'Action',
+                            key: 'action',
+                            width: 240,
+                            align: 'center',
+                            render: (h, params) => {
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.moveUp(params.index,params.row)
+                                            }
+                                        }
+                                    }, '上移'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.moveDown(params.index,params.row)
+                                            }
+                                        }
+                                    }, '下移'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.confsRemove(params.index)
+                                            }
+                                        }
+                                    }, 'Delete')
+                                ]);
+                            }
+                        }
+                this.columns.push(tableJson);
             }
         }
     };
