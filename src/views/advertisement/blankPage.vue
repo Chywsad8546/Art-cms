@@ -179,10 +179,11 @@
                 });
             },
             queryBlank(){
-                // let year = this.formItem.time.getFullYear();       //获取当前年份(2位)  
-                // let moneth = this.formItem.time.getMonth()+1;       //获取当前年份(2位)  
-                // let dqDate = this.formItem.time.getDate();
-                this.formItem.time = dutil.dateformat(this.dateTime, 'yyyy-MM-dd');
+                if(this.dateTime){
+                   this.formItem.time = dutil.dateformat(this.dateTime, 'yyyy-MM-dd');
+                }else{
+                    this.formItem.time = "";
+                }            
                 this.adListAll();
             }
         },
