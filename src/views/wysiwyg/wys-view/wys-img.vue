@@ -68,9 +68,9 @@
 </style>
 
 <stage-template>
-    <img src="{{@ image}}" />
+    <img id="{{@ brickid}}" src="{{@ image}}" />
 
 </stage-template>
-<stage-javascript>
-
+<stage-javascript type="text/javascript">
+    alert($('#{{@ brickid}}').length)
 </stage-javascript>

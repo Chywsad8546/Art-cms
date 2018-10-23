@@ -42,6 +42,7 @@ export default {
                             return '错误 没有定义stage-template模板内容';
                         };
                     }
+                    console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript, com.component.wys_stageTemplate);
                     if (_.trim(com.component.wys_stageJavascript)) {
                         com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
                     } else {
@@ -123,26 +124,18 @@ export default {
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
         console.log('render', data, component_id, isCreateEventRender, editorRenderTriggerERROR);
-        if (editorRenderTriggerERROR) {
-            // todo 给个提示就可用，不要更新data和html
-        } else if (editorRenderTriggerERROR) {
 
-        } else {
-            var html = 'arttemplate render 错误';
-            var js = '';
-            try {
-                html = targetStageComponent.editor.arttemplate(data);
-                js = targetStageComponent.editor.artjavascript(data);
-            } catch (e) {
-                console.error('arttemplate渲染报错', e);
-            }
-            targetStageComponent.dom.html(html);
-            if (_.trim(js)) {
-                $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
-            }
-            targetStageComponent.js = _.trim(js);
-            targetStageComponent.data = data;
+        var html = 'arttemplate render 错误';
+        var js = '';
+        try {
+            html = targetStageComponent.editor.arttemplate(data);
+            js = targetStageComponent.editor.artjavascript(data);
+        } catch (e) {
+            console.error('arttemplate渲染报错', e);
         }
+        targetStageComponent.dom.html(html);
+
+        targetStageComponent.data = data;
 
         /*
         如果是拖拽产生的新组件，第一次要做一个替换站位div
@@ -152,6 +145,10 @@ export default {
             this._stage.find('.wysi_hold').remove();
             targetStageComponent.isDragNew = false;
         }
+        if (_.trim(js)) {
+            $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
+        }
+        targetStageComponent.js = _.trim(js);
     },
     /*
     创建 stageComponent
