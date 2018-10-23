@@ -7,6 +7,20 @@ export const otherRouter = {
     component: Main,
     children: [
         {
+            path: 'ad/addetail',
+            title: '广告详情',
+            name: 'ad_addetail',
+            component: () =>
+                import('@/views/advertisement/adSimpleView.vue')
+        },
+        {
+            path: 'ad/addsenioretail',
+            title: '广告详情',
+            name: 'ad_addsenioretail',
+            component: () =>
+                import('@/views/advertisement/adSeniorView.vue')
+        },
+        {
             path: 'cityManageSystem/org',
             title: '组织架构',
             name: 'org',
@@ -150,12 +164,65 @@ export const otherRouter = {
 };
 
 export const appRouter = [
-    //人员管理
+    //专题建站
+    {
+        path: '/specialtopic',
+        icon: 'social-buffer',
+        name: 'specialtopic',
+        title: '专题建站',
+        component: Main,
+        children: [
+
+            {
+                path: 'wysiwygmaindemo',
+                name: 'wysiwygmaindemo',
+                title: 'demo',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/wysiwyg/main.vue')
+            },
+            {
+                path: 'luodiye',
+                name: 'luodiye',
+                title: '源码专题页',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/cityManageSystem/blankPage.vue')
+            },
+        ]
+    },
+
+    //消息推送
+    {
+        path: '/pushmessage',
+        icon: 'social-buffer',
+        name: 'pushmessage',
+        title: '消息推送',
+        component: Main,
+        children: [
+
+            {
+                path: 'apppushlist',
+                name: 'apppushlist',
+                title: '推送列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/appPush.vue')
+            }
+        ]
+    },
+    //位置广告
     {
         path: '/cityManageSystem',
         icon: 'social-buffer',
         name: 'personManage',
-        title: '广告管理',
+        title: '位置广告',
         component: Main,
         children: [{
             path: 'yihaoyuan',
@@ -207,16 +274,7 @@ export const appRouter = [
             component: () =>
                 import('@/views/cityManageSystem/blankPage.vue')
         },
-        {
-            path: 'luodiye',
-            name: 'luodiye',
-            title: '落地页',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
-        },
+
         {
             path: 'guanggaoyonghuliebiao',
             name: 'guanggaoyonghuliebiao',
@@ -226,16 +284,6 @@ export const appRouter = [
             // },
             component: () =>
                 import('@/views/cityManageSystem/blankPage.vue')
-        },
-        {
-            path: 'apppushlist',
-            name: 'apppushlist',
-            title: '推送列表',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/advertisement/appPush.vue')
         },
         {
             path: 'manyplotad',
@@ -513,7 +561,16 @@ export const appRouter = [
 ];
 
 export const aloneRouter = [
-
+    {
+        path: '/wysiwyg',
+        name: 'wysiwygmain',
+        meta: {
+            requireAuth:false,
+            title: '编辑器主页面'
+        },
+        component: () =>
+            import ('@/views/wysiwyg/main.vue')
+    }
 ];
 
 export default {
