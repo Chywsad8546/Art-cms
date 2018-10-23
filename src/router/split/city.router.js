@@ -138,7 +138,14 @@ export const otherRouter = {
             },
             component: () =>
                 import('@/views/cityManageSystem/customerManage/projExpertList.vue')
-        }
+        },
+        {
+            path: 'cityManageSystem/positionEdit',
+            title: '排期详情页',
+            name: 'positionEdit',
+            component: () =>
+                import('@/views/advertisement/positionEdit.vue')
+        },
     ]
 };
 
@@ -188,7 +195,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
+                import('@/views/advertisement/blankPage.vue')
         },
         {
             path: 'chuangyibiao',

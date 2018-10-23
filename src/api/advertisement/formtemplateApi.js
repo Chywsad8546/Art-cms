@@ -31,5 +31,15 @@ export default {
         return http.get('/cmsapi/getIdeaTypeData', {
             params: params
         });
-    },    
+    }, 
+    adListAll(params) {
+        return http.get('/cmsapi/adListAll', {
+            params: params
+        });
+    },
+    getAdPositionInfo(params) {
+        return http.get('/cmsapi/getAdPositionInfo', {
+            params: params
+        });
+    },
 }
