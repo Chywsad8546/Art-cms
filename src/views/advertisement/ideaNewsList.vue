@@ -1,0 +1,316 @@
+<template>
+    <Row>
+        <Col span="100">
+            <Card>
+                <p slot="title">推送列表管理</p>
+                <Row class="margin-top-10 searchable-table-con1">
+                    <Form  ref="searchData" :model="searchData" inline :label-width="120">
+                        <FormItem label="消息标题" prop="title">
+                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
+                        </FormItem>
+
+                        <FormItem label="推送状态" prop="isPush">
+                            <Select v-model="searchData.isPush" style="width:140px">
+                                <Option value="0">未推送</Option>
+                                <Option value="1">推送成功</Option>
+                                <Option value="2">推送失败</Option>
+                            </Select>
+                        </FormItem>
+
+                        <FormItem label="政策类型" prop="pushType">
+                            <Select v-model="searchData.pushType" style="width:140px">
+                                <Option value="1">政策知识</Option>
+                                <Option value="2">热点新闻</Option>
+                            </Select>
+                        </FormItem>
+
+                        <FormItem label="开始时间"  prop="starTime">
+                            <DatePicker type="date" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        </FormItem>
+                        <FormItem label="结束时间"  prop="endTime">
+                            <DatePicker type="date" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        </FormItem>
+
+                        <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
+                                        <Select v-model="searchData.businessCardAuth" style="width:140px">
+                                            <Option value="">全部</Option>
+                                            <Option value="0">未认证</Option>
+                                            <Option value="1">认证中</Option>
+                                            <Option value="2">认证通过</Option>
+                                            <Option value="3">认证不通过</Option>
+                                        </Select>
+                                    </FormItem>-->
+                        <FormItem>
+                            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
+                            <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
+                        </FormItem>
+
+                        <FormItem>
+                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
+                        </FormItem>
+                    </Form>
+
+                    <Table border :columns="columns" :data="data"></Table>
+                    <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
+                </Row>
+            </Card>
+
+        </Col>
+
+        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+            <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
+                <FormItem label="消息标题" prop="title">
+                    <Input v-model.trim="addNewsChannelModal.title" style="width:140px"></Input>
+                    <input v-model.trim="addNewsChannelModal.positionId" hidden></input>
+                </FormItem>
+
+                <FormItem label="推送时间"  prop="pushTime">
+                    <DatePicker type="datetime" format="yyyy-MM-dd HH:mm:ss" v-model="addNewsChannelModal.pushTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                </FormItem>
+
+                <FormItem label="推送类型" prop="type">
+                    <Select v-model="addNewsChannelModal.pushType" style="width:140px">
+                        <Option value="1">政策知识</Option>
+                        <Option value="2">热点新闻</Option>
+                    </Select>
+                </FormItem>
+
+                <FormItem label="跳转链接" prop="desc">
+                    <Input v-model.trim="addNewsChannelModal.pushLink" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="图片" prop="icon">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="摘要" prop="desc">
+                    <Input type="textarea" v-model.trim="addNewsChannelModal.summary"></Input>
+                </FormItem>
+                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
+                                <Select v-model="searchData.businessCardAuth" style="width:140px">
+                                    <Option value="">全部</Option>
+                                    <Option value="0">未认证</Option>
+                                    <Option value="1">认证中</Option>
+                                    <Option value="2">认证通过</Option>
+                                    <Option value="3">认证不通过</Option>
+                                </Select>
+                            </FormItem>-->
+            </Form>
+        </Modal>
+
+        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
+            <Form  ref="updateCahnnelValue" :model="updateCahnnelValue" inline :label-width="120">
+                <FormItem label="消息标题" prop="title">
+                    <Input v-model.trim="updateCahnnelValue.title" style="width:140px"></Input>
+                </FormItem>
+
+                <FormItem label="推送时间"  prop="pushTime">
+                    <DatePicker type="datetime" format="yyyy-MM-dd HH:mm:ss" v-model="updateCahnnelValue.pushTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                </FormItem>
+
+                <FormItem label="推送类型" prop="pushType">
+                    <Select v-model="updateCahnnelValue.pushType" style="width:140px">
+                        <Option :value=1>政策知识</Option>
+                        <Option :value=2>热点新闻</Option>
+                    </Select>
+                </FormItem>
+
+                <FormItem label="跳转链接" prop="desc">
+                    <Input v-model.trim="updateCahnnelValue.pushLink" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="图片" prop="icon">
+                    <Upload action="/cmsapi/upload/uploadimgNoDomain" :show-upload-list="false"  :default-file-list="defaultList" :on-success="getImgFileName"  :format="['jpg','jpeg','png','gif']" :max-size="6144" >
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+                    </Upload>
+                </FormItem>
+
+                <FormItem label="摘要" prop="desc">
+                    <Input type="textarea" v-model.trim="updateCahnnelValue.summary"></Input>
+                </FormItem>
+            </Form>
+        </Modal>
+    </Row>
+</template>
+<script>
+    import api from '../../api/advertisement/pushApi.js';
+    import ideaApi from '../../api/advertisement/ideaList.js';
+    import dutil from '../../libs/util.js';
+    import apiDictionary from '../../api/dictionary/channelDictionary.js';
+    export default {
+        data() {
+            return {
+                defaultList: [],
+                columns: [
+                    {
+                        key: 'ideaCode',
+                        title: 'ideaCode',
+                        width: 100
+                    },
+                    {
+                        key: 'pageName',
+                        title: '频道'
+                    },
+                    {
+                        key: 'adName',
+                        title: '创意名称'
+                    },
+                    {
+                        key: 'modifyAt',
+                        title: '最后更新'
+                    },
+                    {
+                        title: '展示状态',
+                        key: 'zhanshiZhuangtai',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.zhanshiZhuangtai == 0){
+                                return h('div', ["不展示"]);
+                            }else if (params.row.zhanshiZhuangtai == 1) {
+                                return h('div', ["展示"]);
+                            }
+                        }
+                    },
+                    {
+                        title: '排期状态',
+                        key: 'pushType',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.paiqiZhuangtai == 0) {
+                                return h('div', ["未排期"]);
+                            }else if (params.row.paiqiZhuangtai == 1){
+                                return h('div', ["已排期"]);
+                            }
+                        }
+                    },
+                    {
+                        title: '广告商',
+                        key: 'adCompany'
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.updateCahnnelValue.title = params.row.title;
+                                                this.updateCahnnelValue.desc = params.row.desc;
+                                                this.updateCahnnelValue.id = params.row.id;
+                                                this.updateCahnnelValue.pushTime = params.row.pushTime;
+                                                this.updateCahnnelValue.pushType = params.row.pushType;
+                                                this.updateCahnnelValue.imgurl = params.row.imgurl;
+                                                this.updateCahnnelValue.pushLink = params.row.pushLink;
+                                                this.updateCahnnelValue.summary = params.row.summary;
+                                                i.modal2 = true;
+                                            }
+                                        }
+                                    },
+                                    '修改'
+                                )
+                            ]);
+                        }
+                    }
+                ],
+                searchData: {
+                    page: 1,
+                    limit: 10
+                },
+                data: [],
+                initTable: [],
+                total: 0,
+                modal2: false,
+                isTrueAddTag: false,
+                modal_loading: false,
+                updateCahnnelValue: {
+                    title: '',
+                    type: ''
+                },
+                addNewsChannelModal: {
+                    title: '',
+                    type: '',
+                    positionId:900
+                },
+                ruleValidate: {
+                    title: [{ required: true, message: '标题不能为空！', trigger: 'blur' }],
+                    pushTime: [{ required: true, type: 'date', message: '请输入推送时间', trigger: 'change' }],
+                }
+            };
+        },
+        methods: {
+            init(){
+                ideaApi.ideaList(this.searchData).then(response => {
+                    this.total = response.data.count;
+                    this.data = response.data.data;
+                });
+            },
+            addNewsChannel(addChannelValue) {
+                this.$refs['addNewsChannelModalform'].validate((valid) => {
+                    if (valid) {
+                        addChannelValue.pushTime = dutil.dateformat(addChannelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
+                        api.addAppPush(addChannelValue).then(response => {
+                            if (response.data.data > 0){
+                                this.$Message.success('添加成功');
+                                this.init();
+                            }
+                        });
+                    }else {
+                        this.$Message.error('Fail!');
+                    }
+                });
+            },
+            updateChannel(updateCahnnelValue){
+                updateCahnnelValue.pushTime = dutil.dateformat(updateCahnnelValue.pushTime,'yyyy-MM-dd hh:mm:ss');
+                console.log(updateCahnnelValue)
+                api.updateAppPush(updateCahnnelValue).then(response => {
+                    if (response.data.data > 0){
+                        this.$Message.success('修改成功');
+                        this.init();
+                    }
+                });
+            },
+            handleSearch () {
+                this.searchData.page = 1;
+                this.init();
+            },
+            handleCancel (name) {
+                this.$refs[name].resetFields();
+                this.searchData.page = 1;
+                this.init();
+            },
+            getImgFileName(response, file, fileList){
+                console.log(response.data);
+                this.$Message.success('上传成功');
+                this.addNewsChannelModal.imgurl = response.data;
+                this.updateCahnnelValue.imgurl = response.data;
+            },
+            pageChange (page) {
+                this.searchData.page = page;
+                this.init();
+            },
+            sizeChange (size) {
+                this.searchData.limit = size;
+                this.init();
+            }
+        },
+        created(){
+            this.init();
+        }
+    };
+</script>
+

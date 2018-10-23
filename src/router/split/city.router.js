@@ -171,14 +171,14 @@ export const appRouter = [
                 import('@/views/cityManageSystem/blankPage.vue')
         },
         {
-            path: 'chuangyibiao',
-            name: 'chuangyibiao',
+            path: 'ideaList',
+            name: 'ideaList',
             title: '创意列表',
             // meta: {
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
+                import('@/views/advertisement/ideaNewsList.vue')
         },
         {
             path: 'luodiye',
