@@ -5,9 +5,19 @@
             <p slot="title">广告详情</p>
             <Row >
                 <Col span="12">
+                    <div ref="stage">
 
+                    </div>
                 </Col>
                 <Col span="12">
+                <Form ref="commonForm" :model="commonForm" :rules="commonFormRuleValidate" :label-width="80">
+                        <FormItem label="甲方公司名称" required prop="adCompany">
+                            <Input v-model="commonForm.adCompany" placeholder="请填写内容"></Input>
+                        </FormItem>
+                        <FormItem label="创意名称" required prop="adName">
+                            <Input v-model="commonForm.adName" placeholder="请填写内容"></Input>
+                        </FormItem>
+                </Form>
                 <Form ref="form" :model="formItem" :rules="ruleValidate" :label-width="80">
                     <template v-for="(item,index) in confs">
                         <FormItem :label="item.label" v-if="item.type=='input'" :required="item.required" :prop="item.name">
@@ -47,47 +57,66 @@
 
 <script>
     import _ from 'lodash';
+    import editortemplate from '@/api/advertisement/formtemplateApi';
+    import ad from '@/api/advertisement/ad';
     export default {
 
         name: 'ad-detail-view',
         data() {
             return {
                 confs: [
-                    {
-                        'type': 'input', // 类型输入框
-                        'name': 'input1', // 字段名，在confs中，这个name不能重复，一定要唯一
-                        'label': '输入框1', // 字段的提示名
-                        'default': '默认值', // 默认值 此字段的默认值是空字符串
-                        'reg': '', // 校验的正则表达式
-                        'required': true, // 是否是必填
-                        'message': '请填写' // 校验不通过的提示文字
-                    },
-                    {
-                        'type': 'select', // 类型下拉框
-                        'name': 'select1',
-                        'label': '下拉框1', // 字段的提示名
-                        'default': '默认值', // 默认值 此字段的默认值是空字符串
-                        'reg': '', // 校验的正则表达式
-                        'required': true, // 是否是必填
-                        'message': '', // 校验不通过的提示文字
-                        'options': ['选项1', '选项2'] // 下拉框的选项值
-                    },
-                    {
-                        'type': 'upload', // 类型上传文件
-                        'name': 'upload1',
-                        'label': '上传图片', // 字段的提示名
-                        'default': '', // 上传组件 这个没意义，可以不让用户填写
-                        'reg': '', // 校验的正则表达式
-                        'required': true, // 是否是必填
-                        'message': '', // 校验不通过的提示文字
-                        'format': ['jpg', 'jpeg', 'png'] // 可以上传的文件类型，如果是[]代表任何文件都可以
-                    }
+                    // {
+                    //     'type': 'input', // 类型输入框
+                    //     'name': 'input1', // 字段名，在confs中，这个name不能重复，一定要唯一
+                    //     'label': '输入框1', // 字段的提示名
+                    //     'default': '默认值', // 默认值 此字段的默认值是空字符串
+                    //     'reg': '', // 校验的正则表达式
+                    //     'required': true, // 是否是必填
+                    //     'message': '请填写' // 校验不通过的提示文字
+                    // },
+                    // {
+                    //     'type': 'select', // 类型下拉框
+                    //     'name': 'select1',
+                    //     'label': '下拉框1', // 字段的提示名
+                    //     'default': '默认值', // 默认值 此字段的默认值是空字符串
+                    //     'reg': '', // 校验的正则表达式
+                    //     'required': true, // 是否是必填
+                    //     'message': '', // 校验不通过的提示文字
+                    //     'options': ['选项1', '选项2'] // 下拉框的选项值
+                    // },
+                    // {
+                    //     'type': 'upload', // 类型上传文件
+                    //     'name': 'upload1',
+                    //     'label': '上传图片', // 字段的提示名
+                    //     'default': '', // 上传组件 这个没意义，可以不让用户填写
+                    //     'reg': '', // 校验的正则表达式
+                    //     'required': true, // 是否是必填
+                    //     'message': '', // 校验不通过的提示文字
+                    //     'format': ['jpg', 'jpeg', 'png'] // 可以上传的文件类型，如果是[]代表任何文件都可以
+                    // }
                 ],
                 formItem: {
                     // input: 'zjl'
                 },
                 ruleValidate: {
+                },
+                arttemplate: '',
+                positionId: 0,
+                typeId: 0,
+                adResource:'',
+                commonForm: {
+                    adCompany: '',
+                    adName: ''
+                },
+                commonFormRuleValidate: {
+                    adCompany: [
+                        {required: true, message: '请填写', trigger: 'blur'}
+                    ],
+                    adName: [
+                        {required: true, message: '请填写', trigger: 'blur'}
+                    ]
                 }
+
             };
         },
         methods: {
@@ -99,24 +128,51 @@
                 for (var i = 0; i < this.confs.length; i++) {
                     let item = this.confs[i];
                     if (item.type === 'upload' && item.required && uploadvalid) {
-                        if (_.trim(this.formItem[item.name])) {
+                        if (!_.trim(this.formItem[item.name])) {
                             uploadvalid = false;
                         }
                     }
                 }
-                this.$refs['form'].validate((valid) => {
-                    if (valid && uploadvalid) {
-                        // todo 提交表单
-                    } else {
-                        this.$Message.error('补充完善后，才能保存');
-                    }
+
+                this.$refs['commonForm'].validate((commvalid) => {
+                    this.$refs['form'].validate((valid) => {
+                        if (commvalid && valid && uploadvalid) {
+                            if (this.$route.query.id) {
+                                ad.edgeMode({
+                                    idcode:this.$route.query.id,
+                                    ideaData: JSON.stringify(this.formItem),
+                                    typeId: this.typeId,
+                                    positionId: this.positionId,
+                                    adCompany: this.commonForm.adCompany,
+                                    adName: this.commonForm.adName,
+                                    adResource:this.adResource
+                                }).then(function (res) {
+                                    // todo 跳回到列表页
+                                    // this.$router.push({});
+                                });
+                            } else {
+                                ad.addIdea({
+                                    ideaData: JSON.stringify(this.formItem),
+                                    typeId: this.typeId,
+                                    positionId: this.positionId,
+                                    adCompany: this.commonForm.adCompany,
+                                    adName: this.commonForm.adName,
+                                    adResource:this.adResource
+                                }).then(function (res) {
+                                    // todo 跳回到列表页
+                                    // this.$router.push({});
+                                });
+                            }
+                        } else {
+                            this.$Message.error('补充完善后，才能保存');
+                        }
+                    });
                 });
             },
             uploadSuccess (res, file) {
                 if (res.code === 'success') {
                     this.formItem[res.data.hook] = this.$imgurl(res.data.url);
-                }
-                else {
+                } else {
                     this.$Notice.error({
                         title: '上传失败',
                         desc: res.data.url
@@ -129,42 +185,72 @@
                     desc: ''
                 });
             },
-            initWatch(){
+            init() {
+                /**
+                 * 初始化 数据和校验 信息
+                 */
+                for (var i = 0; i < this.confs.length; i++) {
+                    let item = this.confs[i];
+
+                    this.$set(this.formItem, item.name, item.default);
+    
+                    let rule = {required: item.required, message: item.message, trigger: 'blur'};// Pattern
+                    /**
+                     * 如果需要正则验证，注入正则表达式
+                     */
+                    if (_.trim(item.reg)) {
+                        rule.Pattern = new RegExp(_.trim(item.reg));
+                    }
+
+                    if (item.type === 'input') {
+                        rule.trigger = 'blur';
+                    } else if (item.type === 'select') {
+                        rule.trigger = 'change';
+                    }
+                    this.$set(this.ruleValidate, item.name, [rule]);
+                }
+
                 /**
                  * 挂载watch钩子，当数据有变化的时候，更新预览显示
                  */
                 this.$watch('formItem', function (newVal, oldVal) {
                     // 做点什么
-                    console.log('newVal',newVal)
-                },{
+                    var html = template.render(this.arttemplate, newVal);
+                    this.adResource = html;
+                    $(this.$refs['stage']).html(html);
+                }, {
                     deep: true
                 });
             }
         },
         created: function () {
-            for (var i = 0; i < this.confs.length; i++) {
-                let item = this.confs[i];
-                if (item.type === 'upload') {
-                    this.$set(this.formItem, item.name, '');
-                } else {
-                    this.$set(this.formItem, item.name, item.default);
-                }
-                let rule = {required: item.required, message: item.message, trigger: 'blur'};// Pattern
-                /**
-                 * 如果需要正则验证，注入正则表达式
-                 */
-                if (_.trim(item.reg)) {
-                    rule.Pattern = new RegExp(_.trim(item.reg));
-                }
-
-                if (item.type === 'input') {
-                    rule.trigger = 'blur';
-                } else if (item.type === 'select') {
-                    rule.trigger = 'change';
-                }
-                this.$set(this.ruleValidate, item.name, [rule]);
+            var that = this;
+            if (this.$route.query.id) {
+                ad.getIdea(this.$route.query.id).then(function (res) {
+                    that.typeId = res.data.data.typeId;
+                    let ideares = res.data.data;
+                    let ideaData = JSON.parse(res.data.data.adData);
+                    editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
+                        that.confs = JSON.parse(res.data.data.form);
+                        that.confs.forEach(function (item) {
+                            item.default = ideaData[item.name] || '';
+                        });
+                        that.commonForm.adCompany = ideares.adCompany;
+                        that.commonForm.adName = ideares.adName;
+                        that.arttemplate = res.data.data.template;
+                        that.positionId = res.data.data.positionId;
+                        that.init();
+                    });
+                });
+            } else {
+                editortemplate.getTemplate(this.$route.query.templateid).then(function (res) {
+                    that.typeId = that.$route.query.templateid;
+                    that.confs = JSON.parse(res.data.data.form);
+                    that.arttemplate = res.data.data.template;
+                    that.positionId = res.data.data.positionId;
+                    that.init();
+                });
             }
-            this.initWatch();
         }
     };
 </script>

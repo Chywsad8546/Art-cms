@@ -4,6 +4,11 @@ export default {
     addTemplate(params) {
         return http.post('/cmsapi/addTemplate', params);
     },
+    getTemplate(id) {
+        return http.get('/cmsapi/getIdeaTypeData', {
+            params: {id:id}
+        });
+    },
     getStationInfo(params) {
         return http.get('/cmsapi/getStationInfo', {
             params: params

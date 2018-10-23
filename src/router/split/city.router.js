@@ -150,12 +150,65 @@ export const otherRouter = {
 };
 
 export const appRouter = [
-    //人员管理
+    //专题建站
+    {
+        path: '/specialtopic',
+        icon: 'social-buffer',
+        name: 'specialtopic',
+        title: '专题建站',
+        component: Main,
+        children: [
+
+            {
+                path: 'wysiwygmaindemo',
+                name: 'wysiwygmaindemo',
+                title: 'demo',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/wysiwyg/main.vue')
+            },
+            {
+                path: 'luodiye',
+                name: 'luodiye',
+                title: '源码专题页',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/cityManageSystem/blankPage.vue')
+            },
+        ]
+    },
+
+    //消息推送
+    {
+        path: '/pushmessage',
+        icon: 'social-buffer',
+        name: 'pushmessage',
+        title: '消息推送',
+        component: Main,
+        children: [
+
+            {
+                path: 'apppushlist',
+                name: 'apppushlist',
+                title: '推送列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/appPush.vue')
+            }
+        ]
+    },
+    //位置广告
     {
         path: '/cityManageSystem',
         icon: 'social-buffer',
         name: 'personManage',
-        title: '广告管理',
+        title: '位置广告',
         component: Main,
         children: [{
             path: 'yihaoyuan',
@@ -207,16 +260,7 @@ export const appRouter = [
             component: () =>
                 import('@/views/cityManageSystem/blankPage.vue')
         },
-        {
-            path: 'luodiye',
-            name: 'luodiye',
-            title: '落地页',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/cityManageSystem/blankPage.vue')
-        },
+
         {
             path: 'guanggaoyonghuliebiao',
             name: 'guanggaoyonghuliebiao',
@@ -226,16 +270,6 @@ export const appRouter = [
             // },
             component: () =>
                 import('@/views/cityManageSystem/blankPage.vue')
-        },
-        {
-            path: 'apppushlist',
-            name: 'apppushlist',
-            title: '推送列表',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/advertisement/appPush.vue')
         },
         {
             path: 'manyplotad',
