@@ -11,7 +11,14 @@ export const otherRouter = {
             title: '广告详情',
             name: 'ad_addetail',
             component: () =>
-                import('@/views/advertisement/adDetailView.vue')
+                import('@/views/advertisement/adSimpleView.vue')
+        },
+        {
+            path: 'ad/addsenioretail',
+            title: '广告详情',
+            name: 'ad_addsenioretail',
+            component: () =>
+                import('@/views/advertisement/adSeniorView.vue')
         },
         {
             path: 'cityManageSystem/org',
