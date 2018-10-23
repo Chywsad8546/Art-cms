@@ -210,7 +210,28 @@ export const appRouter = [
         name: 'personManage',
         title: '位置广告',
         component: Main,
-        children: [{
+        children: [
+            {
+                path: 'stationManagement',
+                name: 'stationManagement',
+                title: '站点管理',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/stationManagement.vue')
+            },
+            {
+                path: 'pageManagement',
+                name: 'pageManagement',
+                title: '栏目管理',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/pageManagement.vue')
+            },
+            {
             path: 'yihaoyuan',
             name: 'yihaoyuan',
             title: '北京壹号院',
@@ -260,7 +281,6 @@ export const appRouter = [
             component: () =>
                 import('@/views/advertisement/ideaNewsList.vue')
         },
-
         {
             path: 'guanggaoyonghuliebiao',
             name: 'guanggaoyonghuliebiao',
@@ -531,7 +551,7 @@ export const appRouter = [
                 // },
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
-            }     
+            }
         ]
     }
     // {

@@ -32,6 +32,25 @@ export default {
     },
     editIdea(params) {
         return http.post('/cmsapi/idea/editIdea', params);
-    }
-
+    },
+    //获取所有站点
+    getAllStation(params) {
+        return http.post('/cmsapi/getAllStation', params);
+    },
+    //添加站点
+    addStation(params){
+        return http.post('/cmsapi/addStation', params);
+    },
+    //修改站点/cmsapi/updateStation
+    updateStation(params){
+        return http.post('/cmsapi/updateStation', params);
+    },
+    //获取所栏目
+    getAllPage(params) {
+        return http.post('/cmsapi/getAllPage', params);
+    },
+    //添加栏目
+    addPage(params){
+        return http.post('/cmsapi/addPage', params);
+    },
 };

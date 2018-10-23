@@ -239,14 +239,18 @@
                 this.init();
             },
             pdClick() {
-                fapi.getPositionInfo(this.searchData).then(response => {
-                    this.weizhiList = response.data.data;
-                });
+                if (typeof this.searchData.pageName !== 'undefined') {
+                    fapi.getPositionInfo(this.searchData).then(response => {
+                        this.weizhiList = response.data.data;
+                    });
+                }
             },
             zdClick() {
-                fapi.getChannelInfo(this.searchData).then(response => {
-                    this.pingdaoList = response.data.data;
-                });
+                if (typeof this.searchData.station !== 'undefined') {
+                    fapi.getChannelInfo(this.searchData).then(response => {
+                        this.pingdaoList = response.data.data;
+                    });
+                }
             },
             adpdClick() {
                 fapi.getPositionInfo(this.pdmode).then(response => {
@@ -272,7 +276,7 @@
                 });
             },
             addIdeaNews: function () {
-                if (this.addIdeaNewsModal.bjq !== ''){
+                if (this.addIdeaNewsModal.bjq !== '') {
                     this.$router.push({
                         name: 'ad_addetail',
                         query: {templateid: this.addIdeaNewsModal.bjq}
