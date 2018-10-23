@@ -86,7 +86,7 @@
                     <Input v-model.trim="updateCahnnelValue.userPwd" style="width:140px"></Input>
                 </FormItem>
 
-                <FormItem label="选择角色" prop="type">
+                <FormItem label="选择角色" prop="userRoleCode">
                     <Select v-model="updateCahnnelValue.userRoleCode" style="width:140px">
                         <Option value="admin">超级角色</Option>
                         <Option value="bjjl">编辑经理</Option>
@@ -96,8 +96,8 @@
 
                 <FormItem label="是否有效" prop="status">
                     <Select v-model="updateCahnnelValue.status" style="width:140px">
-                        <Option value="0">是</Option>
-                        <Option value="1">否</Option>
+                        <Option :value="0">是</Option>
+                        <Option :value="1">否</Option>
                     </Select>
                 </FormItem>
                 <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
@@ -174,9 +174,11 @@
                                                 this.updateCahnnelValue.id = params.row.id;
                                                 this.updateCahnnelValue.userName = params.row.userName;
                                                 this.updateCahnnelValue.userPwd = params.row.userPwd;
-
+                                                this.updateCahnnelValue.userRoleCode = params.row.userRoleCode;
+                                                this.updateCahnnelValue.status = params.row.status;
                                                 //弹窗弹出
                                                 i.modal2 = true;
+                                                console.log(this.updateCahnnelValue)
                                             }
                                         }
                                     },

@@ -24,5 +24,9 @@ export default {
     setSort(params){
         return http.post('/cmsapi/article/articleSort',params);
     },
+    //列表页预览api/cmsapi/article/listAddPreview
+    listAddPreview(params){
+        return http.post('/cmsapi/article/listAddPreview',params);
+    },
 
 };

@@ -73,6 +73,21 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <Modal v-model="qrcodeModal" width="500">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span></span>
+            </p>
+            <Tabs type="card">
+                <TabPane label="WEB预览">
+                    <div style="text-align:center">
+                        <p class="qrcode" id="qrcode"></p>
+                    </div>
+                </TabPane>
+            </Tabs>
+            <div slot="footer">
+            </div>
+        </Modal>
     </Row>
 </template>
 <script>
@@ -80,9 +95,11 @@
     import apiNewsManageme from '../../api/newsManageme/newsManageme.js';
     import apiDictionary from '../../api/dictionary/channelDictionary.js';
     import apiTagDictionary from '../../api/dictionary/tagDictionary.js';
+    import QRCode from 'qrcodejs2';
     export default {
         data() {
             return {
+                qrcodeModal:false,
                 defaultList:[],
                 columns: [
                     {
@@ -199,6 +216,24 @@
                         render: (h, params) => {
                             var i = this;
                             var guanliOpration=[];
+                            guanliOpration.push(h(
+                                'Button',
+                                {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.previewFun(params.row.id)
+                                        }
+                                    }
+                                },
+                                '预览'
+                            ));
                             if(this.$hasAuth('button_newsmodify')) {
                                 if (params.row.type == 0) {
                                     guanliOpration.push(h(
@@ -429,7 +464,7 @@
                 apiNewsManageme.getAllAuthor().then(response =>{
                     this.allAuthor = response.data.data
                 })
-                apiTagDictionary.getTagDictionaryList().then(response => {
+                apiTagDictionary.getTagDictionaryList({pageSize: 1000}).then(response => {
                     this.tagDatas = response.data.data
                 })
                 apiDictionary.getChannelDictionaryList().then(response => {
@@ -466,6 +501,24 @@
             sizeChange (size) {
                 this.searchData.pageSize = size;
                 this.init();
+            },
+            previewFun(id,type) {//预览事件
+                apiNewsManageme.listAddPreview({id:id}).then(response => {
+                    this.qrcodeModal = !this.qrcodeModal;
+                    let url = this.$domain.cityDomain +'?id='+id;
+                    document.getElementById("qrcode").innerHTML = "";
+                    this.qrcode(url);
+                });
+            },
+            qrcode (url) {
+                let qrcode = new QRCode('qrcode', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: url // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         },
         created(){

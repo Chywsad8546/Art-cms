@@ -1,27 +1,28 @@
 <template>
 <div class="articleContainer">
-    <Form ref="formInline" :model="form" :rules="rules" :label-width="80">
+    <Form ref="formInline" :model="form" :rules="ruleValidate" :label-width="80">
     <div class="publictop">
         <div class="articleTitle">发表图集</div>
     <div>
-        <FormItem label="标题">
+        <FormItem label="标题" prop="title">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
         </FormItem>
         <div class="color-list">
-        <div 
-            class="color-item" 
+        <div
+            class="color-item"
             v-for="ImgArr,index in pitchImgArr" v-dragging="{ item: ImgArr, list: pitchImgArr, group: 'ImgArr' }"
-            :key="ImgArr.img">  
+            :key="ImgArr.img">
+                    <div class="gallery-index">{{index+1}}</div>
                     <div class="gallery-img">
                         <img :src="ImgArr.img"/>
-                    </div>                
+                    </div>
                     <div class="areainput">
-                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个子）" />             
+                        <Input v-model="ImgArr.describe" type="textarea" :rows="4" placeholder="图片说明（不超过150个字）" />
                     </div>
                     <div class="czCon">
                         <Button type="primary" @click="editUpimg(index)">换图</Button>
-                        <Button  @click="removeImg(index)">删除</Button>  
-                        <Button >拖动排序</Button>             
+                        <Button  @click="removeImg(index)">删除</Button>
+                        <Button >拖动排序</Button>
                     </div>
         </div>
         </div>
@@ -34,29 +35,29 @@
                     <Radio label='1'>单图</Radio>
                     <!-- <Radio label='2'>三图</Radio>
                     <Radio label='0'>无</Radio> -->
-                </RadioGroup>    
+                </RadioGroup>
             </div>
             <div v-show="form.listType==='1'">
-                <div class="avatar-uploader" v-if="coverImgOne.length > 0">                    
+                <div class="avatar-uploader" v-if="coverImgOne.length > 0">
                     <img v-for="imgOne,index in coverImgOne" @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
-                 <div class="avatar-uploader" v-else>                    
+                 <div class="avatar-uploader" v-else>
                     <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
-                </div>               
+                </div>
             </div>
             <div v-show="form.listType==='2'">
-                <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length > 0" v-for="imgOne,index in coverImgTrue">
                     <img @click="coverEditUpImg(index)" :src="imgOne"/>
                 </div>
-                <div class="avatar-uploader" v-if="coverImgTrue.length < 1">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 1">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>
-                <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">                    
+                <div class="avatar-uploader"  v-if="coverImgTrue.length < 2">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
                 </div>
-                <div class="avatar-uploader" v-if="coverImgTrue.length < 3">                    
+                <div class="avatar-uploader" v-if="coverImgTrue.length < 3">
                         <img @click="showPopupClick(2)" src="./img/suoluetu.png"/>
-                </div>      
+                </div>
             </div>
         </FormItem>
         <FormItem label="栏目">
@@ -72,7 +73,7 @@
                 <Radio label='1'>1级</Radio>
                 <Radio label='2'>2级</Radio>
                 <Radio label='3'>3级</Radio>
-            </RadioGroup>               
+            </RadioGroup>
         </FormItem>
         <FormItem label="来源" style="width:200px;">
             <Input v-model="form.source" placeholder="请输入来源"></Input>
@@ -81,27 +82,40 @@
             <Input v-model="form.author" placeholder="请输入作者"></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>        
+            <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
             <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
-            <Button style="margin-left: 8px" @click="previewFun" :disabled="isDisable">预览</Button>
-            <Button v-show="isDraftFlag" @click="releaseNews(2)" :disabled="isDisable">存为草稿</Button>
+            <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
+            <Button v-show="isDraftFlag" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
         </FormItem>
- </div> 
+ </div>
     </div>
 <!-- 上传图片组件 -->
     <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  v-show="uplopopDisplay"></uploadzhImg>
     <timingRelease @confirm-event = "callBackTime" @cancel-event = "callBackTimeCancel" v-show="vshowTimeSelect"></timingRelease>
-</Form>
-    <Modal v-model="qrcodeModal" width="240">
+
+    <Modal v-model="qrcodeModal" @on-cancel="previewCancel" width="500">
         <p slot="header" style="color:#f60;text-align:center">
-            <span>扫描二维码预览</span>
+            <span></span>
         </p>
-        <div style="text-align:center">
-            <p class="qrcode" id="qrcode"></p>
-        </div>
+        <Tabs type="card">
+            <TabPane label="WEB预览">
+                <div style="text-align:center">
+                    <p class="qrcode" id="qrcode"></p>
+                </div>
+            </TabPane>
+            <TabPane label="APP预览">
+                <div class="appcodePop">
+                    <Input v-model="form.appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
+                    <FormItem>
+                         <Button type="primary" @click="previewAppFun(form.isPublish)">保存</Button>
+                    </FormItem>
+                </div>
+            </TabPane>
+        </Tabs>
         <div slot="footer">
         </div>
     </Modal>
+</Form>
 </div>
 </template>
 <script>
@@ -141,8 +155,18 @@
                 Lid: {},
                 isDisable: false,
                 qrcodeModal: false,
+                flagPreview:false,
                 isTimeFlag:true,//控制定时发布按钮显示
                 isDraftFlag:true,//控制草稿按钮显示
+                tagsJson:{//保存标签全局json用
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                },
                 form: {
                     title: '',
                     content: [],
@@ -158,13 +182,22 @@
                     author:'',
                     topic:[],
                     topicName:[],  //栏目数组
-                    recommendLevel:''//1 2 3 级
+                    recommendLevel:'',//1 2 3 级
+                    tagsJson:{
+                        "1":[],
+                        "2":[],
+                        "3":[],
+                        "4":[],
+                        "5":[],
+                        "6":[],
+                        "7":[]
+                    },
+                    appCode:''
                 },
-                rules: {
-                    name: [
-                        { required: true, message: '请输入活动名称', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-                    ]
+                ruleValidate: {
+                    title: [
+                        { type: 'string', max: 50, message: '已超过50个字', trigger: 'change' }
+                    ],
                 },
                 // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
                 domain: '/cmsapi/sys/uploadImg',
@@ -178,14 +211,32 @@
             this.newsChaneelList();
             this.Lid.id = this.$route.query.newsId;
             if(this.Lid.id != undefined){
-                this.getNewsDetail();
+                setTimeout(()=>{
+                     this.getNewsDetail();
+                },500);
             }
         },
         computed: {},
         methods: {
+            computedByteLen(str) {
+                return str.replace(/[^\x00-\xff]/g, '01').length;
+            },
+            previewCancel() {
+                if(this.flagPreview == false){
+                    setTimeout(()=>{
+                        this.$router.push({
+                            name: "newsManageList"
+                        });
+                    },1000);
+                }
+            },
             getNewsDetail() {
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
+                    if(response.data.data.tagsJson){
+                        this.tagsJson = JSON.parse(response.data.data.tagsJson);
+                        this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
+                    }
                     if(response.data.data.content){
                         this.form.content = response.data.data.content;
                         this.pitchImgArr = JSON.parse(response.data.data.content);
@@ -193,28 +244,25 @@
                     if(response.data.data.topic){
                         this.form.topic = response.data.data.topic;
                     }
-                    if(response.data.data.tagsName){
-                        this.parentlabelMsg = response.data.data.tagsName;
-                    }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 3 || isPublish === '3'){
+                    if(isPublish === 1 || isPublish === '1'){
                         this.isTimeFlag = false;
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
                         this.isDraftFlag = false;
                     }
-                    this.form.recommendLevel = response.data.data.recommendLevel+'';       
+                    this.form.recommendLevel = response.data.data.recommendLevel+'';
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
                     this.form.listType = response.data.data.listType+'';
                     if(this.form.listType === 1 || this.form.listType === '1'){
                         if(response.data.data.listImg){
                             this.coverImgOne = response.data.data.listImg;
-                        }                    
+                        }
                     }else if(this.form.listType === 2 || this.form.listType === '2'){
                         if(response.data.data.listImg){
                             this.coverImgTrue = response.data.data.listImg;
-                        }                    
+                        }
                     }
                 })
             },
@@ -240,11 +288,11 @@
                 }
                 return isJPG && isLt2M
             },
-            onEditorBlur(){//失去焦点事件              
+            onEditorBlur(){//失去焦点事件
                 console.log(this.content);
             },
             onEditorFocus(){//获得焦点事件
-            
+
             },
             selectSort(data) {
                 this.uploadimgList.forEach(function(obj){
@@ -267,7 +315,7 @@
                 // let length = selfQuill.getSelection().index;
                 // selfQuill.insertEmbed(length, 'image', file.data);
                 // // 调整光标到最后
-                // selfQuill.setSelection(length + 1)                
+                // selfQuill.setSelection(length + 1)
             },
             uploadImg() {
                 this.upState = 0;
@@ -283,7 +331,7 @@
                 });
                 this.uploadimgFlag = !this.uploadimgFlag;
                 var el = event.currentTarget;
-                this.imgDom = el;               
+                this.imgDom = el;
             },
             uplaqloadImg() {
                  document.querySelector('#iviewUp input').click();
@@ -301,7 +349,7 @@
                             this.coverImgOne.splice(this.coverImgIndex,1,data);
                         }else{
                             this.coverImgOne.push(data);
-                        }                  
+                        }
                     }else if(this.form.listType === '2'){
                         if(this.coverImgTrue.length>2){
                             // this.pitchImgArr.splice(index, 1);
@@ -323,7 +371,7 @@
                 this.upState = 2;
                 this.uplopopDisplay = !this.uplopopDisplay;
                 this.coverImgIndex = index;
-            },   
+            },
             showPopupClick(state) {//弹框取消事件
                 this.upState = state;
                 this.uplopopDisplay = !this.uplopopDisplay;
@@ -359,8 +407,17 @@
                 this.pitchImgArr.splice(index, 1);
             },
             callBacklabelFun(data){
-                this.form.tagsName = data[0].arr1;
-                this.form.tags = data[0].arr2;
+                this.form.tags = [];
+                this.form.tagsName = [];
+                let arr = ["1","2","3","4","5","6","7"];
+                arr.forEach(key => {
+                    this.tagsJson[key] = [];
+                    data[key].forEach(item=> {
+                        this.form.tags.push(item.value);
+                        this.form.tagsName.push(item.label);
+                        this.tagsJson[key].push(item.value);
+                    })
+                });
             },
             newsChaneelList() {
                 api.newsChaneelList().then(response => {
@@ -369,7 +426,7 @@
                     this.$Notice.warning({
                         title: "栏目获取失败"
                     });
-                })                
+                })
             },
             callBackTime(time) {
                 this.form.publishAt = time;
@@ -388,26 +445,22 @@
                 }
                 this.typeKeepArr();
                 this.preventRepeatClick();
+                this.flagPreview = false;
                 this.form.content = JSON.stringify(this.pitchImgArr);
+                this.form.preContent = JSON.stringify(this.pitchImgArr);
                 this.form.isPublish = type;
                if(this.Lid.id != undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "修改成功"
-                            });
-                            this.setJumpFun();
-                    }) 
+                        this.prevResponse(response);
+                        this.$Message.success('修改成功！');
+                    })
                 }else{
                     api.addArticle(this.form).then(response => {
-                            this.$Modal.success({
-                                title: '',
-                                content: "发布成功"
-                            });
-                            this.setJumpFun();
-                    }) 
-                }            
+                        this.prevResponse(response);
+                        this.$Message.success('发布成功！');
+                    })
+                }
             },
             preventRepeatClick() {
                 this.isDisable = true;
@@ -423,6 +476,7 @@
                 }else{
                     this.form.listImg = [];
                 }
+                this.form.tagsJson = JSON.stringify(this.tagsJson);
             },
             verification() {//验证方法
                 if (this.form.title==="") {
@@ -430,6 +484,12 @@
                         title: "请输入标题"
                     });
                     return false;
+                }
+                if(this.computedByteLen(this.form.title) > 50){
+                        this.$Notice.warning({
+                            title: "标题不能超过25字"
+                        });
+                        return false;
                 }
                 if(this.pitchImgArr.length <= 0){
                     this.$Notice.warning({
@@ -452,6 +512,12 @@
                         return false;
                     }
                 }
+                if(this.form.topic.length <= 0){
+                    this.$Notice.warning({
+                        title: "请选择栏目"
+                    });
+                    return false;
+                }
                 if(this.form.recommendLevel == ''){
                         this.$Notice.warning({
                             title: "请选择图集级别"
@@ -466,25 +532,58 @@
                     });
                 },1000);
             },
-            previewFun() {//预览事件
+            previewFun(type) {//预览事件
                 if(this.verification() == false){
                     return false;
                 }
                 this.preventRepeatClick();
                 this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
+                this.flagPreview = true;
+                if(this.Lid.id != undefined){
+                        this.form.id = this.Lid.id;
+                }
                 this.form.content = JSON.stringify(this.pitchImgArr);
                 this.form.preContent = JSON.stringify(this.pitchImgArr);
                 api.addPreview(this.form).then(response => {
+                    this.prevResponse(response);
+                });
+            },
+            previewAppFun(type) {//预览事件
+                if(this.verification() == false){
+                    return false;
+                }
+                if(this.form.appCode == ''){
+                    this.$Notice.warning({
+                        title: "请输入appCode"
+                    });
+                    return false;
+                }
+                this.preventRepeatClick();
+                this.typeKeepArr();//通过选项判断封面数组
+                this.form.isPublish = type;
+                if(this.Lid.id != undefined) {
+                    this.form.id = this.Lid.id;
+                }
+                api.addPreview(this.form).then(response => {
+                        this.prevResponse(response);
+                        this.$Modal.success({
+                            title: '',
+                            content: "保存成功请在APP上预览"
+                        });
+                        this.previewCancel();
+                });
+            },
+            prevResponse(response){
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    let url = 'http://appdev.toutiaofangchan.com/#/look/images?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomainimg+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
                     document.getElementById("qrcode").innerHTML = "";
                     this.qrcode(url);
-                });
             },
             qrcode (url) {
                 let qrcode = new QRCode('qrcode', {
@@ -512,6 +611,11 @@
     };
 </script>
 <style>
+.appcodePop {
+    width: 170px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 .imglistleft {
     padding: 25px 0 0 20px;
 }
@@ -531,6 +635,18 @@
 .popupUploadImg p{
     line-height: 50px;
     color: #333;
+}
+.gallery-index {
+    position: relative;
+    width: 102px;
+    height: 78px;
+    line-height: 78px;
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    float: left;
+    margin-right: 10px;
+    overflow: hidden;
 }
 .gallery-img {
     position: relative;
@@ -552,7 +668,7 @@
     margin: 0 auto;
 }
 .areainput {
-    width: 60%;
+    width: 50%;
     overflow: hidden;
     float: left;
     margin-right: 10px;
@@ -578,42 +694,6 @@
     list-style: none;
     padding: 0;
     border-radius: 4px;
-}
-.uploadimg-list li {
-    float: left;
-    width: 16.66%;
-    text-align: center;
-    height: 120px;
-    line-height: 120px;
-    color: #666;
-    font-size: 13px;
-    transition: color .15s linear;
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    position: relative;
-}
-.uploadimg-list .checked:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    background-color: rgba(0,0,0,.5);
-    background-image: url("./img/pitchImg.png");
-    -moz-background-size: 40px 40px;
-    background-size: 40px 40px;
-    background-position: 100% 0;
-    background-repeat: no-repeat;
-    text-align: center;
-    color: #fffacd;
-}
-.uploadimg-list li img {
-    width: 100%;
 }
 .articleTitle {
     height: 50px;
@@ -658,6 +738,8 @@
     padding-right: 20px;
     overflow: hidden;
 }
+
+/*
 .articlecontentPopup {
     background: #fff;
     width: 668px;
@@ -676,7 +758,8 @@
     bottom: 0;
     text-align: center;
 }
-/* .uploadModal {
+
+.uploadModal {
     position: fixed;
     left: 0;
     top: 0;
