@@ -1,6 +1,7 @@
 <template>
 <div>
     <Form :model="formItem" :label-width="80">
+        <div class="backcontiner">
            <Row>
                 <!-- <Col span="5">
                     <FormItem label="名称">
@@ -51,9 +52,10 @@
                     </FormItem>
                 </Col>
             </Row>
+            </div>
     </Form>
     <Table border :columns="columblankPage" :data="blankPageListData"></Table>
-     <Page :total="total"  show-total show-sizer  @on-change="pageChange" ></Page>
+    <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
 </div>
     <!-- <Row>
         <Col span="100">
@@ -185,6 +187,12 @@
                     this.formItem.time = "";
                 }            
                 this.adListAll();
+            },
+            exportExl(){              
+                 api.exportExl(this.formItem).then(response => {
+                    this.templateListData = response.data.data;
+                    this.total = response.data.count;
+                });               
             }
         },
         created(){
@@ -192,3 +200,13 @@
         }
     };
 </script>
+<style>
+.backcontiner {
+    width: 100%;
+    padding-top: 20px;
+    background: #ffffff;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+</style>
+

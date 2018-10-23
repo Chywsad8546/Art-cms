@@ -1,7 +1,7 @@
 <template>
 <div>
     <Table border :columns="columns7" :data="templateListData"></Table>
-    <Page :total="total"  @on-change="pageChange" ></Page>
+    <Page :total="total"  @on-change="pageChange" show-total show-sizer></Page>
 </div>
     <!-- <Page :total="total"  @on-change="pageChange" style="margin-top:10px; text-align:right"></Page> -->
 </template>
@@ -103,7 +103,7 @@
                     onCancel: () => {
                     }
                 });
-            },
+            }
         },
         created: function () {
             this.templateList();

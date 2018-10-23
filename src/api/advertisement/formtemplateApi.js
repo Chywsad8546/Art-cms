@@ -42,4 +42,20 @@ export default {
             params: params
         });
     },
+    addSchedules(params) {
+        return http.post('/cmsapi/addSchedules', params);
+    },
+    forceCover(params) {
+        return http.post('/cmsapi/forceCover', params);
+    },
+    schedulesList(params) {
+        return http.get('/cmsapi/schedulesList', {
+            params: params
+        });
+    },
+    exportExl(params) {
+        return http.get('/cmsapi/exportExl', {
+            params: params
+        });
+    }
 }

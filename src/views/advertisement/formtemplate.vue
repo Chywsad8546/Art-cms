@@ -6,29 +6,54 @@
             <Row >
                 <Col span="12">
                     <Button type="primary" v-if="vshowFlag" @click="formModal1 = true">新增选框</Button>
-                    <Form ref="form" :model="formItem" :label-width="100">
+                    <Form ref="formValidate" :model="formItem" :rules="ruleInline" :label-width="100">
  
                     <Table :columns="columns" :data="confs"></Table>
 
-                        <FormItem label="模板类型" prop="title" style="margin-top:20px;">
+                        <FormItem label="模板类型" prop="name" style="margin-top:20px;">
                             <Input v-model="formItem.name" placeholder="请输入模板类型"></Input>
                         </FormItem>
-                        <FormItem label="选择频道位置">
-                            <Select v-model="zdmode.station" style="width:100px" @on-change = "zdClick">
-                                <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+
+                        <!-- <FormItem label="City" prop="city">
+                            <Select v-model="formValidate.city" placeholder="Select your city">
+                                <Option value="beijing">New York</Option>
+                                <Option value="shanghai">London</Option>
+                                <Option value="shenzhen">Sydney</Option>
                             </Select>
-                            <Select v-model="pdmode.pageName" style="width:100px"  @on-change = "pdClick">
-                                <Option v-for="item in pingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
-                            </Select>
-                            <Select v-model="formItem.positionId" style="width:100px">
-                                <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
-                            </Select>
-                        </FormItem>                  
-                         <FormItem label="template">
+                        </FormItem> -->
+
+                          <FormItem label="选择频道位置">
+                                <Row>
+                                    <Col span="7">
+                                        <FormItem >                  
+                                            <Select v-model="zdmode.station" style="width:100px" @on-change = "zdClick">
+                                                <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                                            </Select>
+                                        </FormItem> 
+                                    </Col>
+                                    <Col span="7">                  
+                                        <FormItem >
+                                            <Select v-model="pdmode.pageName" style="width:100px"  @on-change = "pdClick">
+                                                <Option v-for="item in pingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                                            </Select>
+                                        </FormItem>
+                                    </Col>
+                                    <Col span="7">                  
+                                        <FormItem >
+                                            <Select v-model="formItem.positionId" style="width:100px">
+                                                <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
+                                            </Select>
+                                        </FormItem>
+                                    </Col>
+                                </Row>
+                            </FormItem> 
+
+                                         
+                         <FormItem label="template" prop="template">
                             <Input v-model="formItem.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
                         </FormItem>                       
                         <FormItem v-if="vshowFlag">
-                            <Button type="primary" @click="addTemplate">保存</Button>
+                            <Button type="primary" @click="addTemplate('formValidate')">保存</Button>
                             <Button type="ghost" style="margin-left: 8px">取消</Button>
                         </FormItem>
                     </Form>
@@ -40,7 +65,7 @@
                         <Radio label="select">select</Radio>
                         <Radio label="upload">upload</Radio>
                     </RadioGroup>
-                    <Form ref="formAdd" :model="formAdd" :label-width="60">
+                    <Form ref="formAdd" :rules="rulebdInsert" :model="formAdd" :label-width="60">
                         <FormItem label="name"  prop="name">
                             <Input type="text" v-model="formAdd.name" placeholder="请输入name"></Input>                           
                         </FormItem>                       
@@ -62,7 +87,7 @@
                         <FormItem label="提示文字"  prop="message">
                             <Input type="text" v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
                         </FormItem>
-                        <FormItem label="options" v-if="inputType == 'select'">
+                        <FormItem label="options" prop="formOptions" v-if="inputType == 'select'">
                             <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="options"></Input>
                         </FormItem>
                         <FormItem label="文件类型" v-if="inputType == 'upload'">
@@ -74,7 +99,7 @@
                         </FormItem>                       
                     </Form>
                     <div slot="footer">
-                        <Button type="primary" size="large"  @click="popupOk">保存</Button>
+                        <Button type="primary" size="large"  @click="popupOk('formAdd')">保存</Button>
                     </div>
                 </Modal>
                 </Col>
@@ -180,6 +205,46 @@
                     template:"",
                     form:""
                 },
+                ruleInline: {
+                    name: [
+                        { required: true, message: '请填写类型', trigger: 'blur' }
+                    ],
+                    template:[
+                        { required: true, message: '请填写模板', trigger: 'blur' }
+                    ],
+                    station: [
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ],
+                    pageName:[
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ],
+                    positionId: [
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ],
+                    city: [
+                        { required: true, message: 'Please select the city', trigger: 'change' }
+                    ],
+                },
+                rulebdInsert: {
+                    name: [
+                        { required: true, message: '请填写name', trigger: 'blur' }
+                    ],
+                    label:[
+                        { required: true, message: '请填写label', trigger: 'blur' }
+                    ],
+                    default: [
+                        { required: true, message: '请选择默认名称', trigger: 'change' }
+                    ],
+                    pageName:[
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ],
+                    positionId: [
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ],
+                    formOptions:[
+                        { required: true, message: '请选择位置', trigger: 'change' }
+                    ]
+                },
                 vshowFlag: true
             };
         },
@@ -223,45 +288,53 @@
             confsRemove(index){
                     this.confs.splice(index,1);
             },     
-            popupOk () {       
-                let strArr = {
-                    'type':this.inputType,
-                    'name':this.formAdd.name,
-                    'label':this.formAdd.label,
-                    'default':this.formAdd.default,
-                    'reg':this.formAdd.reg,
-                    'required':this.formAdd.required,
-                    'message':this.formAdd.message
-                };               
-                if(this.inputType == "select"){
-                    strArr.options = this.formAdd.options.split(/[(\r\n)\r\n]+/);                  
-                }
-                if(this.inputType == "upload"){
-                    strArr.format = this.formAdd.format;
-                }
-                if(this.confs.length > 0){
-                    this.confs.forEach(item => {
-                        if(item.name == this.formAdd.name){
-                            this.$Message.error("name名称不能重复");
+            popupOk (name) {
+                  this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        let strArr = {
+                            'type':this.inputType,
+                            'name':this.formAdd.name,
+                            'label':this.formAdd.label,
+                            'default':this.formAdd.default,
+                            'reg':this.formAdd.reg,
+                            'required':this.formAdd.required,
+                            'message':this.formAdd.message
+                        };               
+                        if(this.inputType == "select"){
+                            strArr.options = this.formAdd.options.split(/[(\r\n)\r\n]+/);                  
+                        }
+                        if(this.inputType == "upload"){
+                            strArr.format = this.formAdd.format;
+                        }
+                        if(this.confs.length > 0){
+                            this.confs.forEach(item => {
+                                if(item.name == this.formAdd.name){
+                                    this.$Message.error("name名称不能重复");
+                                    return false;
+                                }
+                            });
+                        }
+                        // if(this.formAdd.name == ""){
+                        //     this.$Message.error("请输入name");
+                        //     return false;
+                        // }
+                        // if(this.formAdd.label == ""){
+                        //     this.$Message.error("请输入label");
+                        //     return false;
+                        // }
+                        if(this.formAdd.reg == true && this.formAdd.message == ""){
+                            this.$Message.error("请输入校验不通过提示信息");
                             return false;
                         }
-                    });
-                }
-                if(this.formAdd.name == ""){
-                    this.$Message.error("请输入name");
-                    return false;
-                }
-                if(this.formAdd.label == ""){
-                    this.$Message.error("请输入label");
-                    return false;
-                }
-                if(this.formAdd.reg == true && this.formAdd.message == ""){
-                    this.$Message.error("请输入校验不通过提示信息");
-                    return false;
-                }
-                this.confs.push(strArr);
-                this.cleanData();
-                this.formModal1 = !this.formModal1;       
+                        this.confs.push(strArr);
+                        this.cleanData();
+                        this.formModal1 = !this.formModal1;  
+                    } else {
+                        this.$Message.error('请填写内容');
+                        return false;
+                    }
+                }) 
+     
             },
             cleanData(){
                 this.inputType = "input";
@@ -285,30 +358,43 @@
                      //   console.log(JSON.parse(response.data.data.form));
                 });
             },
-            addTemplate() {
-                if(this.confs.length <= 0){
-                    this.$Message.error("请添加选框"); 
-                    return false;
-                }
-                if(this.formItem.name == ""){
-                    this.$Message.error("请填写类型"); 
-                    return false;                    
-                }
-                if(this.formItem.template == ""){
-                    this.$Message.error("请填写模板"); 
-                    return false;                    
-                }
-                if(this.formItem.positionId == ""){
-                    this.$Message.error("请选择位置"); 
-                    return false;                    
-                }
-                this.formItem.form = JSON.stringify(this.confs);
-                api.addTemplate(this.formItem).then(response => {
-                    this.$Message.success("添加成功"); 
-                    this.$router.push({
-                        name: "templateList"
-                    });
-                });
+            addTemplate(name) {
+
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                            if(this.confs.length <= 0){
+                                this.$Message.error("请添加选框"); 
+                                return false;
+                            }
+                            if(this.formItem.positionId == ""){
+                                this.$Message.error("请选择位置"); 
+                                return false;                    
+                            }
+                            this.formItem.form = JSON.stringify(this.confs);
+                            api.addTemplate(this.formItem).then(response => {
+                                this.$Message.success("添加成功"); 
+                                this.$router.push({
+                                    name: "templateList"
+                                });
+                            });
+                    } else {
+                        this.$Message.error('请填写内容');
+                    }
+                })
+
+                // if(this.formItem.name == ""){
+                //     this.$Message.error("请填写类型"); 
+                //     return false;                    
+                // }
+                // if(this.formItem.template == ""){
+                //     this.$Message.error("请填写模板"); 
+                //     return false;                    
+                // }
+                // if(this.formItem.positionId == ""){
+                //     this.$Message.error("请选择位置"); 
+                //     return false;                    
+                // }
+
             }
         },
         created: function () {
