@@ -27,4 +27,9 @@ export default {
     deleteTemplate(params) {
         return http.post('/cmsapi/deleteTemplate', params);
     },
+    getIdeaTypeData(params) {
+        return http.get('/cmsapi/getIdeaTypeData', {
+            params: params
+        });
+    },    
 }

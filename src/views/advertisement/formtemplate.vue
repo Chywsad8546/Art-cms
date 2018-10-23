@@ -5,7 +5,7 @@
             <p slot="title">创建广告位编辑器</p>
             <Row >
                 <Col span="12">
-                    <Button type="primary" @click="formModal1 = true">新增选框</Button>
+                    <Button type="primary" v-if="vshowFlag" @click="formModal1 = true">新增选框</Button>
                     <Form ref="form" :model="formItem" :label-width="100">
  
                     <Table :columns="columns" :data="confs"></Table>
@@ -25,9 +25,9 @@
                             </Select>
                         </FormItem>                  
                          <FormItem label="template">
-                            <Input v-model="formItem.template" type="textarea" :rows="4" placeholder="请输入内容"></Input>
+                            <Input v-model="formItem.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
                         </FormItem>                       
-                        <FormItem>
+                        <FormItem v-if="vshowFlag">
                             <Button type="primary" @click="addTemplate">保存</Button>
                             <Button type="ghost" style="margin-left: 8px">取消</Button>
                         </FormItem>
@@ -117,6 +117,7 @@
                 zdmode:{
                     station:""
                 },
+                Lid:{},
                 pdmode:{pageName:""},
                 wzmode:{positionId:""},
                 zhandianList:[],
@@ -227,7 +228,8 @@
                     positionId:0,
                     template:"",
                     form:""
-                }
+                },
+                vshowFlag: true
             };
         },
         methods: {
@@ -324,6 +326,16 @@
             },
             popupCancel() {
             },
+            getIdeaTypeData(){
+                this.vshowFlag = !this.vshowFlag;
+                api.getIdeaTypeData(this.Lid).then(response => {
+                    console.log(response.data.data);
+                    this.formItem.name = response.data.data.name;
+                    this.formItem.template = response.data.data.template;
+                    this.confs = JSON.parse(response.data.data.form);
+                     //   console.log(JSON.parse(response.data.data.form));
+                });
+            },
             addTemplate() {
                 if(this.confs.length <= 0){
                     this.$Message.error("请添加选框"); 
@@ -352,6 +364,10 @@
         },
         created: function () {
             this.getStationInfo();
+            this.Lid.id = this.$route.query.advertId;
+            if(this.Lid.id != undefined){
+                this.getIdeaTypeData();
+            }
         }
     };
 </script>

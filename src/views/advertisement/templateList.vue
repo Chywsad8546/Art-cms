@@ -36,12 +36,30 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$router.push({
+                                                name: 'formtemplate',
+                                                query: {advertId: params.row.id}
+                                            });
+                                            //this.moveUp(params.index,params.row)
+                                        }
+                                    }
+                                }, '编辑'),
+                                h('Button', {
+                                    props: {
                                         type: 'error',
                                         size: 'small'
                                     },
                                     on: {
                                         click: () => {
-                                            this.deleteTemplate(params.row.id);
+                                            this.deleteConfirm(params.row.id);
                                         }
                                     }
                                 }, '删除')
@@ -73,7 +91,18 @@
                     this.templateListData = response.data.data;
                     this.total = response.data.count;
                 });                   
-            }
+            },
+            deleteConfirm (id) {
+                this.$Modal.confirm({
+                    title: '',
+                    content: '<p>是否确定删除</p>',
+                    onOk: () => {
+                        this.deleteTemplate(id);
+                    },
+                    onCancel: () => {
+                    }
+                });
+            },
         },
         created: function () {
             this.templateList();
