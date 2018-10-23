@@ -76,15 +76,21 @@
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addIdeaNews">
             <Form  ref="addNewsChannelModalform" :model="addIdeaNewsModal" inline :label-width="120">
+                <FormItem label="站点">
                 <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
                     <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                 </Select>
+                </FormItem>
+                    <FormItem label="页面">
                 <Select v-model="pdmode.pageName" style="width:100px"  @on-change = "adpdClick">
                     <Option v-for="item in adpingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
                 </Select>
+                    </FormItem>
+                <FormItem label="位置" prop="bjq">
                 <Select v-model="addIdeaNewsModal.positionId" style="width:100px">
                     <Option v-for="item in adweizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                 </Select>
+                </FormItem>
                            <FormItem label="编辑器" prop="bjq">
                                 <Select v-model="addIdeaNewsModal.bjq" style="width:140px">
                                     <Option value="35">复杂编辑器</Option>
@@ -105,7 +111,7 @@
     export default {
         data() {
             return {
-                addIdeaNewsModal: {},
+                addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
                 pdmode: {pageName: ''},
                 zdmode: {station: ''},
@@ -266,10 +272,14 @@
                 });
             },
             addIdeaNews: function () {
-                this.$router.push({
-                    name: 'ad_addetail',
-                    query: {templateid: this.addIdeaNewsModal.bjq}
-                });
+                if (this.addIdeaNewsModal.bjq !== ''){
+                    this.$router.push({
+                        name: 'ad_addetail',
+                        query: {templateid: this.addIdeaNewsModal.bjq}
+                    });
+                } else {
+                    this.$Message.error('请选择编辑器！');
+                }
             }
         },
         created() {
