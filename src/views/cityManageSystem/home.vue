@@ -2,7 +2,7 @@
     <div class="home-main">
         <Row :gutter="10">
             <Col :md="24" :lg="24">
-            欢迎您，城市管理员
+            欢迎您，广告管理员
             </Col>
         </Row>
     </div>
