@@ -508,6 +508,8 @@
                     this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
                 }
 
+
+
                 this.init();
             },
             handleCancel (name) {
