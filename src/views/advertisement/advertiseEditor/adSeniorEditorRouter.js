@@ -17,7 +17,7 @@ var editorRouters= [
     {
         name: 'xinfangTop5Editor',
         component: () =>
-            import('@/views/advertisement/adSeniorEditor/xinfangTop5Editor.vue'),
+            import('@/views/advertisement/advertiseEditor/adSeniorEditor/xinfangTop5Editor.vue'),
 
     }
 ];

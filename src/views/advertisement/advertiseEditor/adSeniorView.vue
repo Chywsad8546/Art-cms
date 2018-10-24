@@ -1,9 +1,9 @@
 <style lang="less">
-    @import "../main.less";
-    @import "../../styles/common.less";
-    @import "../../styles/table.less";
-    @import "../../styles/css.less";
-    @import '../../../node_modules/dragula/dist/dragula.css';
+    @import "../../main.less";
+    @import "../../../styles/common.less";
+    @import "../../../styles/table.less";
+    @import "../../../styles/css.less";
+    @import '../../../../node_modules/dragula/dist/dragula.css';
     .wysi_active{
         border-color: red;
         border: 1px solid;
