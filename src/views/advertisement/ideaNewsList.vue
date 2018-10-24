@@ -74,7 +74,7 @@
             </Card>
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addIdeaNews">
+        <Modal v-model="isTrueAddTag" width="1000" @on-ok="addIdeaNews">
             <Form  ref="addNewsChannelModalform" :model="addIdeaNewsModal" inline :label-width="120">
                 <FormItem label="站点">
                 <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
@@ -190,7 +190,7 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'ad_addetail',
+                                                    name: 'ad_redirect ',
                                                     query: {id: params.row.ideaCode}
                                                 });
                                             }
@@ -278,7 +278,7 @@
             addIdeaNews: function () {
                 if (this.addIdeaNewsModal.bjq !== '') {
                     this.$router.push({
-                        name: 'ad_addetail',
+                        name: 'ad_redirect ',
                         query: {templateid: this.addIdeaNewsModal.bjq}
                     });
                 } else {

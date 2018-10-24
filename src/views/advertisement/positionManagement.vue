@@ -49,14 +49,14 @@
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationName">
-                    <Select v-model="addNewsChannelModal.stationName" @on-change = "changeStation" style="width:140px">
-                        <Option v-for="item in stationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                <FormItem label="站点名称" prop="stationIndex">
+                    <Select v-model="addNewsChannelModal.stationIndex" @on-change = "changeStation" style="width:140px">
+                        <Option v-for="(item, index) in stationList" :value="index" :key="index">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="栏目名称" prop="pageId">
-                    <Select v-model="addNewsChannelModal.pageId" style="width:140px">
-                        <Option v-for="item in pageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+                <FormItem label="栏目名称" prop="pageIndex">
+                    <Select v-model="addNewsChannelModal.pageIndex" style="width:140px">
+                        <Option v-for="(item, index) in pageList" :value="index" :key="index">{{ item.pageName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="位置名称" prop="positionName">
@@ -73,7 +73,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="modal3" width="360">
+        <Modal v-model="modal3" width="1000">
             <Button type="primary" @click="addModal">添加模板</Button>
                 <Table border :columns="modalColums" :data="modalData"></Table>
         </Modal>
@@ -82,7 +82,6 @@
 <script>
     import adapi from '../../api/advertisement/ad.js';
     import api from '../../api/advertisement/formtemplateApi.js';
-    import dutil from '../../libs/util.js';
     export default {
         data() {
             return {
@@ -248,6 +247,12 @@
                 });
             },
             addNewsChannel(addChannelValue) {
+                console.log(this.pageList);
+                this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
+                this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].pageId;
+                this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
+                this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
+                //console.log(this.addNewsChannelModal);
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         if (typeof addChannelValue.pageId !== 'undefined'){
@@ -320,10 +325,14 @@
                 this.searchData.limit = size;
                 this.init();
             },
-            changeStation(){
-                adapi.getAllPage({isDel: 0,stationName: this.addNewsChannelModal.stationName}).then(response => {
-                    this.pageList = response.data.data;
-                });
+            changeStation() {
+                if (this.addNewsChannelModal.stationIndex !== undefined) {
+                    adapi.getAllPage({isDel: 0, stationName: this.stationList[this.addNewsChannelModal.stationIndex].stationName}).then(response => {
+                        this.pageList = response.data.data;
+                    });
+                } else {
+                    this.pageList = [];
+                }
             },
         },
         created() {
