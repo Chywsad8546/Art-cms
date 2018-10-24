@@ -10,12 +10,14 @@
 var editorRouters= [
     {
         name: 'default',
+        title:'空白编辑器',
         component: () =>
             import('@/views/advertisement/advertiseEditor/adSimpleView.vue'),
 
     },
     {
         name: 'xinfangTop5Editor',
+        title:'新房Top5编辑器',
         component: () =>
             import('@/views/advertisement/advertiseEditor/adSeniorEditor/xinfangTop5Editor.vue'),
 
