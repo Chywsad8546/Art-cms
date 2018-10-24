@@ -2,7 +2,7 @@
     <Row>
         <Col span="24">
         <Card>
-            <p slot="title">广告详情</p>
+            <p slot="title">编辑创意</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert type="warning" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
@@ -15,41 +15,54 @@
                 <!--<Col span="12" v-if="!isNewSystem">-->
                 <!--</Col>-->
                 <Col span="12" v-if="isNewSystem" style="min-width: 400px">
-                <Form ref="commonForm" :model="commonForm" :rules="commonFormRuleValidate" :label-width="80">
+                <Card >
+                    <p slot="title">
+                        <Icon type="ios-film-outline"></Icon>
+                        标的信息
+                    </p>
+                    <Form ref="commonForm" :model="commonForm" :rules="commonFormRuleValidate" :label-width="80">
                         <FormItem label="甲方公司名称" required prop="adCompany">
                             <Input v-model="commonForm.adCompany" placeholder="请填写内容"></Input>
                         </FormItem>
                         <FormItem label="创意名称" required prop="adName">
                             <Input v-model="commonForm.adName" placeholder="请填写内容"></Input>
                         </FormItem>
-                </Form>
-                <Form ref="form" :model="formItem" :rules="ruleValidate" :label-width="80">
-                    <template v-for="(item,index) in confs">
-                        <FormItem :label="item.label" v-if="item.type=='input'" :required="item.required" :prop="item.name">
-                            <Input v-model="formItem[item.name]" placeholder="请填写内容"></Input>
-                        </FormItem>
-                        <FormItem :label="item.label" v-if="item.type=='select'" :required="item.required" :prop="item.name">
-                            <Select v-model="formItem[item.name]">
-                                <Option v-for="(option,optionindex) in item.options" :value="option">{{option}}</Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem :label="item.label" v-if="item.type=='upload'" :required="item.required">
-                            <Upload action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
-                                    :on-format-error="uploadFormatError"
-                                    :show-upload-list="false">
-                                <Button type="ghost" icon="ios-cloud-upload-outline">点我上传</Button>
-                            </Upload>
-                            <div class="ivu-form-item-error-tip" v-if="item.required && formItem[item.name]==''">请上传</div>
-                        </FormItem>
+                    </Form>
+                </Card>
+                <Card >
+                    <p slot="title">
+                        <Icon type="ios-film-outline"></Icon>
+                        广告信息
+                    </p>
+                    <Form ref="form" :model="formItem" :rules="ruleValidate" :label-width="80">
+                        <template v-for="(item,index) in confs">
+                            <FormItem :label="item.label" v-if="item.type=='input'" :required="item.required" :prop="item.name">
+                                <Input v-model="formItem[item.name]" placeholder="请填写内容"></Input>
+                            </FormItem>
+                            <FormItem :label="item.label" v-if="item.type=='select'" :required="item.required" :prop="item.name">
+                                <Select v-model="formItem[item.name]">
+                                    <Option v-for="(option,optionindex) in item.options" :value="option">{{option}}</Option>
+                                </Select>
+                            </FormItem>
+                            <FormItem :label="item.label" v-if="item.type=='upload'" :required="item.required">
+                                <Upload action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
+                                        :on-format-error="uploadFormatError"
+                                        :show-upload-list="false">
+                                    <Button type="ghost" icon="ios-cloud-upload-outline">点我上传</Button>
+                                </Upload>
+                                <div class="ivu-form-item-error-tip" v-if="item.required && formItem[item.name]==''">请上传</div>
+                            </FormItem>
 
-                    </template>
+                        </template>
 
 
-                    <FormItem>
-                        <Button type="primary" @click="save">保存</Button>
-                        <Button type="ghost" style="margin-left: 8px">Cancel</Button>
-                    </FormItem>
-                </Form>
+                        <FormItem>
+                            <Button type="primary" @click="save">保存</Button>
+                        </FormItem>
+                    </Form>
+                </Card>
+
+
                 </Col>
             </Row>
         </Card>
@@ -108,7 +121,7 @@
                 arttemplate: '',
                 positionId: 0,
                 typeId: 0,
-                adResource:'',
+                adResource: '',
                 commonForm: {
                     adCompany: '',
                     adName: ''
@@ -121,7 +134,7 @@
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
                 },
-                isNewSystem:false
+                isNewSystem: false
 
             };
         },
@@ -144,14 +157,14 @@
                     this.$refs['form'].validate((valid) => {
                         if (commvalid && valid && uploadvalid) {
                             if (this.$route.query.id) {
-                                ad.edgeMode({
-                                    idcode:this.$route.query.id,
+                                ad.editIdea({
+                                    idcode: this.$route.query.id,
                                     ideaData: JSON.stringify(this.formItem),
                                     typeId: this.typeId,
                                     positionId: this.positionId,
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
-                                    adResource:this.adResource
+                                    adResource: this.adResource
                                 }).then(function (res) {
                                     // todo 跳回到列表页
                                     // this.$router.push({});
@@ -163,7 +176,7 @@
                                     positionId: this.positionId,
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
-                                    adResource:this.adResource
+                                    adResource: this.adResource
                                 }).then(function (res) {
                                     // todo 跳回到列表页
                                     // this.$router.push({});
@@ -233,7 +246,7 @@
             var that = this;
             if (this.$route.query.id) {
                 ad.getIdea(this.$route.query.id).then(function (res) {
-                    if(res.data.data.isNew) {
+                    if (res.data.data.isNew) {
                         that.typeId = res.data.data.typeId;
                         let ideares = res.data.data;
                         let ideaData = JSON.parse(res.data.data.adData);
@@ -247,14 +260,15 @@
                             that.arttemplate = res.data.data.template;
                             that.positionId = res.data.data.positionId;
                             that.init();
-                            that.isNewSystem=true;
+                            that.isNewSystem = true;
                         });
                     }
                     /**
                      * 旧系统录的创意不能编辑了，只能看
                      */
                     else {
-                        that.isNewSystem=false;
+                        that.isNewSystem = false;
+                        this.adResource = res.data.data.adResource;
                         $(this.$refs['stage']).html(res.data.data.adResource);
                     }
                 });

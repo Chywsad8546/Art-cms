@@ -4,7 +4,7 @@
 
 
                 <Form ref="form" :model="{share:share,formItem:formItem}" :rules="ruleValidate" :label-width="80">
-                    <FormItem label="甲方公司名称" required prop="share.adCompany">
+                    <FormItem label="楼盘名称" required prop="share.adCompany">
                         <Input v-model="share.adCompany" placeholder="请填写内容"></Input>
                     </FormItem>
                     <FormItem label="创意名称" required prop="formItem.adName">

@@ -7,6 +7,13 @@ export const otherRouter = {
     component: Main,
     children: [
         {
+            path: 'ad/redirect',
+            title: '广告中间页',
+            name: 'ad_redirect',
+            component: () =>
+                import('@/views/advertisement/advertiseEditor/adRedirect.vue')
+        },
+        {
             path: 'ad/addetail',
             title: '广告详情',
             name: 'ad_addetail',
