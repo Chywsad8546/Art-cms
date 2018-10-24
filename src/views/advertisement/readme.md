@@ -1,7 +1,8 @@
 # 广告模块
 
-## 一，系统逻辑关系
+## 逻辑关系
 
+### 广告系统各维度逻辑关系
 广告位逻辑关系从上到下依次为：
 - 应用
 - 栏目
@@ -12,7 +13,9 @@
 
 ![alt text](http://wap-qn.bidewu.com/cms/jiaocheng/cmsguanxi.jpg) 
 
-#### 1.1 测试环境
+### 应用系统与广告系统关系
+
+
 [经纪人平台](http://jingjiren.test.toutiaofangchan.com)
 
 [企业平台](http://corp.test.toutiaofangchan.com)
