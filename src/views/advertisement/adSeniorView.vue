@@ -37,7 +37,7 @@
     <Row>
         <Col span="24">
         <Card>
-            <p slot="title">广告详情</p>
+            <p slot="title">内容编辑器</p>
             <Row >
                 <Col span="12">
                 <div ref="stage">
@@ -130,7 +130,6 @@
                 that.currentEditor = res.default;
                 that.currentEditorKey = 'testdemo';
                 that.arttemplate = _.trim(res.default.wys_stageTemplate);
-                console.log('res', res);
             }).catch(function (res) {
                 console.error('error', res);
             });
