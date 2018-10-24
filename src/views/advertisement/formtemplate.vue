@@ -7,7 +7,7 @@
                 <Col span="12">
                     <Button type="primary" @click="formModal1 = true">新增选框</Button>
                     <Form ref="form" :model="formItem" :label-width="100">
- 
+
                     <Table :columns="columns" :data="confs"></Table>
 
                         <FormItem label="模板类型" prop="title" style="margin-top:20px;">
@@ -23,10 +23,10 @@
                             <Select v-model="formItem.positionId" style="width:100px">
                                 <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                             </Select>
-                        </FormItem>                  
+                        </FormItem>
                          <FormItem label="template">
                             <Input v-model="formItem.template" type="textarea" :rows="4" placeholder="请输入内容"></Input>
-                        </FormItem>                       
+                        </FormItem>
                         <FormItem>
                             <Button type="primary" @click="addTemplate">保存</Button>
                             <Button type="ghost" style="margin-left: 8px">取消</Button>
@@ -42,16 +42,16 @@
                     </RadioGroup>
                     <Form ref="formAdd" :model="formAdd" :label-width="60">
                         <FormItem label="name"  prop="name">
-                            <Input type="text" v-model="formAdd.name" placeholder="请输入name"></Input>                           
-                        </FormItem>                       
+                            <Input type="text" v-model="formAdd.name" placeholder="请输入name"></Input>
+                        </FormItem>
                         <FormItem label="label"  prop="label">
-                            <Input type="text" v-model="formAdd.label" placeholder="请输入label"></Input>                           
+                            <Input type="text" v-model="formAdd.label" placeholder="请输入label"></Input>
                         </FormItem>
                         <FormItem label="default"  prop="default">
-                            <Input type="text" v-model="formAdd.default" placeholder="请输入default"></Input>                           
+                            <Input type="text" v-model="formAdd.default" placeholder="请输入default"></Input>
                         </FormItem>
                         <FormItem label="正则"  prop="reg">
-                            <Input type="text" v-model="formAdd.reg" placeholder="请输入正则"></Input>                           
+                            <Input type="text" v-model="formAdd.reg" placeholder="请输入正则"></Input>
                         </FormItem>
                         <FormItem label="是否必填">
                             <i-switch v-model="formAdd.required" size="large">
@@ -60,7 +60,7 @@
                             </i-switch>
                         </FormItem>
                         <FormItem label="提示文字"  prop="message">
-                            <Input type="text" v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
+                            <Input type="text" v-model="formAdd.message" placeholder="校验提示文字"></Input>
                         </FormItem>
                         <FormItem label="options" v-if="inputType == 'select'">
                             <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="options"></Input>
@@ -71,7 +71,7 @@
                                 <Checkbox label="jpeg"></Checkbox>
                                 <Checkbox label="png"></Checkbox>
                             </CheckboxGroup>
-                        </FormItem>                       
+                        </FormItem>
                     </Form>
                     <div slot="footer">
                         <Button type="primary" size="large"  @click="popupOk">保存</Button>
@@ -108,7 +108,7 @@
 
 <script>
     import api from '../../api/advertisement/formtemplateApi.js';
-    export default {     
+    export default {
         name: 'ad-formtemplate-view',
         data() {
             return {
@@ -234,44 +234,44 @@
             pdClick(){
                 api.getPositionInfo(this.pdmode).then(response => {
                     this.weizhiList = response.data.data;
-                });   
+                });
             },
             zdClick(){
                 api.getChannelInfo(this.zdmode).then(response => {
                     this.pingdaoList = response.data.data;
-                });   
+                });
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
                     this.zhandianList = response.data.data;
-                });               
+                });
             },
             show() {
                 console.log(this.$data);
             },
-            moveUp:function(index,item) { 
-                //在上一项插入该项 
+            moveUp:function(index,item) {
+                //在上一项插入该项
                 this.confs.splice(index-1,0,item);
-                //删除后一项 
-                this.confs.splice(index+1,1); 
-                if(index == 0) { 
+                //删除后一项
+                this.confs.splice(index+1,1);
+                if(index == 0) {
                     this.$Message.error("到顶啦！");
-                } 
-            }, 
-            moveDown:function(index,item) { 
-                //在下一项插入该项 
-                this.confs.splice(index+2,0,item); 
-                // 删除前一项 
-                this.confs.splice(index,1); 
+                }
+            },
+            moveDown:function(index,item) {
+                //在下一项插入该项
+                this.confs.splice(index+2,0,item);
+                // 删除前一项
+                this.confs.splice(index,1);
                 if(index == this.confs.length-1) {
                     this.$Message.error("已经是最后一项啦！");
-                } 
-            }, 
+                }
+            },
             confsRemove(index){
                     this.confs.splice(index,1);
                     console.log(this.confs);
-            },     
-            popupOk () {       
+            },
+            popupOk () {
                 let strArr = {
                     'type':this.inputType,
                     'name':this.formAdd.name,
@@ -280,9 +280,9 @@
                     'reg':this.formAdd.reg,
                     'required':this.formAdd.required,
                     'message':this.formAdd.message
-                };               
+                };
                 if(this.inputType == "select"){
-                    strArr.options = this.formAdd.options.split(/[(\r\n)\r\n]+/);                  
+                    strArr.options = this.formAdd.options.split(/[(\r\n)\r\n]+/);
                 }
                 if(this.inputType == "upload"){
                     strArr.format = this.formAdd.format;
@@ -309,7 +309,7 @@
                 }
                 this.confs.push(strArr);
                 this.cleanData();
-                this.formModal1 = !this.formModal1;       
+                this.formModal1 = !this.formModal1;
             },
             cleanData(){
                 this.inputType = "input";
@@ -326,24 +326,24 @@
             },
             addTemplate() {
                 if(this.confs.length <= 0){
-                    this.$Message.error("请添加选框"); 
+                    this.$Message.error("请添加选框");
                     return false;
                 }
                 if(this.formItem.name == ""){
-                    this.$Message.error("请填写类型"); 
-                    return false;                    
+                    this.$Message.error("请填写类型");
+                    return false;
                 }
                 if(this.formItem.template == ""){
-                    this.$Message.error("请填写模板"); 
-                    return false;                    
+                    this.$Message.error("请填写模板");
+                    return false;
                 }
                 if(this.formItem.positionId == ""){
-                    this.$Message.error("请选择位置"); 
-                    return false;                    
+                    this.$Message.error("请选择位置");
+                    return false;
                 }
                 this.formItem.form = JSON.stringify(this.confs);
                 api.addTemplate(this.formItem).then(response => {
-                    this.$Message.success("添加成功"); 
+                    this.$Message.success("添加成功");
                     this.$router.push({
                         name: "templateList"
                     });
