@@ -93,9 +93,7 @@
                 </FormItem>
                            <FormItem label="编辑器" prop="bjq">
                                 <Select v-model="addIdeaNewsModal.bjq" style="width:140px">
-                                    <Option value="35">复杂编辑器</Option>
-                                    <Option value="35">简单编辑器1</Option>
-                                    <Option value="35">简单编辑器2</Option>
+                                    <Option v-for="item in bjqList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                 </Select>
                             </FormItem>
             </Form>
@@ -103,14 +101,13 @@
     </Row>
 </template>
 <script>
-    import api from '../../api/advertisement/pushApi.js';
     import ideaApi from '../../api/advertisement/ideaList.js';
     import dutil from '../../libs/util.js';
     import fapi from '../../api/advertisement/formtemplateApi.js';
-    import apiDictionary from '../../api/dictionary/channelDictionary.js';
     export default {
         data() {
             return {
+                bjqList: [],
                 addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
                 pdmode: {pageName: ''},
@@ -220,6 +217,9 @@
                 ideaApi.ideaList(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
+                });
+                fapi.templateList().then(response => {
+                    this.bjqList = response.data.data;
                 });
             },
             handleSearch () {

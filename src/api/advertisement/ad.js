@@ -68,5 +68,9 @@ export default {
     // 修改位置/cmsapi/updatePosition
     updatePosition(params) {
         return http.post('/cmsapi/updatePosition', params);
+    },
+    // 修改站点名称/cmsapi/updateStationName
+    updateStationName(params) {
+        return http.post('/cmsapi/updateStationName', params);
     }
 };

@@ -5,17 +5,23 @@
                 <p slot="title">栏目列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
+                        <FormItem label="站点名称" prop="stationName">
+                            <Select v-model="searchData.stationName" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="栏目名称" prop="pageName">
+                            <Select v-model="searchData.pageName" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option v-for="item in searchPageList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem label="位置id" prop="positionId">
                             <Input v-model.trim="searchData.positionId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="站点名称" prop="stationName">
-                            <Input v-model.trim="searchData.stationName" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="栏目名称" prop="pageName">
-                            <Input v-model.trim="searchData.pageName" style="width:140px"></Input>
                         </FormItem>
                        <!-- <FormItem label="是否删除" prop="isDel">
                             <Select v-model="searchData.isDel" style="width:140px">
@@ -66,17 +72,40 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <Modal v-model="modal3" width="360">
+            <Button type="primary" @click="addModal">添加模板</Button>
+                <Table border :columns="modalColums" :data="modalData"></Table>
+        </Modal>
     </Row>
 </template>
 <script>
     import adapi from '../../api/advertisement/ad.js';
-    import api from '../../api/advertisement/openScreen.js';
+    import api from '../../api/advertisement/formtemplateApi.js';
     import dutil from '../../libs/util.js';
     export default {
         data() {
             return {
+                searchStationList: [],
+                searchPageList: [],
+                modalColums: [
+                    {
+                        key: 'id',
+                        title: 'id'
+                    },
+                    {
+                        key: 'name',
+                        title: '名称'
+                    },
+                    {
+                        key: 'positionName',
+                        title: '位置名称'
+                    },
+                ],
+                modalData: [],
+                modal3: false,
                 stationList: [],
-                pageList:[],
+                pageList: [],
                 columns: [
                     {
                         key: 'positionId',
@@ -116,7 +145,7 @@
                         render: (h, params) => {
                             var i = this;
                             return h('div', [
-                                /*h(
+                                h(
                                     'Button',
                                     {
                                         props: {
@@ -128,20 +157,16 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
-                                                if (params.row.isDel === 1) {
-                                                    this.updateCahnnelValue.isDel = 0;
-                                                } else {
-                                                    this.updateCahnnelValue.isDel = 1;
-                                                }
-                                                this.delStation();
-                                                this.init();
+                                                this.modal3 = true;
+                                                api.templateList({positionId: params.row.positionId}).then(response => {
+                                                    this.modalData = response.data.data;
+                                                });
+                                                console.log(this.modalData)
                                             }
                                         }
                                     },
-                                    '是否删除'
-                                ),*/
+                                    '模板管理'
+                                ),
                                 h(
                                     'Button',
                                     {
@@ -188,14 +213,23 @@
             };
         },
         methods: {
+            addModal(){
+                this.$router.push({
+                    name: "formtemplate"
+                });
+            },
             addModeButton() {
                 this.addNewsChannelModal = {
                 };
                 this.isTrueAddTag = true;
             },
             init() {
+                adapi.getAllPage().then(response => {
+                    this.searchPageList = response.data.data;
+                });
                 adapi.getAllStation({isDel: 0}).then(response => {
                     this.stationList = response.data.data;
+                    this.searchStationList = response.data.data;
                 });
                 this.addNewsChannelModal = {
                 };
