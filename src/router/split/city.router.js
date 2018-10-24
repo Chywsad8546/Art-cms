@@ -11,7 +11,7 @@ export const otherRouter = {
             title: '广告详情',
             name: 'ad_addetail',
             component: () =>
-                import('@/views/advertisement/adSimpleView.vue')
+                import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
         },
         {
             path: 'ad/addsenioretail',

@@ -4,15 +4,17 @@
         <Card>
             <p slot="title">广告详情</p>
             <Row >
-                <Col span="12">
+                <Col span="12" style="background-color:#eeeeee">
                 <Alert type="warning" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
-                    <div ref="stage">
-
+                    <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #8b8b8b;overflow: hidden">
+                        <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
+                    <div ref="stage" >
+                    </div>
                     </div>
                 </Col>
                 <!--<Col span="12" v-if="!isNewSystem">-->
                 <!--</Col>-->
-                <Col span="12" v-if="isNewSystem">
+                <Col span="12" v-if="isNewSystem" style="min-width: 400px">
                 <Form ref="commonForm" :model="commonForm" :rules="commonFormRuleValidate" :label-width="80">
                         <FormItem label="甲方公司名称" required prop="adCompany">
                             <Input v-model="commonForm.adCompany" placeholder="请填写内容"></Input>
@@ -263,6 +265,7 @@
                     that.arttemplate = res.data.data.template;
                     that.positionId = res.data.data.positionId;
                     that.init();
+                    that.isNewSystem = true;
                 });
             }
         }

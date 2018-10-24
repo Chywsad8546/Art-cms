@@ -11,7 +11,7 @@ var editorRouters= [
     {
         name: 'default',
         component: () =>
-            import('@/views/advertisement/adSimpleView.vue'),
+            import('@/views/advertisement/advertiseEditor/adSimpleView.vue'),
 
     },
     {
