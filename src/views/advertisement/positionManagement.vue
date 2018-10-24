@@ -230,7 +230,7 @@
                                 this.init();
                             });
                         }else {
-                            console.log('失败');
+                            this.$Message.error('请选择栏目！');
                         }
                     } else {
                         this.$Message.error('表单验证失败!');
