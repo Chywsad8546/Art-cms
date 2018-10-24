@@ -70,7 +70,7 @@
                 <navigation :include="includeIds">
                     <router-view :key="$route.meta.keepaliveid" v-if="$route.meta.keepalive"></router-view>
                 </navigation>
-                <router-view v-if="!$route.meta.keepalive"></router-view>
+                <router-view v-if="!$route.meta.keepalive" :key="$route.meta.keepaliveid" ></router-view>
             </div>
         </div>
     </div>
