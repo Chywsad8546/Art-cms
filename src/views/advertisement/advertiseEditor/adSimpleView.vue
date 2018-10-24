@@ -5,7 +5,7 @@
             <p slot="title">编辑创意</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
-                <Alert type="warning" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
+                <Alert type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
                     <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #8b8b8b;overflow: hidden">
                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >

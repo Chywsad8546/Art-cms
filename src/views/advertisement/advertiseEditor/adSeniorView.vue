@@ -41,7 +41,7 @@
             <p slot="title">编辑创意</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
-                <!--<Alert type="warning" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>-->
+                <Alert type="error" v-if="!canFindEditor">内容编辑器走丢了，不能修改了:(</Alert>
                 <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color:#ffffff;overflow: hidden">
                     <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
@@ -63,7 +63,7 @@
                         </FormItem>
                     </Form>
                 </Card>
-                <Card >
+                <Card v-if="canFindEditor" >
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
                         广告内容
@@ -114,12 +114,12 @@
                     adName: [
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
-                }
+                },
+                canFindEditor:true
             };
         },
         methods: {
             save(success, error) {
-
                 this.$refs['commonForm'].validate((commvalid) => {
                     if (commvalid) {
                         if (this.$route.query.id) {
@@ -132,8 +132,21 @@
                                 adName: this.commonForm.adName,
                                 adResource: this.adResource
                             }).then(function (res) {
-                                // todo 跳回到列表页
-                                // this.$router.push({});
+                                if (success) {
+                                    try {
+                                        success();
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
+                            }).catch(function (er) {
+                                if (error) {
+                                    try {
+                                        error(er);
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
                             });
                         } else {
                             ad.addIdea({
@@ -144,8 +157,21 @@
                                 adName: this.commonForm.adName,
                                 adResource: this.adResource
                             }).then(function (res) {
-                                // todo 跳回到列表页
-                                // this.$router.push({});
+                                if (success) {
+                                    try {
+                                        success();
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
+                            }).catch(function (er) {
+                                if (error) {
+                                    try {
+                                        error(er);
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                }
                             });
                         }
                     } else {
@@ -171,9 +197,18 @@
              * @param component
              */
             hookWatch(component) {
+                var that = this;
+
                 let mix = {
                     __wys_mixin_hook: true,
                     created: function () {
+                        for (var key in that.share) {
+                            try {
+                                this.$set(this.share, key, that.share[key]);
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }
                         console.log('created');
                         /**
                         判断是不是右侧editor的子组件，如果不是一级子组件，不要触发这些钩子
@@ -216,10 +251,11 @@
         created() {
             var that = this;
             if (this.$route.query.id) {
+                console.log('this.$route.query.id',this.$route.query.id)
                 ad.getIdea(this.$route.query.id).then(function (res) {
                     that.typeId = res.data.data.typeId;
                     let ideares = res.data.data;
-                    let ideaData = JSON.parse(res.data.data.adData);
+                    let ideaData = JSON.parse(res.data.data.adData || {});
                     editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
                         let editor = this.getEditor(res.data.data.form);
                         that.typeId = that.$route.query.templateid;
@@ -235,14 +271,18 @@
                                 that.currentEditor = res.default;
                                 that.currentEditorKey = editor.name;
                             }).catch(function (res) {
+                                that.canFindEditor=false;
                                 console.error('error', res);
                             });
                         } else {
-                            // todo 没有找到editor
+                            that.canFindEditor=false;
                         }
                     });
+                }).catch(function () {
+                    that.canFindEditor=false;
                 });
             } else {
+
                 editortemplate.getTemplate(this.$route.query.templateid).then(function (res) {
                     let editor = that.getEditor(res.data.data.form);
                     that.typeId = that.$route.query.templateid;
@@ -255,11 +295,14 @@
                             that.currentEditorKey = editor.name;
                             that.arttemplate = _.trim(res.default.wys_stageTemplate);
                         }).catch(function (res) {
+                            that.canFindEditor=false;
                             console.error('error', res);
                         });
                     } else {
-                        // todo 没有找到editor
+                        that.canFindEditor=false;
                     }
+                }).catch(function () {
+                    that.canFindEditor=false;
                 });
             }
         }
