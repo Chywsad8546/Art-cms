@@ -21,14 +21,12 @@ export const otherRouter = {
                 import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
         },
         {
-            path: 'ad/addsenioretail',
+            path: 'ad/positionEdit',
             title: '广告详情',
-            name: 'ad_addsenioretail',
+            name: 'positionEdit',
             component: () =>
-                import('@/views/advertisement/advertiseEditor/adSeniorView.vue')
+                import('@/views/advertisement/positionEdit.vue')
         },
-
-
         // 系统管理：权限管理
         {
             path: 'sysManage/assignPermissions',
@@ -175,7 +173,7 @@ export const appRouter = [
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/error-page/blankPage.vue')
+                import('@/views/advertisement/blankPage.vue')
         },
         {
             path: 'ideaList',
