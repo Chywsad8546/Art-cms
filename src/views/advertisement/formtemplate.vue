@@ -163,11 +163,9 @@
                             </Col>
                         </Row>
                 </FormItem> 
-                <FormItem label="路由" prop="route" class="seniorClass">
-                    <Select v-model="senior.route" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                <FormItem label="路由" prop="form" class="seniorClass">
+                    <Select v-model="senior.form" placeholder="请选择路由">
+                         <Option v-for="item in editorRouterList" :value="item.name" :key="item.name">{{ item.title }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="template" prop="template" class="seniorClass">
@@ -185,7 +183,7 @@
 
 <script>
     import api from '../../api/advertisement/formtemplateApi.js';
-    import adSeniorEditorRouter from './adSeniorEditorRouter.js';
+    import adSeniorEditorRouter from './advertiseEditor/adSeniorEditorRouter.js';
     export default {     
         name: 'ad-formtemplate-view',
         data() {
@@ -203,6 +201,7 @@
                 seniorWzList:[],
                 seniorPdList:[],
                 weizhiList:[],
+                editorRouterList:[],
                 formAdd: {
                     name: '',
                     label: '',
@@ -214,7 +213,13 @@
                     format:[]
                 },
                 senior: {
-                    route:""
+                    name:"",
+                    form:"",
+                    template:"",
+                    positionId:0,
+                    station:"",
+                    pageName:"",
+                    isAdvancedEdit:0
                 },
                 columns:[
                     {
@@ -306,9 +311,24 @@
                     ],
                 },
                 seniorValidate: {
-                    route:[
+                    form:[
                         { required: true, message: '请选择路由', trigger: 'change' }
                     ],
+                    name:[
+                        { required: true, message: '请填写类型', trigger: 'change' }
+                    ],
+                    template:[
+                        { required: true, message: '请填写模板', trigger: 'blur' }
+                    ],
+                    station: [
+                        { type:"number", required: true, message: '请选择站点', trigger: 'change' }
+                    ],
+                    pageName:[
+                        { required: true, message: '请选择频道', trigger: 'change' }
+                    ],
+                    positionId: [
+                        {type:"number", required: true, message: '请选择位置', trigger: 'change' }
+                    ]
                 },
                 vshowFlag: true
             };
@@ -464,18 +484,21 @@
                 //     return false;                    
                 // }
 
-            }
-        },
-        subRouteAdd(name){
+            },
+            subRouteAdd(name){
+                console.log(this.senior);
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-
+                         
                     }
                 })
+            },
         },
+
         created: function () {
             this.getStationInfo();
-            console.log(adSeniorEditorRouter);
+            this.editorRouterList = adSeniorEditorRouter.editorRouters;
+            console.log(adSeniorEditorRouter.editorRouters);
             this.Lid.id = this.$route.query.advertId;
             if(this.Lid.id != undefined){
                 this.getIdeaTypeData();
