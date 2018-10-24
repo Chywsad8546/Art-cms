@@ -91,7 +91,8 @@
                 columns: [
                     {
                         key: 'id',
-                        title: 'id'
+                        title: 'id',
+                        width: 80
                     },
                     {
                         key: 'title',
@@ -114,7 +115,8 @@
                                     "三级"
                                 ]);
                             }
-                        }
+                        },
+                        width: 80
                     },
                     {
                         title: '类型',
@@ -178,27 +180,30 @@
                                     "草稿"
                                 ]);
                             }
-                        }
+                        },
+                        width: 80
                     },
                     {
                         title: '编辑',
                         render: (h, params) => {
                             return h('div', params.row.sysUser.userName);
-                        }
+                        },
+                        width: 80
                     },
                     {
                         key: 'readCount',
-                        width: 40,
+                        width: 80,
                         title: '阅读量'
                     },
                     {
                         key: 'sort',
-                        width: 40,
+                        width: 80,
                         title: '排序'
                     },
                     {
                         key: 'publishAt',
-                        title: '发布时间'
+                        title: '发布时间',
+                        width: 200
                     },
                     {
                         title: '管理',
