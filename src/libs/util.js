@@ -264,4 +264,12 @@ util.dateformat = function(d, format) {
     }
     return format;
 };
+
+util.StringtoJson = function(value) {
+    return JSON.parse(value);
+};
+
+util.stringToDate = function (value) {
+    return new Date(value);
+}
 export default util;
