@@ -30,7 +30,6 @@
                             <Button type="primary" @click="addModeButton">添加</Button>
                         </FormItem>
                     </Form>
-
                     <Table border :columns="columns" :data="data"></Table>
                     <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
                 </Row>
