@@ -5,6 +5,12 @@
             <p slot="title">资讯列表管理</p>
             <Row class="margin-top-10 searchable-table-con1">
                 <Form ref="searchData" :model="searchData" inline :label-width="120">
+                    <FormItem label="编号" prop="id">
+                        <Input v-model.trim="searchData.id" style="width:140px"/>
+                    </FormItem>
+                    <FormItem label="标题" prop="title">
+                        <Input v-model.trim="searchData.title" style="width:140px"/>
+                    </FormItem>
                     <FormItem label="编辑" prop="creator">
                         <Select v-model="searchData.creator" style="width:140px">
                             <Option value="">全部</Option>
