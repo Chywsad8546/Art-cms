@@ -6,10 +6,10 @@
   <div class="wrapper">
     <div class="left">
       <div class="nav">
-        <a href="http://m.toutiaofangchan.com/bj/xinfang">新房</a>
-        <a href="http://m.toutiaofangchan.com/bj/xiaoqu">小区</a>
-        <a href="http://m.toutiaofangchan.com/bj/esf">二手房</a>
-        <a href="http://m.toutiaofangchan.com/bj/zufang">租房</a>
+        <!--<a href="http://m.toutiaofangchan.com/bj/xinfang">新房</a>-->
+        <!--<a href="http://m.toutiaofangchan.com/bj/xiaoqu">小区</a>-->
+        <!--<a href="http://m.toutiaofangchan.com/bj/esf">二手房</a>-->
+        <!--<a href="http://m.toutiaofangchan.com/bj/zufang">租房</a>-->
       </div>
     </div>
 
@@ -17,7 +17,7 @@
 
       <div class="login" @keydown.enter="handleSubmit">
         <p class="title">
-          企业账号登录
+          广告新闻系统
         </p>
         <div class="login-con">
           <Form ref="loginForm" :model="form" :rules="rules">

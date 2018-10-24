@@ -24,7 +24,7 @@
                             </Select>
                         </FormItem>
 
-                        <FormItem label="开始时间"  prop="starTime">
+                        <FormItem label="开始时间"  prop="startTime">
                             <DatePicker type="date" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem label="结束时间"  prop="endTime">

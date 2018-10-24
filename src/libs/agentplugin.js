@@ -12,6 +12,18 @@ function install (Vue) {
      * 3，新页面如果已经存在打开的多个，那么新页面重新创建一个新的，触发新页面的created事件
      * @param location 路由信息
      */
+    Vue.prototype.$replacePageAndActiveRouter = function (location) {
+        console.log('this.$vnode.key',this.$vnode.key)
+        this.$store.commit('removeTag', this.$vnode.key);
+        this.$router.replace(location);
+    };
+    /**
+     * 关闭当前页面，清除当前页的keepalive缓存，并跳转到新页面，本方法以尽量激活新页面为目的，如：
+     * 1，如果新页面在缓存中，只是激活缓存，触发新页面的activated事件
+     * 2，如果新页面没在缓存中，重新打开新页面，触发新页面的created事件
+     * 3，新页面如果已经存在打开的多个，那么新页面重新创建一个新的，触发新页面的created事件
+     * @param location 路由信息
+     */
     Vue.prototype.$closePageAndActiveRouter = function (location) {
         this.$store.commit('removeTag', this.$vnode.key);
         this.$router.push(location);

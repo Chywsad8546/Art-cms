@@ -5,6 +5,12 @@
             <p slot="title">资讯列表管理</p>
             <Row class="margin-top-10 searchable-table-con1">
                 <Form ref="searchData" :model="searchData" inline :label-width="120">
+                    <FormItem label="编号" prop="id">
+                        <Input v-model.trim="searchData.id" style="width:140px"/>
+                    </FormItem>
+                    <FormItem label="标题" prop="title">
+                        <Input v-model.trim="searchData.title" style="width:140px"/>
+                    </FormItem>
                     <FormItem label="编辑" prop="creator">
                         <Select v-model="searchData.creator" style="width:140px">
                             <Option value="">全部</Option>
@@ -109,7 +115,8 @@
                 columns: [
                     {
                         key: 'id',
-                        title: 'id'
+                        title: 'id',
+                        width: 80
                     },
                     {
                         key: 'title',
@@ -132,7 +139,8 @@
                                     "三级"
                                 ]);
                             }
-                        }
+                        },
+                        width: 80
                     },
                     {
                         title: '类型',
@@ -196,27 +204,30 @@
                                     "草稿"
                                 ]);
                             }
-                        }
+                        },
+                        width: 80
                     },
                     {
                         title: '编辑',
                         render: (h, params) => {
                             return h('div', params.row.sysUser.userName);
-                        }
+                        },
+                        width: 80
                     },
                     {
                         key: 'readCount',
-                        width: 40,
+                        width: 80,
                         title: '阅读量'
                     },
                     {
                         key: 'sort',
-                        width: 40,
+                        width: 80,
                         title: '排序'
                     },
                     {
                         key: 'publishAt',
-                        title: '发布时间'
+                        title: '发布时间',
+                        width: 200
                     },
                     {
                         title: '管理',
