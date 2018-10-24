@@ -270,9 +270,9 @@ export const appRouter = [
                 path: 'newsManageList',
                 name: 'newsManageList',
                 title: '资讯列表',
-                // meta: {
-                //     requireAuth: true
-                // },
+                meta: {
+                    keepalive: true
+                },
                 component: () =>
                     import('@/views/newsManage/newsManageList.vue'),
                 permissions: [
