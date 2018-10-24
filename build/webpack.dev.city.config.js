@@ -51,9 +51,6 @@ module.exports = merge(webpackBaseConfig, {
         new CopyWebpackPlugin([
             {
                 from: 'src/views/main-components/theme-switch/theme'
-            },
-            {
-                from: 'src/views/my-components/text-editor/tinymce'
             }
         ], {
             ignore: [
@@ -72,8 +69,7 @@ module.exports = merge(webpackBaseConfig, {
             '/cmsapi': {
                 // 目标服务器地址
                 //target: 'http://192.168.1.46:8084/',
-                target: 'http://127.0.0.1:8084/',
-                //target: 'http://newcms.dev.bidewu.com/',
+                target: 'http://newcms.dev.bidewu.com/',
                 //路径重写
                 pathRewrite: {'^/cmsapi' : '/cmsapi'},
                 changeOrigin: true

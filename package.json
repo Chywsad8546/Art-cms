@@ -5,14 +5,8 @@
   "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config build/webpack.dev.config.js",
-    "dev": "webpack-dev-server --content-base ./ --open --inline --hot --compress --config build/webpack.dev.config.js",
-    "corp": "webpack-dev-server --content-base ./ --open --inline --hot --compress --config build/webpack.dev.corp.config.js",
     "city": "webpack-dev-server --content-base ./ --open --inline --hot --compress --config build/webpack.dev.city.config.js",
-    "build-test": "webpack --progress --hide-modules --config build/webpack.test.config.js",
-    "build-corp-test": "webpack --progress --hide-modules --config build/webpack.test.corp.config.js",
     "build-city-test": "webpack --progress --hide-modules --config build/webpack.test.city.config.js",
-    "build-pro": "webpack --progress --hide-modules --config build/webpack.prod.config.js",
-    "build-corp-pro": "webpack --progress --hide-modules --config build/webpack.prod.corp.config.js",
     "build-city-pro": "webpack --progress --hide-modules --config build/webpack.prod.city.config.js",
     "lint": "eslint --fix --ext .js,.vue src",
     "test": "npm run lint"
