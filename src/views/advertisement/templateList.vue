@@ -1,7 +1,7 @@
 <template>
 <div>
     <Table border :columns="columns7" :data="templateListData"></Table>
-    <Page :total="total"  @on-change="pageChange" ></Page>
+    <Page :total="total"  @on-change="pageChange" show-total show-sizer></Page>
 </div>
     <!-- <Page :total="total"  @on-change="pageChange" style="margin-top:10px; text-align:right"></Page> -->
 </template>
@@ -36,12 +36,31 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            if(params.row.isNew == 1){
+                                                this.$router.push({
+                                                    name: 'formtemplate',
+                                                    query: {advertId: params.row.id}
+                                                });
+                                            }
+                                        }
+                                    }
+                                }, '编辑'),
+                                h('Button', {
+                                    props: {
                                         type: 'error',
                                         size: 'small'
                                     },
                                     on: {
                                         click: () => {
-                                            this.deleteTemplate(params.row.id);
+                                            this.deleteConfirm(params.row.id);
                                         }
                                     }
                                 }, '删除')
@@ -73,6 +92,17 @@
                     this.templateListData = response.data.data;
                     this.total = response.data.count;
                 });                   
+            },
+            deleteConfirm (id) {
+                this.$Modal.confirm({
+                    title: '',
+                    content: '<p>是否确定删除</p>',
+                    onOk: () => {
+                        this.deleteTemplate(id);
+                    },
+                    onCancel: () => {
+                    }
+                });
             }
         },
         created: function () {
