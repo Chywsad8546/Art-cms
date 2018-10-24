@@ -204,7 +204,7 @@
                     desc: ''
                 });
             },
-            init() {
+            init(created) {
                 /**
                  * 初始化 数据和校验 信息
                  */
@@ -240,6 +240,14 @@
                 }, {
                     deep: true
                 });
+                if (created) {
+                    try {
+                        var html = template.render(this.arttemplate, newVal);
+                        this.adResource = html;
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
             }
         },
         created: function () {
@@ -278,7 +286,7 @@
                     that.confs = JSON.parse(res.data.data.form);
                     that.arttemplate = res.data.data.template;
                     that.positionId = res.data.data.positionId;
-                    that.init();
+                    that.init(true);
                     that.isNewSystem = true;
                 });
             }
