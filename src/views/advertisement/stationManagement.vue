@@ -9,7 +9,10 @@
                             <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="站点名称" prop="stationName">
-                            <Input v-model.trim="searchData.stationName" style="width:140px"></Input>
+                            <Select v-model="searchData.stationName" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                            </Select>
                         </FormItem>
                          <FormItem label="是否删除" prop="isDel">
                               <Select v-model="searchData.isDel" style="width:140px">
@@ -59,6 +62,7 @@
     export default {
         data() {
             return {
+                searchStationList:[],
                 defaultList: [],
                 columns: [
                     {
@@ -130,7 +134,7 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
+                                                this.updateCahnnelValue.stationNameUp = params.row.stationName;
                                                 this.updateCahnnelValue.stationName = params.row.stationName;
                                                 i.modal2 = true;
                                             }
@@ -176,6 +180,9 @@
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
+                adapi.getAllStation().then(response => {
+                    this.searchStationList = response.data.data;
+                });
             },
             updateIsPush(id, isDel) {
                 api.updateOpenScreen({id: id, isDel: isDel}).then(response => {
@@ -220,7 +227,7 @@
             updateChannel() {
                 this.$refs['updateCahnnelValuefrom'].validate((valid) => {
                     if (valid) {
-                        adapi.updateStation(this.updateCahnnelValue).then(response => {
+                        adapi.updateStationName(this.updateCahnnelValue).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
                                 this.init();
