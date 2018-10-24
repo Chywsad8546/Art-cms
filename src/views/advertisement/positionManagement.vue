@@ -5,22 +5,25 @@
                 <p slot="title">栏目列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
+                        <FormItem label="位置id" prop="positionId">
+                            <Input v-model.trim="searchData.positionId" style="width:140px"></Input>
+                        </FormItem>
+                        <FormItem label="位置名称" prop="positionName">
+                            <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
+                        </FormItem>
                         <FormItem label="站点名称" prop="stationName">
                             <Input v-model.trim="searchData.stationName" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="栏目id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageName">
                             <Input v-model.trim="searchData.pageName" style="width:140px"></Input>
                         </FormItem>
-                        <FormItem label="是否删除" prop="isDel">
+                       <!-- <FormItem label="是否删除" prop="isDel">
                             <Select v-model="searchData.isDel" style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option value="0">否</Option>
                                 <Option value="1">是</Option>
                             </Select>
-                        </FormItem>
+                        </FormItem>-->
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
@@ -41,20 +44,25 @@
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
-                    <Select v-model="addNewsChannelModal.stationName" style="width:140px">
+                    <Select v-model="addNewsChannelModal.stationName" @on-change = "changeStation" style="width:140px">
                         <Option v-for="item in stationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="栏目名称" prop="pageName">
-                    <Input v-model.trim="addNewsChannelModal.pageName" style="width:140px"></Input>
+                <FormItem label="栏目名称" prop="pageId">
+                    <Select v-model="addNewsChannelModal.pageId" style="width:140px">
+                        <Option v-for="item in pageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="位置名称" prop="positionName">
+                    <Input v-model.trim="addNewsChannelModal.positionName" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
 
         <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
-                <FormItem label="栏目名称" prop="pageName">
-                    <Input v-model.trim="updateCahnnelValue.pageName" style="width:140px"></Input>
+                <FormItem label="栏目名称" prop="positionName">
+                    <Input v-model.trim="updateCahnnelValue.positionName" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -68,19 +76,24 @@
         data() {
             return {
                 stationList: [],
+                pageList:[],
                 columns: [
                     {
-                        key: 'pageId',
-                        title: '栏目id',
+                        key: 'positionId',
+                        title: '位置id',
                         width: 100
                     },
                     {
                         key: 'stationName',
-                        title: '站点'
+                        title: '应用名称'
                     },
                     {
                         key: 'pageName',
-                        title: '栏目'
+                        title: '栏目名称'
+                    },
+                    {
+                        key: 'positionName',
+                        title: '位置名称'
                     },
                     {
                         title: '是否删除',
@@ -103,7 +116,7 @@
                         render: (h, params) => {
                             var i = this;
                             return h('div', [
-                                h(
+                                /*h(
                                     'Button',
                                     {
                                         props: {
@@ -128,7 +141,7 @@
                                         }
                                     },
                                     '是否删除'
-                                ),
+                                ),*/
                                 h(
                                     'Button',
                                     {
@@ -142,8 +155,8 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
-                                                this.updateCahnnelValue.pageName = params.row.pageName;
+                                                this.updateCahnnelValue.positionName = params.row.positionName;
+                                                this.updateCahnnelValue.positionId = params.row.positionId;
                                                 i.modal2 = true;
                                             }
                                         }
@@ -166,11 +179,11 @@
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
-                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
+                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
                     stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
                 },
                 updateruleValidate: {
-                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
+                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
                 }
             };
         },
@@ -187,7 +200,7 @@
                 this.addNewsChannelModal = {
                 };
                 this.updateCahnnelValue = {};
-                adapi.getAllPage(this.searchData).then(response => {
+                adapi.getAllPositions(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
@@ -203,17 +216,22 @@
             addNewsChannel(addChannelValue) {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        adapi.addPage(addChannelValue).then(response => {
-                            if (response.data.data > 0) {
-                                this.$Message.success('添加成功');
+                        if (typeof addChannelValue.pageId !== 'undefined'){
+                            console.log(addChannelValue);
+                            adapi.addPosition(addChannelValue).then(response => {
+                                if (response.data.data > 0) {
+                                    this.$Message.success('添加成功');
+                                    this.init();
+                                } else {
+                                    this.$Message.error('已存在，添加失败');
+                                }
+                            }).catch(error => {
+                                this.$Message.error(error.response.data.msg);
                                 this.init();
-                            } else {
-                                this.$Message.error('已存在，添加失败');
-                            }
-                        }).catch(error => {
-                            this.$Message.error(error.response.data.msg);
-                            this.init();
-                        });
+                            });
+                        }else {
+                            console.log('失败');
+                        }
                     } else {
                         this.$Message.error('表单验证失败!');
                     }
@@ -235,7 +253,7 @@
             updateChannel() {
                 this.$refs['updateCahnnelValuefrom'].validate((valid) => {
                     if (valid) {
-                        adapi.updateStation(this.updateCahnnelValue).then(response => {
+                        adapi.updatePosition(this.updateCahnnelValue).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
                                 this.init();
@@ -267,7 +285,12 @@
             sizeChange (size) {
                 this.searchData.limit = size;
                 this.init();
-            }
+            },
+            changeStation(){
+                adapi.getAllPage({isDel: 0,stationName: this.addNewsChannelModal.stationName}).then(response => {
+                    this.pageList = response.data.data;
+                });
+            },
         },
         created() {
             this.init();

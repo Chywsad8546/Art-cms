@@ -53,4 +53,16 @@ export default {
     addPage(params){
         return http.post('/cmsapi/addPage', params);
     },
+    //获取所有位置/cmsapi/getAllPosition
+    getAllPositions(params){
+        return http.post('/cmsapi/getAllPosition', params);
+    },
+    //添加位置
+    addPosition(params){
+        return http.post('/cmsapi/addPosition', params);
+    },
+    //修改位置/cmsapi/updatePosition
+    updatePosition(params){
+        return http.post('/cmsapi/updatePosition', params);
+    },
 };

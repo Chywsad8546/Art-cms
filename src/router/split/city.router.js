@@ -232,6 +232,16 @@ export const appRouter = [
                     import('@/views/advertisement/pageManagement.vue')
             },
             {
+                path: 'positionManagement',
+                name: 'positionManagement',
+                title: '位置管理',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/positionManagement.vue')
+            },
+            {
             path: 'yihaoyuan',
             name: 'yihaoyuan',
             title: '北京壹号院',
