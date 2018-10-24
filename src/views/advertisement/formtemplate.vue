@@ -122,15 +122,20 @@
 
                                     <Form ref="form" :model="editorformItem" :rules="ruleValidate" :label-width="80">
                                         <template v-for="(item,index) in confs">
+
                                             <FormItem :label="item.label" v-if="item.type=='input'" :required="item.required" :prop="item.name">
+                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
                                                 <Input v-model="editorformItem[item.name]" placeholder="请填写内容"></Input>
+
                                             </FormItem>
                                             <FormItem :label="item.label" v-if="item.type=='select'" :required="item.required" :prop="item.name">
+                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
                                                 <Select v-model="editorformItem[item.name]">
                                                     <Option v-for="(option,optionindex) in item.options" :value="option">{{option}}</Option>
                                                 </Select>
                                             </FormItem>
                                             <FormItem :label="item.label" v-if="item.type=='upload'" :required="item.required">
+                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
                                                 <Upload action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
                                                         :on-format-error="uploadFormatError"
                                                         :show-upload-list="false">
@@ -485,6 +490,7 @@ import { setTimeout } from 'timers';
                         this.formItem.name = response.data.data.name;
                         this.formItem.template = response.data.data.template;
                         this.confs = JSON.parse(response.data.data.form);
+                        this.editorTry(true);
                     }
                 });
             },
@@ -546,7 +552,7 @@ import { setTimeout } from 'timers';
                     desc: ''
                 });
             },
-            editorTry() {
+            editorTry(created) {
                 if(this.unwatch){
                     try{
                         this.unwatch();
@@ -624,6 +630,15 @@ import { setTimeout } from 'timers';
                     }
 
                 });
+                if(created){
+                    try {
+                        var html = template.render(this.formItem.template, this.editorformItem);
+                        $(this.$refs['stage']).html(html);
+                    }
+                    catch (e){
+                        $(this.$refs['stage']).html(html);
+                    }
+                }
             }
         },
 
