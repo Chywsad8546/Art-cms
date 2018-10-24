@@ -1,6 +1,6 @@
 <template>
 <div class="contenter">
-    <Tabs value="name1" class="tabColor">
+    <Tabs value="name1" v-model="tabName" class="tabColor">
         <TabPane label="简单编辑器" name="name1">         
                     <Row>
                             <Col span="24">
@@ -184,18 +184,15 @@
 <script>
     import api from '../../api/advertisement/formtemplateApi.js';
     import adSeniorEditorRouter from './advertiseEditor/adSeniorEditorRouter.js';
+import { setTimeout } from 'timers';
     export default {     
         name: 'ad-formtemplate-view',
         data() {
             return {
                 formModal1: false,
                 inputType: 'input',
-                zdmode:{
-                    station:""
-                },
+                tabName:"name1",
                 Lid:{},
-                pdmode:{pageName:""},
-                wzmode:{positionId:""},
                 zhandianList:[],
                 pingdaoList:[],
                 seniorWzList:[],
@@ -219,7 +216,7 @@
                     positionId:0,
                     station:"",
                     pageName:"",
-                    isAdvancedEdit:0
+                    isAdvancedEdit:1
                 },
                 columns:[
                     {
@@ -268,7 +265,8 @@
                     template:"",
                     form:"",
                     station:"",
-                    pageName:""
+                    pageName:"",
+                    isAdvancedEdit:0
                 },
                 ruleInline: {
                     name: [
@@ -447,14 +445,23 @@
             getIdeaTypeData(){
                 this.vshowFlag = !this.vshowFlag;
                 api.getIdeaTypeData(this.Lid).then(response => {
-                    this.formItem.name = response.data.data.name;
-                    this.formItem.template = response.data.data.template;
-                    this.confs = JSON.parse(response.data.data.form);
-                     //   console.log(JSON.parse(response.data.data.form));
+                    console.log(response.data.data);
+                    if(response.data.data.isAdvancedEdit == 1){
+                        setTimeout(()=>{
+                          this.tabName = "name2";
+                        },300);
+                        this.senior.name = response.data.data.name;
+                        this.senior.form = response.data.data.form;
+                        this.senior.template = response.data.data.template;
+                    }else{
+                        this.tabName = "name1";
+                      this.formItem.name = response.data.data.name;
+                      this.formItem.template = response.data.data.template;
+                      this.confs = JSON.parse(response.data.data.form);
+                    }
                 });
             },
             addTemplate(name) {
-                console.log(this.formItem);
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                             if(this.confs.length <= 0){
@@ -486,10 +493,14 @@
 
             },
             subRouteAdd(name){
-                console.log(this.senior);
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                         
+                         api.addTemplate(this.senior).then(response => {
+                                this.$Message.success("添加成功"); 
+                                this.$router.push({
+                                    name: "templateList"
+                                });
+                          });                        
                     }
                 })
             },

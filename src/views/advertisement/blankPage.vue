@@ -205,7 +205,7 @@
     width: 100%;
     padding-top: 20px;
     background: #ffffff;
-    overflow: hidden;
+
     margin-bottom: 10px;
 }
 </style>
