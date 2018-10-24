@@ -77,16 +77,24 @@
                         align: 'center',
                         render: (h, params) => {
                             if (params.row.isDel === 0) {
-                                return h('div', ['否']);
+                                return h('div',{
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['否']);
                             } else if (params.row.isDel === 1) {
-                                return h('div', ['是']);
+                                return h('div',{
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, ['是']);
                             }
                         }
                     },
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
+
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -99,7 +107,7 @@
                                             size: 'small'
                                         },
                                         style: {
-                                            marginRight: '5px'
+                                            marginRight: '15px'
                                         },
                                         on: {
                                             click: () => {
@@ -115,7 +123,7 @@
                                             }
                                         }
                                     },
-                                    '是否删除'
+                                    '删除'
                                 ),
                                 h(
                                     'Button',
