@@ -11,8 +11,8 @@
             <shrinkable-menu :shrink="shrink" @on-change="handleSubmenuChange" :theme="menuTheme"
                              :before-push="beforePush" :open-names="openedSubmenuArr" :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <img v-show="!shrink" src="../images/logo.png" key="max-logo"/>
-                    <img v-show="shrink" src="../images/logo_min.png" key="min-logo"/>
+                    <img v-show="!shrink" style="width: 125px;height:44px" src="http://wap-qn.bidewu.com/cmslogo.png" key="max-logo"/>
+                    <img v-show="shrink" style="width: 125px;height:44px" src="http://wap-qn.bidewu.com/cmslogo.png" key="min-logo"/>
                 </div>
             </shrinkable-menu>
         </div>
@@ -70,7 +70,7 @@
                 <navigation :include="includeIds">
                     <router-view :key="$route.meta.keepaliveid" v-if="$route.meta.keepalive"></router-view>
                 </navigation>
-                <router-view v-if="!$route.meta.keepalive"></router-view>
+                <router-view v-if="!$route.meta.keepalive" :key="$route.meta.keepaliveid" ></router-view>
             </div>
         </div>
     </div>
