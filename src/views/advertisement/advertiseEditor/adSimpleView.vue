@@ -240,10 +240,11 @@
                 }, {
                     deep: true
                 });
-                if (created) {
+                if (true) {
                     try {
-                        var html = template.render(this.arttemplate, newVal);
+                        var html = template.render(this.arttemplate, this.formItem);
                         this.adResource = html;
+                        $(this.$refs['stage']).html(html);
                     } catch (e) {
                         console.error(e);
                     }
