@@ -61,14 +61,14 @@
                                     <Modal
                                         v-model="formModal1"
                                         title="新增选框">
-                                        <RadioGroup v-model="inputType">
+                                        <RadioGroup v-model="inputType" style="margin-bottom:20px;" @on-change="tabRadioClick">
                                             <Radio label="input">input</Radio>
                                             <Radio label="select">select</Radio>
                                             <Radio label="upload">upload</Radio>
                                         </RadioGroup>
-                                        <Form ref="formAdd" :rules="rulebdInsert" :model="formAdd" :label-width="60">
+                                        <Form ref="formAdd" :rules="rulebdInsert" :model="formAdd" :label-width="80">
                                             <FormItem label="name"  prop="name">
-                                                <Input type="text" v-model="formAdd.name" placeholder="请输入name"></Input>                           
+                                                <Input type="text"  v-model="formAdd.name" placeholder="请输入name"></Input>                           
                                             </FormItem>                       
                                             <FormItem label="label"  prop="label">
                                                 <Input type="text" v-model="formAdd.label" placeholder="请输入label"></Input>                           
@@ -86,21 +86,21 @@
                                                 </i-switch>
                                             </FormItem>
                                             <FormItem label="提示文字"  prop="message" v-if="inputType == 'input'">
-                                                <Input type="text" v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
+                                                <Input type="text"  v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
                                             </FormItem>
                                             <FormItem label="options" prop="formOptions" v-if="inputType == 'select'">
                                                 <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="每行一个select回车换行"></Input>
                                             </FormItem>
-                                            <FormItem label="文件类型" prop="format" v-if="inputType == 'upload'">
+                                            <!-- <FormItem label="文件类型" prop="format" v-if="inputType == 'upload'">
                                                 <CheckboxGroup v-model="formAdd.format">
                                                     <Checkbox label="jpg"></Checkbox>
                                                     <Checkbox label="jpeg"></Checkbox>
                                                     <Checkbox label="png"></Checkbox>
                                                 </CheckboxGroup>
-                                            </FormItem>                       
+                                            </FormItem>                        -->
                                         </Form>
                                         <div slot="footer">
-                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">保存</Button>
+                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">新增</Button>
                                         </div>
                                     </Modal>
                                     </Col>
@@ -124,19 +124,19 @@
                                         <template v-for="(item,index) in confs">
 
                                             <FormItem :label="item.label" v-if="item.type=='input'" :required="item.required" :prop="item.name">
-                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
-                                                <Input v-model="editorformItem[item.name]" placeholder="请填写内容"></Input>
+                                                <Poptip trigger="hover" class="iconClass" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
+                                                <Input class="zswidht" v-model="editorformItem[item.name]" placeholder="请填写内容"></Input>
 
                                             </FormItem>
                                             <FormItem :label="item.label" v-if="item.type=='select'" :required="item.required" :prop="item.name">
-                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
-                                                <Select v-model="editorformItem[item.name]">
+                                                <Poptip trigger="hover" class="iconClass" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
+                                                <Select class="zswidht" v-model="editorformItem[item.name]">
                                                     <Option v-for="(option,optionindex) in item.options" :value="option">{{option}}</Option>
                                                 </Select>
                                             </FormItem>
                                             <FormItem :label="item.label" v-if="item.type=='upload'" :required="item.required">
-                                                <Poptip trigger="hover" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
-                                                <Upload action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
+                                                <Poptip trigger="hover" class="iconClass" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
+                                                <Upload class="zswidht" action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
                                                         :on-format-error="uploadFormatError"
                                                         :show-upload-list="false">
                                                     <Button type="ghost" icon="ios-cloud-upload-outline">点我上传</Button>
@@ -193,9 +193,9 @@
                          <Option v-for="item in editorRouterList" :value="item.name" :key="item.name">{{ item.title }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="template" prop="template" class="seniorClass">
+                <!-- <FormItem label="template" prop="template" class="seniorClass">
                         <Input v-model="senior.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
-                </FormItem> 
+                </FormItem>  -->
                 <FormItem v-if="vshowFlag">
                     <Button type="primary" @click="subRouteAdd('seniorForm')">保存</Button>
                 </FormItem>
@@ -230,7 +230,7 @@ import { setTimeout } from 'timers';
                     default: '',
                     reg: '',
                     required: true,
-                    message: '',
+                    message: '请填写',
                     options: '',
                     format: []
                 },
@@ -312,7 +312,8 @@ import { setTimeout } from 'timers';
                 },
                 rulebdInsert: {
                     name: [
-                        { required: true, message: '请填写name', trigger: 'blur' }
+                        { required: true, message: '请填写name', trigger: 'blur' },
+                        { type: 'string',pattern:/^[0-9A-Za-z_]+$/, message:'只能输入字母数字和下划线', trigger:'blur'},
                     ],
                     label: [
                         { required: true, message: '请填写label', trigger: 'blur' }
@@ -364,6 +365,13 @@ import { setTimeout } from 'timers';
             };
         },
         methods: {
+            tabRadioClick(){
+                if(this.inputType == "upload"){
+                    this.formAdd.default = "http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/5b00600178e84b91b5f4fe78a5eed91c/1.png";
+                }else{
+                    this.formAdd.default = "";
+                }
+            },
             pdClick() {
                 api.getPositionInfo(this.formItem).then(response => {
                     this.weizhiList = response.data.data;
@@ -716,5 +724,12 @@ import { setTimeout } from 'timers';
 }
 .seniorClass {
     width: 50%;
+}
+.zswidht {
+    width: 50%;
+}
+.iconClass {
+    float: left;
+    margin-right: 10px;
 }
 </style>
