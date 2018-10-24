@@ -79,7 +79,7 @@
             <Tabs type="card">
                 <TabPane label="WEB预览">
                     <div style="text-align:center">
-                        <p class="qrcode" id="qrcode"></p>
+                        <p class="qrcode" id="qrcode3"></p>
                     </div>
                 </TabPane>
                 <TabPane label="APP预览">
@@ -478,11 +478,11 @@
                             title: "请选择播放模式"
                         });
                     }
-                    document.getElementById("qrcode").innerHTML = "";
+                    document.getElementById("qrcode3").innerHTML = "";
                     this.qrcode(url);
             },
             qrcode (url) {
-                let qrcode = new QRCode('qrcode', {
+                let qrcode = new QRCode('qrcode3', {
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容

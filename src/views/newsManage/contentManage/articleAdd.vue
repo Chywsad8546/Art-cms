@@ -153,7 +153,7 @@
         <Tabs type="card">
             <TabPane label="WEB预览">
                 <div style="text-align:center">
-                    <p class="qrcode" id="qrcode"></p>
+                    <p class="qrcode" id="qrcode1"></p>
                 </div>
             </TabPane>
             <TabPane label="APP预览">
@@ -600,7 +600,7 @@
                         this.previewCancel();
                 });
             },
-            prevResponse(response){
+            prevResponse(response){                  
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;
@@ -608,7 +608,7 @@
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
                     let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    document.getElementById("qrcode").innerHTML = "";
+                    document.getElementById("qrcode1").innerHTML = "";
                     this.qrcode(url);
             },
             previewCancel() {
@@ -621,7 +621,7 @@
                 }
             },
             qrcode (url) {
-                let qrcode = new QRCode('qrcode', {
+                let qrcode = new QRCode('qrcode1', {
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容
