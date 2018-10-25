@@ -492,7 +492,6 @@ import { setTimeout } from 'timers';
             getIdeaTypeData() {
                 this.vshowFlag = !this.vshowFlag;
                 api.getIdeaTypeData(this.Lid).then(response => {
-                    console.log(response.data.data);
                     if (response.data.data.isAdvancedEdit == 1) {
                         setTimeout(() => {
                             this.tabName = 'name2';
@@ -622,7 +621,6 @@ import { setTimeout } from 'timers';
                 this.unwatch  = this.$watch('editorformItem', function (newVal, oldVal) {
                     // 做点什么
                     try {
-                        console.log('render,formItem change')
                         var html = template.render(this.formItem.template, newVal);
                         $(this.$refs['stage']).html(html);
                     }
@@ -660,7 +658,6 @@ import { setTimeout } from 'timers';
         created: function () {
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;
-            console.log(adSeniorEditorRouter.editorRouters);
             this.Lid.id = this.$route.query.advertId;
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
