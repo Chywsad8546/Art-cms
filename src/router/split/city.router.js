@@ -139,9 +139,6 @@ export const appRouter = [
                 path: 'positionManagement',
                 name: 'positionManagement',
                 title: '广告位管理',
-                // meta: {
-                //     keepalive: true
-                // },
                 component: () =>
                     import('@/views/advertisement/positionManagement.vue')
             },
