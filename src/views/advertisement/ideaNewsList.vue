@@ -104,6 +104,7 @@
     import ideaApi from '../../api/advertisement/ideaList.js';
     import dutil from '../../libs/util.js';
     import fapi from '../../api/advertisement/formtemplateApi.js';
+
     export default {
         data() {
             return {
@@ -190,7 +191,7 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'ad_redirect ',
+                                                    name: 'ad_redirect',
                                                     query: {id: params.row.ideaCode}
                                                 });
                                             }
@@ -278,7 +279,7 @@
             addIdeaNews: function () {
                 if (this.addIdeaNewsModal.bjq !== '') {
                     this.$router.push({
-                        name: 'ad_redirect ',
+                        name: 'ad_redirect',
                         query: {templateid: this.addIdeaNewsModal.bjq}
                     });
                 } else {

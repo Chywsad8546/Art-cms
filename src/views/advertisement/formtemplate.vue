@@ -24,8 +24,8 @@
                                                 <Row>
                                                     <Col span="7">
                                                     <FormItem prop="station">
-                                                        <Select v-model="formItem.station" style="width:100px" @on-change = "zdClick">
-                                                            <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                                                        <Select v-model="formItem.stationId" style="width:100px" @on-change = "zdClick">
+                                                            <Option v-for="item in zhandianList" :value="item.stationId" :key="item.stationId">{{ item.stationName }}</Option>
                                                         </Select>
                                                     </FormItem>
                                                     </Col>
@@ -167,8 +167,8 @@
                         <Row>
                             <Col span="7">
                                 <FormItem prop="station">                  
-                                    <Select v-model="senior.station" style="width:100px" @on-change = "seniorZdClick">
-                                        <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                                    <Select v-model="senior.stationId" style="width:100px" @on-change = "seniorZdClick">
+                                        <Option v-for="item in zhandianList" :value="item.stationId" :key="item.stationId">{{ item.stationName }}</Option>
                                     </Select>
                                 </FormItem>                                        
                             </Col>
@@ -239,7 +239,7 @@ import { setTimeout } from 'timers';
                     form: '',
                     template: '',
                     positionId: 0,
-                    station: '',
+                    stationId: '',
                     pageName: '',
                     isAdvancedEdit: 1
                 },
@@ -287,9 +287,9 @@ import { setTimeout } from 'timers';
                 formItem: {
                     name: '',
                     positionId: '',
-                    template: '',
+                    template: '<div style="width: 375px; float: left; height: 500px; overflow: auto;min-height: 500px; " ><p style="color:#cccccc;text-align:center;">{{@ input1}}</p><div><img src="{{@ upload1}}" style="width:100%"/></div></div>',
                     form: '',
-                    station: '',
+                    stationId: '',
                     pageName: '',
                     isAdvancedEdit: 0
                 },
@@ -301,7 +301,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { type: 'number', required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择站点', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }
@@ -345,7 +345,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { type: 'number', required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择站点', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }
@@ -394,8 +394,15 @@ import { setTimeout } from 'timers';
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
+                    
                     this.zhandianList = response.data.data;
+                    this.zhandianList.forEach(item=>{
+                      item.stationId = item.stationId+'';
+                    });
+                    // console.log(this.zhandianList);
                 });
+                
+
             },
             show() {
                 console.log(this.$data);

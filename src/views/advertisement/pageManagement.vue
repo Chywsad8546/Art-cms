@@ -44,11 +44,11 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
-                    <Select v-model="addNewsChannelModal.stationName" style="width:140px">
-                        <Option v-for="item in stationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                    <Select v-model="addNewsChannelModal.adstationIndex" style="width:140px">
+                        <Option v-for="(item,index) in stationList" :value="index" :key="index">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="栏目名称" prop="pageName">
@@ -212,10 +212,13 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
+            addNewsChannel() {
+                let index = this.addNewsChannelModal.adstationIndex;
+                this.addNewsChannelModal.stationId = this.stationList[index].pageId;
+                this.addNewsChannelModal.stationName = this.stationList[index].stationName;
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        adapi.addPage(addChannelValue).then(response => {
+                        adapi.addPage(this.addNewsChannelModal).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
@@ -232,16 +235,26 @@
                 });
             },
             delStation() {
-                adapi.updateStation(this.updateCahnnelValue).then(response => {
-                    if (response.data.data > 0) {
-                        this.$Message.success('更改成功！');
-                        this.init();
-                    } else {
-                        this.$Message.error('更改失败！');
+                var delDate = this.updateCahnnelValue;
+                this.$Modal.confirm({
+                    title: '删除',
+                    content: '<p>确认删除</p>',
+                    onOk: () => {
+                        console.log(delDate)
+                        adapi.updateStation(delDate).then(response => {
+                            if (response.data.data > 0) {
+                                this.$Message.success('更改成功！');
+                                this.init();
+                            } else {
+                                this.$Message.error('更改失败！');
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
+                    },
+                    onCancel: () => {
                     }
-                }).catch(error => {
-                    this.$Message.error(error.response.data.msg);
-                    this.init();
                 });
             },
             updateChannel() {
