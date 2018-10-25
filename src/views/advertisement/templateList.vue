@@ -85,7 +85,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            if (params.row.isNew == 1) {
+                                            if (params.row.isNew === 1) {
                                                 this.$router.push({
                                                     name: 'formtemplate',
                                                     query: {advertId: params.row.id}
