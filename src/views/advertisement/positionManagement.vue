@@ -269,10 +269,10 @@
             },
             addNewsChannel(addChannelValue) {
                 console.log(this.pageList);
-                this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
-                this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
-                this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
-                this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
+                // this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
+                // this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
+                // this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
+                // this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
                 //console.log(this.addNewsChannelModal);
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
