@@ -90,8 +90,19 @@
         </Modal>
 
         <Modal v-model="modal3" width="1000">
-            <Button type="primary" @click="addModal">添加模板</Button>
+            <Card >
+                <p slot="title">
+                    <Icon type="ios-film-outline"></Icon>
+                    已设置的编辑器
+                </p>
+                <a href="#" slot="extra" @click.prevent="addModal">
+                    <Icon type="plus"></Icon>
+                    添加编辑器
+                </a>
                 <Table border :columns="modalColums" :data="modalData"></Table>
+            </Card>
+            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+
         </Modal>
     </Row>
 </template>
@@ -113,12 +124,135 @@
                         title: '名称'
                     },
                     {
-                        key: 'positionName',
-                        title: '位置名称'
+                        title: '编辑器类别',
+                        key: 'isAdvancedEdit',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isAdvancedEdit === 0) {
+                                return h('div',{
+                                }, ['普通编辑器']);
+                            } else if (params.row.isAdvancedEdit === 1) {
+                                return h('div',{
+                                    style: {
+                                    }
+                                }, ['高级编辑器']);
+                            }
+                        }
                     },
                     {
-                        key: 'version',
-                        title: '版本号'
+                        title: '编辑器版本',//
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isNew === 0) {
+                                return h('div',{
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, [h(
+                                    'Poptip',
+                                    {
+                                        props: {
+                                            trigger: 'hover',
+                                            title: '旧系统的编辑器，新系统不能使用，只能查看创意结果'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    '旧版'
+                                )]);
+                            } else if (params.row.isNew === 1) {
+                                return h('div',{
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['新版']);
+                            }
+                        }
+                    },
+                    {
+                        title: '状态',
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.status === 0) {
+                                return h('div',{
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, ['已禁用']);
+                            } else if (params.row.status === 1) {
+                                return h('div',{
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['启动']);
+                            }
+                        }
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var that = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                // this.modal3 = true;
+                                                // this.currentPosition = params.row.positionId;
+                                                // api.templateList({positionId: params.row.positionId}).then(response => {
+                                                //     this.modalData = response.data.data;
+                                                // });
+                                            }
+                                        }
+                                    },
+                                    '禁用'
+                                ),
+                                (function () {
+                                    if (params.row.isNew == 1) {
+                                        return h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        if (params.row.isNew == 1) {
+                                                            that.$router.push({
+                                                                name: 'formtemplate',
+                                                                query: {advertId: params.row.id}
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            '修改'
+                                        );
+                                    }
+                                    else {
+                                        return h();
+                                    }
+                                })()
+
+                            ]);
+                        }
                     }
                 ],
                 modalData: [],

@@ -220,7 +220,6 @@ import { setTimeout } from 'timers';
                 inputType: 'input',
                 tabName: 'name1',
                 Lid: {},
-                adList:{},
                 zhandianList: [],
                 pingdaoList: [],
                 seniorWzList: [],
@@ -410,8 +409,8 @@ import { setTimeout } from 'timers';
 
             },
             adListAll() {
-                api.adListAll(this.adList).then(response => {
-                    this.positionName = response.data.data[0].positionName;
+                api.adListAll({positionId:this.formItem.positionId}).then(response => {
+                    this.positionName = response.data.data[0].pageName+' / '+ response.data.data[0].positionName;
                 });
             },
             show() {
@@ -515,6 +514,8 @@ import { setTimeout } from 'timers';
                         this.confs = JSON.parse(response.data.data.form);
                         this.editorTry(true);
                     }
+                    this.formItem.positionId = response.data.data.positionId;
+                    this.adListAll();
                 });
             },
             addTemplate(name) {
@@ -668,11 +669,13 @@ import { setTimeout } from 'timers';
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;
             this.Lid.id = this.$route.query.advertId;
-            this.adList.positionId = this.$route.query.positionId;
-            this.formItem.positionId = this.$route.query.positionId;
-            this.adListAll();
+
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
+            }
+            else {
+                this.formItem.positionId = this.$route.query.positionId;
+                this.adListAll();
             }
         }
     };
