@@ -10,15 +10,15 @@
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点名称id" prop="stationName">
-                        <Select v-model="searchData.stationName" style="width:140px">
+                        <Select v-model="searchData.stationName" @on-change = "zdClick" style="width:140px">
                             <Option value="">全部</Option>
-                            <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                            <Option v-for="item in zhandianList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
                         </Select>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageName">
-                            <Select v-model="searchData.pageName" style="width:140px">
+                            <Select v-model="searchData.pageId" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in seratchPageList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                                <Option v-for="item in seratchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="是否删除" prop="isDel">
@@ -73,6 +73,7 @@
 <script>
     import adapi from '../../api/advertisement/ad.js';
     import api from '../../api/advertisement/openScreen.js';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     import dutil from '../../libs/util.js';
     export default {
         data() {
@@ -181,11 +182,19 @@
                 updateruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
                 },
-                searchStationList: [],
+                zhandianList: [],
                 seratchPageList: []
             };
         },
         methods: {
+            zdClick() {
+                console.log(this.searchData)
+                if (typeof this.searchData.station !== 'undefined') {
+                    fapi.getChannelInfo(this.searchData).then(response => {
+                        this.seratchPageList = response.data.data;
+                    });
+                }
+            },
             addModeButton() {
                 this.addNewsChannelModal = {
                 };
@@ -194,7 +203,7 @@
             init() {
                 adapi.getAllStation({isDel: 0}).then(response => {
                     this.stationList = response.data.data;
-                    this.searchStationList = response.data.data;
+                    this.zhandianList = response.data.data;
                 });
                 this.addNewsChannelModal = {
                 };
