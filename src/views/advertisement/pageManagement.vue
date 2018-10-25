@@ -9,7 +9,7 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称id" prop="station">
+                        <FormItem label="应用" prop="station">
                         <Select v-model="searchData.station" @on-change = "zdClick" style="width:140px">
                             <Option value="">全部</Option>
                             <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
@@ -17,7 +17,6 @@
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageId">
                             <Select v-model="searchData.pageId" style="width:140px">
-                                <Option value="">全部</Option>
                                 <Option v-for="item in seratchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
@@ -47,9 +46,9 @@
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationName">
-                    <Select v-model="addNewsChannelModal.adstationIndex" style="width:140px">
-                        <Option v-for="(item,index) in stationList" :value="index" :key="index">{{ item.stationName }}</Option>
+                <FormItem label="站点名称" prop="stationId">
+                    <Select v-model="addNewsChannelModal.stationId" :label-in-value="true" @on-change="sitechange" style="width:140px">
+                        <Option v-for="(item,index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="栏目名称" prop="pageName">
@@ -58,7 +57,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
+        <Modal v-model="modal2" width="360" @on-ok="updateChannel()">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
                 <FormItem label="栏目名称" prop="pageName">
                     <Input v-model.trim="updateCahnnelValue.pageName" style="width:140px"></Input>
@@ -169,12 +168,15 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 addNewsChannelModal: {
+                    stationId:'',
+                    stationName:'',
+                    pageName:''
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }]
+                    stationId: [{ type: 'integer',required: true, message: '站点不能为空', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
@@ -184,6 +186,9 @@
             };
         },
         methods: {
+            sitechange(v){
+                this.addNewsChannelModal.stationName=v.label;
+            },
             zdClick() {
                 console.log(this.searchData)
                 if (typeof this.searchData.stationName !== 'undefined') {
@@ -219,9 +224,9 @@
                 });
             },
             addNewsChannel() {
-                let index = this.addNewsChannelModal.adstationIndex;
-                this.addNewsChannelModal.stationId = this.stationList[index].pageId;
-                this.addNewsChannelModal.stationName = this.stationList[index].stationName;
+                // let index = this.addNewsChannelModal.adstationIndex;
+                // this.addNewsChannelModal.stationId = this.stationList[index].pageId;
+                // this.addNewsChannelModal.stationName = this.stationList[index].stationName;
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         adapi.addPage(this.addNewsChannelModal).then(response => {
