@@ -160,10 +160,10 @@
                                         on: {
                                             click: () => {
                                                 this.modal3 = true;
+                                                this.currentPosition = params.row.positionId;
                                                 api.templateList({positionId: params.row.positionId}).then(response => {
                                                     this.modalData = response.data.data;
                                                 });
-                                                console.log(this.modalData)
                                             }
                                         }
                                     },
@@ -194,6 +194,7 @@
                         }
                     }
                 ],
+                currentPosition:0,
                 searchData: {
                 },
                 data: [],
@@ -217,7 +218,7 @@
         methods: {
             addModal(){
                 this.$router.push({
-                    name: "formtemplate"
+                    name: "formtemplate",query:{positionId:this.currentPosition}
                 });
             },
             addModeButton() {
