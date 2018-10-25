@@ -12,7 +12,7 @@
                                             <Icon type="ios-film-outline"></Icon>
                                             基本信息
                                         </p>
-                                        <a href="#" slot="extra" v-if="vshowFlag" @click.prevent="formModal1 = true" >
+                                        <a href="#" slot="extra"  @click.prevent="formModal1 = true" >
                                             <Icon type="ios-paper"></Icon>
                                             设置编辑器
                                         </a>
@@ -21,7 +21,7 @@
                                                 <Input v-model="formItem.name" placeholder="请输入模板类型"></Input>
                                             </FormItem>
                                             <FormItem label="选择频道位置">
-                                                <Row>
+                                                <!-- <Row>
                                                     <Col span="7">
                                                     <FormItem prop="station">
                                                         <Select v-model="formItem.stationId" style="width:100px" @on-change = "zdClick">
@@ -43,7 +43,7 @@
                                                         </Select>
                                                     </FormItem>
                                                     </Col>
-                                                </Row>
+                                                </Row> -->
                                             </FormItem>
 
 
@@ -51,7 +51,7 @@
                                             <FormItem label="template" prop="template">
                                                 <Input v-model="formItem.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
                                             </FormItem>
-                                            <FormItem v-if="vshowFlag">
+                                            <FormItem >
                                                 <Button type="primary" @click="addTemplate('formValidate')">保存</Button>
                                                 <Button type="ghost" style="margin-left: 8px">取消</Button>
                                             </FormItem>
@@ -164,7 +164,7 @@
                     <Input v-model="senior.name" placeholder="请输入模板类型"></Input>
                 </FormItem>
                 <FormItem label="选择频道位置" class="seniorClass">
-                        <Row>
+                        <!-- <Row>
                             <Col span="7">
                                 <FormItem prop="station">                  
                                     <Select v-model="senior.stationId" style="width:100px" @on-change = "seniorZdClick">
@@ -186,7 +186,7 @@
                                     </Select>
                                 </FormItem>
                             </Col>
-                        </Row>
+                        </Row> -->
                 </FormItem> 
                 <FormItem label="路由" prop="form" class="seniorClass">
                     <Select v-model="senior.form" placeholder="请选择路由">
@@ -196,7 +196,7 @@
                 <!-- <FormItem label="template" prop="template" class="seniorClass">
                         <Input v-model="senior.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
                 </FormItem>  -->
-                <FormItem v-if="vshowFlag">
+                <FormItem>
                     <Button type="primary" @click="subRouteAdd('seniorForm')">保存</Button>
                 </FormItem>
             </Form>
@@ -354,7 +354,6 @@ import { setTimeout } from 'timers';
                         {type: 'number', required: true, message: '请选择位置', trigger: 'change' }
                     ]
                 },
-                vshowFlag: true,
                 editorformItem: {
                     // input: 'zjl'
                 },
@@ -490,7 +489,6 @@ import { setTimeout } from 'timers';
             popupCancel() {
             },
             getIdeaTypeData() {
-                this.vshowFlag = !this.vshowFlag;
                 api.getIdeaTypeData(this.Lid).then(response => {
                     if (response.data.data.isAdvancedEdit == 1) {
                         setTimeout(() => {
@@ -634,7 +632,6 @@ import { setTimeout } from 'timers';
                 this.editortemplateunwatch = this.$watch('formItem.template', function (newVal, oldVal) {
                     // 做点什么
                     try {
-                        console.log('render,template change')
                         var html = template.render(newVal, this.editorformItem);
                         $(this.$refs['stage']).html(html);
                     }
@@ -659,59 +656,9 @@ import { setTimeout } from 'timers';
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;
             this.Lid.id = this.$route.query.advertId;
+            this.formItem.positionId = this.$route.query.positionId;
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
-            } else {
-                let tableJson = {
-                    title: 'Action',
-                    key: 'action',
-                    width: 240,
-                    align: 'center',
-                    render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.moveUp(params.index, params.row);
-                                    }
-                                }
-                            }, '上移'),
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.moveDown(params.index, params.row);
-                                    }
-                                }
-                            }, '下移'),
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.confsRemove(params.index);
-                                    }
-                                }
-                            }, 'Delete')
-                        ]);
-                    }
-                };
-                this.columns.push(tableJson);
             }
         }
     };
