@@ -157,7 +157,7 @@ export const appRouter = [
         {
             path: 'guanggapwei',
             name: 'guanggapwei',
-            title: '排期管理',
+            title: '广告位排期管理',
             // meta: {
             //     keepalive: true
             // },
