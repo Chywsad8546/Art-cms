@@ -83,10 +83,6 @@
                         width: 100
                     },
                     {
-                        key: 'stationName',
-                        title: '站点'
-                    },
-                    {
                         key: 'pageName',
                         title: '栏目'
                     },
