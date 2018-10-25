@@ -191,7 +191,7 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'ad_redirect ',
+                                                    name: 'ad_redirect',
                                                     query: {id: params.row.ideaCode}
                                                 });
                                             }
@@ -279,7 +279,7 @@
             addIdeaNews: function () {
                 if (this.addIdeaNewsModal.bjq !== '') {
                     this.$router.push({
-                        name: 'ad_redirect ',
+                        name: 'ad_redirect',
                         query: {templateid: this.addIdeaNewsModal.bjq}
                     });
                 } else {
