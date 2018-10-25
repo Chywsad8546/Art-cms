@@ -613,7 +613,8 @@ import { setTimeout } from 'timers';
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        rule.Pattern = new RegExp(_.trim(item.reg));
+                        console.log('reg',item.reg)
+                        rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
                     if (item.type === 'input') {
