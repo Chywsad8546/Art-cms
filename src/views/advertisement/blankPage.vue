@@ -162,7 +162,7 @@
             },
             zdClick(){
                 api.getChannelInfo(this.formItem).then(response => {
-                    this.pingdaoList = response.data.data;
+                    this.pingdaoList = response.data.data;                  
                 });   
             },
             getStationInfo() {

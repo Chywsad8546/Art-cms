@@ -504,7 +504,7 @@ import { setTimeout } from 'timers';
                         }, 300);
                         this.senior.name = response.data.data.name;
                         this.senior.form = response.data.data.form;
-                        this.senior.template = response.data.data.template;
+                        //this.senior.template = response.data.data.template;
                     } else {
                         this.tabName = 'name1';
                         this.formItem.name = response.data.data.name;
