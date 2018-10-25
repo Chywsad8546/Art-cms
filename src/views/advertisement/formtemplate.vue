@@ -21,6 +21,7 @@
                                                 <Input v-model="formItem.name" placeholder="请输入模板类型"></Input>
                                             </FormItem>
                                             <FormItem label="选择频道位置">
+                                                {{positionName}}
                                                 <!-- <Row>
                                                     <Col span="7">
                                                     <FormItem prop="station">
@@ -151,7 +152,6 @@
                                             <!--<Button type="primary" >保存</Button>-->
                                         <!--</FormItem>-->
                                     </Form>
-
                                     </Col>
                                 </Row>
                         </Card>
@@ -164,6 +164,7 @@
                     <Input v-model="senior.name" placeholder="请输入模板类型"></Input>
                 </FormItem>
                 <FormItem label="选择频道位置" class="seniorClass">
+                     {{positionName}}
                         <!-- <Row>
                             <Col span="7">
                                 <FormItem prop="station">                  
@@ -218,11 +219,13 @@ import { setTimeout } from 'timers';
                 inputType: 'input',
                 tabName: 'name1',
                 Lid: {},
+                adList:{},
                 zhandianList: [],
                 pingdaoList: [],
                 seniorWzList: [],
                 seniorPdList: [],
                 weizhiList: [],
+                positionName:"",
                 editorRouterList: [],
                 formAdd: {
                     name: '',
@@ -402,6 +405,11 @@ import { setTimeout } from 'timers';
                 });
                 
 
+            },
+            adListAll() {
+                api.adListAll(this.adList).then(response => {
+                    this.positionName = response.data.data[0].positionName;
+                });
             },
             show() {
                 console.log(this.$data);
@@ -656,7 +664,9 @@ import { setTimeout } from 'timers';
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;
             this.Lid.id = this.$route.query.advertId;
+            this.adList.positionId = this.$route.query.positionId;
             this.formItem.positionId = this.$route.query.positionId;
+            this.adListAll();
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
             }
