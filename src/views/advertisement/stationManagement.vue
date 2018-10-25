@@ -69,7 +69,7 @@
                 defaultList: [],
                 columns: [
                     {
-                        key: 'pageId',
+                        key: 'station',
                         title: '站点id',
                         width: 100
                     },

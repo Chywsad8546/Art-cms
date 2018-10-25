@@ -66,6 +66,9 @@
                 <FormItem label="位置名称" prop="positionName">
                     <Input v-model.trim="addNewsChannelModal.positionName" style="width:140px"></Input>
                 </FormItem>
+                <FormItem label="版本号" prop="version">
+                    <Input v-model.trim="addNewsChannelModal.version" style="width:140px"></Input>
+                </FormItem>
             </Form>
         </Modal>
 
@@ -103,6 +106,10 @@
                     {
                         key: 'positionName',
                         title: '位置名称'
+                    },
+                    {
+                        key: 'version',
+                        title: '版本号'
                     },
                 ],
                 modalData: [],

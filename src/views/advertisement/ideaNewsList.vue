@@ -16,9 +16,9 @@
                                 <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="选择栏目" prop="pageName">
-                            <Select v-model="searchData.pageName" style="width:100px"  @on-change = "pdClick">
-                                <Option v-for="item in pingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                        <FormItem label="选择栏目" prop="pageId">
+                            <Select v-model="searchData.pageId" style="width:100px"  @on-change = "pdClick">
+                                <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="选择位置" prop="positionId">
@@ -83,12 +83,12 @@
                 </Select>
                 </FormItem>
                     <FormItem label="页面">
-                <Select v-model="pdmode.pageName" style="width:100px"  @on-change = "adpdClick">
-                    <Option v-for="item in adpingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                <Select v-model="pdmode.pageId" style="width:100px"  @on-change = "adpdClick">
+                    <Option v-for="item in adpingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                 </Select>
                     </FormItem>
                 <FormItem label="位置" prop="bjq">
-                <Select v-model="addIdeaNewsModal.positionId" style="width:100px">
+                <Select v-model="addIdeaNewsModal.positionId" style="width:100px" @on-change = "getBjqList">
                     <Option v-for="item in adweizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                 </Select>
                 </FormItem>
@@ -113,7 +113,7 @@
                 addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
                 pdmode: {pageName: ''},
-                zdmode: {station: ''},
+                zdmode: {stationId: ''},
                 zhandianList: [],
                 pingdaoList: [],
                 adpingdaoList: [],
@@ -207,7 +207,7 @@
                 searchData: {
                     page: 1,
                     limit: 10,
-                    station: '',
+                    stationId: '',
                     pageName: ''
                 },
                 data: [],
@@ -220,7 +220,9 @@
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
-                fapi.templateList().then(response => {
+            },
+            getBjqList() {
+                fapi.templateList(this.addIdeaNewsModal).then(response => {
                     this.bjqList = response.data.data;
                 });
             },
@@ -241,6 +243,7 @@
                 this.init();
             },
             pdClick() {
+                console.log(this.searchData)
                 if (typeof this.searchData.pageName !== 'undefined') {
                     fapi.getPositionInfo(this.searchData).then(response => {
                         this.weizhiList = response.data.data;
@@ -248,6 +251,7 @@
                 }
             },
             zdClick() {
+                console.log(this.searchData)
                 if (typeof this.searchData.station !== 'undefined') {
                     fapi.getChannelInfo(this.searchData).then(response => {
                         this.pingdaoList = response.data.data;
