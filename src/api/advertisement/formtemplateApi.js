@@ -36,7 +36,7 @@ export default {
         return http.get('/cmsapi/getIdeaTypeData', {
             params: params
         });
-    }, 
+    },
     adListAll(params) {
         return http.get('/cmsapi/adListAll', {
             params: params
