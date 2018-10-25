@@ -17,8 +17,8 @@
                                             设置编辑器
                                         </a>
                                         <Form ref="formValidate" :model="formItem" :rules="ruleInline" :label-width="100">
-                                            <FormItem label="模板类型" prop="name" style="margin-top:20px;">
-                                                <Input v-model="formItem.name" placeholder="请输入模板类型"></Input>
+                                            <FormItem label="编辑器名称" prop="name" style="margin-top:20px;">
+                                                <Input v-model="formItem.name" placeholder="请输入编辑器名称"></Input>
                                             </FormItem>
                                             <FormItem label="频道位置">
                                                 {{positionName}}
@@ -49,7 +49,8 @@
 
 
 
-                                            <FormItem label="template" prop="template">
+                                            <FormItem label="artTemplate" prop="template">
+                                                <Poptip trigger='hover' class='iconClass' placement='right' title='artTemplate是什么' content='artTemplate是一个模板引擎,官网 http://aui.github.io/art-template/zh-cn/'><Icon type='help' /></Poptip>
                                                 <Input v-model="formItem.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
                                             </FormItem>
                                             <FormItem >
@@ -113,7 +114,7 @@
                             <p slot="title">编辑器预览</p>
                                 <Row >
                                     <Col span="12" style="background-color:#eeeeee">
-                                    <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #8b8b8b;overflow: hidden">
+                                    <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #ffffff;overflow: hidden">
                                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                                         <div ref="stage" >
                                         </div>
@@ -160,8 +161,8 @@
             </TabPane>
         <TabPane label="高级编辑器" name="name2">
             <Form ref="seniorForm" :model="senior" :rules="seniorValidate" :label-width="100">
-                <FormItem label="模板类型" prop="name" style="margin-top:20px;" class="seniorClass">
-                    <Input v-model="senior.name" placeholder="请输入模板类型"></Input>
+                <FormItem label="编辑器名称" prop="name" style="margin-top:20px;" class="seniorClass">
+                    <Input v-model="senior.name" placeholder="请输入编辑器名称"></Input>
                 </FormItem>
                 <FormItem label="选择频道位置" class="seniorClass">
                      {{positionName}}
@@ -357,8 +358,10 @@ import { setTimeout } from 'timers';
                         {type: 'number', required: true, message: '请选择位置', trigger: 'change' }
                     ]
                 },
+                /**
+                 * 编辑器预览相关的几个变量
+                 */
                 editorformItem: {
-                    // input: 'zjl'
                 },
                 ruleValidate: {
                 },
@@ -610,7 +613,8 @@ import { setTimeout } from 'timers';
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        rule.Pattern = new RegExp(_.trim(item.reg));
+                        console.log('reg',item.reg)
+                        rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
                     if (item.type === 'input') {

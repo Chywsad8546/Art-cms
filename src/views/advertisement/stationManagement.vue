@@ -3,15 +3,16 @@
         <Col span="100">
             <Card>
                 <p slot="title">站点列表管理</p>
+                <a href="#" slot="extra"  @click.prevent="addModeButton" >
+                    <Icon type="plus-circled"></Icon>
+                    添加站点
+                </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="站点名称" prop="stationName">
-                            <Select v-model="searchData.stationName" style="width:140px">
+                        <FormItem label="站点名称" prop="station">
+                            <Select v-model="searchData.station" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                                <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                          <FormItem label="是否删除" prop="isDel">
@@ -26,9 +27,9 @@
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="addModeButton">添加</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="addModeButton">添加</Button>-->
+                        <!--</FormItem>-->
                     </Form>
                     <Table border :columns="columns" :data="data"></Table>
                     <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
@@ -37,7 +38,7 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
                     <Input v-model.trim="addNewsChannelModal.stationName" style="width:140px"></Input>
@@ -45,7 +46,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
+        <Modal v-model="modal2"  width="360" @on-ok="updateChannel()">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
                     <Input v-model.trim="updateCahnnelValue.stationName" style="width:140px"></Input>
@@ -57,6 +58,7 @@
 <script>
     import adapi from '../../api/advertisement/ad.js';
     import api from '../../api/advertisement/openScreen.js';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     import dutil from '../../libs/util.js';
     export default {
         data() {
@@ -115,7 +117,7 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
+                                                this.updateCahnnelValue.pageId = params.row.station;
                                                 if (params.row.isDel === 1) {
                                                     this.updateCahnnelValue.isDel = 0;
                                                 } else {
@@ -161,6 +163,7 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
+                isAddTagLoading:true,
                 addNewsChannelModal: {
                 },
                 updateCahnnelValue: {
@@ -175,19 +178,18 @@
         },
         methods: {
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
-                this.isTrueAddTag = true;
+                this.isTrueAddTag=true;
+                this.isAddTagLoading=true;
             },
             init() {
                 this.addNewsChannelModal = {
                 };
                 this.updateCahnnelValue = {};
-                adapi.getAllStation(this.searchData).then(response => {
+                fapi.getStationInfo(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
-                adapi.getAllStation().then(response => {
+                fapi.getStationInfo().then(response => {
                     this.searchStationList = response.data.data;
                 });
             },
@@ -199,10 +201,10 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
+            addNewsChannel() {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        adapi.addStation(addChannelValue).then(response => {
+                        adapi.addStation(this.addNewsChannelModal).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
@@ -214,6 +216,10 @@
                             this.init();
                         });
                     } else {
+                        this.isAddTagLoading=false;
+                        this.$nextTick(()=>{
+                           this.isAddTagLoading=true;
+                        });
                         this.$Message.error('表单验证失败!');
                     }
                 });
@@ -221,8 +227,8 @@
             delStation() {
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '删除',
-                    content: '<p>确认删除</p>',
+                    title: '更改删除状态',
+                    content: '<p>是否更改删除状态</p>',
                     onOk: () => {
                         console.log(delDate)
                         adapi.updateStation(delDate).then(response => {

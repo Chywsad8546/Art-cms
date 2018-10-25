@@ -3,15 +3,19 @@
         <Col span="100">
             <Card>
                 <p slot="title">栏目管理</p>
+                <a href="#" slot="extra"  @click.prevent="addModeButton" >
+                    <Icon type="plus-circled"></Icon>
+                    添加栏目
+                </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称id" prop="stationName">
-                        <Select v-model="searchData.stationName" @on-change = "zdClick" style="width:140px">
+                        <FormItem label="站点名称id" prop="station">
+                        <Select v-model="searchData.station" @on-change = "zdClick" style="width:140px">
                             <Option value="">全部</Option>
-                            <Option v-for="item in zhandianList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                            <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                         </Select>
                         </FormItem>
-                        <FormItem label="栏目名称" prop="pageName">
+                        <FormItem label="栏目名称" prop="pageId">
                             <Select v-model="searchData.pageId" style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option v-for="item in seratchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
@@ -24,9 +28,6 @@
                                 <Option value="1">是</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="栏目id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
-                        </FormItem>
 
 
                         <FormItem>
@@ -34,9 +35,7 @@
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="addModeButton">添加</Button>
-                        </FormItem>
+
                     </Form>
 
                     <Table border :columns="columns" :data="data"></Table>
@@ -187,7 +186,7 @@
         methods: {
             zdClick() {
                 console.log(this.searchData)
-                if (typeof this.searchData.station !== 'undefined') {
+                if (typeof this.searchData.stationName !== 'undefined') {
                     fapi.getChannelInfo(this.searchData).then(response => {
                         this.seratchPageList = response.data.data;
                     });
@@ -199,19 +198,16 @@
                 this.isTrueAddTag = true;
             },
             init() {
-                adapi.getAllStation({isDel: 0}).then(response => {
+                fapi.getStationInfo({isDel: 0}).then(response => {
                     this.stationList = response.data.data;
                     this.zhandianList = response.data.data;
                 });
                 this.addNewsChannelModal = {
                 };
                 this.updateCahnnelValue = {};
-                adapi.getAllPage(this.searchData).then(response => {
+                fapi.getChannelInfo(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
-                });
-                adapi.getAllPage().then(response => {
-                    this.seratchPageList = response.data.data;
                 });
             },
             updateIsPush(id, isDel) {
@@ -247,8 +243,8 @@
             delStation() {
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '删除',
-                    content: '<p>确认删除</p>',
+                    title: '更改删除状态',
+                    content: '<p>是否更改删除状态</p>',
                     onOk: () => {
                         console.log(delDate);
                         adapi.updateStation(delDate).then(response => {

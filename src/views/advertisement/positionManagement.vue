@@ -3,22 +3,23 @@
         <Col span="100">
             <Card>
                 <p slot="title">广告位管理</p>
+                <a href="#" slot="extra"  @click.prevent="addModeButton" >
+                    <Icon type="plus-circled"></Icon>
+                    添加广告位
+                </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称" prop="stationName">
-                            <Select v-model="searchData.stationName" style="width:140px">
+                        <FormItem label="站点名称" prop="station">
+                            <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                                <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="栏目名称" prop="pageName">
-                            <Select v-model="searchData.pageName" style="width:140px">
+                        <FormItem label="栏目名称" prop="pageId">
+                            <Select v-model="searchData.pageId" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchPageList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                                <Option v-for="item in searchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
-                        </FormItem>
-                        <FormItem label="位置id" prop="positionId">
-                            <Input v-model.trim="searchData.positionId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
@@ -35,9 +36,9 @@
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="addModeButton">添加</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="addModeButton">添加</Button>-->
+                        <!--</FormItem>-->
                     </Form>
 
                     <Table border :columns="columns" :data="data"></Table>
@@ -47,7 +48,7 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationIndex">
                     <Select v-model="addNewsChannelModal.stationIndex" @on-change = "changeStation" style="width:140px">
@@ -64,6 +65,18 @@
                 </FormItem>
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="addNewsChannelModal.version" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="是否添加默认缺省页" prop="isAddDefault">
+                    <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
+                        <Option value="0">是</Option>
+                        <Option value="1">否</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
+                    <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
+                        <Option value="0">低级</Option>
+                        <Option value="1">高级</Option>
+                    </Select>
                 </FormItem>
             </Form>
         </Modal>
@@ -106,7 +119,7 @@
                     {
                         key: 'version',
                         title: '版本号'
-                    },
+                    }
                 ],
                 modalData: [],
                 modal3: false,
@@ -131,17 +144,8 @@
                         title: '位置名称'
                     },
                     {
-                        title: '是否删除',
-                        key: 'isDel',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            if (params.row.isDel === 0) {
-                                return h('div', ['否']);
-                            } else if (params.row.isDel === 1) {
-                                return h('div', ['是']);
-                            }
-                        }
+                        title: '版本号',
+                        key: 'version'
                     },
                     {
                         title: '管理',
@@ -163,10 +167,10 @@
                                         on: {
                                             click: () => {
                                                 this.modal3 = true;
+                                                this.currentPosition = params.row.positionId;
                                                 api.templateList({positionId: params.row.positionId}).then(response => {
                                                     this.modalData = response.data.data;
                                                 });
-                                                console.log(this.modalData)
                                             }
                                         }
                                     },
@@ -197,6 +201,7 @@
                         }
                     }
                 ],
+                currentPosition: 0,
                 searchData: {
                 },
                 data: [],
@@ -204,34 +209,44 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
+                isAddTagLoading: true,
                 addNewsChannelModal: {
+                    stationIndex: '',
+                    pageIndex: '',
+                    positionName: '',
+                    version: ''
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
+                    stationIndex: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
+                    version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
+                    pageIndex: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }]
                 },
                 updateruleValidate: {
-                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
+                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }]
                 }
             };
         },
         methods: {
-            addModal(){
+            zdClick() {
+                //console.log(this.searchData);
+                if (typeof this.searchData.station !== 'undefined') {
+                    api.getChannelInfo(this.searchData).then(response => {
+                        this.searchPageList = response.data.data;
+                    });
+                }
+            },
+            addModal() {
                 this.$router.push({
-                    name: "formtemplate"
+                    name: 'formtemplate', query: {positionId: this.currentPosition}
                 });
             },
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
                 this.isTrueAddTag = true;
             },
             init() {
-                adapi.getAllPage().then(response => {
-                    this.searchPageList = response.data.data;
-                });
                 adapi.getAllStation({isDel: 0}).then(response => {
                     this.stationList = response.data.data;
                     this.searchStationList = response.data.data;
@@ -254,30 +269,38 @@
             },
             addNewsChannel(addChannelValue) {
                 console.log(this.pageList);
-                this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
-                this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].pageId;
-                this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
-                this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
+                // this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
+                // this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
+                // this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
+                // this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
                 //console.log(this.addNewsChannelModal);
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        if (typeof addChannelValue.pageId !== 'undefined'){
-                            console.log(addChannelValue);
-                            adapi.addPosition(addChannelValue).then(response => {
-                                if (response.data.data > 0) {
-                                    this.$Message.success('添加成功');
-                                    this.init();
-                                } else {
-                                    this.$Message.error('已存在，添加失败');
-                                }
-                            }).catch(error => {
-                                this.$Message.error(error.response.data.msg);
+                        console.log('addNewsChannelModal', this.addNewsChannelModal);
+
+                        adapi.addPosition(this.addNewsChannelModal).then(response => {
+                            if (response.data.data > 0) {
+                                this.$Message.success('添加成功');
+                                this.isTrueAddTag = false;
+                                // this.isAddTagLoading = true;
+                                this.isAddTagLoading=false;
+                                this.$nextTick(()=>{
+                                    this.isAddTagLoading=true;
+                                });
                                 this.init();
-                            });
-                        }else {
-                            this.$Message.error('请选择栏目！');
-                        }
+                            } else {
+                                this.$Message.error('已存在，添加失败');
+                            }
+                            // this.$Modal.remove();
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
                     } else {
+                        this.isAddTagLoading=false;
+                        this.$nextTick(()=>{
+                            this.isAddTagLoading=true;
+                        });
                         this.$Message.error('表单验证失败!');
                     }
                 });
@@ -333,13 +356,13 @@
             },
             changeStation() {
                 if (this.addNewsChannelModal.stationIndex !== undefined) {
-                    adapi.getAllPage({isDel: 0, stationName: this.stationList[this.addNewsChannelModal.stationIndex].stationName}).then(response => {
+                    api.getChannelInfo({isDel: 0, station: this.stationList[this.addNewsChannelModal.stationIndex].station}).then(response => {
                         this.pageList = response.data.data;
                     });
                 } else {
                     this.pageList = [];
                 }
-            },
+            }
         },
         created() {
             this.init();
