@@ -61,7 +61,7 @@
     export default {
         data() {
             return {
-                searchStationList:[],
+                searchStationList: [],
                 defaultList: [],
                 columns: [
                     {
@@ -126,7 +126,7 @@
                                             }
                                         }
                                     },
-                                    '删除'
+                                    '是否删除'
                                 ),
                                 h(
                                     'Button',
@@ -219,16 +219,26 @@
                 });
             },
             delStation() {
-                adapi.updateStation(this.updateCahnnelValue).then(response => {
-                    if (response.data.data > 0) {
-                        this.$Message.success('更改成功！');
-                        this.init();
-                    } else {
-                        this.$Message.error('更改失败！');
+                var delDate = this.updateCahnnelValue;
+                this.$Modal.confirm({
+                    title: '删除',
+                    content: '<p>确认删除</p>',
+                    onOk: () => {
+                        console.log(delDate)
+                        adapi.updateStation(delDate).then(response => {
+                            if (response.data.data > 0) {
+                                this.$Message.success('删除成功！');
+                                this.init();
+                            } else {
+                                this.$Message.error('删除失败！');
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
+                    },
+                    onCancel: () => {
                     }
-                }).catch(error => {
-                    this.$Message.error(error.response.data.msg);
-                    this.init();
                 });
             },
             updateChannel() {
