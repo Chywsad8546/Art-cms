@@ -20,7 +20,7 @@
                                             <FormItem label="模板类型" prop="name" style="margin-top:20px;">
                                                 <Input v-model="formItem.name" placeholder="请输入模板类型"></Input>
                                             </FormItem>
-                                            <FormItem label="选择频道位置">
+                                            <FormItem label="频道位置">
                                                 {{positionName}}
                                                 <!-- <Row>
                                                     <Col span="7">
