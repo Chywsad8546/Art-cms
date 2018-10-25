@@ -45,7 +45,7 @@
                                                     </Col>
                                                 </Row>
                                             </FormItem>
-                                            <!--<Table :columns="columns" :data="confs"></Table>-->
+
 
 
                                             <FormItem label="template" prop="template">
@@ -105,7 +105,7 @@
                                     </Modal>
                                     </Col>
                                     <Col  span="12" >
-
+                                    <!--<Table :columns="columns" :data="confs"></Table>-->
                                     </Col>
                                 </Row>
                         <Card shadow>

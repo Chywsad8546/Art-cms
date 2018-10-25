@@ -2,7 +2,7 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">栏目列表管理</p>
+                <p slot="title">广告位管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点名称" prop="stationName">
@@ -139,7 +139,6 @@
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -164,7 +163,7 @@
                                             }
                                         }
                                     },
-                                    '模板管理'
+                                    '设置编辑器'
                                 ),
                                 h(
                                     'Button',

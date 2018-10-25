@@ -2,7 +2,7 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">栏目列表管理</p>
+                <p slot="title">栏目管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点名称id" prop="stationName">
@@ -10,9 +10,6 @@
                             <Option value="">全部</Option>
                             <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
                         </Select>
-                        </FormItem>
-                        <FormItem label="栏目id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageName">
                             <Select v-model="searchData.pageName" style="width:140px">
@@ -27,6 +24,11 @@
                                 <Option value="1">是</Option>
                             </Select>
                         </FormItem>
+                        <FormItem label="栏目id" prop="pageId">
+                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
+                        </FormItem>
+
+
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
@@ -104,7 +106,6 @@
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -133,7 +134,7 @@
                                             }
                                         }
                                     },
-                                    '是否删除'
+                                    '删除'
                                 ),
                                 h(
                                     'Button',
@@ -161,6 +162,10 @@
                     }
                 ],
                 searchData: {
+                    stationName: '',
+                    pageName: '',
+                    isDel: '',
+                    pageId: ''
                 },
                 data: [],
                 total: 0,
@@ -173,13 +178,13 @@
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
+                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }]
                 },
                 updateruleValidate: {
-                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
+                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
                 },
                 searchStationList: [],
-                seratchPageList: [],
+                seratchPageList: []
             };
         },
         methods: {
@@ -240,7 +245,7 @@
                     title: '删除',
                     content: '<p>确认删除</p>',
                     onOk: () => {
-                        console.log(delDate)
+                        console.log(delDate);
                         adapi.updateStation(delDate).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
