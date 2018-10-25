@@ -138,7 +138,7 @@ export const appRouter = [
             {
                 path: 'positionManagement',
                 name: 'positionManagement',
-                title: '位置管理',
+                title: '广告位管理',
                 // meta: {
                 //     keepalive: true
                 // },
@@ -178,36 +178,8 @@ export const appRouter = [
                 import('@/views/advertisement/ideaNewsList.vue')
         },
 
-        {
-            path: 'manyplotad',
-            name: 'manyplotad',
-            title: '多楼盘广告配置',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-            path: 'manyplotadlist',
-            name: 'manyplotadlist',
-            title: '多楼盘广告',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-            path: 'openscreenpage',
-            name: 'openscreenpage',
-            title: 'APP开屏广告',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
+
+
         {
             path: 'openscreenpagelist',
             name: 'openscreenpagelist',
@@ -434,7 +406,27 @@ export const appRouter = [
                 // },
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
-            }
+            },
+            {
+                path: 'manyplotadlist',
+                name: 'manyplotadlist',
+                title: '多楼盘广告',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            {
+                path: 'openscreenpage',
+                name: 'openscreenpage',
+                title: 'APP开屏广告',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
         ]
     },
     {
@@ -459,6 +451,16 @@ export const appRouter = [
                 path: 'guanggaoyonghuliebiao',
                 name: 'guanggaoyonghuliebiao',
                 title: '广告用户列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            {
+                path: 'manyplotad',
+                name: 'manyplotad',
+                title: '多楼盘广告配置',
                 // meta: {
                 //     keepalive: true
                 // },
