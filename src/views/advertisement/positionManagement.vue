@@ -51,7 +51,7 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationIndex">
                     <Select v-model="addNewsChannelModal.stationIndex" @on-change = "changeStation" style="width:140px">
@@ -209,6 +209,7 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
+                isAddTagLoading:false,
                 addNewsChannelModal: {
                 },
                 updateCahnnelValue: {
@@ -216,6 +217,7 @@
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
                     stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
+                    version:[{ required: true, message: '请填写版本号', trigger: 'blur' }],
                 },
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
@@ -258,7 +260,6 @@
                 });
             },
             addNewsChannel(addChannelValue) {
-                console.log(this.pageList);
                 this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
                 this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].pageId;
                 this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
@@ -283,6 +284,7 @@
                             this.$Message.error('请选择栏目！');
                         }
                     } else {
+                        this.isAddTagLoading=false;
                         this.$Message.error('表单验证失败!');
                     }
                 });
