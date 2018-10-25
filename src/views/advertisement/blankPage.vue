@@ -10,8 +10,8 @@
                 </Col> -->
                 <Col span="4">                  
                     <FormItem label="站点">
-                        <Select v-model="formItem.station" style="width:100px" @on-change = "zdClick">
-                            <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                        <Select v-model="formItem.stationId" style="width:100px" @on-change = "zdClick">
+                            <Option v-for="item in zhandianList" :value="item.stationId" :key="item.stationId">{{ item.stationName }}</Option>
                         </Select>
                     </FormItem>
                 </Col>
@@ -168,6 +168,9 @@
             getStationInfo() {
                 api.getStationInfo().then(response => {
                     this.zhandianList = response.data.data;
+                    this.zhandianList.forEach(item=>{
+                      item.stationId = item.stationId+'';
+                    });
                 });               
             },
             pageChange(page){
