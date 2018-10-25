@@ -9,20 +9,17 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称" prop="stationName">
-                            <Select v-model="searchData.stationName" style="width:140px">
+                        <FormItem label="站点名称" prop="station">
+                            <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="栏目名称" prop="pageName">
-                            <Select v-model="searchData.pageName" style="width:140px">
+                        <FormItem label="栏目名称" prop="pageId">
+                            <Select v-model="searchData.pageId" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchPageList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                                <Option v-for="item in searchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
-                        </FormItem>
-                        <FormItem label="位置id" prop="positionId">
-                            <Input v-model.trim="searchData.positionId" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
@@ -68,6 +65,18 @@
                 </FormItem>
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="addNewsChannelModal.version" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="是否添加默认缺省页" prop="isAddDefault">
+                    <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
+                        <Option value="0">是</Option>
+                        <Option value="1">否</Option>
+                    </Select>
+                </FormItem>
+                <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
+                    <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
+                        <Option value="0">低级</Option>
+                        <Option value="1">高级</Option>
+                    </Select>
                 </FormItem>
             </Form>
         </Modal>
@@ -135,17 +144,8 @@
                         title: '位置名称'
                     },
                     {
-                        title: '是否删除',
-                        key: 'isDel',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            if (params.row.isDel === 0) {
-                                return h('div', ['否']);
-                            } else if (params.row.isDel === 1) {
-                                return h('div', ['是']);
-                            }
-                        }
+                        title: '版本号',
+                        key: 'version'
                     },
                     {
                         title: '管理',
@@ -230,6 +230,14 @@
             };
         },
         methods: {
+            zdClick() {
+                //console.log(this.searchData);
+                if (typeof this.searchData.station !== 'undefined') {
+                    api.getChannelInfo(this.searchData).then(response => {
+                        this.searchPageList = response.data.data;
+                    });
+                }
+            },
             addModal() {
                 this.$router.push({
                     name: 'formtemplate', query: {positionId: this.currentPosition}
@@ -239,9 +247,6 @@
                 this.isTrueAddTag = true;
             },
             init() {
-                adapi.getAllPage().then(response => {
-                    this.searchPageList = response.data.data;
-                });
                 adapi.getAllStation({isDel: 0}).then(response => {
                     this.stationList = response.data.data;
                     this.searchStationList = response.data.data;
@@ -262,7 +267,13 @@
                     }
                 });
             },
-            addNewsChannel() {
+            addNewsChannel(addChannelValue) {
+                console.log(this.pageList);
+                this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
+                this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
+                this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
+                this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
+                //console.log(this.addNewsChannelModal);
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         console.log('addNewsChannelModal', this.addNewsChannelModal);
@@ -345,7 +356,7 @@
             },
             changeStation() {
                 if (this.addNewsChannelModal.stationIndex !== undefined) {
-                    adapi.getAllPage({isDel: 0, stationName: this.stationList[this.addNewsChannelModal.stationIndex].stationName}).then(response => {
+                    api.getChannelInfo({isDel: 0, station: this.stationList[this.addNewsChannelModal.stationIndex].station}).then(response => {
                         this.pageList = response.data.data;
                     });
                 } else {

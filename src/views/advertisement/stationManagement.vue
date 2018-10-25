@@ -9,13 +9,10 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="站点名称" prop="stationName">
-                            <Select v-model="searchData.stationName" style="width:140px">
+                        <FormItem label="站点名称" prop="station">
+                            <Select v-model="searchData.station" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                                <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                          <FormItem label="是否删除" prop="isDel">
@@ -61,6 +58,7 @@
 <script>
     import adapi from '../../api/advertisement/ad.js';
     import api from '../../api/advertisement/openScreen.js';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     import dutil from '../../libs/util.js';
     export default {
         data() {
@@ -119,7 +117,7 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
+                                                this.updateCahnnelValue.pageId = params.row.station;
                                                 if (params.row.isDel === 1) {
                                                     this.updateCahnnelValue.isDel = 0;
                                                 } else {
@@ -187,11 +185,11 @@
                 this.addNewsChannelModal = {
                 };
                 this.updateCahnnelValue = {};
-                adapi.getAllStation(this.searchData).then(response => {
+                fapi.getStationInfo(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
-                adapi.getAllStation().then(response => {
+                fapi.getStationInfo().then(response => {
                     this.searchStationList = response.data.data;
                 });
             },
@@ -229,8 +227,8 @@
             delStation() {
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '删除',
-                    content: '<p>确认删除</p>',
+                    title: '更改删除状态',
+                    content: '<p>是否更改删除状态</p>',
                     onOk: () => {
                         console.log(delDate)
                         adapi.updateStation(delDate).then(response => {
