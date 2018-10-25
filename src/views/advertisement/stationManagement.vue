@@ -41,7 +41,7 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
                     <Input v-model.trim="addNewsChannelModal.stationName" style="width:140px"></Input>
@@ -49,7 +49,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
+        <Modal v-model="modal2"  width="360" @on-ok="updateChannel()">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
                 <FormItem label="站点名称" prop="stationName">
                     <Input v-model.trim="updateCahnnelValue.stationName" style="width:140px"></Input>
@@ -165,6 +165,7 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
+                isAddTagLoading:true,
                 addNewsChannelModal: {
                 },
                 updateCahnnelValue: {
@@ -179,9 +180,8 @@
         },
         methods: {
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
-                this.isTrueAddTag = true;
+                this.isTrueAddTag=true;
+                this.isAddTagLoading=true;
             },
             init() {
                 this.addNewsChannelModal = {
@@ -203,10 +203,10 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
+            addNewsChannel() {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        adapi.addStation(addChannelValue).then(response => {
+                        adapi.addStation(this.addNewsChannelModal).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
@@ -218,6 +218,10 @@
                             this.init();
                         });
                     } else {
+                        this.isAddTagLoading=false;
+                        this.$nextTick(()=>{
+                           this.isAddTagLoading=true;
+                        });
                         this.$Message.error('表单验证失败!');
                     }
                 });

@@ -12,7 +12,7 @@
                         <FormItem label="站点名称" prop="stationName">
                             <Select v-model="searchData.stationName" style="width:140px">
                                 <Option value="">全部</Option>
-                                <Option v-for="item in searchStationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                                <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageName">
@@ -51,7 +51,7 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
                 <FormItem label="站点名称" prop="stationIndex">
                     <Select v-model="addNewsChannelModal.stationIndex" @on-change = "changeStation" style="width:140px">
@@ -110,7 +110,7 @@
                     {
                         key: 'version',
                         title: '版本号'
-                    },
+                    }
                 ],
                 modalData: [],
                 modal3: false,
@@ -201,7 +201,7 @@
                         }
                     }
                 ],
-                currentPosition:0,
+                currentPosition: 0,
                 searchData: {
                 },
                 data: [],
@@ -209,30 +209,33 @@
                 modal2: false,
                 isTrueAddTag: false,
                 modal_loading: false,
-                isAddTagLoading:false,
+                isAddTagLoading: true,
                 addNewsChannelModal: {
+                    stationIndex: '',
+                    pageIndex: '',
+                    positionName: '',
+                    version: ''
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
-                    version:[{ required: true, message: '请填写版本号', trigger: 'blur' }],
+                    stationIndex: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
+                    version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
+                    pageIndex: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }]
                 },
                 updateruleValidate: {
-                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
+                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }]
                 }
             };
         },
         methods: {
-            addModal(){
+            addModal() {
                 this.$router.push({
-                    name: "formtemplate",query:{positionId:this.currentPosition}
+                    name: 'formtemplate', query: {positionId: this.currentPosition}
                 });
             },
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
                 this.isTrueAddTag = true;
             },
             init() {
@@ -259,32 +262,34 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
-                this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
-                this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].pageId;
-                this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
-                this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
-                //console.log(this.addNewsChannelModal);
+            addNewsChannel() {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        if (typeof addChannelValue.pageId !== 'undefined'){
-                            console.log(addChannelValue);
-                            adapi.addPosition(addChannelValue).then(response => {
-                                if (response.data.data > 0) {
-                                    this.$Message.success('添加成功');
-                                    this.init();
-                                } else {
-                                    this.$Message.error('已存在，添加失败');
-                                }
-                            }).catch(error => {
-                                this.$Message.error(error.response.data.msg);
+                        console.log('addNewsChannelModal', this.addNewsChannelModal);
+
+                        adapi.addPosition(this.addNewsChannelModal).then(response => {
+                            if (response.data.data > 0) {
+                                this.$Message.success('添加成功');
+                                this.isTrueAddTag = false;
+                                // this.isAddTagLoading = true;
+                                this.isAddTagLoading=false;
+                                this.$nextTick(()=>{
+                                    this.isAddTagLoading=true;
+                                });
                                 this.init();
-                            });
-                        }else {
-                            this.$Message.error('请选择栏目！');
-                        }
+                            } else {
+                                this.$Message.error('已存在，添加失败');
+                            }
+                            // this.$Modal.remove();
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
                     } else {
                         this.isAddTagLoading=false;
+                        this.$nextTick(()=>{
+                            this.isAddTagLoading=true;
+                        });
                         this.$Message.error('表单验证失败!');
                     }
                 });
@@ -346,7 +351,7 @@
                 } else {
                     this.pageList = [];
                 }
-            },
+            }
         },
         created() {
             this.init();
