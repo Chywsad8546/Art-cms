@@ -1,23 +1,64 @@
 <template>
-<div>
+    <Row>
+        <Col span="100">
+            <Card>
+                <p slot="title">编辑器列表管理</p>
+    <Form  ref="searchData" :model="searchData" inline :label-width="120">
+        <FormItem label="选择站点" prop="station">
+            <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
+                <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="选择栏目" prop="pageId">
+            <Select v-model="searchData.pageId" style="width:100px"  @on-change = "pdClick">
+                <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+            </Select>
+        </FormItem>
+        <FormItem label="选择位置" prop="positionId">
+            <Select v-model="searchData.positionId" style="width:100px">
+                <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
+            </Select>
+        </FormItem>
+        <!-- <FormItem label="是否删除" prop="isDel">
+             <Select v-model="searchData.isDel" style="width:140px">
+                 <Option value="">全部</Option>
+                 <Option value="0">否</Option>
+                 <Option value="1">是</Option>
+             </Select>
+         </FormItem>-->
+        <FormItem>
+            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
+            <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
+        </FormItem>
+    </Form>
     <Table border :columns="columns7" :data="templateListData"></Table>
     <Page :total="total"  @on-change="pageChange" show-total show-sizer></Page>
-</div>
+            </Card>
+
+        </Col>
+    </Row>
     <!-- <Page :total="total"  @on-change="pageChange" style="margin-top:10px; text-align:right"></Page> -->
 </template>
 
 <script>
     import api from '../../api/advertisement/formtemplateApi.js';
+    import adapi from '../../api/advertisement/ad.js';
     export default {
         data () {
             return {
+                weizhiList:[],
+                zhandianList: [],
+                pingdaoList: [],
+                searchData: {
+                    pageNum: 1
+                },
                 form: {
-                    id:""
+                    id: ''
                 },
                 columns7: [
                     {
                         title: 'id',
-                        key: 'id',
+                        key: 'id'
                     },
                     {
                         title: '模板类型',
@@ -44,7 +85,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            if(params.row.isNew == 1){
+                                            if (params.row.isNew == 1) {
                                                 this.$router.push({
                                                     name: 'formtemplate',
                                                     query: {advertId: params.row.id}
@@ -68,30 +109,61 @@
                         }
                     }
                 ],
-                total:0,
-                tempList:{
-                    pageNum:1
-                },
+                total: 0,
                 templateListData: []
-            }
+            };
         },
         methods: {
-            pageChange(page){
-                this.tempList.pageNum = page;
+            handleSearch () {
+                this.searchData.page = 1;
+                this.init();
+            },
+            handleCancel (name) {
+                this.$refs[name].resetFields();
+                this.searchData.page = 1;
+                this.init();
+            },
+            pdClick() {
+                console.log(this.searchData)
+                if (typeof this.searchData.pageId !== 'undefined') {
+                    api.getPositionInfo(this.searchData).then(response => {
+                        this.weizhiList = response.data.data;
+                    });
+                }
+            },
+            zdClick() {
+                console.log(this.searchData)
+                if (typeof this.searchData.station !== 'undefined') {
+                    api.getChannelInfo(this.searchData).then(response => {
+                        this.pingdaoList = response.data.data;
+                    });
+                }
+            },
+            init() {
+                this.weizhiList = [];
+                this.pingdaoList = [];
+                this.zhandianList = [];
+                adapi.getAllStation({isDel: 0}).then(response => {
+                    this.zhandianList = response.data.data;
+                });
                 this.templateList();
             },
-            deleteTemplate(id){
+            pageChange(page) {
+                this.searchData.pageNum = page;
+                this.templateList();
+            },
+            deleteTemplate(id) {
                 this.form.id = id;
                 api.deleteTemplate(this.form).then(response => {
-                    this.$Message.success("删除成功"); 
+                    this.$Message.success('删除成功');
                     this.templateList();
-                });  
+                });
             },
-            templateList(){
-                api.templateList(this.tempList).then(response => {
+            templateList() {
+                api.templateList(this.searchData).then(response => {
                     this.templateListData = response.data.data;
                     this.total = response.data.count;
-                });                   
+                });
             },
             deleteConfirm (id) {
                 this.$Modal.confirm({
@@ -106,9 +178,9 @@
             }
         },
         created: function () {
-            this.templateList();
+            this.init();
         }
-    }
+    };
 </script>
 
 <style>
