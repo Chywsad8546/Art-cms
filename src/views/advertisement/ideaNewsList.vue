@@ -2,7 +2,8 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">推送列表管理</p>
+                <p slot="title">创意管理</p>
+
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                <!--         <FormItem label="消息标题" prop="title">

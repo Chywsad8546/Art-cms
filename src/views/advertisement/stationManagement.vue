@@ -3,6 +3,10 @@
         <Col span="100">
             <Card>
                 <p slot="title">站点列表管理</p>
+                <a href="#" slot="extra"  @click.prevent="addModeButton" >
+                    <Icon type="plus-circled"></Icon>
+                    添加站点
+                </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点id" prop="pageId">
@@ -26,9 +30,9 @@
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="addModeButton">添加</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="addModeButton">添加</Button>-->
+                        <!--</FormItem>-->
                     </Form>
                     <Table border :columns="columns" :data="data"></Table>
                     <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>

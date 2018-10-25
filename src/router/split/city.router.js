@@ -414,16 +414,16 @@ export const appRouter = [
                 component: () =>
                     import('@/views/error-page/blankPage.vue')
             },
-            {
-                path: 'openscreenpage',
-                name: 'openscreenpage',
-                title: 'APP开屏广告',
-                // meta: {
-                //     keepalive: true
-                // },
-                component: () =>
-                    import('@/views/error-page/blankPage.vue')
-            },
+            // {
+            //     path: 'openscreenpage',
+            //     name: 'openscreenpage',
+            //     title: 'APP开屏广告',
+            //     // meta: {
+            //     //     keepalive: true
+            //     // },
+            //     component: () =>
+            //         import('@/views/error-page/blankPage.vue')
+            // },
         ]
     },
     {
