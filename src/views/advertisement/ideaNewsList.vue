@@ -104,6 +104,7 @@
     import ideaApi from '../../api/advertisement/ideaList.js';
     import dutil from '../../libs/util.js';
     import fapi from '../../api/advertisement/formtemplateApi.js';
+
     export default {
         data() {
             return {
