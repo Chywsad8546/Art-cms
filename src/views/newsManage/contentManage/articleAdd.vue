@@ -3,8 +3,11 @@
         <Form ref="formInline" :model="form" :rules="ruleValidate" :label-width="80">
         <div class="publictop">
             <div class="articleTitle">发表文章</div>
-            <FormItem label="标题" prop="title">
+            <FormItem label="标题" prop="title" style="margin-bottom:0px;">
                 <Input v-model="form.title" placeholder="请输入标题"></Input>
+            </FormItem>
+            <FormItem >
+                <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
             </FormItem>
             <FormItem label="内容">
                 <quill-editor v-model="form.content"
@@ -372,7 +375,7 @@
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         //console.log(item);
-                        this.tagsJson[key].push(item.value);
+                        this.tagsJson[key].push(item.value);                   
                     })
                 });
             },

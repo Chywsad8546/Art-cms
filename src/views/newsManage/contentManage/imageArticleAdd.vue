@@ -4,8 +4,11 @@
     <div class="publictop">
         <div class="articleTitle">发表图集</div>
     <div>
-        <FormItem label="标题" prop="title">
+        <FormItem label="标题" prop="title" style="margin-bottom:0px;">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
+        <FormItem >
+            <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
         </FormItem>
         <div class="color-list">
         <div

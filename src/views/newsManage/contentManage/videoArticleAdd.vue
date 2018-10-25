@@ -4,8 +4,11 @@
         <div class="articleTitle">上传视频</div>
     </div>
     <Form :model="form" :rules="ruleValidate" :label-width="80">
-        <FormItem label="标题" prop="title">
+        <FormItem label="标题" prop="title" style="margin-bottom:0px;">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
+        <FormItem >
+            <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
         </FormItem>
         <FormItem label="视频简介">
             <Input v-model="form.content.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
