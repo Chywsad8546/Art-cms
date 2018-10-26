@@ -130,10 +130,10 @@
                         align: 'center',
                         render: (h, params) => {
                             if (params.row.isAdvancedEdit === 0) {
-                                return h('div',{
+                                return h('div', {
                                 }, ['普通编辑器']);
                             } else if (params.row.isAdvancedEdit === 1) {
-                                return h('div',{
+                                return h('div', {
                                     style: {
                                     }
                                 }, ['高级编辑器']);
@@ -141,12 +141,12 @@
                         }
                     },
                     {
-                        title: '编辑器版本',//
+                        title: '编辑器版本', //
                         key: 'status',
                         align: 'center',
                         render: (h, params) => {
                             if (params.row.isNew === 0) {
-                                return h('div',{
+                                return h('div', {
                                     style: {
                                         color: 'red'
                                     }
@@ -164,7 +164,7 @@
                                     '旧版'
                                 )]);
                             } else if (params.row.isNew === 1) {
-                                return h('div',{
+                                return h('div', {
                                     style: {
                                         color: 'green'
                                     }
@@ -178,13 +178,13 @@
                         align: 'center',
                         render: (h, params) => {
                             if (params.row.status === 0) {
-                                return h('div',{
+                                return h('div', {
                                     style: {
                                         color: 'red'
                                     }
                                 }, ['已禁用']);
                             } else if (params.row.status === 1) {
-                                return h('div',{
+                                return h('div', {
                                     style: {
                                         color: 'green'
                                     }
@@ -211,6 +211,23 @@
                                         },
                                         on: {
                                             click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '是否禁用',
+                                                    content: '<p>是否禁用</p>',
+                                                    onOk: () => {
+                                                        api.deleteTemplate({id: params.row.id}).then(response => {
+                                                            if (response.data.data > 0) {
+                                                                api.templateList({positionId: params.row.positionId}).then(response => {
+                                                                    this.modalData = response.data.data;
+                                                                });
+                                                            } else {
+                                                                this.$Message.error('禁用失败！');
+                                                            };
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                    }
+                                                });
                                                 // this.modal3 = true;
                                                 // this.currentPosition = params.row.positionId;
                                                 // api.templateList({positionId: params.row.positionId}).then(response => {
@@ -246,8 +263,7 @@
                                             },
                                             '修改'
                                         );
-                                    }
-                                    else {
+                                    } else {
                                         return h();
                                     }
                                 })()
@@ -360,24 +376,24 @@
                     version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
                     pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
                     isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],
-                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }],
+                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
+                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }]
                 }
             };
         },
         methods: {
-            sitechange(v){
+            sitechange(v) {
                 if (v !== undefined) {
                     this.addNewsChannelModal.pageName = v.label;
                 }
             },
             zdClick() {
-                //console.log(this.searchData);
+                // console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
-                    api.getChannelInfo(this.searchData).then(response => {
+                    api.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.searchPageList = response.data.data;
                     });
                 }
@@ -391,12 +407,12 @@
                 this.isTrueAddTag = true;
             },
             init() {
-                adapi.getAllStation({isDel: 0}).then(response => {
+                adapi.getAllStation({isDel: 0, pageSize: 1000}).then(response => {
                     this.stationList = response.data.data;
                     this.searchStationList = response.data.data;
                 });
-         /*       this.addNewsChannelModal = {
-                };*/
+                /*       this.addNewsChannelModal = {
+                }; */
                 this.updateCahnnelValue = {};
                 adapi.getAllPositions(this.searchData).then(response => {
                     this.total = response.data.count;
@@ -417,7 +433,7 @@
                 // this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
                 // this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
                 // this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
-                //console.log(this.addNewsChannelModal);
+                // console.log(this.addNewsChannelModal);
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         console.log('addNewsChannelModal', this.addNewsChannelModal);
@@ -427,9 +443,9 @@
                                 this.$Message.success('添加成功');
                                 this.isTrueAddTag = false;
                                 // this.isAddTagLoading = true;
-                                this.isAddTagLoading=false;
-                                this.$nextTick(()=>{
-                                    this.isAddTagLoading=true;
+                                this.isAddTagLoading = false;
+                                this.$nextTick(() => {
+                                    this.isAddTagLoading = true;
                                 });
                                 this.init();
                             } else {
@@ -441,9 +457,9 @@
                             this.init();
                         });
                     } else {
-                        this.isAddTagLoading=false;
-                        this.$nextTick(()=>{
-                            this.isAddTagLoading=true;
+                        this.isAddTagLoading = false;
+                        this.$nextTick(() => {
+                            this.isAddTagLoading = true;
                         });
                         this.$Message.error('表单验证失败!');
                     }
@@ -482,20 +498,20 @@
                 });
             },
             handleSearch () {
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             handleCancel (name) {
                 this.$refs[name].resetFields();
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             pageChange (page) {
-                this.searchData.page = page;
+                this.searchData.pageNum = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.limit = size;
+                this.searchData.pageSize = size;
                 this.init();
             },
             changeStation(v) {

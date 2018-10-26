@@ -189,7 +189,7 @@
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
-                fapi.getStationInfo().then(response => {
+                fapi.getStationInfo({pageSize: 1000}).then(response => {
                     this.searchStationList = response.data.data;
                 });
             },
@@ -208,6 +208,7 @@
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
+                                this.isTrueAddTag = false;
                             } else {
                                 this.$Message.error('已存在，添加失败');
                             }
@@ -267,20 +268,20 @@
                 });
             },
             handleSearch () {
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             handleCancel (name) {
                 this.$refs[name].resetFields();
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             pageChange (page) {
-                this.searchData.page = page;
+                this.searchData.pageNum = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.limit = size;
+                this.searchData.pageSize = size;
                 this.init();
             }
         },

@@ -117,7 +117,6 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.pageId = params.row.pageId;
                                                 if (params.row.isDel === 1) {
                                                     this.updateCahnnelValue.isDel = 0;
@@ -143,7 +142,6 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.pageId = params.row.pageId;
                                                 this.updateCahnnelValue.pageName = params.row.pageName;
                                                 i.modal2 = true;
@@ -168,15 +166,15 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 addNewsChannelModal: {
-                    stationId:'',
-                    stationName:'',
-                    pageName:''
+                    stationId: '',
+                    stationName: '',
+                    pageName: ''
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationId: [{ type: 'integer',required: true, message: '站点不能为空', trigger: 'change' }]
+                    stationId: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
@@ -186,30 +184,32 @@
             };
         },
         methods: {
-            sitechange(v){
-                this.addNewsChannelModal.stationName=v.label;
+            sitechange(v) {
+                if (v !== undefined) {
+                    this.addNewsChannelModal.stationName = v.label;
+                }
             },
             zdClick() {
-                console.log(this.searchData)
-                if (typeof this.searchData.stationName !== 'undefined') {
-                    fapi.getChannelInfo(this.searchData).then(response => {
+                console.log(this.searchData);
+                if (typeof this.searchData.station !== 'undefined') {
+                    fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.seratchPageList = response.data.data;
                     });
                 }
             },
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
                 this.isTrueAddTag = true;
             },
             init() {
-                fapi.getStationInfo({isDel: 0}).then(response => {
+                this.addNewsChannelModal = {
+                    stationId: '',
+                    stationName: '',
+                    pageName: ''
+                };
+                fapi.getStationInfo({isDel: 0, pageSize: 1000}).then(response => {
                     this.stationList = response.data.data;
                     this.zhandianList = response.data.data;
                 });
-                this.addNewsChannelModal = {
-                };
-                this.updateCahnnelValue = {};
                 fapi.getChannelInfo(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
@@ -288,20 +288,21 @@
                 });
             },
             handleSearch () {
-                this.searchData.page = 1;
+                this.searchData.pagepageNum = 1;
                 this.init();
             },
             handleCancel (name) {
+                this.seratchPageList = [];
                 this.$refs[name].resetFields();
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             pageChange (page) {
-                this.searchData.page = page;
+                this.searchData.pageNum = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.limit = size;
+                this.searchData.pageSize = size;
                 this.init();
             }
         },
