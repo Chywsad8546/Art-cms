@@ -52,7 +52,7 @@ export const otherRouter = {
         {
             path: 'planDetail',
             name: 'planDetail',
-            title: '编辑器维护',
+            title: '计划详情',
             // meta: {
             //     requireAuth: true
             // },

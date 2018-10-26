@@ -4,10 +4,12 @@
             <Card>
                 <p slot="title">计划详情</p>
                 <Card>
-                    <p slot="title">计划Id: {{plandetail.planid}}</p>
-                    <p>计划名称: {{plandetail.planName}}</p>
-                    <p>创意数量：{{plandetail.ideaCount}}</p>
-                    <p>展示数量：{{plandetail.zhanShiCount}}</p>
+                    <Form inline :label-width="120">
+                        <FormItem><p style="font-size: 18px">计划名称: {{plandetail.planName}}</p></FormItem>
+                        <FormItem><p style="font-size: 14px">创意数量：{{plandetail.ideaCount}}</p></FormItem>
+                        <FormItem><p style="font-size: 14px">展示数量：{{plandetail.zhanShiCount}}</p></FormItem>
+                        <FormItem><p style="font-size: 14px">排期数量：{{plandetail.paiQiCount}}</p></FormItem>
+                    </Form>
                 </Card>
 
                 <Row class="margin-top-10 searchable-table-con1">
@@ -34,11 +36,12 @@
                         </FormItem>
 
 
-                        <FormItem label="开始时间"  prop="startTime">
-                            <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        <FormItem label="选择时间"  prop="timeRange">
+                            <DatePicker type="daterange" v-model="searchData.timeRange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
+                          <!--  <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                         </FormItem>
                         <FormItem label="结束时间"  prop="endTime">
-                            <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                            <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>-->
                         </FormItem>
 
                         <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
@@ -205,7 +208,10 @@
                     limit: 10,
                     stationId: '',
                     pageName: '',
-                    planId:'',
+                    planId: '',
+                    startTime: '',
+                    endTime: '',
+                    timeRange: ['', '']
                 },
                 data: [],
                 total: 0,
@@ -237,6 +243,8 @@
             },
             handleSearch () {
                 this.searchData.page = 1;
+                this.searchData.startTime = this.searchData.timeRange[0];
+                this.searchData.endTime = this.searchData.timeRange[1];
                 if (typeof this.searchData.startTime !== 'string') {
                     this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
                 }
@@ -247,6 +255,8 @@
             },
             handleCancel (name) {
                 this.$refs[name].resetFields();
+                this.searchData.startTime = this.searchData.timeRange[0];
+                this.searchData.endTime = this.searchData.timeRange[1];
                 this.searchData.page = 1;
                 this.init();
             },
@@ -293,7 +303,7 @@
                 if (this.addIdeaNewsModal.bjq !== '') {
                     this.$router.push({
                         name: 'ad_redirect',
-                        query: {templateid: this.addIdeaNewsModal.bjq}
+                        query: {templateid: this.addIdeaNewsModal.bjq, planId: this.plandetail.planid}
                     });
                 } else {
                     this.$Message.error('请选择编辑器！');
