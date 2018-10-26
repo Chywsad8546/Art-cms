@@ -1,7 +1,8 @@
 <template>
 <div class="contenter">
-    <Tabs value="name1" v-model="tabName" class="tabColor">
-        <TabPane label="简单编辑器" name="name1">         
+    <!-- <Tabs value="name1" v-model="tabName" class="tabColor">
+        <TabPane v-if="isAdvancedEdit == 0" label="简单编辑器" name="name1">          -->
+            <div v-if="ordinaryEditor" class="editorContent">
                     <Row>
                             <Col span="24">
 
@@ -46,9 +47,6 @@
                                                     </Col>
                                                 </Row> -->
                                             </FormItem>
-
-
-
                                             <FormItem label="artTemplate" prop="template">
                                                 <Poptip trigger='hover' class='iconClass' placement='right' title='artTemplate是什么' content='artTemplate是一个模板引擎,官网 http://aui.github.io/art-template/zh-cn/'><Icon type='help' /></Poptip>
                                                 <Input v-model="formItem.template" type="textarea" :rows="6" placeholder="请输入内容"></Input>
@@ -90,7 +88,7 @@
                                             <FormItem label="提示文字"  prop="message" v-if="inputType == 'input'">
                                                 <Input type="text"  v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
                                             </FormItem>
-                                            <FormItem label="options" prop="formOptions" v-if="inputType == 'select'">
+                                            <FormItem label="options" prop="options" v-if="inputType == 'select'">
                                                 <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="每行一个select回车换行"></Input>
                                             </FormItem>
                                             <!-- <FormItem label="文件类型" prop="format" v-if="inputType == 'upload'">
@@ -157,9 +155,11 @@
                                 </Row>
                         </Card>
                             </Col>
-                        </Row>    
-            </TabPane>
-        <TabPane label="高级编辑器" name="name2">
+                        </Row>  
+        </div>
+          <div v-if="seniorEditor" class="editorContent" style="padding-top:10px; padding-bottom:10px;">
+            <!-- </TabPane>
+        <TabPane v-if="isAdvancedEdit == 1" label="高级编辑器" name="name2"> -->
             <Form ref="seniorForm" :model="senior" :rules="seniorValidate" :label-width="100">
                 <FormItem label="编辑器名称" prop="name" style="margin-top:20px;" class="seniorClass">
                     <Input v-model="senior.name" placeholder="请输入编辑器名称"></Input>
@@ -202,8 +202,9 @@
                     <Button type="primary" @click="subRouteAdd('seniorForm')">保存</Button>
                 </FormItem>
             </Form>
-        </TabPane>
-    </Tabs>
+        </div>
+        <!-- </TabPane>
+    </Tabs> -->
     
 </div>
 </template>
@@ -227,6 +228,8 @@ import { setTimeout } from 'timers';
                 weizhiList: [],
                 positionName:"",
                 editorRouterList: [],
+                seniorEditor: false,
+                ordinaryEditor:false,
                 formAdd: {
                     name: '',
                     label: '',
@@ -330,8 +333,8 @@ import { setTimeout } from 'timers';
                     positionId: [
                         { required: true, message: '请选择位置', trigger: 'change' }
                     ],
-                    formOptions: [
-                        { required: true, message: '请选择位置', trigger: 'change' }
+                    options: [
+                        { required: true, message: '请选择位置', trigger: 'blur' }
                     ],
                     format: [
                         { required: true, type: 'array', min: 1, message: '请选择文件格式', trigger: 'change' }
@@ -410,6 +413,11 @@ import { setTimeout } from 'timers';
             },
             adListAll() {
                 api.adListAll({positionId:this.formItem.positionId}).then(response => {
+                    if (response.data.data[0].isAdvancedEdit == 1) {
+                        this.seniorEditor= true;
+                    } else {
+                        this.ordinaryEditor=true;
+                    }
                     this.positionName = response.data.data[0].pageName+' / '+ response.data.data[0].positionName;
                 });
             },
@@ -501,14 +509,14 @@ import { setTimeout } from 'timers';
             getIdeaTypeData() {
                 api.getIdeaTypeData(this.Lid).then(response => {
                     if (response.data.data.isAdvancedEdit == 1) {
-                        setTimeout(() => {
-                            this.tabName = 'name2';
-                        }, 300);
+                        // setTimeout(() => {
+                        //     this.tabName = 'name2';
+                        // }, 300);
                         this.senior.name = response.data.data.name;
                         this.senior.form = response.data.data.form;
                         //this.senior.template = response.data.data.template;
                     } else {
-                        this.tabName = 'name1';
+                       // this.ordinaryEditor=true;
                         this.formItem.name = response.data.data.name;
                         this.formItem.template = response.data.data.template;
                         this.confs = JSON.parse(response.data.data.form);
@@ -529,24 +537,11 @@ import { setTimeout } from 'timers';
                         api.addTemplate(this.formItem).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
-                                name: 'templateList'
+                                name: 'positionManagement'
                             });
                         });
                     }
                 });
-
-                // if(this.formItem.name == ""){
-                //     this.$Message.error("请填写类型");
-                //     return false;
-                // }
-                // if(this.formItem.template == ""){
-                //     this.$Message.error("请填写模板");
-                //     return false;
-                // }
-                // if(this.formItem.positionId == ""){
-                //     this.$Message.error("请选择位置");
-                //     return false;
-                // }
             },
             subRouteAdd(name) {
                 this.$refs[name].validate((valid) => {
@@ -554,7 +549,7 @@ import { setTimeout } from 'timers';
                         api.addTemplate(this.senior).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
-                                name: 'templateList'
+                                name: 'positionManagement'
                             });
                         });
                     }
@@ -699,5 +694,9 @@ import { setTimeout } from 'timers';
 .iconClass {
     float: left;
     margin-right: 10px;
+}
+.editorContent {
+    width: 100%;
+    background: #ffffff;
 }
 </style>

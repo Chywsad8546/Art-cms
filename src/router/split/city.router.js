@@ -142,7 +142,13 @@ export const appRouter = [
                 component: () =>
                     import('@/views/advertisement/positionManagement.vue')
             },
-
+            {
+                path: 'positionPlan',
+                name: 'positionPlan',
+                title: '广告计划',
+                component: () =>
+                    import('@/views/advertisement/positionPlan.vue')
+            },
 
         {
                 path: 'templateList',
