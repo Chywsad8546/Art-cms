@@ -537,7 +537,7 @@ import { setTimeout } from 'timers';
                         api.addTemplate(this.formItem).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
-                                name: 'templateList'
+                                name: 'positionManagement'
                             });
                         });
                     }
@@ -549,7 +549,7 @@ import { setTimeout } from 'timers';
                         api.addTemplate(this.senior).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
-                                name: 'templateList'
+                                name: 'positionManagement'
                             });
                         });
                     }
