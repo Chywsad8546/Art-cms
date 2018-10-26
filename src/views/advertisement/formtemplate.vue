@@ -88,7 +88,7 @@
                                             <FormItem label="提示文字"  prop="message" v-if="inputType == 'input'">
                                                 <Input type="text"  v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
                                             </FormItem>
-                                            <FormItem label="options" prop="formOptions" v-if="inputType == 'select'">
+                                            <FormItem label="options" prop="options" v-if="inputType == 'select'">
                                                 <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="每行一个select回车换行"></Input>
                                             </FormItem>
                                             <!-- <FormItem label="文件类型" prop="format" v-if="inputType == 'upload'">
@@ -333,8 +333,8 @@ import { setTimeout } from 'timers';
                     positionId: [
                         { required: true, message: '请选择位置', trigger: 'change' }
                     ],
-                    formOptions: [
-                        { required: true, message: '请选择位置', trigger: 'change' }
+                    options: [
+                        { required: true, message: '请选择位置', trigger: 'blur' }
                     ],
                     format: [
                         { required: true, type: 'array', min: 1, message: '请选择文件格式', trigger: 'change' }
