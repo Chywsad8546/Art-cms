@@ -69,8 +69,15 @@ export default {
     updatePosition(params) {
         return http.post('/cmsapi/updatePosition', params);
     },
-    // 修改站点名称/cmsapi/updateStationName
-    updateStationName(params) {
-        return http.post('/cmsapi/updateStationName', params);
-    }
+    //添加广告计划
+    addPlan(params) {
+        return http.post('/cmsapi/addPlan', params);
+    },
+    //修改广告计划
+    editPlan(params) {
+        return http.post('/cmsapi/editPlan', params);
+    },
+    panList(params) {
+        return http.get('/cmsapi/panList', {params: params});
+    },
 };
