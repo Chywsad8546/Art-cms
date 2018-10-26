@@ -44,9 +44,16 @@
             </Row>
             </div>
 
-    <Table border :columns="columblankPage" :data="blankPageListData"></Table>
+    <Table border :columns="columblankPage" :data="blankPageListData" :loading="searchLoading"></Table>
     <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
 
+    <Modal
+            v-model="showPlan"
+            title="选择创意" scrollable
+            >
+        <planselector></planselector>
+        <span slot="footer"></span>
+    </Modal>
 </div>
     <!-- <Row>
         <Col span="100">
@@ -61,14 +68,17 @@
     import dutil from '../../libs/util.js';
     import moment from 'moment';
     import tdpop from './tdpop.vue';
+    import planselector from './PlanSelector.vue';
     import Vue from 'vue';
     Vue.component("tdpop",tdpop);
     export default {
         components: {
-            tdpop
+            tdpop,
+            planselector
         },
         data() {
             return {
+                showPlan:false,
                 formItem: {
                     station: '',
                     pageId: '',
@@ -157,6 +167,7 @@
                 ],
                 blankPageListData: [],
                 total: 0,
+                searchLoading:false,
                 tempList: {},
                 zhandianList: [],
                 weizhiList: [],
@@ -203,9 +214,11 @@
                 return ids.join(',');
             },
             cellclick(){
+                this.showPlan=true;
                 console.log('cellclick')
             },
             search() {
+                this.searchLoading=true;
                 let days = moment(this.dateTime).daysInMonth();
                 let month = moment(this.dateTime).format('M');
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
@@ -244,6 +257,7 @@
                                     }
                                 });
                             }
+                            that.searchLoading=false;
                         });
                 });
             },
