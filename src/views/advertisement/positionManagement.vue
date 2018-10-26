@@ -11,13 +11,11 @@
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点名称" prop="station">
                             <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
-                                <Option value="">全部</Option>
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageId">
                             <Select v-model="searchData.pageId" style="width:140px">
-                                <Option value="">全部</Option>
                                 <Option v-for="item in searchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
@@ -50,14 +48,14 @@
 
         <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationIndex">
-                    <Select v-model="addNewsChannelModal.stationIndex" @on-change = "changeStation" style="width:140px">
-                        <Option v-for="(item, index) in stationList" :value="index" :key="index">{{ item.stationName }}</Option>
+                <FormItem label="站点名称" prop="station">
+                    <Select v-model="addNewsChannelModal.station" :label-in-value="true" @on-change = "changeStation" style="width:140px">
+                        <Option v-for="(item, index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="栏目名称" prop="pageIndex">
-                    <Select v-model="addNewsChannelModal.pageIndex" style="width:140px">
-                        <Option v-for="(item, index) in pageList" :value="index" :key="index">{{ item.pageName }}</Option>
+                <FormItem label="栏目名称" prop="pageId">
+                    <Select v-model="addNewsChannelModal.pageId" :label-in-value="true" @on-change="sitechange" style="width:140px">
+                        <Option v-for="item in pageList"  :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="位置名称" prop="positionName">
@@ -68,14 +66,14 @@
                 </FormItem>
                 <FormItem label="是否添加默认缺省页" prop="isAddDefault">
                     <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
-                        <Option value="0">是</Option>
-                        <Option value="1">否</Option>
+                        <Option :value=0>是</Option>
+                        <Option :value=1>否</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
                     <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
-                        <Option value="0">低级</Option>
-                        <Option value="1">高级</Option>
+                        <Option :value=0>低级</Option>
+                        <Option :value=1>高级</Option>
                     </Select>
                 </FormItem>
             </Form>
@@ -85,6 +83,9 @@
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
                 <FormItem label="栏目名称" prop="positionName">
                     <Input v-model.trim="updateCahnnelValue.positionName" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="版本号" prop="version">
+                    <Input v-model.trim="updateCahnnelValue.version" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -323,6 +324,7 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
+                                                this.updateCahnnelValue.version = params.row.version;
                                                 this.updateCahnnelValue.positionName = params.row.positionName;
                                                 this.updateCahnnelValue.positionId = params.row.positionId;
                                                 i.modal2 = true;
@@ -354,16 +356,24 @@
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    stationIndex: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
+                    station: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
                     version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
-                    pageIndex: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }]
+                    pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
+                    isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],
+                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }],
                 },
                 updateruleValidate: {
-                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }]
+                    positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
+                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
                 }
             };
         },
         methods: {
+            sitechange(v){
+                if (v !== undefined) {
+                    this.addNewsChannelModal.pageName = v.label;
+                }
+            },
             zdClick() {
                 //console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
@@ -385,8 +395,8 @@
                     this.stationList = response.data.data;
                     this.searchStationList = response.data.data;
                 });
-                this.addNewsChannelModal = {
-                };
+         /*       this.addNewsChannelModal = {
+                };*/
                 this.updateCahnnelValue = {};
                 adapi.getAllPositions(this.searchData).then(response => {
                     this.total = response.data.count;
@@ -488,9 +498,12 @@
                 this.searchData.limit = size;
                 this.init();
             },
-            changeStation() {
-                if (this.addNewsChannelModal.stationIndex !== undefined) {
-                    api.getChannelInfo({isDel: 0, station: this.stationList[this.addNewsChannelModal.stationIndex].station}).then(response => {
+            changeStation(v) {
+                if (v !== undefined) {
+                    this.addNewsChannelModal.stationName = v.label;
+                }
+                if (this.addNewsChannelModal.station !== undefined) {
+                    api.getChannelInfo({isDel: 0, station: this.addNewsChannelModal.station}).then(response => {
                         this.pageList = response.data.data;
                     });
                 } else {
