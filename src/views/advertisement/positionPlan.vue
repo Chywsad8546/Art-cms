@@ -50,12 +50,6 @@
     export default {
         data() {
             return {
-                searchStationList: [],
-                searchPageList: [],
-                modalData: [],
-                modal3: false,
-                stationList: [],
-                pageList: [],
                 columns: [
                     {
                         key: 'id',
@@ -130,15 +124,12 @@
                         }
                     }
                 ],
-                currentPosition: 0,
                 searchData: {
                 },
                 data: [],
                 total: 0,
-                modal2: false,
                 isTrueAddTag: false,
                 isTrueEdit:false,
-                modal_loading: false,
                 isAddTagLoading: true,
                 addPlanModal: {
                     planName: '',
@@ -146,8 +137,6 @@
                 editPlanModal: {
                     id:'',
                     planName: '',
-                },
-                updateCahnnelValue: {
                 },
                 planRuleValidate: {
                     planName: [{ required: true, message: '计划名称不能为空', trigger: 'blur' }],
@@ -158,18 +147,10 @@
             };
         },
         methods: {
-            addModal() {
-                this.$router.push({
-                    name: 'formtemplate', query: {positionId: this.currentPosition}
-                });
-            },
             init() {
-                adapi.panList().then(response => {
-                    console.log(response);
+                adapi.panList(this.searchData).then(response => {
                     this.data = response.data.data;
                     this.total = response.data.count;
-                   // this.stationList = response.data.data;
-                  //  this.searchStationList = response.data.data;
                 });
             },
             addPlanChannel(){
@@ -221,7 +202,10 @@
             handleSearch(){
                 this.init();
             },
-            updateChannel() {
+            handleCancel (name) {
+                this.$refs[name].resetFields();
+                this.searchData.page = 1;
+                this.init();
             },
             pageChange (page) {
                 this.searchData.pageNum = page;
@@ -232,6 +216,7 @@
                 this.init();
             },
             addModeButton(){
+                this.addPlanModal.planName = "";
                 this.isTrueAddTag = true;
             }
         },
