@@ -47,10 +47,7 @@
     <Table border :columns="columblankPage" :data="blankPageListData" :loading="searchLoading"></Table>
     <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
 
-    <Modal
-            v-model="showPlan"
-            title="选择创意" scrollable
-            >
+    <Modal v-model="showPlan" title="选择创意" scrollable width="850">
         <planselector></planselector>
         <span slot="footer"></span>
     </Modal>

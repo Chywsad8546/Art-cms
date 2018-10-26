@@ -7,13 +7,12 @@
                 <Form  ref="searchData"  inline :label-width="120">
 
                     <FormItem label="计划名称" >
-                        <Select v-model="planid"  style="width:300px">
+                        <Select v-model="planid"  style="width:300px" @on-change="selectchange">
                             <Option v-for="item in plans" :value="item.id" :key="item.id">{{ item.planName }}</Option>
                         </Select>
                     </FormItem>
 
                 </Form>
-
                 <Table border :columns="columns" :data="data"></Table>
                 <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
             </Row>
@@ -22,38 +21,46 @@
     </Row>
 </template>
 <script>
+    import ideaApi from '../../api/advertisement/ideaList.js';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     import adapi from '../../api/advertisement/ad.js';
-    import api from '../../api/advertisement/formtemplateApi.js';
     export default {
         data() {
             return {
-                plans:[],
-                planid:'',
+                plans: [],
+                planid: '',
                 columns: [
                     {
-                        key: 'id',
-                        title: '计划id',
+                        key: 'pageName',
+                        title: '频道',
                         width: 100
                     },
                     {
-                        key: 'planName',
-                        title: '计划名字'
+                        key: 'adName',
+                        title: '创意名称',
+                        width: 200
                     },
                     {
-                        key: 'ideaCount',
-                        title: '创意总数'
+                        title: '排期状态',
+                        key: 'pushType',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.paiqiZhuangtai === 0) {
+                                return h('div', ['未排期']);
+                            } else if (params.row.paiqiZhuangtai === 1) {
+                                return h('div', ['已排期']);
+                            }
+                        }
                     },
                     {
-                        key: 'zhanShiCount',
-                        title: '展示数'
-                    },
-                    {
-                        title: '排期数',
-                        key: 'paiQiCount'
+                        title: '广告商',
+                        key: 'adCompany'
                     },
                     {
                         title: '管理',
                         key: 'action',
+                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -71,29 +78,9 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'planDetail', query: {planid: params.row.id}
+                                                    name: 'ad_redirect',
+                                                    query: {id: params.row.ideaCode}
                                                 });
-                                            }
-                                        }
-                                    },
-                                    '详情'
-                                ),
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.isTrueEdit = true;
-                                                this.editPlanModal.id = params.row.id;
-                                                this.editPlanModal.planName = params.row.planName;
-                                                // this.editPlan(params.row.id);
                                             }
                                         }
                                     },
@@ -104,98 +91,38 @@
                     }
                 ],
                 searchData: {
+                    page: 1,
+                    limit: 5,
+                    planId: ''
                 },
                 data: [],
-                total: 0,
-                isTrueAddTag: false,
-                isTrueEdit:false,
-                isAddTagLoading: true,
-                addPlanModal: {
-                    planName: '',
-                },
-                editPlanModal: {
-                    id:'',
-                    planName: '',
-                },
-                planRuleValidate: {
-                    planName: [{ required: true, message: '计划名称不能为空', trigger: 'blur' }],
-                },
-                planEditValidate: {
-                    planName: [{ required: true, message: '计划名称不能为空', trigger: 'blur' }],
-                }
+                total: 0
             };
         },
         methods: {
             init() {
-                adapi.panList(this.searchData).then(response => {
+                // this.searchData.planId = this.plandetail.planid;
+                adapi.panList({}).then(response => {
                     this.plans = response.data.data;
                 });
-            },
-            addPlanChannel(){
-                this.$refs['addPlanModalform'].validate((valid) => {
-                    if (valid) {
-                        adapi.addPlan(this.addPlanModal).then(response => {
-                            this.$Message.success('添加成功');
-                            this.isTrueAddTag = false;
-                            this.isAddTagLoading=false;
-                            this.$nextTick(()=>{
-                                this.isAddTagLoading=true;
-                            });
-                            this.init();
-                        }).catch(error => {
-                            this.$Message.error(error.response.data.msg);
-                        });
-                    }else{
-                        this.isAddTagLoading=false;
-                        this.$nextTick(()=>{
-                            this.isAddTagLoading=true;
-                        });
-                        this.$Message.error('表单验证失败!');
-                    }
-                });
-            },
-            eidtPlanChannel(){
-                this.$refs['editPlanModalform'].validate((valid) => {
-                    if (valid) {
-                        adapi.editPlan(this.editPlanModal).then(response => {
-                            this.$Message.success('添加成功');
-                            this.isTrueEdit = false;
-                            this.isAddTagLoading=false;
-                            this.$nextTick(()=>{
-                                this.isAddTagLoading=true;
-                            });
-                            this.init();
-                        }).catch(error => {
-                            this.$Message.error(error.response.data.msg);
-                        });
-                    }else{
-                        this.isAddTagLoading=false;
-                        this.$nextTick(()=>{
-                            this.isAddTagLoading=true;
-                        });
-                        this.$Message.error('表单验证失败!');
-                    }
-                });
-            },
-            handleSearch(){
-                this.init();
-            },
-            handleCancel (name) {
-                this.$refs[name].resetFields();
-                this.searchData.page = 1;
-                this.init();
+
             },
             pageChange (page) {
-                this.searchData.pageNum = page;
+                this.searchData.page = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.pageSize = size;
+                this.searchData.limit = size;
                 this.init();
             },
-            addModeButton(){
-                this.addPlanModal.planName = "";
-                this.isTrueAddTag = true;
+            selectchange(id){
+                this.searchData.planId = id;
+                console.log(id)
+                //positionId:
+                ideaApi.ideaList(this.searchData).then(response => {
+                    this.total = response.data.count;
+                    this.data = response.data.data;
+                });
             }
         },
         created() {
