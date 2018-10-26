@@ -208,6 +208,7 @@
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
+                                this.isTrueAddTag = false;
                             } else {
                                 this.$Message.error('已存在，添加失败');
                             }

@@ -534,6 +534,7 @@ import { setTimeout } from 'timers';
                             return false;
                         }
                         this.formItem.form = JSON.stringify(this.confs);
+                        console.log(this.formItem);
                         api.addTemplate(this.formItem).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
