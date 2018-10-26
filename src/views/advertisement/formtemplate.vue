@@ -68,16 +68,16 @@
                                         </RadioGroup>
                                         <Form ref="formAdd" :rules="rulebdInsert" :model="formAdd" :label-width="80">
                                             <FormItem label="name"  prop="name">
-                                                <Input type="text"  v-model="formAdd.name" placeholder="请输入name"></Input>                           
-                                            </FormItem>                       
+                                                <Input type="text"  v-model="formAdd.name" placeholder="请输入name"></Input>
+                                            </FormItem>
                                             <FormItem label="label"  prop="label">
-                                                <Input type="text" v-model="formAdd.label" placeholder="请输入label"></Input>                           
+                                                <Input type="text" v-model="formAdd.label" placeholder="请输入label"></Input>
                                             </FormItem>
                                             <FormItem label="default"  prop="default">
-                                                <Input type="text" v-model="formAdd.default" placeholder="请输入default"></Input>                           
+                                                <Input type="text" v-model="formAdd.default" placeholder="请输入default"></Input>
                                             </FormItem>
                                             <FormItem label="正则"  prop="reg" v-if="inputType == 'input'">
-                                                <Input type="text" v-model="formAdd.reg" placeholder="请输入正则"></Input>                           
+                                                <Input type="text" v-model="formAdd.reg" placeholder="请输入正则"></Input>
                                             </FormItem>
                                             <FormItem label="是否必填">
                                                 <i-switch v-model="formAdd.required" size="large">
@@ -86,7 +86,7 @@
                                                 </i-switch>
                                             </FormItem>
                                             <FormItem label="提示文字"  prop="message" v-if="inputType == 'input'">
-                                                <Input type="text"  v-model="formAdd.message" placeholder="校验提示文字"></Input>                        
+                                                <Input type="text"  v-model="formAdd.message" placeholder="校验提示文字"></Input>
                                             </FormItem>
                                             <FormItem label="options" prop="options" v-if="inputType == 'select'">
                                                 <Input v-model="formAdd.options" type="textarea" class="optionsHeight" placeholder="每行一个select回车换行"></Input>
@@ -155,7 +155,7 @@
                                 </Row>
                         </Card>
                             </Col>
-                        </Row>  
+                        </Row>
         </div>
           <div v-if="seniorEditor" class="editorContent" style="padding-top:10px; padding-bottom:10px;">
             <!-- </TabPane>
@@ -168,20 +168,20 @@
                      {{positionName}}
                         <!-- <Row>
                             <Col span="7">
-                                <FormItem prop="station">                  
+                                <FormItem prop="station">
                                     <Select v-model="senior.stationId" style="width:100px" @on-change = "seniorZdClick">
                                         <Option v-for="item in zhandianList" :value="item.stationId" :key="item.stationId">{{ item.stationName }}</Option>
                                     </Select>
-                                </FormItem>                                        
+                                </FormItem>
                             </Col>
-                            <Col span="7">                  
+                            <Col span="7">
                                 <FormItem prop="pageName">
                                     <Select v-model="senior.pageName" style="width:100px"  @on-change = "seniorPdClick">
                                         <Option v-for="item in seniorPdList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
-                            <Col span="7">                  
+                            <Col span="7">
                                 <FormItem prop="positionId">
                                     <Select v-model="senior.positionId" style="width:100px">
                                         <Option v-for="item in seniorWzList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
@@ -189,7 +189,7 @@
                                 </FormItem>
                             </Col>
                         </Row> -->
-                </FormItem> 
+                </FormItem>
                 <FormItem label="路由" prop="form" class="seniorClass">
                     <Select v-model="senior.form" placeholder="请选择路由">
                          <Option v-for="item in editorRouterList" :value="item.name" :key="item.name">{{ item.title }}</Option>
@@ -205,7 +205,7 @@
         </div>
         <!-- </TabPane>
     </Tabs> -->
-    
+
 </div>
 </template>
 
@@ -401,14 +401,14 @@ import { setTimeout } from 'timers';
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
-                    
+
                     this.zhandianList = response.data.data;
                     this.zhandianList.forEach(item=>{
                       item.stationId = item.stationId+'';
                     });
                     // console.log(this.zhandianList);
                 });
-                
+
 
             },
             adListAll() {

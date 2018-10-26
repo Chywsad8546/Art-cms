@@ -49,6 +49,16 @@ export const otherRouter = {
             component: () =>
                 import('@/views/systemManage/sysManage/assignPermissions.vue')
         },
+        {
+            path: 'planDetail',
+            name: 'planDetail',
+            title: '编辑器维护',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/advertisement/planDetail.vue')
+        },
 
     ]
 };

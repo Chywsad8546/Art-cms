@@ -92,7 +92,7 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'planDetail', query: {planid: params.row.id}
+                                                    name: 'planDetail', query: {planid: params.row.id, ideaCount: params.row.ideaCount, paiQiCount: params.row.paiQiCount, zhanShiCount: params.row.zhanShiCount}
                                                 });
                                             }
                                         }
@@ -157,8 +157,8 @@
                 this.$refs['addPlanModalform'].validate((valid) => {
                     if (valid) {
                         adapi.addPlan(this.addPlanModal).then(response => {
-                            this.$Message.success('添加成功');    
-                            this.isTrueAddTag = false;                   
+                            this.$Message.success('添加成功');
+                            this.isTrueAddTag = false;
                             this.isAddTagLoading=false;
                             this.$nextTick(()=>{
                                 this.isAddTagLoading=true;
@@ -180,8 +180,8 @@
                  this.$refs['editPlanModalform'].validate((valid) => {
                     if (valid) {
                         adapi.editPlan(this.editPlanModal).then(response => {
-                            this.$Message.success('添加成功');    
-                            this.isTrueEdit = false;                   
+                            this.$Message.success('添加成功');
+                            this.isTrueEdit = false;
                             this.isAddTagLoading=false;
                             this.$nextTick(()=>{
                                 this.isAddTagLoading=true;
@@ -197,7 +197,7 @@
                         });
                         this.$Message.error('表单验证失败!');
                     }
-                });               
+                });
             },
             handleSearch(){
                 this.init();

@@ -119,30 +119,28 @@
                 this.init();
             },
             handleCancel (name) {
+                this.weizhiList = [];
+                this.pingdaoList = [];
                 this.$refs[name].resetFields();
                 this.searchData.page = 1;
                 this.init();
             },
             pdClick() {
-                console.log(this.searchData)
+                //console.log(this.searchData);
                 if (typeof this.searchData.pageId !== 'undefined') {
-                    api.getPositionInfo(this.searchData).then(response => {
+                    api.getPositionInfo({pageId: this.searchData.pageId}).then(response => {
                         this.weizhiList = response.data.data;
                     });
                 }
             },
             zdClick() {
-                console.log(this.searchData)
                 if (typeof this.searchData.station !== 'undefined') {
-                    api.getChannelInfo(this.searchData).then(response => {
+                    api.getChannelInfo({station: this.searchData.station}).then(response => {
                         this.pingdaoList = response.data.data;
                     });
                 }
             },
             init() {
-                this.weizhiList = [];
-                this.pingdaoList = [];
-                this.zhandianList = [];
                 adapi.getAllStation({isDel: 0}).then(response => {
                     this.zhandianList = response.data.data;
                 });
