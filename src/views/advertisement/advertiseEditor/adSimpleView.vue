@@ -155,7 +155,8 @@
 
                 this.$refs['commonForm'].validate((commvalid) => {
                     this.$refs['form'].validate((valid) => {
-                        if (commvalid && valid && uploadvalid) {
+                        if (commvalid && valid && uploadvalid) {      
+                            var that = this;                
                             if (this.$route.query.id) {
                                 ad.editIdea({
                                     idcode: this.$route.query.id,
@@ -176,8 +177,12 @@
                                     positionId: this.positionId,
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
-                                    adResource: this.adResource
+                                    adResource: this.adResource,
+                                    planId:this.$route.query.planId
                                 }).then(function (res) {
+                                    that.$router.push({
+                                        name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
+                                    });
                                     // todo 跳回到列表页
                                     // this.$router.push({});
                                 });
