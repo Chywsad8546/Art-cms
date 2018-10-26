@@ -42,6 +42,16 @@ export default {
             params: params
         });
     },
+    /**
+     * 获取一批广告位在某个时间段内的排期
+     * @param params
+     * @returns {AxiosPromise<any>}
+     */
+    getPaiqiList(params) {
+        return http.get('/cmsapi/getSchedulingByPositionId', {
+            params: params
+        });
+    },
     getAdPositionInfo(params) {
         return http.get('/cmsapi/getAdPositionInfo', {
             params: params

@@ -118,7 +118,7 @@ export const appRouter = [
             {
                 path: 'stationManagement',
                 name: 'stationManagement',
-                title: '站点管理',
+                title: '应用管理',
                 // meta: {
                 //     keepalive: true
                 // },
