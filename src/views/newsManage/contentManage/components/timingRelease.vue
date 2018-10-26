@@ -71,13 +71,15 @@
                 let callBackTime = this.stryear+"-"+this.dateCallValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
                 let dateInput = dutil.stringToDate(callBackTime);
                 let dateNow = new Date();
+                var min=dateNow.getMinutes();
+                dateNow.setMinutes(min + 5);
                 //console.log(dateInput.getTime() , dateNow.getTime())
                 if (dateInput.getTime() > dateNow.getTime()){
                     this.$emit("confirm-event",callBackTime);
                 }else {
                     this.$Modal.error({
                         title: '',
-                        content: "输入时间必须大于当前时间！"
+                        content: "输入时间必须在当前时间五分钟后！"
                     });
                 }
             },

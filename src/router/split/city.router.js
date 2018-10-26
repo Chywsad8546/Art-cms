@@ -7,6 +7,23 @@ export const otherRouter = {
     component: Main,
     children: [
         {
+            path: 'formtemplate',
+            name: 'formtemplate',
+            title: '编辑器维护',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/advertisement/formtemplate.vue')
+        },
+        {
+            path: 'ad/redirect',
+            title: '广告中间页',
+            name: 'ad_redirect',
+            component: () =>
+                import('@/views/advertisement/advertiseEditor/adRedirect.vue')
+        },
+        {
             path: 'ad/addetail',
             title: '广告详情',
             name: 'ad_addetail',
@@ -14,14 +31,12 @@ export const otherRouter = {
                 import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
         },
         {
-            path: 'ad/addsenioretail',
+            path: 'ad/positionEdit',
             title: '广告详情',
-            name: 'ad_addsenioretail',
+            name: 'positionEdit',
             component: () =>
-                import('@/views/advertisement/advertiseEditor/adSeniorView.vue')
+                import('@/views/advertisement/positionEdit.vue')
         },
-
-
         // 系统管理：权限管理
         {
             path: 'sysManage/assignPermissions',
@@ -33,6 +48,16 @@ export const otherRouter = {
             },
             component: () =>
                 import('@/views/systemManage/sysManage/assignPermissions.vue')
+        },
+        {
+            path: 'planDetail',
+            name: 'planDetail',
+            title: '编辑器维护',
+            // meta: {
+            //     requireAuth: true
+            // },
+            component: () =>
+                import('@/views/advertisement/planDetail.vue')
         },
 
     ]
@@ -123,37 +148,22 @@ export const appRouter = [
             {
                 path: 'positionManagement',
                 name: 'positionManagement',
-                title: '位置管理',
-                // meta: {
-                //     keepalive: true
-                // },
+                title: '广告位管理',
                 component: () =>
                     import('@/views/advertisement/positionManagement.vue')
             },
             {
-            path: 'yihaoyuan',
-            name: 'yihaoyuan',
-            title: '北京壹号院',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-                path: 'formtemplate',
-                name: 'formtemplate',
-                title: '模板添加',
-                // meta: {
-                //     requireAuth: true
-                // },
+                path: 'positionPlan',
+                name: 'positionPlan',
+                title: '广告计划',
                 component: () =>
-                    import('@/views/advertisement/formtemplate.vue')
-        },
+                    import('@/views/advertisement/positionPlan.vue')
+            },
+
         {
                 path: 'templateList',
                 name: 'templateList',
-                title: '模板列表',
+                title: '编辑器管理',
                 // meta: {
                 //     requireAuth: true
                 // },
@@ -163,63 +173,26 @@ export const appRouter = [
         {
             path: 'guanggapwei',
             name: 'guanggapwei',
-            title: '广告位',
+            title: '广告位排期管理',
             // meta: {
             //     keepalive: true
             // },
             component: () =>
-                import('@/views/error-page/blankPage.vue')
+                import('@/views/advertisement/blankPage.vue')
         },
         {
             path: 'ideaList',
             name: 'ideaList',
-            title: '创意列表',
+            title: '创意管理',
             // meta: {
             //     keepalive: true
             // },
             component: () =>
                 import('@/views/advertisement/ideaNewsList.vue')
         },
-        {
-            path: 'guanggaoyonghuliebiao',
-            name: 'guanggaoyonghuliebiao',
-            title: '广告用户列表',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-            path: 'manyplotad',
-            name: 'manyplotad',
-            title: '多楼盘广告配置',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-            path: 'manyplotadlist',
-            name: 'manyplotadlist',
-            title: '多楼盘广告',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
-        {
-            path: 'openscreenpage',
-            name: 'openscreenpage',
-            title: 'APP开屏广告',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/error-page/blankPage.vue')
-        },
+
+
+
         {
             path: 'openscreenpagelist',
             name: 'openscreenpagelist',
@@ -276,6 +249,10 @@ export const appRouter = [
                         name: 'button_pushArticle',
                         title: '发布权限'
                     },
+                    {
+                        name: 'button_appPreview',
+                        title: '预览权限'
+                    },
                 ]
             },{
             path: 'releaseArticle',
@@ -307,6 +284,25 @@ export const appRouter = [
             component: () =>
                 import('@/views/newsManage/contentManage/videoArticleAdd.vue')
         },
+            {
+                path: 'channelDictionary',
+                name: 'channelDictionary',
+                title: '栏目字典',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/dictionary/channelDictionary.vue')
+            },{
+                path: 'tagDictionary',
+                name: 'tagDictionary',
+                title: '标签字典',
+                // meta: {
+                //     requireAuth: true
+                // },
+                component: () =>
+                    import('@/views/dictionary/tagDictionary.vue')
+            }
         // {
         //     path: 'chuangyibiao',
         //     name: 'chuangyibiao',
@@ -396,35 +392,8 @@ export const appRouter = [
         //     // },
         ]
     },
-    //字典管理
-    {
-        path: '/dictionary',
-        icon: 'social-buffer',
-        name: 'dictionary',
-        title: '字典管理',
-        component: Main,
-        children: [{
-            path: 'channelDictionary',
-            name: 'channelDictionary',
-            title: '栏目字典',
-            // meta: {
-            //     requireAuth: true
-            // },
-            component: () =>
-                import('@/views/dictionary/channelDictionary.vue')
-        },{
-            path: 'tagDictionary',
-            name: 'tagDictionary',
-            title: '标签字典',
-            // meta: {
-            //     requireAuth: true
-            // },
-            component: () =>
-                import('@/views/dictionary/tagDictionary.vue')
-        }
-        ]
-    },
-    //系统管理
+
+    //遗留功能
     {
         path: '/systemManage',
         icon: 'social-buffer',
@@ -450,9 +419,69 @@ export const appRouter = [
                 // },
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
-            }
+            },
+            {
+                path: 'manyplotadlist',
+                name: 'manyplotadlist',
+                title: '多楼盘广告',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            // {
+            //     path: 'openscreenpage',
+            //     name: 'openscreenpage',
+            //     title: 'APP开屏广告',
+            //     // meta: {
+            //     //     keepalive: true
+            //     // },
+            //     component: () =>
+            //         import('@/views/error-page/blankPage.vue')
+            // },
         ]
-    }
+    },
+    {
+        path: '/nouse',
+        icon: 'social-buffer',
+        name: 'nouse',
+        title: '遗留功能',
+        component: Main,
+        children: [
+
+            {
+                path: 'yihaoyuan',
+                name: 'yihaoyuan',
+                title: '北京壹号院',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            {
+                path: 'guanggaoyonghuliebiao',
+                name: 'guanggaoyonghuliebiao',
+                title: '广告用户列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            {
+                path: 'manyplotad',
+                name: 'manyplotad',
+                title: '多楼盘广告配置',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+        ]
+    },
     // {
     //     path: '/cityManageSystem',    5
     //     icon: 'lock-combination',

@@ -2,14 +2,20 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">创意管理</p>
+                <p slot="title">计划详情</p>
+                <Card>
+                    <p slot="title">计划Id: {{plandetail.planid}}</p>
+                    <p>计划名称: {{plandetail.planName}}</p>
+                    <p>创意数量：{{plandetail.ideaCount}}</p>
+                    <p>展示数量：{{plandetail.zhanShiCount}}</p>
+                </Card>
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-               <!--         <FormItem label="消息标题" prop="title">
-                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
-                        </FormItem>
--->
+                        <!--         <FormItem label="消息标题" prop="title">
+                                     <Input v-model.trim="searchData.title" style="width:140px"></Input>
+                                 </FormItem>
+         -->
 
                         <FormItem label="选择站点" prop="station">
                             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
@@ -54,9 +60,7 @@
                             <Select v-model="searchData.ZhanshiZhuangtai" style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option value="1">展示</Option>
-                                <Option value="2">缺省/已展示</Option>
-                                <Option value="3">缺省/未展示</Option>
-                                <Option value="4">未调用</Option>
+                                <Option value="0">未展示</Option>
                             </Select>
                         </FormItem>
                         <FormItem>
@@ -78,25 +82,25 @@
         <Modal v-model="isTrueAddTag" width="1000" @on-ok="addIdeaNews">
             <Form  ref="addNewsChannelModalform" :model="addIdeaNewsModal" inline :label-width="120">
                 <FormItem label="站点">
-                <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
-                    <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
-                </Select>
+                    <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
+                        <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                    </Select>
                 </FormItem>
-                    <FormItem label="页面">
-                <Select v-model="pdmode.pageId" style="width:100px"  @on-change = "adpdClick">
-                    <Option v-for="item in adpingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
-                </Select>
-                    </FormItem>
+                <FormItem label="页面">
+                    <Select v-model="pdmode.pageId" style="width:100px"  @on-change = "adpdClick">
+                        <Option v-for="item in adpingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+                    </Select>
+                </FormItem>
                 <FormItem label="位置" prop="bjq">
-                <Select v-model="addIdeaNewsModal.positionId" style="width:100px" @on-change = "getBjqList">
-                    <Option v-for="item in adweizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
-                </Select>
+                    <Select v-model="addIdeaNewsModal.positionId" style="width:100px" @on-change = "getBjqList">
+                        <Option v-for="item in adweizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
+                    </Select>
                 </FormItem>
-                           <FormItem label="编辑器" prop="bjq">
-                                <Select v-model="addIdeaNewsModal.bjq" style="width:140px">
-                                    <Option v-for="item in bjqList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                                </Select>
-                            </FormItem>
+                <FormItem label="编辑器" prop="bjq">
+                    <Select v-model="addIdeaNewsModal.bjq" style="width:140px">
+                        <Option v-for="item in bjqList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </FormItem>
             </Form>
         </Modal>
     </Row>
@@ -134,10 +138,6 @@
                         title: '创意名称'
                     },
                     {
-                        key: 'modifyAt',
-                        title: '最后更新'
-                    },
-                    {
                         title: '展示状态',
                         key: 'zhanshiZhuangtai',
                         width: 130,
@@ -145,12 +145,8 @@
                         render: (h, params) => {
                             if (params.row.zhanshiZhuangtai === 1) {
                                 return h('div', ['展示']);
-                            } else if (params.row.zhanshiZhuangtai === 2) {
-                                return h('div', ['缺省/已展示']);
-                            } else if (params.row.zhanshiZhuangtai === 3) {
-                                return h('div', ['缺省/未展示']);
-                            } else if (params.row.zhanshiZhuangtai === 4) {
-                                return h('div', ['未调用']);
+                            } else if (params.row.zhanshiZhuangtai === 0) {
+                                return h('div', ['未展示']);
                             }
                         }
                     },
@@ -160,9 +156,9 @@
                         width: 130,
                         align: 'center',
                         render: (h, params) => {
-                            if (params.row.paiqiZhuangtai == 0) {
+                            if (params.row.paiqiZhuangtai === 0) {
                                 return h('div', ['未排期']);
-                            } else if (params.row.paiqiZhuangtai == 1) {
+                            } else if (params.row.paiqiZhuangtai === 1) {
                                 return h('div', ['已排期']);
                             }
                         }
@@ -208,14 +204,27 @@
                     page: 1,
                     limit: 10,
                     stationId: '',
-                    pageName: ''
+                    pageName: '',
+                    planId:'',
                 },
                 data: [],
-                total: 0
+                total: 0,
+                plandetail: {
+                    planid: this.$route.query.planid,
+                    ideaCount: this.$route.query.ideaCount,
+                    paiQiCount: this.$route.query.paiQiCount,
+                    zhanShiCount: this.$route.query.zhanShiCount,
+                    planName: '',
+                }
             };
         },
         methods: {
             init() {
+                this.searchData.planId = this.plandetail.planid;
+                fapi.planDetails({id: this.plandetail.planid}).then(response => {
+                    this.plandetail.id = response.data.data.id;
+                    this.plandetail.planName = response.data.data.planName;
+                });
                 ideaApi.ideaList(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
@@ -227,7 +236,6 @@
                 });
             },
             handleSearch () {
-                console.log(this.pdmode, this.zdmode);
                 this.searchData.page = 1;
                 if (typeof this.searchData.startTime !== 'string') {
                     this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
@@ -243,7 +251,7 @@
                 this.init();
             },
             pdClick() {
-                console.log(this.searchData)
+                console.log(this.searchData);
                 if (typeof this.searchData.pageName !== 'undefined') {
                     fapi.getPositionInfo(this.searchData).then(response => {
                         this.weizhiList = response.data.data;
@@ -251,7 +259,7 @@
                 }
             },
             zdClick() {
-                console.log(this.searchData)
+                console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
                     fapi.getChannelInfo(this.searchData).then(response => {
                         this.pingdaoList = response.data.data;

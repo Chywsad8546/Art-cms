@@ -1,12 +1,12 @@
 import http from '../api.base';
 export default {
-    //添加模板api
+    // 添加模板api
     addTemplate(params) {
         return http.post('/cmsapi/addTemplate', params);
     },
     getTemplate(id) {
         return http.get('/cmsapi/getIdeaTypeData', {
-            params: {id:id}
+            params: {id: id}
         });
     },
     getStationInfo(params) {
@@ -36,7 +36,7 @@ export default {
         return http.get('/cmsapi/getIdeaTypeData', {
             params: params
         });
-    }, 
+    },
     adListAll(params) {
         return http.get('/cmsapi/adListAll', {
             params: params
@@ -62,5 +62,10 @@ export default {
         return http.get('/cmsapi/exportExl', {
             params: params
         });
+    },
+    // 计划详情/cmsapi/planDetails
+    planDetails(params) {
+        return http.get('/cmsapi/planDetails', {params: params
+        });
     }
-}
+};

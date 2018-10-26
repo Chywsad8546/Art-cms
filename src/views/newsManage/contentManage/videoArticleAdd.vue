@@ -4,8 +4,11 @@
         <div class="articleTitle">上传视频</div>
     </div>
     <Form :model="form" :rules="ruleValidate" :label-width="80">
-        <FormItem label="标题" prop="title">
+        <FormItem label="标题" prop="title" style="margin-bottom:0px;">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
+        <FormItem >
+            <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
         </FormItem>
         <FormItem label="视频简介">
             <Input v-model="form.content.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入视频简介"></Input>
@@ -79,7 +82,7 @@
             <Tabs type="card">
                 <TabPane label="WEB预览">
                     <div style="text-align:center">
-                        <p class="qrcode" id="qrcode"></p>
+                        <p class="qrcode" id="qrcode3"></p>
                     </div>
                 </TabPane>
                 <TabPane label="APP预览">
@@ -285,7 +288,7 @@
             handleFormatError (file) {
                 this.$Notice.warning({
                     title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+                    desc: '文件 ' + file.name + ' 格式不正确，请上传 mp4,rm,rmvb,wma,avi 格式的视频。'
                 });
             },
             parEvent(data) {
@@ -394,10 +397,16 @@
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
+                this.form.showTags = [];
+                this.form.showTagsName = [];
                 let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
                     data[key].forEach(item=> {
+                        if(key != "1" && key != "2"&& key != "3"&& key != "6"){
+                          this.form.showTags.push(item.value);
+                          this.form.showTagsName.push(item.label);
+                        }
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         this.tagsJson[key].push(item.value);
@@ -472,11 +481,11 @@
                             title: "请选择播放模式"
                         });
                     }
-                    document.getElementById("qrcode").innerHTML = "";
+                    document.getElementById("qrcode3").innerHTML = "";
                     this.qrcode(url);
             },
             qrcode (url) {
-                let qrcode = new QRCode('qrcode', {
+                let qrcode = new QRCode('qrcode3', {
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容

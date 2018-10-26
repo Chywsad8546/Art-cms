@@ -3,7 +3,7 @@
         <div class="roomContiner">
             <div class="room">房产类型:</div>
             <div class="roomSelect">
-                <Select  v-model="modelhouse" style="width:100px" :label-in-value = "true" @on-change = "houseSelectFun">
+                <Select  v-model="modelhouse" clearable style="width:100px" :label-in-value = "true" @on-change = "houseSelectFun">
                     <Option v-for="item in houseTypeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </div> 
@@ -11,7 +11,7 @@
                 城市:
             </div>
             <div class="roomSelect">
-                <Select  style="width:100px" v-model="modelCity" :label-in-value = "true" @on-change = "citySelectFun">
+                <Select  style="width:100px" v-model="modelCity" clearable :label-in-value = "true" @on-change = "citySelectFun">
                     <Option v-for="item in cityChoiceList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </div>
@@ -19,7 +19,7 @@
                 区县:
             </div>
             <div class="roomSelect">
-                <Select style="width:100px" v-model="modelCounty" :label-in-value = "true" @on-change = "districtSelectFun">
+                <Select style="width:100px" v-model="modelCounty" clearable :label-in-value = "true" @on-change = "districtSelectFun">
                     <Option v-for="item in districtList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
             </div>
@@ -123,17 +123,19 @@
                 this.$emit("labelArr-event",this.labelCallArr);
             },
             citySelectFun(obj) {
-                this.districtList = [];
-                let city = this.cityList[1].data;
-                city.forEach((item, index) =>{
-                    if(item.id == obj.value){
-                        this.districtList = item.districtList;
-                    }                 
-                });
-                this.modelCounty = "";
                 this.callbackArr2 = [];
-                let arr = {"value":obj.value,"label":obj.label};
-                this.callbackArr2.push(arr);
+                if(obj != undefined){
+                    this.districtList = [];
+                    let city = this.cityList[1].data;
+                    city.forEach((item, index) =>{
+                        if(item.id == obj.value){
+                            this.districtList = item.districtList;
+                        }                 
+                    });
+                    this.modelCounty = "";
+                    let arr = {"value":obj.value,"label":obj.label};
+                    this.callbackArr2.push(arr);
+                }
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
                 this.callBackJson["3"] = this.callbackArr3;
@@ -145,9 +147,10 @@
             },
             houseSelectFun(obj){
                 this.callbackArr1 = [];
-                let arr = {"value":obj.value,"label":obj.label};
-                this.callbackArr1.push(arr);
-               
+                if(obj != undefined){
+                    let arr = {"value":obj.value,"label":obj.label};
+                    this.callbackArr1.push(arr);
+                }
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
                 this.callBackJson["3"] = this.callbackArr3;
@@ -157,20 +160,20 @@
                 this.callBackJson["7"] = this.callbackArr7;
                 this.$emit("labelArr-event",this.callBackJson);             
             },
-            districtSelectFun(obj){              
+            districtSelectFun(obj){      
+                this.callbackArr3 = [];        
                 if(obj != undefined){
-                    this.callbackArr3 = [];
                     let arr = {"value":obj.value,"label":obj.label};
                     this.callbackArr3.push(arr);
-                    this.callBackJson["1"] = this.callbackArr1;
-                    this.callBackJson["2"] = this.callbackArr2;
-                    this.callBackJson["3"] = this.callbackArr3;
-                    this.callBackJson["4"] = this.callbackArr4;
-                    this.callBackJson["5"] = this.callbackArr5;
-                    this.callBackJson["6"] = this.callbackArr6;
-                    this.callBackJson["7"] = this.callbackArr7;
-                    this.$emit("labelArr-event",this.callBackJson);
                 }
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);               
             },
             fqSelectFun(cid){
                 this.callbackArr4 = [];

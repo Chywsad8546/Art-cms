@@ -39,7 +39,7 @@ export default {
 
     // 获取所有站点
     getAllStation(params) {
-        return http.post('/cmsapi/getAllStation', params);
+        return http.get('/cmsapi/getStationInfo', {params: params});
     },
     // 添加站点
     addStation(params) {
@@ -49,9 +49,9 @@ export default {
     updateStation(params) {
         return http.post('/cmsapi/updateStation', params);
     },
-    // 获取所栏目
+    // 获取所有频道
     getAllPage(params) {
-        return http.post('/cmsapi/getAllPage', params);
+        return http.get('/cmsapi/getChannelInfo', {params: params});
     },
     // 添加栏目
     addPage(params) {
@@ -68,5 +68,19 @@ export default {
     // 修改位置/cmsapi/updatePosition
     updatePosition(params) {
         return http.post('/cmsapi/updatePosition', params);
-    }
+    },
+    //添加广告计划
+    addPlan(params) {
+        return http.post('/cmsapi/addPlan', params);
+    },
+    //修改广告计划
+    editPlan(params) {
+        return http.post('/cmsapi/editPlan', params);
+    },
+    panList(params) {
+        return http.get('/cmsapi/panList', {params: params});
+    },
+    editStatus(params) {
+        return http.post('/cmsapi/editStatus', params);
+    },
 };

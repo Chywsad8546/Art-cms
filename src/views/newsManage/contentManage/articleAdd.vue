@@ -3,8 +3,11 @@
         <Form ref="formInline" :model="form" :rules="ruleValidate" :label-width="80">
         <div class="publictop">
             <div class="articleTitle">发表文章</div>
-            <FormItem label="标题" prop="title">
+            <FormItem label="标题" prop="title" style="margin-bottom:0px;">
                 <Input v-model="form.title" placeholder="请输入标题"></Input>
+            </FormItem>
+            <FormItem >
+                <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
             </FormItem>
             <FormItem label="内容">
                 <quill-editor v-model="form.content"
@@ -153,7 +156,7 @@
         <Tabs type="card">
             <TabPane label="WEB预览">
                 <div style="text-align:center">
-                    <p class="qrcode" id="qrcode"></p>
+                    <p class="qrcode" id="qrcode1"></p>
                 </div>
             </TabPane>
             <TabPane label="APP预览">
@@ -359,14 +362,20 @@
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
+                this.form.showTags = [];
+                this.form.showTagsName = [];
                 let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
                     data[key].forEach(item=> {
+                        if(key != "1" && key != "2"&& key != "3"&& key != "6"){
+                          this.form.showTags.push(item.value);
+                          this.form.showTagsName.push(item.label);
+                        }
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         //console.log(item);
-                        this.tagsJson[key].push(item.value);
+                        this.tagsJson[key].push(item.value);                   
                     })
                 });
             },
@@ -594,7 +603,7 @@
                         this.previewCancel();
                 });
             },
-            prevResponse(response){
+            prevResponse(response){                  
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;
@@ -602,7 +611,7 @@
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
                     let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    document.getElementById("qrcode").innerHTML = "";
+                    document.getElementById("qrcode1").innerHTML = "";
                     this.qrcode(url);
             },
             previewCancel() {
@@ -615,7 +624,7 @@
                 }
             },
             qrcode (url) {
-                let qrcode = new QRCode('qrcode', {
+                let qrcode = new QRCode('qrcode1', {
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容

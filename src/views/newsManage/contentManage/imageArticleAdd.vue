@@ -4,8 +4,11 @@
     <div class="publictop">
         <div class="articleTitle">发表图集</div>
     <div>
-        <FormItem label="标题" prop="title">
+        <FormItem label="标题" prop="title" style="margin-bottom:0px;">
             <Input v-model="form.title" placeholder="请输入标题"></Input>
+        </FormItem>
+        <FormItem >
+            <div v-if="form.title.length > 0" style="height:10px;width:100%;color:red;">当前标题字数：{{form.title.length}}</div>
         </FormItem>
         <div class="color-list">
         <div
@@ -100,7 +103,7 @@
         <Tabs type="card">
             <TabPane label="WEB预览">
                 <div style="text-align:center">
-                    <p class="qrcode" id="qrcode"></p>
+                    <p class="qrcode" id="qrcode2"></p>
                 </div>
             </TabPane>
             <TabPane label="APP预览">
@@ -409,10 +412,16 @@
             callBacklabelFun(data){
                 this.form.tags = [];
                 this.form.tagsName = [];
+                this.form.showTags = [];
+                this.form.showTagsName = [];
                 let arr = ["1","2","3","4","5","6","7"];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
                     data[key].forEach(item=> {
+                        if(key != "1" && key != "2"&& key != "3"&& key != "6"){
+                          this.form.showTags.push(item.value);
+                          this.form.showTagsName.push(item.label);
+                        }
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         this.tagsJson[key].push(item.value);
@@ -582,11 +591,11 @@
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
                     let url = this.$domain.cityDomainimg+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    document.getElementById("qrcode").innerHTML = "";
+                    document.getElementById("qrcode2").innerHTML = "";
                     this.qrcode(url);
             },
-            qrcode (url) {
-                let qrcode = new QRCode('qrcode', {
+            qrcode (url) {              
+                let qrcode = new QRCode('qrcode2', {
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容

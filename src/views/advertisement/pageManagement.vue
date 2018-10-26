@@ -2,17 +2,23 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">栏目列表管理</p>
+                <p slot="title">栏目管理</p>
+                <a href="#" slot="extra"  @click.prevent="addModeButton" >
+                    <Icon type="plus-circled"></Icon>
+                    添加栏目
+                </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称" prop="stationName">
-                            <Input v-model.trim="searchData.stationName" style="width:140px"></Input>
+                        <FormItem label="应用" prop="station">
+                        <Select v-model="searchData.station" @on-change = "zdClick" style="width:140px">
+                            <Option value="">全部</Option>
+                            <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                        </Select>
                         </FormItem>
-                        <FormItem label="栏目id" prop="pageId">
-                            <Input v-model.trim="searchData.pageId" style="width:140px"></Input>
-                        </FormItem>
-                        <FormItem label="栏目名称" prop="pageName">
-                            <Input v-model.trim="searchData.pageName" style="width:140px"></Input>
+                        <FormItem label="栏目名称" prop="pageId">
+                            <Select v-model="searchData.pageId" style="width:140px">
+                                <Option v-for="item in seratchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+                            </Select>
                         </FormItem>
                         <FormItem label="是否删除" prop="isDel">
                             <Select v-model="searchData.isDel" style="width:140px">
@@ -21,14 +27,14 @@
                                 <Option value="1">是</Option>
                             </Select>
                         </FormItem>
+
+
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="addModeButton">添加</Button>
-                        </FormItem>
+
                     </Form>
 
                     <Table border :columns="columns" :data="data"></Table>
@@ -38,11 +44,11 @@
 
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel(addNewsChannelModal)">
+        <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationName">
-                    <Select v-model="addNewsChannelModal.stationName" style="width:140px">
-                        <Option v-for="item in stationList" :value="item.stationName" :key="item.stationName">{{ item.stationName }}</Option>
+                <FormItem label="站点名称" prop="stationId">
+                    <Select v-model="addNewsChannelModal.stationId" :label-in-value="true" @on-change="sitechange" style="width:140px">
+                        <Option v-for="(item,index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="栏目名称" prop="pageName">
@@ -51,7 +57,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
+        <Modal v-model="modal2" width="360" @on-ok="updateChannel()">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
                 <FormItem label="栏目名称" prop="pageName">
                     <Input v-model.trim="updateCahnnelValue.pageName" style="width:140px"></Input>
@@ -63,6 +69,7 @@
 <script>
     import adapi from '../../api/advertisement/ad.js';
     import api from '../../api/advertisement/openScreen.js';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     import dutil from '../../libs/util.js';
     export default {
         data() {
@@ -73,10 +80,6 @@
                         key: 'pageId',
                         title: '栏目id',
                         width: 100
-                    },
-                    {
-                        key: 'stationName',
-                        title: '站点'
                     },
                     {
                         key: 'pageName',
@@ -98,7 +101,6 @@
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -115,7 +117,6 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.pageId = params.row.pageId;
                                                 if (params.row.isDel === 1) {
                                                     this.updateCahnnelValue.isDel = 0;
@@ -127,7 +128,7 @@
                                             }
                                         }
                                     },
-                                    '是否删除'
+                                    '删除'
                                 ),
                                 h(
                                     'Button',
@@ -141,7 +142,6 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.pageId = params.row.pageId;
                                                 this.updateCahnnelValue.pageName = params.row.pageName;
                                                 i.modal2 = true;
@@ -155,6 +155,10 @@
                     }
                 ],
                 searchData: {
+                    stationName: '',
+                    pageName: '',
+                    isDel: '',
+                    pageId: ''
                 },
                 data: [],
                 total: 0,
@@ -162,32 +166,51 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 addNewsChannelModal: {
+                    stationId: '',
+                    stationName: '',
+                    pageName: ''
                 },
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationName: [{ required: true, message: '站点不能为空', trigger: 'blur' }],
+                    stationId: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }]
                 },
                 updateruleValidate: {
-                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                }
+                    pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
+                },
+                zhandianList: [],
+                seratchPageList: []
             };
         },
         methods: {
+            sitechange(v) {
+                if (v !== undefined) {
+                    this.addNewsChannelModal.stationName = v.label;
+                }
+            },
+            zdClick() {
+                console.log(this.searchData);
+                if (typeof this.searchData.station !== 'undefined') {
+                    fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
+                        this.seratchPageList = response.data.data;
+                    });
+                }
+            },
             addModeButton() {
-                this.addNewsChannelModal = {
-                };
                 this.isTrueAddTag = true;
             },
             init() {
-                adapi.getAllStation({isDel: 0}).then(response => {
-                    this.stationList = response.data.data;
-                });
                 this.addNewsChannelModal = {
+                    stationId: '',
+                    stationName: '',
+                    pageName: ''
                 };
-                this.updateCahnnelValue = {};
-                adapi.getAllPage(this.searchData).then(response => {
+                fapi.getStationInfo({isDel: 0, pageSize: 1000}).then(response => {
+                    this.stationList = response.data.data;
+                    this.zhandianList = response.data.data;
+                });
+                fapi.getChannelInfo(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
                 });
@@ -200,10 +223,13 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
+            addNewsChannel() {
+                // let index = this.addNewsChannelModal.adstationIndex;
+                // this.addNewsChannelModal.stationId = this.stationList[index].pageId;
+                // this.addNewsChannelModal.stationName = this.stationList[index].stationName;
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
-                        adapi.addPage(addChannelValue).then(response => {
+                        adapi.addPage(this.addNewsChannelModal).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('添加成功');
                                 this.init();
@@ -220,16 +246,26 @@
                 });
             },
             delStation() {
-                adapi.updateStation(this.updateCahnnelValue).then(response => {
-                    if (response.data.data > 0) {
-                        this.$Message.success('更改成功！');
-                        this.init();
-                    } else {
-                        this.$Message.error('更改失败！');
+                var delDate = this.updateCahnnelValue;
+                this.$Modal.confirm({
+                    title: '更改删除状态',
+                    content: '<p>是否更改删除状态</p>',
+                    onOk: () => {
+                        console.log(delDate);
+                        adapi.updateStation(delDate).then(response => {
+                            if (response.data.data > 0) {
+                                this.$Message.success('更改成功！');
+                                this.init();
+                            } else {
+                                this.$Message.error('更改失败！');
+                            }
+                        }).catch(error => {
+                            this.$Message.error(error.response.data.msg);
+                            this.init();
+                        });
+                    },
+                    onCancel: () => {
                     }
-                }).catch(error => {
-                    this.$Message.error(error.response.data.msg);
-                    this.init();
                 });
             },
             updateChannel() {
@@ -252,20 +288,21 @@
                 });
             },
             handleSearch () {
-                this.searchData.page = 1;
+                this.searchData.pagepageNum = 1;
                 this.init();
             },
             handleCancel (name) {
+                this.seratchPageList = [];
                 this.$refs[name].resetFields();
-                this.searchData.page = 1;
+                this.searchData.pageNum = 1;
                 this.init();
             },
             pageChange (page) {
-                this.searchData.page = page;
+                this.searchData.pageNum = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.limit = size;
+                this.searchData.pageSize = size;
                 this.init();
             }
         },

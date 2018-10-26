@@ -18,8 +18,8 @@
 
                 <Col span="4">                  
                     <FormItem label="广告频道">
-                        <Select v-model="formItem.pageName" style="width:100px"  @on-change = "pdClick">
-                            <Option v-for="item in pingdaoList" :value="item.pageName" :key="item.pageName">{{ item.pageName }}</Option>
+                        <Select v-model="formItem.pageId" style="width:100px"  @on-change = "pdClick">
+                            <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                         </Select>
                     </FormItem>
                 </Col>
@@ -162,12 +162,15 @@
             },
             zdClick(){
                 api.getChannelInfo(this.formItem).then(response => {
-                    this.pingdaoList = response.data.data;
+                    this.pingdaoList = response.data.data;                  
                 });   
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
                     this.zhandianList = response.data.data;
+                    this.zhandianList.forEach(item=>{
+                      item.station = item.station+'';
+                    });
                 });               
             },
             pageChange(page){
@@ -205,7 +208,7 @@
     width: 100%;
     padding-top: 20px;
     background: #ffffff;
-    overflow: hidden;
+
     margin-bottom: 10px;
 }
 </style>
