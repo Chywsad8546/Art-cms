@@ -146,7 +146,7 @@
                 searchLoading: false,
                 dpoptions: {
                     disabledDate (date) {
-                        return moment(date).isBefore(moment()) || moment(date).isAfter(moment().add(1,'M'));
+                        return moment(date).isBefore(moment(0, "HH")) || moment(date).isAfter(moment(0, "HH").add(1,'M'));
                     }
                 },
                 ispay:1,
@@ -154,7 +154,7 @@
                 selectPositionName: '',
                 selectAdName:'',
                 selectideacode:'',
-                selectdate: [moment().toDate(), moment().add(1, 'd').toDate()],
+                selectdate: [moment(0, "HH").toDate(), moment(0, "HH").add(1, 'd').toDate()],
                 showPostion: false,
                 daycolumns: [{
                     key: 'selectPositionName',

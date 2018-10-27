@@ -109,12 +109,12 @@
                 zhandianList: [],
                 weizhiList: [],
                 pingdaoList: [],
-                dateTime: moment().date(1).toDate(),
+                dateTime: moment(0, "HH").date(1).toDate(),
                 startTime: '',
                 endTime: '',
                 blankPageListDataDictus: {},
                 selectPostionId: '',
-                selectDate: moment().toDate()
+                selectDate: moment(0, "HH").toDate()
 
             };
         },

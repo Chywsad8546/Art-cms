@@ -39,7 +39,7 @@
         data() {
             return {
                 isxuanzhong: this.xuanzhong,
-                ispre: moment(this.day, 'YYYY-MM-DD').isBefore(moment())
+                ispre: moment(this.day, 'YYYY-MM-DD').isBefore(moment(0, "HH"))
             };
         },
         methods: {

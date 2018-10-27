@@ -72,7 +72,7 @@
                 selectdate: [this.date, moment(this.date).add(1, 'd').toDate()],
                 dpoptions: {
                     disabledDate (date) {
-                        return moment(date).isBefore(moment());
+                        return moment(date).isBefore(moment(0, "HH"));
                     }
                 },
                 columns: [
