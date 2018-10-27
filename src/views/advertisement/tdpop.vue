@@ -42,7 +42,7 @@
         },
         methods: {
             callparent() {
-                if(!this.ispre) {
+                if (!this.ispre) {
                     this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, true);
                 }
             },
@@ -50,7 +50,7 @@
                 this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, false);
             },
             goto() {
-
+                this.$router.push({name: 'ad_redirect', query: {id: this.ideaCode}});
             }
         }
 

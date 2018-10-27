@@ -174,9 +174,9 @@ export const appRouter = [
             path: 'guanggapwei',
             name: 'guanggapwei',
             title: '广告位排期管理',
-            // meta: {
-            //     keepalive: true
-            // },
+            meta: {
+                keepalive: true
+            },
             component: () =>
                 import('@/views/advertisement/blankPage.vue')
         },
