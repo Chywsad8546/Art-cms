@@ -30,7 +30,7 @@
                         </Select>
                     </FormItem>
 
-                    <FormItem label="时间" prop="dateTime">
+                    <FormItem label="时间" >
                         <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
 
@@ -77,9 +77,6 @@
                     positionId: ''
                 },
                 seniorValidate: {
-                    dateTime: [
-                        { required: true, message: '请选择时间范围', trigger: 'change' }
-                    ]
 
                 },
                 columblankPage: [
@@ -109,18 +106,18 @@
                 zhandianList: [],
                 weizhiList: [],
                 pingdaoList: [],
-                dateTime: moment(0, "HH").date(1).toDate(),
+                dateTime: moment().date(1).toDate(),
                 startTime: '',
                 endTime: '',
                 blankPageListDataDictus: {},
                 selectPostionId: '',
-                selectDate: moment(0, "HH").toDate()
+                selectDate: moment(0, 'HH').toDate()
 
             };
         },
         methods: {
-            visiblechange(v){
-                if(!v){
+            visiblechange(v) {
+                if (!v) {
                     this.search();
                 }
             },
@@ -173,10 +170,10 @@
                 this.endTime = moment(this.dateTime).add(1, 'M').format('YYYY-MM-DD');
                 var that = this;
                 api.adListAll(this.formItem).then(response => {
-                    that.blankPageListData.splice(0,that.blankPageListData.length);
+                    that.blankPageListData.splice(0, that.blankPageListData.length);
                     response.data.data.forEach(function (ite) {
                         that.blankPageListData.push(ite);
-                    })
+                    });
 
                     that.blankPageListDataDictus = {};
                     that.blankPageListData.forEach(function (row) {
@@ -226,8 +223,8 @@
                                     key: month + '-' + i,
                                     'width': 100,
                                     render: (h, params) => {
-                                        return h('tdpop', {props:params.row[month + '-' + i] ,
-                                        on: {changepaiqi: that.cellclick}});//
+                                        return h('tdpop', {props: params.row[month + '-' + i],
+                                            on: {changepaiqi: that.cellclick}});//
                                     }
                                 });
                             }
@@ -236,15 +233,15 @@
                 });
             },
             queryBlank(flag) {
-                if (flag) {
-                    this.search();
-                } else {
-                    this.$refs['formAdd'].validate((valid) => {
-                        if (valid) {
-                            this.search();
-                        }
-                    });
-                }
+                // if (flag) {
+                this.search();
+                // } else {
+                //     this.$refs['formAdd'].validate((valid) => {
+                //         if (valid) {
+                //             this.search();
+                //         }
+                //     });
+                // }
             },
             exportExl() {
                 api.exportExl(this.formItem).then(response => {
