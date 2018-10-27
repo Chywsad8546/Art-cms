@@ -50,26 +50,22 @@
             </div>
             <div class="roomKeyWorkContiner">
                 <div class="room">内容关键词:</div>
-                <div class="roomList">
-                        <Tag v-for="item in count" :key="item" :name="item" closable @on-close="handleClose2">标签{{ item + 1 }}</Tag>
-                        <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAdd">添加标签</Button>
-                    <!-- <CheckboxGroup class="labeldxk" v-model="modelkeyword" @on-change = "keywordFun">
-                                <Checkbox  v-for="item in keywordList" :label="item.id">{{item.name}}</Checkbox>
-                    </CheckboxGroup> -->
-                </div>
                 <div class="keyWordClass">
-                    <div>
-                        <Input v-model="keyWord" placeholder="Enter something..." clearable style="width: 200px"></Input>
+                    <div class="keyWordList">
+                        <Input v-model="keyWord" placeholder="请输入关键字" clearable style="width: 200px"></Input>
                     </div>
-                    <div class="associationKey">
+                    <div v-if="keyShow" class="associationKey">
                         <ul>
-                            <li>关键词1</li>
-                            <li>关键词2</li>
-                            <li>关键词3</li>
-                            <li>关键词4</li>
+                            <li v-for="item in keywordList" @click="handleAdd(item)">{{item.title}}</li>
                         </ul>
                     </div>
                 </div>
+            </div>
+            <div class="roomList keyHeight">
+                        <Tag v-for="item,index in callbackArr7" :key="item.label" :name="item.value" closable @on-close="handleClose2(index)">{{ item.label }}</Tag>
+                    <!-- <CheckboxGroup class="labeldxk" v-model="modelkeyword" @on-change = "keywordFun">
+                                <Checkbox  v-for="item in keywordList" :label="item.id">{{item.name}}</Checkbox>
+                    </CheckboxGroup> -->
             </div>
     </div>  
 </template>
@@ -113,23 +109,53 @@
                 callbackArr7:[],
                 cityList: [],
                 keyWord:"",
-                count: [0, 1, 2]
+                keyShow:false,
+                keyWordArr: []
             }
         },
         created() {
             this.tagsList();//获取标签服务
+            document.addEventListener("click", function(){
+                this.keyShow = false;
+            });
         },
         methods: {
-            handleAdd () {//处理标签
-                if (this.count.length) {
-                    this.count.push(this.count[this.count.length - 1] + 1);
-                } else {
-                    this.count.push(0);
+            handleAdd (item) {//处理标签
+                let addFlag = true;
+                this.keyShow = false;
+                this.callbackArr7.forEach(obj=>{
+                    if(obj.value == item.id){
+                        addFlag = false;
+                        this.$Notice.warning({
+                            title: "关键词已存在！"
+                        });
+                        return addFlag;
+                    }
+                });
+                if(addFlag == true){
+                    let arr = {"value":item.id,"label":item.title};
+                    this.callbackArr7.push(arr);
+                    this.callBackJson["1"] = this.callbackArr1;
+                    this.callBackJson["2"] = this.callbackArr2;
+                    this.callBackJson["3"] = this.callbackArr3;
+                    this.callBackJson["4"] = this.callbackArr4;
+                    this.callBackJson["5"] = this.callbackArr5;
+                    this.callBackJson["6"] = this.callbackArr6;
+                    this.callBackJson["7"] = this.callbackArr7;
+                    this.$emit("labelArr-event",this.callBackJson);
                 }
+               // this.callbackArr7 = [];
             },
-            handleClose2 (event, name) {//处理标签
-                const index = this.count.indexOf(name);
-                this.count.splice(index, 1);
+            handleClose2 (index) {//处理标签      
+                this.callbackArr7.splice(index, 1);
+                this.callBackJson["1"] = this.callbackArr1;
+                this.callBackJson["2"] = this.callbackArr2;
+                this.callBackJson["3"] = this.callbackArr3;
+                this.callBackJson["4"] = this.callbackArr4;
+                this.callBackJson["5"] = this.callbackArr5;
+                this.callBackJson["6"] = this.callbackArr6;
+                this.callBackJson["7"] = this.callbackArr7;
+                this.$emit("labelArr-event",this.callBackJson);
             },
             tagsList() {
                 api.tagsList().then(response => {
@@ -139,7 +165,7 @@
                     this.enterpriseList = this.cityList[2].data; //获取房企数组
                     this.huxingList = this.cityList[3].data; //获取户型数组
                     this.orientList = this.cityList[4].data; //获取定向数组
-                    this.keywordList = this.cityList[5].data; //获取关键词数组
+                   // this.keywordList = this.cityList[5].data; //获取关键词数组
                 });
             },
             selectclLabel(obj) {
@@ -354,7 +380,18 @@
                 this.modeldxpp = curVal[6];
                 this.modelkeyword = curVal[7];
             },
-
+            keyWord(curVal,oldVal){
+                if(curVal.length==0){
+                    this.keyShow = false;
+                }else{                   
+                    api.tagsList({"type":7,"title":curVal}).then(response => {
+                        this.keywordList = response.data.data;
+                        if(this.keywordList.length > 0){
+                            this.keyShow = true;
+                        }
+                    });
+                }
+            }
         }
     }
 </script>
@@ -370,6 +407,10 @@
         width: 80%;
         overflow: hidden;
         float: left;
+    }
+    .keyHeight {
+        height: 40px;
+        padding-left: 45px;
     }
     .roomSelect {
         overflow: hidden;
@@ -424,6 +465,7 @@
     }
     .roomKeyWorkContiner {
         width: 100%;
+
     }
     .keyWordClass {
         width: 100%;
@@ -432,9 +474,23 @@
     }
     .associationKey {
         position: absolute;
-        top:70px;
+        top:33px;
         background: #FFFFFF;
         width: 200px;
+        z-index: 10;
+        height: 150px;
+        min-height: 150px;
+        overflow: auto;       
+    }
+    .associationKey li {
+        padding-left: 10px;
+    }
+    .associationKey li:active {
+        background: #cccccc;
+    }
+    .associationKey li:hover{background: #000000;color: #FFFFFF}
+    .keyWordList {
+        width: 80%;
         overflow: hidden;
     }
 </style>

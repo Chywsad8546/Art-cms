@@ -172,6 +172,7 @@
                                     // this.$router.push({});
                                 });
                             } else {
+                                console.log("add");
                                 ad.addIdea({
                                     ideaData: JSON.stringify(this.formItem),
                                     typeId: this.typeId,
@@ -179,7 +180,8 @@
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
                                     adResource: this.adResource,
-                                    planId:this.$route.query.planId
+                                    planId:this.$route.query.planId,
+                                    defaultAd:0
                                 }).then(function (res) {
                                     that.$Message.success('新增成功');
                                     that.$router.push({
