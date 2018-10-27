@@ -11,10 +11,12 @@
                             <Option v-for="item in plans" :value="item.id" :key="'plan'+item.id">{{ item.planName }}</Option>
                         </Select>
                     </FormItem>
+
                     <FormItem label="排期日期" >
-                        <span :style="{color:'red'}">{{date}}</span>
+                        <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder="上架时间"></DatePicker>
                     </FormItem>
                 </Form>
+                <Alert v-if="existwarning" type="warning" show-icon>选择的日期范围内，有已经存在的广告</Alert>
                 <Table border :columns="columns" :data="data"></Table>
                 <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
             </Row>
@@ -56,21 +58,43 @@
             date: '',
             // "startime":"2018-10-02 00:00:00+08",
             // status: Boolean
-            showseed:'',
+            showseed: '',
+            existData: {}
         },
         data() {
             return {
-                showPayDialog:false,
+                existwarning: false,
+                showPayDialog: false,
                 plans: [],
                 planid: '',
-                ispay:1,
-                selectideacode:'',
+                ispay: 1,
+                selectideacode: '',
+                selectdate: [this.date, moment(this.date).add(1, 'd').toDate()],
+                dpoptions: {
+                    disabledDate (date) {
+                        return moment(date).isBefore(moment());
+                    }
+                },
                 columns: [
+                    {
+                        key: 'stationName',
+                        title: '应用',
+                        width: 100
+                        // fixed: 'left'
+                    },
                     {
                         key: 'pageName',
                         title: '频道',
                         width: 100
+                        // fixed: 'left'
                     },
+                    {
+                        key: 'positionName',
+                        title: '广告位',
+                        width: 100
+                        // fixed: 'left'
+                    },
+
                     {
                         key: 'adName',
                         title: '创意名称',
@@ -113,8 +137,8 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.selectideacode=params.row.ideaCode;
-                                                this.showPayDialog=true;
+                                                this.selectideacode = params.row.ideaCode;
+                                                this.showPayDialog = true;
                                             }
                                         }
                                     },
@@ -135,6 +159,18 @@
             };
         },
         methods: {
+            dpchange(v) {
+                this.existwarning = false;
+                let start = moment(v[0]);
+                let end = moment(v[1]);
+                for (;start < end; start = start.add(1, 'd')) {
+                    if (this.existData[this.positionId][start.format('M-D')]['ideaCode']) {
+                        this.existwarning = true;
+                        break;
+                    }
+                }
+                console.log(v);
+            },
             init() {
                 // this.searchData.planId = this.plandetail.planid;
                 adapi.panList({}).then(response => {
@@ -158,17 +194,27 @@
                     this.data = response.data.data;
                 });
             },
-            cancel(){
-                this.showPayDialog=false;
+            cancel() {
+                this.showPayDialog = false;
             },
             paiqi() {
-                let end = moment(this.date,'YYYY-MM-DD').add(1,'d').format('YYYY-MM-DD');
-                console.log({positionId:this.positionId,ideaCode:this.selectideacode,isPay:this.ispay,startTime:this.date,endTime:end})
-                api.addSchedules({positionId:this.positionId,ideaCode:this.selectideacode,isPay:this.ispay,startTime:this.date,endTime:end}).then(response => {
+                let startTime = moment(this.selectdate[0]).format('YYYY-MM-DD');
+                let endTime = moment(this.selectdate[1]).format('YYYY-MM-DD');
+                var that = this;
+                api.addSchedules({positionId: this.positionId, ideaCode: this.selectideacode, isPay: this.ispay, startTime: startTime, endTime: endTime}).then(response => {
                     if (response.data.data.isRepeat == true) {
-
+                        let reAdSchedulesNow = JSON.stringify(response.data.data.adSchedules);
+                        api.forceCover({positionId: this.positionId,
+                            ideaCode: this.selectideacode,
+                            isPay: this.ispay,
+                            startTime: startTime,
+                            endTime: endTime,
+                            reAdSchedulesNow: reAdSchedulesNow
+                        }).then(response => {
+                            that.$Message.success('排期成功');
+                        });
                     } else {
-                        this.$message.success('排期成功');
+                        this.$Message.success('排期成功');
                         // this.schedulesList();
                     }
                 });
@@ -181,8 +227,12 @@
             'positionId': function (val) {
                 this.planid = '';
             },
-            'showseed':function (val) {
-                this.showPayDialog=false;
+            'showseed': function (val) {
+                this.showPayDialog = false;
+            },
+            'date': function (val) {
+                this.selectdate = [val, moment(val).add(1, 'd').toDate()];
+                this.dpchange(this.selectdate);
             }
         }
     };

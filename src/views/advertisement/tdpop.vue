@@ -1,12 +1,25 @@
 <template>
+
     <span>
-        <Button v-if="!ideaCode" type="ghost" shape="circle" icon="ios-plus-empty" @click="callparent"></Button>
-        <span v-if="ideaCode" @click="callparent" :style="{cursor:'pointer',color:'#32CD32',width:'50px',textOverflow:'ellipsis',display:'inline-block','whiteSpace':'nowrap'}" >{{adName}}</span>
+        <!--<span v-if="xuanzhong">-->
+            <!--<Button type="success" shape="circle" icon="checkmark-circled" @click="cancel"></Button>-->
+        <!--</span>-->
+        <!--<span v-if="!xuanzhong">-->
+            <Button v-if="!ideaCode && !ispre" type="ghost" shape="circle" icon="ios-plus-empty" @click="callparent"></Button>
+            <Poptip v-if="ideaCode" trigger="hover" >
+                <span  @click="callparent" :style="{cursor:'pointer',color:'#ffffff',width:'50px',textOverflow:'ellipsis',display:'inline-block','whiteSpace':'nowrap'}" >{{adName}}</span>
+                <div slot="title"><i style="color:#000000">{{adCompany}}</i></div>
+                <div slot="content">
+                    <a @click="goto">{{adName}}</a>
+                </div>
+            </Poptip>
+        <!--</span>-->
     </span>
 
 </template>
 
 <script>
+    import moment from 'moment';
     export default {
         name: 'tdpop',
         props: {
@@ -15,16 +28,32 @@
             // "endtime":"2018-10-04 00:00:00+08",
             ideaCode: String,
             isPay: Boolean,
-            positionId: Number,
+            positionId: '',
             // "startime":"2018-10-02 00:00:00+08",
             status: Boolean,
-            day:String
+            day: String
+            // xuanzhong:Boolean
+        },
+        data() {
+            return {
+                isxuanzhong: this.xuanzhong,
+                ispre: moment(this.day, 'YYYY-MM-DD').isBefore(moment())
+            };
         },
         methods: {
             callparent() {
-                this.$emit('changepaiqi',this.ideaCode,this.adName,this.positionId,this.day);
+                if(!this.ispre) {
+                    this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, true);
+                }
+            },
+            cancel() {
+                this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, false);
+            },
+            goto() {
+
             }
         }
+
     };
 </script>
 
