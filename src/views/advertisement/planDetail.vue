@@ -106,6 +106,18 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <Modal v-model="paiqiListModal" width="1000">
+            <Card >
+                <p slot="title">
+                    <Icon type="navicon-round"></Icon>
+                    当前创意排期列表
+                </p>
+                <Table border :columns="paiqiListColums" :data="paiqiListData"></Table>
+            </Card>
+            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+
+        </Modal>
     </Row>
 </template>
 <script>
@@ -116,6 +128,22 @@
     export default {
         data() {
             return {
+                paiqiListData: [],
+                paiqiListColums: [
+                    {
+                        key: 'adName',
+                        title: '名称'
+                    },
+                    {
+                        key: 'startime',
+                        title: '开始时间'
+                    },
+                    {
+                        key: 'endtime',
+                        title: '结束时间'
+                    }
+                ],
+                paiqiListModal: false,
                 bjqList: [],
                 addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
@@ -133,8 +161,16 @@
                         width: 100
                     },
                     {
+                        key: 'stationName',
+                        title: '站点'
+                    },
+                    {
                         key: 'pageName',
                         title: '频道'
+                    },
+                    {
+                        key: 'positionName',
+                        title: '位置'
                     },
                     {
                         key: 'adName',
@@ -159,10 +195,36 @@
                         width: 130,
                         align: 'center',
                         render: (h, params) => {
+                            var optionArray = [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small',
+                                            icon: 'information',
+                                            shape: 'circle'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.paiqiListModal = true;
+                                                fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                                                    this.paiqiListData = response.data.data;
+                                                });
+                                            }
+                                        }
+                                    }
+                                )
+                            ];
                             if (params.row.paiqiZhuangtai === 0) {
-                                return h('div', ['未排期']);
+                                optionArray.push('未排期');
+                                return h('div', optionArray);
                             } else if (params.row.paiqiZhuangtai === 1) {
-                                return h('div', ['已排期']);
+                                optionArray.push('已排期')
+                                return h('div', optionArray);
                             }
                         }
                     },
@@ -241,7 +303,7 @@
                     ideaCount: this.$route.query.ideaCount,
                     paiQiCount: this.$route.query.paiQiCount,
                     zhanShiCount: this.$route.query.zhanShiCount,
-                    planName: '',
+                    planName: ''
                 }
             };
         },
@@ -282,7 +344,7 @@
                 this.init();
             },
             pdClick() {
-                console.log(this.searchData);
+               // console.log(this.searchData);
                 if (typeof this.searchData.pageName !== 'undefined') {
                     fapi.getPositionInfo(this.searchData).then(response => {
                         this.weizhiList = response.data.data;
@@ -290,9 +352,9 @@
                 }
             },
             zdClick() {
-                console.log(this.searchData);
+                //console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
-                    fapi.getChannelInfo(this.searchData).then(response => {
+                    fapi.getChannelInfo({station:this.searchData.station}).then(response => {
                         this.pingdaoList = response.data.data;
                     });
                 }
