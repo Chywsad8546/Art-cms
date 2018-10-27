@@ -167,11 +167,12 @@
                                     adName: this.commonForm.adName,
                                     adResource: this.adResource
                                 }).then(function (res) {
-                                    this.$Message.success('修改成功');
+                                    that.$Message.success('修改成功');
                                     // todo 跳回到列表页
                                     // this.$router.push({});
                                 });
                             } else {
+                                console.log("add");
                                 ad.addIdea({
                                     ideaData: JSON.stringify(this.formItem),
                                     typeId: this.typeId,
@@ -179,9 +180,10 @@
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
                                     adResource: this.adResource,
-                                    planId:this.$route.query.planId
+                                    planId:this.$route.query.planId,
+                                    defaultAd:0
                                 }).then(function (res) {
-                                    this.$Message.success('新增成功');
+                                    that.$Message.success('新增成功');
                                     that.$router.push({
                                         name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
                                     });
