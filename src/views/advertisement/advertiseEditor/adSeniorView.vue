@@ -289,7 +289,7 @@
                     that.positionId = res.data.data.positionId;
                     if (editor) {
                         editor.component().then(function (res) {
-                            that.share = {};
+                            that.share = {a:'abc'};
                             that.hookWatch(res.default, {});
                             that.currentEditor = res.default;
                             that.currentEditorKey = editor.name;

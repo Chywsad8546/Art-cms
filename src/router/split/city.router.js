@@ -30,13 +30,14 @@ export const otherRouter = {
             component: () =>
                 import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
         },
-        // {
-        //     path: 'ad/positionEdit',
-        //     title: '广告详情',
-        //     name: 'positionEdit',
-        //     component: () =>
-        //         import('@/views/advertisement/positionEdit.vue')
-        // },
+        {
+            path: 'ad/addsenioretail',
+            title: '创意详情-高级',
+            name: 'ad_addsenioretail',
+            component: () =>
+                import('@/views/advertisement/advertiseEditor/adSeniorView.vue')
+        },
+
         // 系统管理：权限管理
         {
             path: 'sysManage/assignPermissions',
