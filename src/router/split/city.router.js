@@ -159,17 +159,6 @@ export const appRouter = [
                 component: () =>
                     import('@/views/advertisement/positionPlan.vue')
             },
-
-        {
-                path: 'templateList',
-                name: 'templateList',
-                title: '编辑器管理',
-                // meta: {
-                //     requireAuth: true
-                // },
-                component: () =>
-                    import('@/views/advertisement/templateList.vue')
-        },
         {
             path: 'guanggapwei',
             name: 'guanggapwei',
@@ -179,16 +168,6 @@ export const appRouter = [
             },
             component: () =>
                 import('@/views/advertisement/blankPage.vue')
-        },
-        {
-            path: 'ideaList',
-            name: 'ideaList',
-            title: '创意管理',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/advertisement/ideaNewsList.vue')
         },
 
 
