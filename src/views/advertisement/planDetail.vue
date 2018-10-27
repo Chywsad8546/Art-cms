@@ -118,6 +118,11 @@
             <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
 
         </Modal>
+
+        <Modal v-model="showPlan" title="选择日期" scrollable width="850" >
+            <planselector :positionId="selectPostionId" :date="selectDate" :existData="blankPageListDataDictus" :showseed="showseed"></planselector>
+            <span slot="footer"></span>
+        </Modal>
     </Row>
 </template>
 <script>

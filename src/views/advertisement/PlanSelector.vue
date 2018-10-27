@@ -6,7 +6,7 @@
             <Row v-if="!showPayDialog" class="margin-top-10 searchable-table-con1">
                 <Form  ref="searchData"  inline :label-width="120">
 
-                    <FormItem label="计划名称" >
+                    <FormItem label="启用中的广告计划" >
                         <Select v-model="planid" :key="'selectplanid'" style="width:300px" @on-change="selectchange">
                             <Option v-for="item in plans" :value="item.id" :key="'plan'+item.id">{{ item.planName }}</Option>
                         </Select>
@@ -173,7 +173,7 @@
             },
             init() {
                 // this.searchData.planId = this.plandetail.planid;
-                adapi.panList({}).then(response => {
+                adapi.panList({status:0}).then(response => {
                     this.plans = response.data.data;
                 });
             },
