@@ -119,20 +119,42 @@
 
         </Modal>
 
-        <Modal v-model="showPlan" title="选择日期" scrollable width="850" >
-            <planselector :positionId="selectPostionId" :date="selectDate" :existData="blankPageListDataDictus" :showseed="showseed"></planselector>
-            <span slot="footer"></span>
+        <Modal v-model="showPostion" title="选择日期" scrollable width="850" >
+            <Form  ref="searchData"  inline :label-width="120">
+
+                <!--<FormItem label="启用中的广告计划" >-->
+                    <!--<Select v-model="planid" :key="'selectplanid'" style="width:300px" @on-change="selectchange">-->
+                        <!--<Option v-for="item in plans" :value="item.id" :key="'plan'+item.id">{{ item.planName }}</Option>-->
+                    <!--</Select>-->
+                <!--</FormItem>-->
+
+                <FormItem label="排期日期" >
+                    <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder="上架时间"></DatePicker>
+                </FormItem>
+            </Form>
+            <Table border :columns="daycolumns" :data="postionData"></Table>
+            <!--<span slot="footer"></span>-->
         </Modal>
     </Row>
 </template>
 <script>
     import ideaApi from '../../api/advertisement/ideaList.js';
     import dutil from '../../libs/util.js';
+    import moment from 'moment';
     import fapi from '../../api/advertisement/formtemplateApi.js';
 
     export default {
         data() {
             return {
+                dpoptions: {
+                    disabledDate (date) {
+                        return moment(date).isBefore(moment());
+                    }
+                },
+                selectdate:[moment().toDate(),moment().add(1,'d').toDate()],
+                showPostion:false,
+                daycolumns:[],
+                postionData:[],
                 paiqiListData: [],
                 paiqiListColums: [
                     {
@@ -281,10 +303,7 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$router.push({
-                                                    name: 'ad_redirect',
-                                                    query: {id: params.row.ideaCode}
-                                                });
+                                                this.showPostion=true;
                                             }
                                         }
                                     },
@@ -316,6 +335,9 @@
             };
         },
         methods: {
+            dpchange(v){
+
+            },
             init() {
                 this.searchData.planId = this.plandetail.planid;
                 fapi.planDetails({id: this.plandetail.planid}).then(response => {
