@@ -55,7 +55,7 @@
                         </FormItem>
 
                         <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
+                            <Button type="primary" @click="isTrueAddTag = true">添加创意</Button>
                         </FormItem>
                     </Form>
 
@@ -65,29 +65,26 @@
             </Card>
         </Col>
 
-        <Modal v-model="isTrueAddTag" width="1000" @on-ok="addIdeaNews">
+        <Modal v-model="isTrueAddTag" width="1000" title="选择编辑器" >
             <Form  ref="addNewsChannelModalform" :model="addIdeaNewsModal" inline :label-width="120">
-                <FormItem label="站点">
+                <FormItem label="应用">
                     <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
                         <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="页面">
+                <FormItem label="栏目">
                     <Select v-model="pdmode.pageId" style="width:100px"  @on-change = "adpdClick">
                         <Option v-for="item in adpingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="位置" prop="bjq">
+                <FormItem label="广告位" prop="bjq">
                     <Select v-model="addIdeaNewsModal.positionId" style="width:100px" @on-change = "getBjqList">
                         <Option v-for="item in adweizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="编辑器" prop="bjq">
-                    <Select v-model="addIdeaNewsModal.bjq" style="width:140px">
-                        <Option v-for="item in bjqList" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                    </Select>
-                </FormItem>
             </Form>
+            <Table border :columns="bjqColumns" :data="bjqList" :loading="bjqloading"  ></Table>
+            <span slot="footer"></span>
         </Modal>
 
         <Modal v-model="paiqiListModal" width="1000">
@@ -142,6 +139,7 @@
         },
         data() {
             return {
+                bjqloading:false,
                 existwarning:false,
                 searchLoading: false,
                 dpoptions: {
@@ -156,6 +154,45 @@
                 selectideacode:'',
                 selectdate: [moment(0, "HH").toDate(), moment(0, "HH").add(1, 'd').toDate()],
                 showPostion: false,
+                bjqColumns:[
+                    {
+                        key: 'name',
+                        title: '编辑器'
+                    },
+                    {
+                        title: '选择',
+                        key: 'action',
+                        width: 170,
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {templateid: params.row.id, planId: this.$route.query.planid}
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '选我'
+                                )
+                            ]);
+                        }
+                    }
+
+                ],
                 daycolumns: [{
                     key: 'selectPositionName',
                     title: '广告位当前排期情况',
@@ -443,8 +480,10 @@
                 });
             },
             getBjqList() {
+                this.bjqloading=true;
                 fapi.templateList(this.addIdeaNewsModal).then(response => {
                     this.bjqList = response.data.data;
+                    this.bjqloading=false;
                 });
             },
             handleSearch () {
@@ -507,16 +546,6 @@
                 fapi.getStationInfo().then(response => {
                     this.zhandianList = response.data.data;
                 });
-            },
-            addIdeaNews: function () {
-                if (this.addIdeaNewsModal.bjq !== '') {
-                    this.$router.push({
-                        name: 'ad_redirect',
-                        query: {templateid: this.addIdeaNewsModal.bjq, planId: this.plandetail.planid}
-                    });
-                } else {
-                    this.$Message.error('请选择编辑器！');
-                }
             }
         },
         created() {

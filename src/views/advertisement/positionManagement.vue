@@ -22,7 +22,7 @@
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
                         </FormItem>
-                        <FormItem label="未设置缺省广告的广告位" prop="defaultAd">
+                        <FormItem label="未设置缺省广告" prop="defaultAd">
                             <Select v-model="searchData.defaultAd" style="width:140px">
                                 <Option value="1">是</Option>
                             </Select>
@@ -86,7 +86,7 @@
 
         <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
-                <FormItem label="栏目名称" prop="positionName">
+                <FormItem label="广告位名称" prop="positionName">
                     <Input v-model.trim="updateCahnnelValue.positionName" style="width:140px"></Input>
                 </FormItem>
                 <FormItem label="版本号" prop="version">
@@ -107,20 +107,32 @@
                 </a>
                 <Table border :columns="modalColums" :data="modalData"></Table>
             </Card>
-            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
-
         </Modal>
 
-        <Modal v-model="adListListModal" width="1000">
+        <Modal v-model="adListListModal" width="1000" >
             <Card >
                 <p slot="title">
                     <Icon type="navicon-round"></Icon>
                     当前位置缺省广告列表
                 </p>
+                <a href="#" slot="extra"  @click.prevent="addquesheng" >
+                    <Icon type="plus-circled"></Icon>
+                    重新设置缺省广告
+                </a>
                 <Table border :columns="adListColums" :data="adListData"></Table>
             </Card>
             <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+            <span slot="footer"></span>
+        </Modal>
 
+        <Modal v-model="showQuesheng" width="1000">
+            <Card >
+                <p slot="title">
+                    <Icon type="ios-film-outline"></Icon>
+                    选择编辑器设置缺省广告
+                </p>
+                <Table border :columns="queshengmodalColums" :data="queshengdata"></Table>
+            </Card>
         </Modal>
     </Row>
 </template>
@@ -130,7 +142,117 @@
     export default {
         data() {
             return {
+                showQuesheng:false,
+                queshengmodalColums: [
+                    {
+                        key: 'id',
+                        title: 'id'
+                    },
+                    {
+                        key: 'name',
+                        title: '名称'
+                    },
+                    {
+                        title: '编辑器类别',
+                        key: 'isAdvancedEdit',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isAdvancedEdit === 0) {
+                                return h('div', {
+                                }, ['普通编辑器']);
+                            } else if (params.row.isAdvancedEdit === 1) {
+                                return h('div', {
+                                    style: {
+                                    }
+                                }, ['高级编辑器']);
+                            }
+                        }
+                    },
+                    {
+                        title: '编辑器版本', //
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isNew === 0) {
+                                return h('div', {
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, [h(
+                                    'Poptip',
+                                    {
+                                        props: {
+                                            trigger: 'hover',
+                                            title: '旧系统的编辑器，新系统不能使用，只能查看创意结果'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    '旧版'
+                                )]);
+                            } else if (params.row.isNew === 1) {
+                                return h('div', {
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['新版']);
+                            }
+                        }
+                    },
+                    {
+                        title: '状态',
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.status === 0) {
+                                return h('div', {
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, ['已禁用']);
+                            } else if (params.row.status === 1) {
+                                return h('div', {
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['启动']);
+                            }
+                        }
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var that = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({name:'ad_redirect',query:{isquesheng:1,templateid:params.row.id}});
+                                            }
+                                        }
+                                    },
+                                    '选我'
+                                )
+
+                            ]);
+                        }
+                    }
+                ],
+                queshengdata:[],
                 adListListModal: false,
+                selectPostionId:'',
                 adListColums: [
                     {
                         key: 'adName',
@@ -161,7 +283,7 @@
                                             click: () => {
                                                 this.$router.push({
                                                     name: 'ad_redirect',
-                                                    query: {id: params.row.ideaCode}
+                                                    query: {id: params.row.ideaCode,isquesheng:1}
                                                 });
                                             }
                                         }
@@ -298,11 +420,6 @@
                                                     onCancel: () => {
                                                     }
                                                 });
-                                                // this.modal3 = true;
-                                                // this.currentPosition = params.row.positionId;
-                                                // api.templateList({positionId: params.row.positionId}).then(response => {
-                                                //     this.modalData = response.data.data;
-                                                // });
                                             }
                                         }
                                     },
@@ -354,24 +471,28 @@
                     },
                     {
                         key: 'stationName',
-                        title: '应用名称'
+                        title: '应用名称',
+                        width: 100
                     },
                     {
                         key: 'pageName',
-                        title: '栏目名称'
+                        title: '栏目名称',
+                        width: 100
                     },
                     {
                         key: 'positionName',
-                        title: '位置名称'
+                        title: '位置名称',
+                        width: 150
                     },
                     {
                         title: '版本号',
-                        key: 'version'
+                        key: 'version',
+                        width: 100
                     },
                     {
                         title: '管理',
                         key: 'action',
-                        align: 'center',
+                        align: 'left',
                         render: (h, params) => {
                             var i = this;
                             var optionArray = [
@@ -420,21 +541,7 @@
                                     '修改'
                                 )
                             ];
-                            if (params.row.isAddDefault === 0) {
-                                optionArray.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        }
-                                    },
-                                    '添加缺省广告！'
-                                ));
-                            }
+
                             if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
                                 optionArray.push(h(
                                     'Button',
@@ -445,9 +552,15 @@
                                         },
                                         style: {
                                             marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.selectPostionId=params.row.positionId;
+                                                this.addquesheng();
+                                            }
                                         }
                                     },
-                                    '未设置缺省广告！'
+                                    '添加缺省广告'
                                 ));
                             } else if (params.row.isAddDefault === 0 && params.row.defaultAd === 1) {
                                 optionArray.push(h(
@@ -464,12 +577,13 @@
                                             click: () => {
                                                 api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
                                                     this.adListListModal = true;
+                                                    this.selectPostionId=params.row.positionId;
                                                     this.adListData = response.data.data;
                                                 });
                                             }
                                         }
                                     },
-                                    '查看已设置缺省广告！'
+                                    '查看缺省广告！'
                                 ));
                             }
                             return h('div', optionArray);
@@ -512,6 +626,13 @@
             };
         },
         methods: {
+            addquesheng(){
+                this.adListListModal=false;
+                api.templateList({positionId: this.selectPostionId}).then(response => {
+                    this.showQuesheng=true;
+                    this.queshengdata = response.data.data;
+                });
+            },
             sitechange(v) {
                 if (v !== undefined) {
                     this.addNewsChannelModal.pageName = v.label;
