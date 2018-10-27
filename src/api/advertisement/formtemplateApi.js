@@ -77,5 +77,13 @@ export default {
     planDetails(params) {
         return http.get('/cmsapi/planDetails', {params: params
         });
-    }
+    },
+    //获取创意所有时间列表
+    getIdeaTimeList(params) {
+        return http.get('/cmsapi/idea/getSchedulesListByIdeaCode', {params: params});
+    },
+    //根据位置id查找缺省创意/cmsapi/idea/getDefaultAdByPositionId
+    getDefaultAdByPositionId(params) {
+        return http.get('/cmsapi/idea/getDefaultAdByPositionId', {params: params});
+    },
 };

@@ -110,6 +110,18 @@
             <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
 
         </Modal>
+
+        <Modal v-model="adListListModal" width="1000">
+            <Card >
+                <p slot="title">
+                    <Icon type="navicon-round"></Icon>
+                    当前位置缺省广告列表
+                </p>
+                <Table border :columns="adListColums" :data="adListData"></Table>
+            </Card>
+            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+
+        </Modal>
     </Row>
 </template>
 <script>
@@ -118,6 +130,17 @@
     export default {
         data() {
             return {
+                adListListModal: false,
+                adListColums: [
+                    {
+                        key: 'adName',
+                        title: '广告名称',
+                    },
+                    {
+
+                    }
+                ],
+                adListData: [],
                 searchStationList: [],
                 searchPageList: [],
                 modalColums: [
@@ -355,20 +378,57 @@
                                     '修改'
                                 )
                             ];
-                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null){
-                                  optionArray.push(h(
-                                      'Button',
-                                      {
-                                          props: {
-                                              type: 'error',
-                                              size: 'small'
-                                          },
-                                          style: {
-                                              marginRight: '5px'
-                                          }
-                                      },
-                                      '未设置缺省广告！'
-                                  ))
+                            if (params.row.isAddDefault === 0) {
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    '添加缺省广告！'
+                                ));
+                            }
+                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    '未设置缺省广告！'
+                                ));
+                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd === 1) {
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
+                                                    this.adListListModal = true;
+                                                    this.adListData = response.data.data;
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '查看已设置缺省广告！'
+                                ));
                             }
                             return h('div', optionArray);
                         }
@@ -376,6 +436,10 @@
                 ],
                 currentPosition: 0,
                 searchData: {
+                    station: '',
+                    defaultAd: '',
+                    positionName: '',
+                    pageId: ''
                 },
                 data: [],
                 total: 0,
