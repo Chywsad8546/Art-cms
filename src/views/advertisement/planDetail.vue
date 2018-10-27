@@ -198,6 +198,27 @@
                                         }
                                     },
                                     '修改'
+                                ),
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {id: params.row.ideaCode}
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '排期'
                                 )
                             ]);
                         }
