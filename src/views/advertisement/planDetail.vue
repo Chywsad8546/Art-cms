@@ -14,11 +14,6 @@
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <!--         <FormItem label="消息标题" prop="title">
-                                     <Input v-model.trim="searchData.title" style="width:140px"></Input>
-                                 </FormItem>
-         -->
-
                         <FormItem label="选择站点" prop="station">
                             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                                 <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
@@ -38,21 +33,9 @@
 
                         <FormItem label="选择时间"  prop="timeRange">
                             <DatePicker type="daterange" v-model="searchData.timeRange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
-                          <!--  <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.startTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
-                        </FormItem>
-                        <FormItem label="结束时间"  prop="endTime">
-                            <DatePicker type="date" format="yyyy-MM-dd" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>-->
+
                         </FormItem>
 
-                        <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                        <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                            <Option value="">全部</Option>
-                                            <Option value="0">未认证</Option>
-                                            <Option value="1">认证中</Option>
-                                            <Option value="2">认证通过</Option>
-                                            <Option value="3">认证不通过</Option>
-                                        </Select>
-                                    </FormItem>-->
                         <FormItem label="排期状态" prop="PaiqiZhuangtai">
                             <Select v-model="searchData.PaiqiZhuangtai" style="width:140px">
                                 <Option value="0">未排期</Option>
@@ -119,7 +102,7 @@
 
         </Modal>
 
-        <Modal v-model="showPostion" title="选择日期" scrollable width="850" >
+        <Modal v-model="showPostion" title="选择日期" scrollable width="850" @on-visible-change="visiblechange" >
             <Form  ref="searchData"  inline :label-width="120">
 
                 <FormItem label="创意:" >
@@ -129,7 +112,17 @@
                 <FormItem label="排期日期" >
                     <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder=""></DatePicker>
                 </FormItem>
+                <FormItem label="付费状态" >
+                    <Select v-model="ispay" :key="'ispayslect'" style="width:290px">
+                        <Option :value="1" :key="'ispay1'">付费</Option>
+                        <Option :value="0" :key="'ispay0'">免费</Option>
+                    </Select>
+                </FormItem>
+                <FormItem>
+                    <Button type="primary" @click="paiqi">确定</Button>
+                </FormItem>
             </Form>
+            <Alert v-if="existwarning" type="warning" show-icon>选择的日期范围内，有已经存在的广告</Alert>
             <Table border :columns="daycolumns" :data="postionData" :loading="searchLoading" ></Table>
             <span slot="footer"></span>
         </Modal>
@@ -149,20 +142,23 @@
         },
         data() {
             return {
+                existwarning:false,
                 searchLoading: false,
                 dpoptions: {
                     disabledDate (date) {
                         return moment(date).isBefore(moment()) || moment(date).isAfter(moment().add(1,'M'));
                     }
                 },
+                ispay:1,
                 selectPostionId: '',
                 selectPositionName: '',
                 selectAdName:'',
+                selectideacode:'',
                 selectdate: [moment().toDate(), moment().add(1, 'd').toDate()],
                 showPostion: false,
                 daycolumns: [{
                     key: 'selectPositionName',
-                    title: '广告位',
+                    title: '广告位当前排期情况',
                     width: 100,
                     fixed: 'left'
                 }],
@@ -319,6 +315,7 @@
                                                 this.selectPostionId = params.row.positionId;
                                                 this.selectPositionName = params.row.positionName;
                                                 this.selectAdName = params.row.adName;
+                                                this.selectideacode = params.row.ideaCode;
                                                 this.getPostionPaiqi();
                                             }
                                         }
@@ -351,7 +348,32 @@
             };
         },
         methods: {
+            paiqi() {
+                let startTime = moment(this.selectdate[0]).format('YYYY-MM-DD');
+                let endTime = moment(this.selectdate[1]).format('YYYY-MM-DD');
+                var that = this;
+                fapi.addSchedules({positionId: this.selectPostionId, ideaCode: this.selectideacode, isPay: this.ispay, startTime: startTime, endTime: endTime}).then(response => {
+                    if (response.data.data.isRepeat == true) {
+                        let reAdSchedulesNow = JSON.stringify(response.data.data.adSchedules);
+                        fapi.forceCover({positionId: this.selectPostionId,
+                            ideaCode: this.selectideacode,
+                            isPay: this.ispay,
+                            startTime: startTime,
+                            endTime: endTime,
+                            reAdSchedulesNow: reAdSchedulesNow
+                        }).then(response => {
+                            that.showPostion = false;
+                            that.$Message.success('排期成功');
+                        });
+                    } else {
+                        that.showPostion = false;
+                        this.$Message.success('排期成功');
+                        // this.schedulesList();
+                    }
+                });
+            },
             getPostionPaiqi() {
+                this.existwarning=false;
                 this.searchLoading = true;
                 var that = this;
                 let columnStart = moment(this.selectdate[0]);
@@ -359,15 +381,14 @@
                 let data = {cellClassName: {},selectPositionName:this.selectPositionName};
                 that.daycolumns.splice(1,that.daycolumns.length-1);
                 for (; columnStart.isBefore(columnEnd); columnStart=columnStart.add(1,'d')) {
+
                     let daykey = columnStart.format('M-D');
                     that.daycolumns.push({
                         title:columnStart.format('M-D'),
                         key: columnStart.format('M-D'),
                         'width': 100,
                         render: (h, params) => {
-                            // console.log('row',params.row,params.row[daykey],daykey)
-                            return h('tdpopreadonly', {props: params.row[daykey],
-                                });//
+                            return h('tdpopreadonly', {props: params.row[daykey]});//
                         }
                     });
                 }
@@ -380,6 +401,7 @@
                     .then(function (res) {
 
                         for (let index = 0; index < res.data.data.length; index++) {
+                            that.existwarning=true;
                             let paiqirow = res.data.data[index];
                             let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
                             let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
@@ -467,6 +489,11 @@
                 fapi.getChannelInfo(this.zdmode).then(response => {
                     this.adpingdaoList = response.data.data;
                 });
+            },
+            visiblechange(v){
+                if(!v){
+                    this.init();
+                }
             },
             pageChange (page) {
                 this.searchData.page = page;
