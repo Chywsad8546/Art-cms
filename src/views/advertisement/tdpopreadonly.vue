@@ -5,9 +5,8 @@
             <!--<Button type="success" shape="circle" icon="checkmark-circled" @click="cancel"></Button>-->
         <!--</span>-->
         <!--<span v-if="!xuanzhong">-->
-            <Button v-if="!ideaCode && !ispre" type="ghost" shape="circle" icon="ios-plus-empty" @click="callparent"></Button>
             <Poptip v-if="ideaCode" trigger="hover" >
-                <span  @click="callparent" :style="{cursor:'pointer',color:'#ffffff',width:'50px',textOverflow:'ellipsis',display:'inline-block','whiteSpace':'nowrap'}" >{{adName}}</span>
+                <span   :style="{cursor:'pointer',color:'#ffffff',width:'50px',textOverflow:'ellipsis',display:'inline-block','whiteSpace':'nowrap'}" >{{adName}}</span>
                 <div slot="title"><i style="color:#000000">甲方公司:{{adCompany}}</i></div>
                 <div slot="content">
                     <p style="color:#000000">广告计划:{{planName}}</p>

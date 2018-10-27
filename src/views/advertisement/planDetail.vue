@@ -122,18 +122,16 @@
         <Modal v-model="showPostion" title="选择日期" scrollable width="850" >
             <Form  ref="searchData"  inline :label-width="120">
 
-                <!--<FormItem label="启用中的广告计划" >-->
-                    <!--<Select v-model="planid" :key="'selectplanid'" style="width:300px" @on-change="selectchange">-->
-                        <!--<Option v-for="item in plans" :value="item.id" :key="'plan'+item.id">{{ item.planName }}</Option>-->
-                    <!--</Select>-->
-                <!--</FormItem>-->
+                <FormItem label="创意:" >
+                    {{selectAdName}}
+                </FormItem>
 
                 <FormItem label="排期日期" >
-                    <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder="上架时间"></DatePicker>
+                    <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder=""></DatePicker>
                 </FormItem>
             </Form>
-            <Table border :columns="daycolumns" :data="postionData"></Table>
-            <!--<span slot="footer"></span>-->
+            <Table border :columns="daycolumns" :data="postionData" :loading="searchLoading" ></Table>
+            <span slot="footer"></span>
         </Modal>
     </Row>
 </template>
@@ -142,20 +140,33 @@
     import dutil from '../../libs/util.js';
     import moment from 'moment';
     import fapi from '../../api/advertisement/formtemplateApi.js';
-
+    import tdpopreadonly from './tdpopreadonly.vue';
+    import Vue from 'vue';
+    Vue.component('tdpopreadonly', tdpopreadonly);
     export default {
+        components: {
+            tdpopreadonly,
+        },
         data() {
             return {
+                searchLoading: false,
                 dpoptions: {
                     disabledDate (date) {
-                        return moment(date).isBefore(moment());
+                        return moment(date).isBefore(moment()) || moment(date).isAfter(moment().add(1,'M'));
                     }
                 },
-                selectPostionId:'',
-                selectdate:[moment().toDate(),moment().add(1,'d').toDate()],
-                showPostion:false,
-                daycolumns:[],
-                postionData:[],
+                selectPostionId: '',
+                selectPositionName: '',
+                selectAdName:'',
+                selectdate: [moment().toDate(), moment().add(1, 'd').toDate()],
+                showPostion: false,
+                daycolumns: [{
+                    key: 'selectPositionName',
+                    title: '广告位',
+                    width: 100,
+                    fixed: 'left'
+                }],
+                postionData: [],
                 paiqiListData: [],
                 paiqiListColums: [
                     {
@@ -254,7 +265,7 @@
                                 optionArray.push('未排期');
                                 return h('div', optionArray);
                             } else if (params.row.paiqiZhuangtai === 1) {
-                                optionArray.push('已排期')
+                                optionArray.push('已排期');
                                 return h('div', optionArray);
                             }
                         }
@@ -266,7 +277,7 @@
                     {
                         title: '管理',
                         key: 'action',
-                        width: 130,
+                        width: 170,
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
@@ -290,7 +301,7 @@
                                             }
                                         }
                                     },
-                                    '修改'
+                                    '修改创意'
                                 ),
                                 h(
                                     'Button',
@@ -304,8 +315,10 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.showPostion=true;
-                                                this.selectPostionId =params.row.positionId;
+                                                this.showPostion = true;
+                                                this.selectPostionId = params.row.positionId;
+                                                this.selectPositionName = params.row.positionName;
+                                                this.selectAdName = params.row.adName;
                                                 this.getPostionPaiqi();
                                             }
                                         }
@@ -338,59 +351,63 @@
             };
         },
         methods: {
-            getPostionPaiqi(){
+            getPostionPaiqi() {
+                this.searchLoading = true;
+                var that = this;
+                let columnStart = moment(this.selectdate[0]);
+                let columnEnd = moment(this.selectdate[1]);
+                let data = {cellClassName: {},selectPositionName:this.selectPositionName};
+                that.daycolumns.splice(1,that.daycolumns.length-1);
+                for (; columnStart.isBefore(columnEnd); columnStart=columnStart.add(1,'d')) {
+                    let daykey = columnStart.format('M-D');
+                    that.daycolumns.push({
+                        title:columnStart.format('M-D'),
+                        key: columnStart.format('M-D'),
+                        'width': 100,
+                        render: (h, params) => {
+                            // console.log('row',params.row,params.row[daykey],daykey)
+                            return h('tdpopreadonly', {props: params.row[daykey],
+                                });//
+                        }
+                    });
+                }
+
                 fapi.getPaiqiList({
                     positionIds: this.selectPostionId,
                     startTime: moment(this.selectdate[0]).format('YYYY-MM-DD'),
                     endTime: moment(this.selectdate[1]).format('YYYY-MM-DD')
                 })
                     .then(function (res) {
+
                         for (let index = 0; index < res.data.data.length; index++) {
                             let paiqirow = res.data.data[index];
                             let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
                             let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
                             for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
                                 let newpaiqirow = _.cloneDeep(paiqirow);
-                                that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
-                                if (!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName) {
-                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName = {};
-                                }
-                                that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')] = 'cell-hold';
+                                data[paiqistart.format('M-D')] = newpaiqirow;
+
+                                data.cellClassName[paiqistart.format('M-D')] = 'cell-hold';
                             }
                         }
-                        for (let i = 0; i < that.blankPageListData.length; i++) {
-                            let item = that.blankPageListData[i];
-
-                            let buchongend = moment(that.endTime, 'YYYY-MM-DD');
-                            for (let buchongstart = moment(that.startTime, 'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
-                                let daykey = buchongstart.format('M-D');
-                                let day = buchongstart.format('YYYY-MM-DD');
-                                // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
-                                if (!item[daykey]) {
-                                    item[daykey] = {};
-                                }
-                                item[daykey]['day'] = day;
-                                // item[daykey]['xuanzhong'] = false;
-                                item[daykey]['positionId'] = item.positionId;
+                        let buchongend= moment(that.selectdate[1]);
+                        for (let buchongstart = moment(that.selectdate[0]); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
+                            let daykey = buchongstart.format('M-D');
+                            let day = buchongstart.format('YYYY-MM-DD');
+                            if (!data[daykey]) {
+                                data[daykey] = {};
                             }
+                            data[daykey]['day'] = day;
+                            // item[daykey]['xuanzhong'] = false;
+                            data[daykey]['positionId'] = that.selectPostionId;
                         }
-
-                        for (let i = 1; i <= days; i++) {
-                            that.columblankPage.push({
-                                title: month + '-' + i,
-                                key: month + '-' + i,
-                                'width': 100,
-                                render: (h, params) => {
-                                    return h('tdpop', {props:params.row[month + '-' + i] ,
-                                        on: {changepaiqi: that.cellclick}});//
-                                }
-                            });
-                        }
+                        that.postionData = [data];
                         that.searchLoading = false;
+                        // console.log(data)
                     });
             },
-            dpchange(v){
-
+            dpchange(v) {
+                this.getPostionPaiqi();
             },
             init() {
                 this.searchData.planId = this.plandetail.planid;
@@ -428,7 +445,6 @@
                 this.init();
             },
             pdClick() {
-               // console.log(this.searchData);
                 if (typeof this.searchData.pageName !== 'undefined') {
                     fapi.getPositionInfo(this.searchData).then(response => {
                         this.weizhiList = response.data.data;
@@ -436,9 +452,8 @@
                 }
             },
             zdClick() {
-                //console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
-                    fapi.getChannelInfo({station:this.searchData.station}).then(response => {
+                    fapi.getChannelInfo({station: this.searchData.station}).then(response => {
                         this.pingdaoList = response.data.data;
                     });
                 }
@@ -483,4 +498,17 @@
         }
     };
 </script>
+<style>
+    .backcontiner {
+        width: 100%;
+        padding-top: 20px;
+        background: #ffffff;
+
+        margin-bottom: 10px;
+    }
+    .ivu-table .cell-hold {
+        background-color: #187;
+        color: #fff;
+    }
+</style>
 
