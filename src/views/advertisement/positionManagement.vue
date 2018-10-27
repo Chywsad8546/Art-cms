@@ -441,6 +441,7 @@
                                                 on: {
                                                     click: () => {
                                                         if (params.row.isNew === 1) {
+                                                            that.modal3=false;
                                                             that.$router.push({
                                                                 name: 'formtemplate',
                                                                 query: {advertId: params.row.id}
