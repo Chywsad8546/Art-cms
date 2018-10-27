@@ -115,8 +115,9 @@
         },
         created() {
             this.tagsList();//获取标签服务
+            var that = this;
             document.addEventListener("click", function(){
-                this.keyShow = false;
+                that.keyShow = false;
             });
         },
         methods: {
