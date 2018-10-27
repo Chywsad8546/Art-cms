@@ -168,9 +168,9 @@
                         defaultAd: this.$route.query.isquesheng || 0
                     }).then(function (res) {
                         that.$Message.success('新增成功');
-                        that.$router.push({
-                            name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
-                        });
+                        // that.$closePageAndActiveRouter({
+                        //     name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
+                        // });
                         // todo 跳回到列表页
                         // this.$router.push({});
                     });

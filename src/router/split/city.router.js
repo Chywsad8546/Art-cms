@@ -25,7 +25,7 @@ export const otherRouter = {
         },
         {
             path: 'ad/addetail',
-            title: '广告详情',
+            title: '创意详情',
             name: 'ad_addetail',
             component: () =>
                 import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
@@ -149,6 +149,9 @@ export const appRouter = [
                 path: 'positionManagement',
                 name: 'positionManagement',
                 title: '广告位管理',
+                meta: {
+                    keepalive: true
+                },
                 component: () =>
                     import('@/views/advertisement/positionManagement.vue')
             },
