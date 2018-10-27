@@ -155,10 +155,11 @@
 
                 this.$refs['commonForm'].validate((commvalid) => {
                     this.$refs['form'].validate((valid) => {
-                        if (commvalid && valid && uploadvalid) {
+                        if (commvalid && valid && uploadvalid) {      
+                            var that = this;                
                             if (this.$route.query.id) {
                                 ad.editIdea({
-                                    idcode: this.$route.query.id,
+                                    ideaCode: this.$route.query.id,
                                     ideaData: JSON.stringify(this.formItem),
                                     typeId: this.typeId,
                                     positionId: this.positionId,
@@ -166,6 +167,7 @@
                                     adName: this.commonForm.adName,
                                     adResource: this.adResource
                                 }).then(function (res) {
+                                    this.$Message.success('修改成功');
                                     // todo 跳回到列表页
                                     // this.$router.push({});
                                 });
@@ -176,8 +178,13 @@
                                     positionId: this.positionId,
                                     adCompany: this.commonForm.adCompany,
                                     adName: this.commonForm.adName,
-                                    adResource: this.adResource
+                                    adResource: this.adResource,
+                                    planId:this.$route.query.planId
                                 }).then(function (res) {
+                                    this.$Message.success('新增成功');
+                                    that.$router.push({
+                                        name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
+                                    });
                                     // todo 跳回到列表页
                                     // this.$router.push({});
                                 });

@@ -80,4 +80,7 @@ export default {
     panList(params) {
         return http.get('/cmsapi/panList', {params: params});
     },
+    editStatus(params) {
+        return http.post('/cmsapi/editStatus', params);
+    },
 };

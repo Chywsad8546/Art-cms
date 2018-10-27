@@ -9,11 +9,17 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="计划ID" prop="id">
+                        <FormItem label="计划ID" prop="id" :label-width="80">
                             <Input v-model.trim="searchData.id" style="width:140px"></Input>
                         </FormItem>
-                        <FormItem label="计划名称" prop="planName">
+                        <FormItem label="计划名称" prop="planName"  :label-width="80">
                             <Input v-model.trim="searchData.planName" style="width:140px"></Input>
+                        </FormItem>
+                        <FormItem label="状态" prop="status" :label-width="50">
+                            <Select v-model="searchData.status" style="width:100px">
+                                <Option value="1">关闭</Option>
+                                <Option value="0">启用</Option>
+                            </Select>
                         </FormItem>
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
@@ -79,6 +85,30 @@
                         render: (h, params) => {
                             var i = this;
                             return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            background: params.row.status == 0 ? 'red':'green',
+                                            marginRight: '5px',
+                                            borderColor: params.row.status == 0 ? 'red':'green',
+                                        },
+                                        on: {
+                                            click: () => {
+                                                let statType = params.row.status == 0 ? 1 : 0;
+                                                adapi.editStatus({"id":params.row.id,"status":statType}).then(response=>{
+                                                    this.$Message.success('修改状态成功');
+                                                    this.init();
+                                                })
+                                            }
+                                        }
+                                    },
+                                    params.row.status==0?"关闭":"启用"
+                                ),   
                                 h(
                                     'Button',
                                     {

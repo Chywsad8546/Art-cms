@@ -41,13 +41,13 @@
                      * 跳高级编辑器，新增创意页
                      */
                     if (res.data.data.isAdvancedEdit) {
-                        that.$replacePageAndActiveRouter({'name': 'ad_addsenioretail', query: {templateid: that.$route.query.templateid}});
+                        that.$replacePageAndActiveRouter({'name': 'ad_addsenioretail', query: {templateid: that.$route.query.templateid,planId:that.$route.query.planId}});
                     }
                     /**
                      * 跳简单编辑器，新增创意页
                      */
                     else {
-                        that.$replacePageAndActiveRouter({'name': 'ad_addetail', query: {templateid: that.$route.query.templateid}});
+                        that.$replacePageAndActiveRouter({'name': 'ad_addetail', query: {templateid: that.$route.query.templateid,planId:that.$route.query.planId}});
                     }
                 });
             }

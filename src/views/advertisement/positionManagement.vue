@@ -22,6 +22,11 @@
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
                         </FormItem>
+                        <FormItem label="未设置缺省广告的广告位" prop="defaultAd">
+                            <Select v-model="searchData.defaultAd" style="width:140px">
+                                <Option value="1">是</Option>
+                            </Select>
+                        </FormItem>
                        <!-- <FormItem label="是否删除" prop="isDel">
                             <Select v-model="searchData.isDel" style="width:140px">
                                 <Option value="">全部</Option>
@@ -239,7 +244,7 @@
                                     '禁用'
                                 ),
                                 (function () {
-                                    if (params.row.isNew == 1) {
+                                    if (params.row.isNew === 1) {
                                         return h(
                                             'Button',
                                             {
@@ -252,7 +257,7 @@
                                                 },
                                                 on: {
                                                     click: () => {
-                                                        if (params.row.isNew == 1) {
+                                                        if (params.row.isNew === 1) {
                                                             that.$router.push({
                                                                 name: 'formtemplate',
                                                                 query: {advertId: params.row.id}
@@ -304,7 +309,7 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
-                            return h('div', [
+                            var optionArray = [
                                 h(
                                     'Button',
                                     {
@@ -349,7 +354,23 @@
                                     },
                                     '修改'
                                 )
-                            ]);
+                            ];
+                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null){
+                                  optionArray.push(h(
+                                      'Button',
+                                      {
+                                          props: {
+                                              type: 'error',
+                                              size: 'small'
+                                          },
+                                          style: {
+                                              marginRight: '5px'
+                                          }
+                                      },
+                                      '未设置缺省广告！'
+                                  ))
+                            }
+                            return h('div', optionArray);
                         }
                     }
                 ],
