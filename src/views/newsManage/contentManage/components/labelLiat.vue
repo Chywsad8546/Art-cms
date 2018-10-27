@@ -48,12 +48,27 @@
                     </CheckboxGroup> 
                 </div>
             </div>
-            <div class="roomContiner">
+            <div class="roomKeyWorkContiner">
                 <div class="room">内容关键词:</div>
                 <div class="roomList">
-                    <CheckboxGroup class="labeldxk" v-model="modelkeyword" @on-change = "keywordFun">
+                        <Tag v-for="item in count" :key="item" :name="item" closable @on-close="handleClose2">标签{{ item + 1 }}</Tag>
+                        <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAdd">添加标签</Button>
+                    <!-- <CheckboxGroup class="labeldxk" v-model="modelkeyword" @on-change = "keywordFun">
                                 <Checkbox  v-for="item in keywordList" :label="item.id">{{item.name}}</Checkbox>
-                    </CheckboxGroup>
+                    </CheckboxGroup> -->
+                </div>
+                <div class="keyWordClass">
+                    <div>
+                        <Input v-model="keyWord" placeholder="Enter something..." clearable style="width: 200px"></Input>
+                    </div>
+                    <div class="associationKey">
+                        <ul>
+                            <li>关键词1</li>
+                            <li>关键词2</li>
+                            <li>关键词3</li>
+                            <li>关键词4</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
     </div>  
@@ -96,13 +111,26 @@
                 callbackArr5:[],
                 callbackArr6:[],
                 callbackArr7:[],
-                cityList: []
+                cityList: [],
+                keyWord:"",
+                count: [0, 1, 2]
             }
         },
         created() {
             this.tagsList();//获取标签服务
         },
         methods: {
+            handleAdd () {//处理标签
+                if (this.count.length) {
+                    this.count.push(this.count[this.count.length - 1] + 1);
+                } else {
+                    this.count.push(0);
+                }
+            },
+            handleClose2 (event, name) {//处理标签
+                const index = this.count.indexOf(name);
+                this.count.splice(index, 1);
+            },
             tagsList() {
                 api.tagsList().then(response => {
                     this.cityList = response.data.data;
@@ -326,6 +354,7 @@
                 this.modeldxpp = curVal[6];
                 this.modelkeyword = curVal[7];
             },
+
         }
     }
 </script>
@@ -392,5 +421,20 @@
     }
     .labeldxk {
         display: inline;
+    }
+    .roomKeyWorkContiner {
+        width: 100%;
+    }
+    .keyWordClass {
+        width: 100%;
+        padding-left: 123px;
+        position: relative;
+    }
+    .associationKey {
+        position: absolute;
+        top:70px;
+        background: #FFFFFF;
+        width: 200px;
+        overflow: hidden;
     }
 </style>
