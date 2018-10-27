@@ -271,11 +271,21 @@
                                         },
                                         on: {
                                             click: () => {
+                                                let status = 0;
+                                                let statusPrompt = '';
+                                                if (params.row.status === 0) {
+                                                    status = 1;
+                                                    statusPrompt = '是否启用';
+                                                } else if (params.row.status === 1) {
+                                                    status = 0;
+                                                    statusPrompt = '是否禁用';
+                                                }
+
                                                 this.$Modal.confirm({
-                                                    title: '是否禁用',
-                                                    content: '<p>是否禁用</p>',
+                                                    title: statusPrompt,
+                                                    content: '<p>' + statusPrompt + '</p>',
                                                     onOk: () => {
-                                                        api.deleteTemplate({id: params.row.id}).then(response => {
+                                                        api.deleteTemplate({id: params.row.id, status: status}).then(response => {
                                                             if (response.data.data > 0) {
                                                                 api.templateList({positionId: params.row.positionId}).then(response => {
                                                                     this.modalData = response.data.data;
@@ -296,7 +306,7 @@
                                             }
                                         }
                                     },
-                                    '禁用'
+                                    '更改状态'
                                 ),
                                 (function () {
                                     if (params.row.isNew === 1) {

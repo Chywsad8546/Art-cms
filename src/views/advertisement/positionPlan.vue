@@ -17,8 +17,8 @@
                         </FormItem>
                         <FormItem label="状态" prop="status" :label-width="50">
                             <Select v-model="searchData.status" style="width:100px">
-                                <Option value="1">关闭</Option>
-                                <Option value="0">启用</Option>
+                                <Option value="1">启用</Option>
+                                <Option value="0">关闭</Option>
                             </Select>
                         </FormItem>
                         <FormItem>
@@ -119,7 +119,7 @@
                         render: (h, params) => {
                             var i = this;
                             return h('div', [
-                                
+
                                 h(
                                     'Button',
                                     {
