@@ -456,14 +456,6 @@ import { setTimeout } from 'timers';
                                 }
                             });
                         }
-                        // if(this.formAdd.name == ""){
-                        //     this.$Message.error("请输入name");
-                        //     return false;
-                        // }
-                        // if(this.formAdd.label == ""){
-                        //     this.$Message.error("请输入label");
-                        //     return false;
-                        // }
                         if (this.formAdd.reg == true && this.formAdd.message == '') {
                             this.$Message.error('请输入校验不通过提示信息');
                             return false;
@@ -522,6 +514,7 @@ import { setTimeout } from 'timers';
                         this.confs = JSON.parse(response.data.data.form);
                         this.editorTry(true);
                     }
+                    this.senior.positionId= response.data.data.positionId;
                     this.formItem.positionId = response.data.data.positionId;
                     this.adListAll();
                 });
@@ -671,6 +664,7 @@ import { setTimeout } from 'timers';
             }
             else {
                 this.formItem.positionId = this.$route.query.positionId;
+                this.senior.positionId= this.$route.query.positionId;
                 this.adListAll();
             }
         }

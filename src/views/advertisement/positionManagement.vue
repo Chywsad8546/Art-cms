@@ -107,6 +107,7 @@
                 </a>
                 <Table border :columns="modalColums" :data="modalData"></Table>
             </Card>
+            <span slot="footer"></span>
         </Modal>
 
         <Modal v-model="adListListModal" width="1000" >
@@ -647,6 +648,7 @@
                 }
             },
             addModal() {
+                this.modal3=false;
                 this.$router.push({
                     name: 'formtemplate', query: {positionId: this.currentPosition}
                 });
