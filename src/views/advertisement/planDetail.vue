@@ -162,15 +162,18 @@
                     },
                     {
                         key: 'stationName',
-                        title: '站点'
+                        title: '应用',
+                        fixed: 'left'
                     },
                     {
                         key: 'pageName',
-                        title: '频道'
+                        title: '频道',
+                        fixed: 'left'
                     },
                     {
                         key: 'positionName',
-                        title: '位置'
+                        title: '位置',
+                        fixed: 'left'
                     },
                     {
                         key: 'adName',
