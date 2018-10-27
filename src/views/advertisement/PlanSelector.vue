@@ -173,7 +173,7 @@
             },
             init() {
                 // this.searchData.planId = this.plandetail.planid;
-                adapi.panList({status:0}).then(response => {
+                adapi.panList({status:1}).then(response => {
                     this.plans = response.data.data;
                 });
             },

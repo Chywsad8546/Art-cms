@@ -151,6 +151,7 @@
                         return moment(date).isBefore(moment());
                     }
                 },
+                selectPostionId:'',
                 selectdate:[moment().toDate(),moment().add(1,'d').toDate()],
                 showPostion:false,
                 daycolumns:[],
@@ -304,6 +305,8 @@
                                         on: {
                                             click: () => {
                                                 this.showPostion=true;
+                                                this.selectPostionId =params.row.positionId;
+                                                this.getPostionPaiqi();
                                             }
                                         }
                                     },
@@ -335,6 +338,57 @@
             };
         },
         methods: {
+            getPostionPaiqi(){
+                fapi.getPaiqiList({
+                    positionIds: this.selectPostionId,
+                    startTime: moment(this.selectdate[0]).format('YYYY-MM-DD'),
+                    endTime: moment(this.selectdate[1]).format('YYYY-MM-DD')
+                })
+                    .then(function (res) {
+                        for (let index = 0; index < res.data.data.length; index++) {
+                            let paiqirow = res.data.data[index];
+                            let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
+                            let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
+                            for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
+                                let newpaiqirow = _.cloneDeep(paiqirow);
+                                that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
+                                if (!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName) {
+                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName = {};
+                                }
+                                that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')] = 'cell-hold';
+                            }
+                        }
+                        for (let i = 0; i < that.blankPageListData.length; i++) {
+                            let item = that.blankPageListData[i];
+
+                            let buchongend = moment(that.endTime, 'YYYY-MM-DD');
+                            for (let buchongstart = moment(that.startTime, 'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
+                                let daykey = buchongstart.format('M-D');
+                                let day = buchongstart.format('YYYY-MM-DD');
+                                // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
+                                if (!item[daykey]) {
+                                    item[daykey] = {};
+                                }
+                                item[daykey]['day'] = day;
+                                // item[daykey]['xuanzhong'] = false;
+                                item[daykey]['positionId'] = item.positionId;
+                            }
+                        }
+
+                        for (let i = 1; i <= days; i++) {
+                            that.columblankPage.push({
+                                title: month + '-' + i,
+                                key: month + '-' + i,
+                                'width': 100,
+                                render: (h, params) => {
+                                    return h('tdpop', {props:params.row[month + '-' + i] ,
+                                        on: {changepaiqi: that.cellclick}});//
+                                }
+                            });
+                        }
+                        that.searchLoading = false;
+                    });
+            },
             dpchange(v){
 
             },
