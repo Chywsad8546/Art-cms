@@ -137,7 +137,39 @@
                         title: '广告名称',
                     },
                     {
-
+                        key: 'createAt',
+                        title: '创建时间',
+                    }, {
+                        title: '管理',
+                        key: 'action',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {id: params.row.ideaCode}
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '修改'
+                                )
+                            ]);
+                        }
                     }
                 ],
                 adListData: [],
