@@ -48,7 +48,7 @@
     <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
 
     <Modal v-model="showPlan" title="选择创意" scrollable width="850">
-        <planselector></planselector>
+        <planselector :positionId="selectPostionId" :date="selectDate" :showseed="showseed"></planselector>
         <span slot="footer"></span>
     </Modal>
 </div>
@@ -66,8 +66,9 @@
     import moment from 'moment';
     import tdpop from './tdpop.vue';
     import planselector from './PlanSelector.vue';
+    import _ from 'lodash';
     import Vue from 'vue';
-    Vue.component("tdpop",tdpop);
+    Vue.component('tdpop', tdpop);
     export default {
         components: {
             tdpop,
@@ -75,7 +76,8 @@
         },
         data() {
             return {
-                showPlan:false,
+                showseed:'',
+                showPlan: false,
                 formItem: {
                     station: '',
                     pageId: '',
@@ -106,65 +108,10 @@
                         'width': 150,
                         fixed: 'left'
                     }
-                    // {
-                    //     title: '创意名称',
-                    //     key: 'adName'
-                    // },
-                    // {
-                    //     title: '最后更新时间',
-                    //     key: 'modifyAt'
-                    // },
-                    // {
-                    //     title: '上架时间',
-                    //     key: 'startime'
-                    // },
-                    // {
-                    //     title: '下架时间',
-                    //     key: 'endtime'
-                    // },
-                    // {
-                    //     title: '生成时间',
-                    //     key: 'createAt'
-                    // },
-                    // {
-                    //     title: '付费状态',
-                    //     key: 'isPay'
-                    // },
-                    // {
-                    //     title: '广告商',
-                    //     key: 'adCompany'
-                    // },
-                    // {
-                    //     title: 'Action',
-                    //     key: 'action',
-                    //     width: 150,
-                    //     align: 'center',
-                    //     render: (h, params) => {
-                    //         return h('div', [
-                    //             h('Button', {
-                    //                 props: {
-                    //                     type: 'primary',
-                    //                     size: 'small'
-                    //                 },
-                    //                 style: {
-                    //                     marginRight: '5px'
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         this.$router.push({
-                    //                             name: 'positionEdit',
-                    //                             query: {positionId: params.row.positionId}
-                    //                         });
-                    //                     }
-                    //                 }
-                    //             }, '编辑')
-                    //         ]);
-                    //     }
-                    // }
                 ],
                 blankPageListData: [],
                 total: 0,
-                searchLoading:false,
+                searchLoading: false,
                 tempList: {},
                 zhandianList: [],
                 weizhiList: [],
@@ -172,7 +119,9 @@
                 dateTime: moment().date(1).toDate(),
                 startTime: '',
                 endTime: '',
-                blankPageListDataDictus:{}
+                blankPageListDataDictus: {},
+                selectPostionId:'',
+                selectDate:''
 
             };
         },
@@ -210,12 +159,15 @@
                 }
                 return ids.join(',');
             },
-            cellclick(){
-                this.showPlan=true;
-                console.log('cellclick')
+            cellclick(ideaCode, adName, positionId, day) {
+                this.showseed=moment().valueOf();
+                this.selectPostionId=positionId;
+                this.selectDate = day;
+                this.showPlan = true;
+                console.log('cellclick', ideaCode, adName, positionId, day);
             },
             search() {
-                this.searchLoading=true;
+                this.searchLoading = true;
                 let days = moment(this.dateTime).daysInMonth();
                 let month = moment(this.dateTime).format('M');
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
@@ -227,6 +179,7 @@
                     that.blankPageListData = response.data.data;
                     that.blankPageListDataDictus = {};
                     that.blankPageListData.forEach(function (row) {
+
                         that.blankPageListDataDictus[row['positionId']] = row;
                     });
                     that.total = response.data.count;
@@ -237,24 +190,47 @@
                         endTime: that.endTime
                     })
                         .then(function (res) {
-                            res.data.data.forEach(function (paiqirow) {
+                            for(let index=0;index<res.data.data.length;index++){
+                                let paiqirow=res.data.data[index];
                                 let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
                                 let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
                                 for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
-                                    that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = paiqirow;
+                                    let newpaiqirow=_.cloneDeep(paiqirow)
+                                    that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
+                                    if(!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName){
+                                        that.blankPageListDataDictus[paiqirow['positionId']].cellClassName= {};
+                                    }
+                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')]='cell-hold';
+                                    console.log(that.blankPageListDataDictus[paiqirow['positionId']])
                                 }
-                            });
+                            }
+                            for(let i=0;i<that.blankPageListData.length;i++) {
+                                let item = that.blankPageListData[i];
+
+                                let buchongend = moment(that.endTime,'YYYY-MM-DD');
+                                for (let buchongstart = moment(that.startTime,'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
+                                    let daykey = buchongstart.format('M-D');
+                                    let day = buchongstart.format('YYYY-MM-DD');
+                                    // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
+                                    if (!item[daykey]) {
+                                        item[daykey] = {};
+                                    }
+                                    item[daykey]['day'] = day;
+                                    item[daykey]['positionId'] = item.positionId;
+                                }
+                            }
+
                             for (let i = 1; i <= days; i++) {
                                 that.columblankPage.push({
                                     title: month + '-' + i,
                                     key: month + '-' + i,
                                     'width': 100,
                                     render: (h, params) => {
-                                        return h('tdpop', {props: params.row[month + '-' + i],on:{changepaiqi:that.cellclick}});
+                                        return h('tdpop', {props: params.row[month + '-' + i], on: {changepaiqi: that.cellclick}});
                                     }
                                 });
                             }
-                            that.searchLoading=false;
+                            that.searchLoading = false;
                         });
                 });
             },
@@ -288,6 +264,10 @@
     background: #ffffff;
 
     margin-bottom: 10px;
+}
+.ivu-table .cell-hold {
+    background-color: #187;
+    color: #fff;
 }
 </style>
 
