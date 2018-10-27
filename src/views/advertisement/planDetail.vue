@@ -106,16 +106,72 @@
                 </FormItem>
             </Form>
         </Modal>
+
+        <Modal v-model="paiqiListModal" width="1000">
+            <Card >
+                <p slot="title">
+                    <Icon type="navicon-round"></Icon>
+                    当前创意排期列表
+                </p>
+                <Table border :columns="paiqiListColums" :data="paiqiListData"></Table>
+            </Card>
+            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+
+        </Modal>
+
+        <Modal v-model="showPostion" title="选择日期" scrollable width="850" >
+            <Form  ref="searchData"  inline :label-width="120">
+
+                <!--<FormItem label="启用中的广告计划" >-->
+                    <!--<Select v-model="planid" :key="'selectplanid'" style="width:300px" @on-change="selectchange">-->
+                        <!--<Option v-for="item in plans" :value="item.id" :key="'plan'+item.id">{{ item.planName }}</Option>-->
+                    <!--</Select>-->
+                <!--</FormItem>-->
+
+                <FormItem label="排期日期" >
+                    <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder="上架时间"></DatePicker>
+                </FormItem>
+            </Form>
+            <Table border :columns="daycolumns" :data="postionData"></Table>
+            <!--<span slot="footer"></span>-->
+        </Modal>
     </Row>
 </template>
 <script>
     import ideaApi from '../../api/advertisement/ideaList.js';
     import dutil from '../../libs/util.js';
+    import moment from 'moment';
     import fapi from '../../api/advertisement/formtemplateApi.js';
 
     export default {
         data() {
             return {
+                dpoptions: {
+                    disabledDate (date) {
+                        return moment(date).isBefore(moment());
+                    }
+                },
+                selectPostionId:'',
+                selectdate:[moment().toDate(),moment().add(1,'d').toDate()],
+                showPostion:false,
+                daycolumns:[],
+                postionData:[],
+                paiqiListData: [],
+                paiqiListColums: [
+                    {
+                        key: 'adName',
+                        title: '名称'
+                    },
+                    {
+                        key: 'startime',
+                        title: '开始时间'
+                    },
+                    {
+                        key: 'endtime',
+                        title: '结束时间'
+                    }
+                ],
+                paiqiListModal: false,
                 bjqList: [],
                 addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
@@ -133,8 +189,19 @@
                         width: 100
                     },
                     {
+                        key: 'stationName',
+                        title: '应用',
+                        fixed: 'left'
+                    },
+                    {
                         key: 'pageName',
-                        title: '频道'
+                        title: '频道',
+                        fixed: 'left'
+                    },
+                    {
+                        key: 'positionName',
+                        title: '位置',
+                        fixed: 'left'
                     },
                     {
                         key: 'adName',
@@ -159,10 +226,36 @@
                         width: 130,
                         align: 'center',
                         render: (h, params) => {
+                            var optionArray = [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small',
+                                            icon: 'information',
+                                            shape: 'circle'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.paiqiListModal = true;
+                                                fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                                                    this.paiqiListData = response.data.data;
+                                                });
+                                            }
+                                        }
+                                    }
+                                )
+                            ];
                             if (params.row.paiqiZhuangtai === 0) {
-                                return h('div', ['未排期']);
+                                optionArray.push('未排期');
+                                return h('div', optionArray);
                             } else if (params.row.paiqiZhuangtai === 1) {
-                                return h('div', ['已排期']);
+                                optionArray.push('已排期')
+                                return h('div', optionArray);
                             }
                         }
                     },
@@ -198,6 +291,26 @@
                                         }
                                     },
                                     '修改'
+                                ),
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showPostion=true;
+                                                this.selectPostionId =params.row.positionId;
+                                                this.getPostionPaiqi();
+                                            }
+                                        }
+                                    },
+                                    '排期'
                                 )
                             ]);
                         }
@@ -220,11 +333,65 @@
                     ideaCount: this.$route.query.ideaCount,
                     paiQiCount: this.$route.query.paiQiCount,
                     zhanShiCount: this.$route.query.zhanShiCount,
-                    planName: '',
+                    planName: ''
                 }
             };
         },
         methods: {
+            getPostionPaiqi(){
+                fapi.getPaiqiList({
+                    positionIds: this.selectPostionId,
+                    startTime: moment(this.selectdate[0]).format('YYYY-MM-DD'),
+                    endTime: moment(this.selectdate[1]).format('YYYY-MM-DD')
+                })
+                    .then(function (res) {
+                        for (let index = 0; index < res.data.data.length; index++) {
+                            let paiqirow = res.data.data[index];
+                            let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
+                            let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
+                            for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
+                                let newpaiqirow = _.cloneDeep(paiqirow);
+                                that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
+                                if (!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName) {
+                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName = {};
+                                }
+                                that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')] = 'cell-hold';
+                            }
+                        }
+                        for (let i = 0; i < that.blankPageListData.length; i++) {
+                            let item = that.blankPageListData[i];
+
+                            let buchongend = moment(that.endTime, 'YYYY-MM-DD');
+                            for (let buchongstart = moment(that.startTime, 'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
+                                let daykey = buchongstart.format('M-D');
+                                let day = buchongstart.format('YYYY-MM-DD');
+                                // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
+                                if (!item[daykey]) {
+                                    item[daykey] = {};
+                                }
+                                item[daykey]['day'] = day;
+                                // item[daykey]['xuanzhong'] = false;
+                                item[daykey]['positionId'] = item.positionId;
+                            }
+                        }
+
+                        for (let i = 1; i <= days; i++) {
+                            that.columblankPage.push({
+                                title: month + '-' + i,
+                                key: month + '-' + i,
+                                'width': 100,
+                                render: (h, params) => {
+                                    return h('tdpop', {props:params.row[month + '-' + i] ,
+                                        on: {changepaiqi: that.cellclick}});//
+                                }
+                            });
+                        }
+                        that.searchLoading = false;
+                    });
+            },
+            dpchange(v){
+
+            },
             init() {
                 this.searchData.planId = this.plandetail.planid;
                 fapi.planDetails({id: this.plandetail.planid}).then(response => {
@@ -261,7 +428,7 @@
                 this.init();
             },
             pdClick() {
-                console.log(this.searchData);
+               // console.log(this.searchData);
                 if (typeof this.searchData.pageName !== 'undefined') {
                     fapi.getPositionInfo(this.searchData).then(response => {
                         this.weizhiList = response.data.data;
@@ -269,9 +436,9 @@
                 }
             },
             zdClick() {
-                console.log(this.searchData);
+                //console.log(this.searchData);
                 if (typeof this.searchData.station !== 'undefined') {
-                    fapi.getChannelInfo(this.searchData).then(response => {
+                    fapi.getChannelInfo({station:this.searchData.station}).then(response => {
                         this.pingdaoList = response.data.data;
                     });
                 }

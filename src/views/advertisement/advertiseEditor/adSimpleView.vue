@@ -6,6 +6,7 @@
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
+                <Alert show-icon v-if="this.$route.query.isquesheng">你当前在设置缺省广告</Alert>
                     <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #ffffff;overflow: hidden">
                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
@@ -139,11 +140,48 @@
             };
         },
         methods: {
+            saveajax() {
+                var that = this;
+                if (this.$route.query.id) {
+                    ad.editIdea({
+                        ideaCode: this.$route.query.id,
+                        ideaData: JSON.stringify(this.formItem),
+                        typeId: this.typeId,
+                        positionId: this.positionId,
+                        adCompany: this.commonForm.adCompany,
+                        adName: this.commonForm.adName,
+                        adResource: this.adResource
+                    }).then(function (res) {
+                        that.$Message.success('修改成功');
+                        // todo 跳回到列表页
+                        // this.$router.push({});
+                    });
+                } else {
+                    ad.addIdea({
+                        ideaData: JSON.stringify(this.formItem),
+                        typeId: this.typeId,
+                        positionId: this.positionId,
+                        adCompany: this.commonForm.adCompany,
+                        adName: this.commonForm.adName,
+                        adResource: this.adResource,
+                        planId: this.$route.query.planId || 0,
+                        defaultAd: this.$route.query.isquesheng || 0
+                    }).then(function (res) {
+                        that.$Message.success('新增成功');
+                        that.$router.push({
+                            name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
+                        });
+                        // todo 跳回到列表页
+                        // this.$router.push({});
+                    });
+                }
+            },
             save() {
                 /**
                  * 表单验证
                  */
                 let uploadvalid = true;
+                let hasCommonInput = false;
                 for (var i = 0; i < this.confs.length; i++) {
                     let item = this.confs[i];
                     if (item.type === 'upload' && item.required && uploadvalid) {
@@ -151,50 +189,27 @@
                             uploadvalid = false;
                         }
                     }
+                    if (item.type !== 'upload') {
+                        hasCommonInput = true;
+                    }
                 }
-
+                var that = this;
                 this.$refs['commonForm'].validate((commvalid) => {
-                    this.$refs['form'].validate((valid) => {
-                        if (commvalid && valid && uploadvalid) {      
-                            var that = this;                
-                            if (this.$route.query.id) {
-                                ad.editIdea({
-                                    ideaCode: this.$route.query.id,
-                                    ideaData: JSON.stringify(this.formItem),
-                                    typeId: this.typeId,
-                                    positionId: this.positionId,
-                                    adCompany: this.commonForm.adCompany,
-                                    adName: this.commonForm.adName,
-                                    adResource: this.adResource
-                                }).then(function (res) {
-                                    that.$Message.success('修改成功');
-                                    // todo 跳回到列表页
-                                    // this.$router.push({});
-                                });
+                    if (hasCommonInput) {
+                        this.$refs['form'].validate((valid) => {
+                            if (commvalid && valid && uploadvalid) {
+                                that.saveajax();
                             } else {
-                                console.log("add");
-                                ad.addIdea({
-                                    ideaData: JSON.stringify(this.formItem),
-                                    typeId: this.typeId,
-                                    positionId: this.positionId,
-                                    adCompany: this.commonForm.adCompany,
-                                    adName: this.commonForm.adName,
-                                    adResource: this.adResource,
-                                    planId:this.$route.query.planId,
-                                    defaultAd:0
-                                }).then(function (res) {
-                                    that.$Message.success('新增成功');
-                                    that.$router.push({
-                                        name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
-                                    });
-                                    // todo 跳回到列表页
-                                    // this.$router.push({});
-                                });
+                                this.$Message.error('补充完善后，才能保存');
                             }
+                        });
+                    } else {
+                        if (commvalid && uploadvalid) {
+                            that.saveajax();
                         } else {
                             this.$Message.error('补充完善后，才能保存');
                         }
-                    });
+                    }
                 });
             },
             uploadSuccess (res, file) {

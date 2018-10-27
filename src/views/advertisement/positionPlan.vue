@@ -63,25 +63,9 @@
                         width: 100
                     },
                     {
-                        key: 'planName',
-                        title: '计划名字'
-                    },
-                    {
-                        key: 'ideaCount',
-                        title: '创意总数'
-                    },
-                    {
-                        key: 'zhanShiCount',
-                        title: '展示数'
-                    },
-                    {
-                        title: '排期数',
-                        key: 'paiQiCount'
-                    },
-                    {
-                        title: '管理',
-                        key: 'action',
-                        align: 'center',
+                        key: 'status',
+                        title: '状态',
+                        width: 80,
                         render: (h, params) => {
                             var i = this;
                             return h('div', [
@@ -108,7 +92,34 @@
                                         }
                                     },
                                     params.row.status==0?"关闭":"启用"
-                                ),   
+                                )
+                            ]);
+                        }
+                    },
+                    {
+                        key: 'planName',
+                        title: '计划名字'
+                    },
+                    {
+                        key: 'ideaCount',
+                        title: '创意总数'
+                    },
+                    {
+                        key: 'zhanShiCount',
+                        title: '展示数'
+                    },
+                    {
+                        title: '排期数',
+                        key: 'paiQiCount'
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                
                                 h(
                                     'Button',
                                     {
