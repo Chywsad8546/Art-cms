@@ -201,9 +201,10 @@
         watch: {
             'positionId': function (val) {
                 this.formItem.planid = '';
-                this.plans=[];
+                this.init();
             },
             'showseed': function (val) {
+                this.formItem.selectideacode='';
                 // this.showPayDialog = false;
             },
             'date': function (val) {
