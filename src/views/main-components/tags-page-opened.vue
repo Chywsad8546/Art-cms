@@ -6,8 +6,9 @@
     <div ref="scrollCon" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll" class="tags-outer-scroll-con">
         <div class="close-all-tag-con">
             <Dropdown transfer @on-click="handleTagsOption">
-                <Button size="small" type="primary">
-                    导航条
+                <Button size="small" type="ghost" shape="circle" icon="navicon">
+                    <!--<Icon type="navicon"></Icon>-->
+                    <!--导航条-->
                     <Icon type="arrow-down-b"></Icon>
                 </Button>
                 <DropdownMenu slot="list">
