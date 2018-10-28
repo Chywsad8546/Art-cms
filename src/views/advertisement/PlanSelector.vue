@@ -208,7 +208,7 @@
             },
             'date': function (val) {
                 this.selectdate = [val, moment(val).add(1, 'd').toDate()];
-                this.dpchange(this.selectdate);
+                // this.dpchange(this.selectdate);
             }
         }
     };
