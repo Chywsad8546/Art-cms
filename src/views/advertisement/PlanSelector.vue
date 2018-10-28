@@ -27,7 +27,7 @@
                     </FormItem>
                     <FormItem>
 
-                        <Button v-show="!searchLoading" type="primary" style="margin-left: 8px" @click="paiqi">确定</Button>`
+                        <Button v-show="!searchLoading" type="primary" style="margin-left: 8px" @click="paiqi">完毕</Button>`
                     </FormItem>
                 </Form>
                 <Alert v-if="existwarning" type="warning" show-icon>选择的日期范围内，有已经存在的广告</Alert>
