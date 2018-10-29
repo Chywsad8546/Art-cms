@@ -307,7 +307,7 @@
                         positionId:this.positionId
                        // positionId:2051
                     }).then(response=>{
-                        if(response.data.data[0].previewType && response.data.data[0].previewUrl){
+                        if(response.data.data[0].previewType){
                             this.previewType = response.data.data[0].previewType;
                             this.previewUrl = response.data.data[0].previewUrl;    
                         }else{
