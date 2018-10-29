@@ -22,6 +22,11 @@
                         <FormItem label="位置名称" prop="positionName">
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
                         </FormItem>
+                        <FormItem label="未设置缺省广告" prop="defaultAd">
+                            <Select v-model="searchData.defaultAd" style="width:140px">
+                                <Option value="1">是</Option>
+                            </Select>
+                        </FormItem>
                        <!-- <FormItem label="是否删除" prop="isDel">
                             <Select v-model="searchData.isDel" style="width:140px">
                                 <Option value="">全部</Option>
@@ -81,7 +86,7 @@
 
         <Modal v-model="modal2" width="360" @on-ok="updateChannel(updateCahnnelValue)">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
-                <FormItem label="栏目名称" prop="positionName">
+                <FormItem label="广告位名称" prop="positionName">
                     <Input v-model.trim="updateCahnnelValue.positionName" style="width:140px"></Input>
                 </FormItem>
                 <FormItem label="版本号" prop="version">
@@ -102,8 +107,33 @@
                 </a>
                 <Table border :columns="modalColums" :data="modalData"></Table>
             </Card>
-            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+            <span slot="footer"></span>
+        </Modal>
 
+        <Modal v-model="adListListModal" width="1000" >
+            <Card >
+                <p slot="title">
+                    <Icon type="navicon-round"></Icon>
+                    当前位置缺省广告列表
+                </p>
+                <a href="#" slot="extra"  @click.prevent="addquesheng" >
+                    <Icon type="plus-circled"></Icon>
+                    重新设置缺省广告
+                </a>
+                <Table border :columns="adListColums" :data="adListData"></Table>
+            </Card>
+            <!--<Button type="primary" icon="plus" @click="addModal">添加编辑器</Button>-->
+            <span slot="footer"></span>
+        </Modal>
+
+        <Modal v-model="showQuesheng" width="1000">
+            <Card >
+                <p slot="title">
+                    <Icon type="ios-film-outline"></Icon>
+                    选择编辑器设置缺省广告
+                </p>
+                <Table border :columns="queshengmodalColums" :data="queshengdata"></Table>
+            </Card>
         </Modal>
     </Row>
 </template>
@@ -113,6 +143,159 @@
     export default {
         data() {
             return {
+                showQuesheng:false,
+                queshengmodalColums: [
+                    {
+                        key: 'id',
+                        title: 'id'
+                    },
+                    {
+                        key: 'name',
+                        title: '名称'
+                    },
+                    {
+                        title: '编辑器类别',
+                        key: 'isAdvancedEdit',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isAdvancedEdit === 0) {
+                                return h('div', {
+                                }, ['普通编辑器']);
+                            } else if (params.row.isAdvancedEdit === 1) {
+                                return h('div', {
+                                    style: {
+                                    }
+                                }, ['高级编辑器']);
+                            }
+                        }
+                    },
+                    {
+                        title: '编辑器版本', //
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.isNew === 0) {
+                                return h('div', {
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, [h(
+                                    'Poptip',
+                                    {
+                                        props: {
+                                            trigger: 'hover',
+                                            title: '旧系统的编辑器，新系统不能使用，只能查看创意结果'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    '旧版'
+                                )]);
+                            } else if (params.row.isNew === 1) {
+                                return h('div', {
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['新版']);
+                            }
+                        }
+                    },
+                    {
+                        title: '状态',
+                        key: 'status',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.status === 0) {
+                                return h('div', {
+                                    style: {
+                                        color: 'red'
+                                    }
+                                }, ['已禁用']);
+                            } else if (params.row.status === 1) {
+                                return h('div', {
+                                    style: {
+                                        color: 'green'
+                                    }
+                                }, ['启动']);
+                            }
+                        }
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'center',
+                        render: (h, params) => {
+                            var that = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({name:'ad_redirect',query:{isquesheng:1,templateid:params.row.id}});
+                                            }
+                                        }
+                                    },
+                                    '选我'
+                                )
+
+                            ]);
+                        }
+                    }
+                ],
+                queshengdata:[],
+                adListListModal: false,
+                selectPostionId:'',
+                adListColums: [
+                    {
+                        key: 'adName',
+                        title: '广告名称',
+                    },
+                    {
+                        key: 'createAt',
+                        title: '创建时间',
+                    }, {
+                        title: '管理',
+                        key: 'action',
+                        width: 130,
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {id: params.row.ideaCode,isquesheng:1}
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '修改'
+                                )
+                            ]);
+                        }
+                    }
+                ],
+                adListData: [],
                 searchStationList: [],
                 searchPageList: [],
                 modalColums: [
@@ -211,11 +394,21 @@
                                         },
                                         on: {
                                             click: () => {
+                                                let status = 0;
+                                                let statusPrompt = '';
+                                                if (params.row.status === 0) {
+                                                    status = 1;
+                                                    statusPrompt = '是否启用';
+                                                } else if (params.row.status === 1) {
+                                                    status = 0;
+                                                    statusPrompt = '是否禁用';
+                                                }
+
                                                 this.$Modal.confirm({
-                                                    title: '是否禁用',
-                                                    content: '<p>是否禁用</p>',
+                                                    title: statusPrompt,
+                                                    content: '<p>' + statusPrompt + '</p>',
                                                     onOk: () => {
-                                                        api.deleteTemplate({id: params.row.id}).then(response => {
+                                                        api.deleteTemplate({id: params.row.id, status: status}).then(response => {
                                                             if (response.data.data > 0) {
                                                                 api.templateList({positionId: params.row.positionId}).then(response => {
                                                                     this.modalData = response.data.data;
@@ -228,18 +421,13 @@
                                                     onCancel: () => {
                                                     }
                                                 });
-                                                // this.modal3 = true;
-                                                // this.currentPosition = params.row.positionId;
-                                                // api.templateList({positionId: params.row.positionId}).then(response => {
-                                                //     this.modalData = response.data.data;
-                                                // });
                                             }
                                         }
                                     },
-                                    '禁用'
+                                    '更改状态'
                                 ),
                                 (function () {
-                                    if (params.row.isNew == 1) {
+                                    if (params.row.isNew === 1) {
                                         return h(
                                             'Button',
                                             {
@@ -252,7 +440,8 @@
                                                 },
                                                 on: {
                                                     click: () => {
-                                                        if (params.row.isNew == 1) {
+                                                        if (params.row.isNew === 1) {
+                                                            that.modal3=false;
                                                             that.$router.push({
                                                                 name: 'formtemplate',
                                                                 query: {advertId: params.row.id}
@@ -284,27 +473,31 @@
                     },
                     {
                         key: 'stationName',
-                        title: '应用名称'
+                        title: '应用名称',
+                        width: 100
                     },
                     {
                         key: 'pageName',
-                        title: '栏目名称'
+                        title: '栏目名称',
+                        width: 100
                     },
                     {
                         key: 'positionName',
-                        title: '位置名称'
+                        title: '位置名称',
+                        width: 150
                     },
                     {
                         title: '版本号',
-                        key: 'version'
+                        key: 'version',
+                        width: 100
                     },
                     {
                         title: '管理',
                         key: 'action',
-                        align: 'center',
+                        align: 'left',
                         render: (h, params) => {
                             var i = this;
-                            return h('div', [
+                            var optionArray = [
                                 h(
                                     'Button',
                                     {
@@ -349,12 +542,62 @@
                                     },
                                     '修改'
                                 )
-                            ]);
+                            ];
+
+                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.selectPostionId=params.row.positionId;
+                                                this.addquesheng();
+                                            }
+                                        }
+                                    },
+                                    '添加缺省广告'
+                                ));
+                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd === 1) {
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
+                                                    this.adListListModal = true;
+                                                    this.selectPostionId=params.row.positionId;
+                                                    this.adListData = response.data.data;
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '查看缺省广告！'
+                                ));
+                            }
+                            return h('div', optionArray);
                         }
                     }
                 ],
                 currentPosition: 0,
                 searchData: {
+                    station: '',
+                    defaultAd: '',
+                    positionName: '',
+                    pageId: ''
                 },
                 data: [],
                 total: 0,
@@ -385,6 +628,13 @@
             };
         },
         methods: {
+            addquesheng(){
+                this.adListListModal=false;
+                api.templateList({positionId: this.selectPostionId}).then(response => {
+                    this.showQuesheng=true;
+                    this.queshengdata = response.data.data;
+                });
+            },
             sitechange(v) {
                 if (v !== undefined) {
                     this.addNewsChannelModal.pageName = v.label;
@@ -399,6 +649,7 @@
                 }
             },
             addModal() {
+                this.modal3=false;
                 this.$router.push({
                     name: 'formtemplate', query: {positionId: this.currentPosition}
                 });

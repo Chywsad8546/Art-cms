@@ -121,6 +121,10 @@
                 adweizhiList: [],
                 columns: [
                     {
+                        title: '应用',
+                        key: 'stationName',
+                    },
+                    {
                         key: 'ideaCode',
                         title: 'ideaCode',
                         width: 100

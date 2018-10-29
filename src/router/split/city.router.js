@@ -25,18 +25,19 @@ export const otherRouter = {
         },
         {
             path: 'ad/addetail',
-            title: '广告详情',
+            title: '创意详情',
             name: 'ad_addetail',
             component: () =>
                 import('@/views/advertisement/advertiseEditor/adSimpleView.vue')
         },
         {
-            path: 'ad/positionEdit',
-            title: '广告详情',
-            name: 'positionEdit',
+            path: 'ad/addsenioretail',
+            title: '创意详情-高级',
+            name: 'ad_addsenioretail',
             component: () =>
-                import('@/views/advertisement/positionEdit.vue')
+                import('@/views/advertisement/advertiseEditor/adSeniorView.vue')
         },
+
         // 系统管理：权限管理
         {
             path: 'sysManage/assignPermissions',
@@ -52,7 +53,7 @@ export const otherRouter = {
         {
             path: 'planDetail',
             name: 'planDetail',
-            title: '编辑器维护',
+            title: '计划详情',
             // meta: {
             //     requireAuth: true
             // },
@@ -128,7 +129,7 @@ export const appRouter = [
             {
                 path: 'stationManagement',
                 name: 'stationManagement',
-                title: '站点管理',
+                title: '应用管理',
                 // meta: {
                 //     keepalive: true
                 // },
@@ -149,6 +150,9 @@ export const appRouter = [
                 path: 'positionManagement',
                 name: 'positionManagement',
                 title: '广告位管理',
+                meta: {
+                    keepalive: true
+                },
                 component: () =>
                     import('@/views/advertisement/positionManagement.vue')
             },
@@ -159,50 +163,20 @@ export const appRouter = [
                 component: () =>
                     import('@/views/advertisement/positionPlan.vue')
             },
-
-        {
-                path: 'templateList',
-                name: 'templateList',
-                title: '编辑器管理',
-                // meta: {
-                //     requireAuth: true
-                // },
-                component: () =>
-                    import('@/views/advertisement/templateList.vue')
-        },
         {
             path: 'guanggapwei',
             name: 'guanggapwei',
             title: '广告位排期管理',
-            // meta: {
-            //     keepalive: true
-            // },
+            meta: {
+                keepalive: true
+            },
             component: () =>
                 import('@/views/advertisement/blankPage.vue')
         },
-        {
-            path: 'ideaList',
-            name: 'ideaList',
-            title: '创意管理',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/advertisement/ideaNewsList.vue')
-        },
 
 
 
-        {
-            path: 'openscreenpagelist',
-            name: 'openscreenpagelist',
-            title: 'APP开屏广告列表',
-            // meta: {
-            //     keepalive: true
-            // },
-            component: () =>
-                import('@/views/advertisement/openScreen.vue')
-        },
+
             // {
             //     path: 'ownerList',
             //     name: 'ownerList',
@@ -420,16 +394,7 @@ export const appRouter = [
                 component: () =>
                     import('@/views/systemManage/sysManage/userManage.vue')
             },
-            {
-                path: 'manyplotadlist',
-                name: 'manyplotadlist',
-                title: '多楼盘广告',
-                // meta: {
-                //     keepalive: true
-                // },
-                component: () =>
-                    import('@/views/error-page/blankPage.vue')
-            },
+
             // {
             //     path: 'openscreenpage',
             //     name: 'openscreenpage',
@@ -449,7 +414,16 @@ export const appRouter = [
         title: '遗留功能',
         component: Main,
         children: [
-
+            {
+                path: 'openscreenpagelist',
+                name: 'openscreenpagelist',
+                title: 'APP开屏广告列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/advertisement/openScreen.vue')
+            },
             {
                 path: 'yihaoyuan',
                 name: 'yihaoyuan',
@@ -474,6 +448,16 @@ export const appRouter = [
                 path: 'manyplotad',
                 name: 'manyplotad',
                 title: '多楼盘广告配置',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/error-page/blankPage.vue')
+            },
+            {
+                path: 'manyplotadlist',
+                name: 'manyplotadlist',
+                title: '多楼盘广告',
                 // meta: {
                 //     keepalive: true
                 // },

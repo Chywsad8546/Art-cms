@@ -19,10 +19,10 @@
         <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
             <div class="main-header">
                 <div class="navicon-con">
-                    <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text"
-                            @click="toggleClick">
-                        <Icon type="navicon" size="32"></Icon>
-                    </Button>
+                    <!--<Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text"-->
+                            <!--@click="toggleClick">-->
+                        <!--<Icon type="navicon" size="32"></Icon>-->
+                    <!--</Button>-->
                 </div>
 
                 <div class="header-middle-con" v-if="qufencity==2">
@@ -127,6 +127,7 @@
                 return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
             },
             currentPath() {
+                // console.log(this.$store.state.app.currentPath)
                 return this.$store.state.app.currentPath; // 当前面包屑数组
             },
             avatorPath() {
