@@ -107,7 +107,7 @@
                         <Option value='2'>APP预览</Option>
                     </Select>
                 </FormItem>
-                <FormItem v-if="updateCahnnelValue.previewType === 1" label="预览URL" prop="previewUrl">
+                <FormItem v-if="upPreviewUrlIsShow" label="预览URL" prop="previewUrl">
                     <Input v-model.trim="updateCahnnelValue.previewUrl" style="width:140px"></Input>
                 </FormItem>
             </Form>
@@ -161,6 +161,7 @@
     export default {
         data() {
             return {
+                upPreviewUrlIsShow:false,
                 showQuesheng:false,
                 queshengmodalColums: [
                     {
@@ -554,7 +555,7 @@
                                                 this.updateCahnnelValue.version = params.row.version;
                                                 this.updateCahnnelValue.positionName = params.row.positionName;
                                                 this.updateCahnnelValue.positionId = params.row.positionId;
-                                                this.updateCahnnelValue.previewType = params.row.previewType;
+                                                this.updateCahnnelValue.previewType = params.row.previewType+'';
                                                 if (params.row.previewType === 1) {
                                                     this.updateCahnnelValue.previewUrl = params.row.previewUrl;
                                                 }
@@ -636,6 +637,10 @@
                     previewType: ''
                 },
                 updateCahnnelValue: {
+                      version : '',
+                      positionName : '',
+                      positionId : '',
+                      previewType : ''
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
@@ -649,14 +654,18 @@
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
                     version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
-                    previewType: [{ type: 'integer', required: true, message: '请选择预览模式', trigger: 'change' }],
+                    previewType: [{ required: true, message: '请选择预览模式', trigger: 'change' }],
                     previewUrl: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
                 }
             };
         },
         methods: {
             changePreviewType(val) {
-                console.log(val)
+                if(val==1){
+                     this.upPreviewUrlIsShow =true;
+                }else{
+                    this.upPreviewUrlIsShow=false;
+                }
             },
             addquesheng(){
                 this.adListListModal=false;
