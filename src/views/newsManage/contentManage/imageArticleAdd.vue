@@ -590,7 +590,7 @@
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    let url = this.$domain.cityDomainimg+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomainimg+'?id='+id+'&pre=1';
                     document.getElementById("qrcode2").innerHTML = "";
                     this.qrcode(url);
             },
