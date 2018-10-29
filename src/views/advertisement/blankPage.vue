@@ -31,7 +31,7 @@
                     </FormItem>
 
                     <FormItem label="时间" >
-                        <DatePicker type="daterange" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
+                        <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
 
                     <FormItem>
@@ -45,7 +45,7 @@
             </div>
 
     <Table border :columns="columblankPage" :data="blankPageListData" :loading="searchLoading"></Table>
-    <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
+    <Page :total="total"  show-total  @on-change="pageChange" style="margin-top:10px;"></Page>
 
     <Modal v-model="showPlan" title="选择创意" scrollable width="850" @on-visible-change="visiblechange">
         <planselector :positionId="selectPostionId" :date="selectDate" :existData="blankPageListDataDictus" :showseed="showseed"></planselector>
@@ -106,7 +106,7 @@
                 zhandianList: [],
                 weizhiList: [],
                 pingdaoList: [],
-                dateTime: [moment().toDate(),moment().add(1,'M').toDate()],
+                dateTime: moment().toDate(),
                 startTime: '',
                 endTime: '',
                 blankPageListDataDictus: {},
@@ -162,12 +162,10 @@
             },
             search() {
                 this.searchLoading = true;
-                let days = moment(this.dateTime[0]).daysInMonth();
-                // let month = moment(this.dateTime[1]).format('M');
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
 
-                this.startTime = moment(this.dateTime[0]).format('YYYY-MM-DD');
-                this.endTime = moment(this.dateTime[1]).format('YYYY-MM-DD');
+                this.startTime = moment(this.dateTime).format('YYYY-MM-DD');
+                this.endTime = moment(this.dateTime).add(1,'M').format('YYYY-MM-DD');
                 var that = this;
                 api.adListAll(this.formItem).then(response => {
                     that.blankPageListData.splice(0, that.blankPageListData.length);

@@ -13,33 +13,33 @@
                 </Card>
 
                 <Row class="margin-top-10 searchable-table-con1">
-                    <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="选择站点" prop="station">
-                            <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
-                                <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
+                    <Form  ref="searchData" :model="searchData"  inline :label-width="120">
+                        <FormItem label="选择站点" prop="stationId" >
+                            <Select v-model="searchData.stationId" style="width:100px" @on-change = "zdClick">
+                                <Option v-for="item in zhandianList" :value="item.station" :key="'station'+item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="选择栏目" prop="pageId">
+                        <FormItem label="选择栏目" prop="pageId" >
                             <Select v-model="searchData.pageId" style="width:100px"  @on-change = "pdClick">
-                                <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
+                                <Option v-for="item in pingdaoList" :value="item.pageId" :key="'pageid'+item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="选择位置" prop="positionId">
                             <Select v-model="searchData.positionId" style="width:100px">
-                                <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
+                                <Option v-for="item in weizhiList" :value="item.positionId" :key="'position'+item.positionId">{{ item.positionName }}</Option>
                             </Select>
                         </FormItem>
 
 
-                        <FormItem label="选择时间"  prop="timeRange">
-                            <DatePicker type="daterange" v-model="searchData.timeRange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
+                        <!--<FormItem label="选择时间"  >-->
+                            <!--<DatePicker type="month" v-model="timeRange"   split-panels placeholder="Select date" style="width: 200px"></DatePicker>-->
 
-                        </FormItem>
+                        <!--</FormItem>-->
 
-                        <FormItem label="排期状态" prop="PaiqiZhuangtai">
+                        <FormItem label="排期状态" prop="PaiqiZhuangtai" >
                             <Select v-model="searchData.PaiqiZhuangtai" style="width:140px">
-                                <Option value="0">未排期</Option>
-                                <Option value="1">已排期</Option>
+                                <Option value="0" :key="'PaiqiZhuangtai0'">未排期</Option>
+                                <Option value="1" :key="'PaiqiZhuangtai1'">已排期</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="展示状态" prop="ZhanshiZhuangtai">
@@ -60,7 +60,7 @@
                     </Form>
 
                     <Table border :columns="columns" :data="data"></Table>
-                    <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
+                    <Page :total="total" show-total @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
                 </Row>
             </Card>
         </Col>
@@ -100,7 +100,7 @@
         </Modal>
 
         <Modal v-model="showPostion" title="选择日期" scrollable width="850" @on-visible-change="visiblechange" >
-            <Form  ref="searchData"  inline :label-width="120">
+            <Form  ref="xuanzeriqi"  inline :label-width="120">
 
                 <FormItem label="创意:" >
                     {{selectAdName}}
@@ -251,19 +251,19 @@
                         key: 'adName',
                         title: '创意名称'
                     },
-                    {
-                        title: '展示状态',
-                        key: 'zhanshiZhuangtai',
-                        width: 130,
-                        align: 'center',
-                        render: (h, params) => {
-                            if (params.row.zhanshiZhuangtai === 1) {
-                                return h('div', ['展示']);
-                            } else if (params.row.zhanshiZhuangtai === 0) {
-                                return h('div', ['未展示']);
-                            }
-                        }
-                    },
+                    // {
+                    //     title: '展示状态',
+                    //     key: 'zhanshiZhuangtai',
+                    //     width: 130,
+                    //     align: 'center',
+                    //     render: (h, params) => {
+                    //         if (params.row.zhanshiZhuangtai === 1) {
+                    //             return h('div', ['展示']);
+                    //         } else if (params.row.zhanshiZhuangtai === 0) {
+                    //             return h('div', ['未展示']);
+                    //         }
+                    //     }
+                    // },
                     {
                         title: '排期状态',
                         key: 'pushType',
@@ -367,12 +367,11 @@
                     page: 1,
                     limit: 10,
                     stationId: '',
-                    pageName: '',
+                    pageId:'',
                     planId: '',
-                    startTime: '',
-                    endTime: '',
-                    timeRange: ['', '']
+                    PaiqiZhuangtai:''
                 },
+                timeRange: moment().toDate(),
                 data: [],
                 total: 0,
                 plandetail: {
@@ -389,6 +388,7 @@
                 let startTime = moment(this.selectdate[0]).format('YYYY-MM-DD');
                 let endTime = moment(this.selectdate[1]).format('YYYY-MM-DD');
                 var that = this;
+
                 fapi.addSchedules({positionId: this.selectPostionId, ideaCode: this.selectideacode, isPay: this.ispay, startTime: startTime, endTime: endTime}).then(response => {
                     if (response.data.data.isRepeat == true) {
                         let reAdSchedulesNow = JSON.stringify(response.data.data.adSchedules);
@@ -474,10 +474,8 @@
                     this.plandetail.id = response.data.data.id;
                     this.plandetail.planName = response.data.data.planName;
                 });
-                ideaApi.ideaList(this.searchData).then(response => {
-                    this.total = response.data.count;
-                    this.data = response.data.data;
-                });
+                this.searchData.page = 1;
+                this.handleSearch();
             },
             getBjqList() {
                 this.bjqloading=true;
@@ -487,23 +485,24 @@
                 });
             },
             handleSearch () {
-                this.searchData.page = 1;
-                this.searchData.startTime = this.searchData.timeRange[0];
-                this.searchData.endTime = this.searchData.timeRange[1];
-                if (typeof this.searchData.startTime !== 'string') {
-                    this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
-                }
-                if (typeof this.searchData.endTime !== 'string') {
-                    this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
-                }
-                this.init();
+                //
+                // this.searchData.startTime = this.searchData.timeRange[0];
+                // this.searchData.endTime = this.searchData.timeRange[1];
+                // if (typeof this.searchData.startTime !== 'string') {
+                //     this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
+                // }
+                // if (typeof this.searchData.endTime !== 'string') {
+                //     this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
+                // }
+                ideaApi.ideaList(this.searchData).then(response => {
+                    this.total = response.data.count;
+                    this.data = response.data.data;
+                });
             },
             handleCancel (name) {
-                this.$refs[name].resetFields();
-                this.searchData.startTime = this.searchData.timeRange[0];
-                this.searchData.endTime = this.searchData.timeRange[1];
-                this.searchData.page = 1;
-                this.init();
+                this.$refs['searchData'].resetFields();
+                // this.searchData.page = 1;
+                // this.handleSearch();
             },
             pdClick() {
                 if (typeof this.searchData.pageName !== 'undefined') {
@@ -513,8 +512,8 @@
                 }
             },
             zdClick() {
-                if (typeof this.searchData.station !== 'undefined') {
-                    fapi.getChannelInfo({station: this.searchData.station}).then(response => {
+                if (this.searchData.stationId) {
+                    fapi.getChannelInfo({station: this.searchData.stationId}).then(response => {
                         this.pingdaoList = response.data.data;
                     });
                 }
@@ -531,19 +530,19 @@
             },
             visiblechange(v){
                 if(!v){
-                    this.init();
+                    this.handleSearch();
                 }
             },
             pageChange (page) {
                 this.searchData.page = page;
-                this.init();
+                this.handleSearch();
             },
             sizeChange (size) {
                 this.searchData.limit = size;
-                this.init();
+                this.handleSearch();
             },
             getStationInfo() {
-                fapi.getStationInfo().then(response => {
+                fapi.getStationInfo({pageSize:1000}).then(response => {
                     this.zhandianList = response.data.data;
                 });
             }
