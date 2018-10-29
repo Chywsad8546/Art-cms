@@ -513,12 +513,14 @@ import { setTimeout } from 'timers';
                         //     this.tabName = 'name2';
                         // }, 300);
                         this.senior.name = response.data.data.name;
+                        this.senior.id = this.Lid;
                         this.senior.form = response.data.data.form;
                         //this.senior.template = response.data.data.template;
                     } else {
                        // this.ordinaryEditor=true;
                         this.formItem.name = response.data.data.name;
                         this.formItem.template = response.data.data.template;
+                        this.formItem.id = this.Lid.id;
                         this.confs = JSON.parse(response.data.data.form);
                         this.editorTry(true);
                     }
