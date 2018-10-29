@@ -689,6 +689,7 @@
                 if (typeof this.searchData.station !== 'undefined') {
                     api.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.searchPageList = response.data.data;
+                        this.searchData.pageId = '';
                     });
                 }
             },
