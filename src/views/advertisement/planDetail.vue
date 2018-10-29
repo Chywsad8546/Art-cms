@@ -595,7 +595,7 @@
                 this.init();
             },
             getStationInfo() {
-                fapi.getStationInfo().then(response => {
+                fapi.getStationInfo({pageSize:1000}).then(response => {
                     this.zhandianList = response.data.data;
                 });
             }
