@@ -423,17 +423,23 @@
                     fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.pingdaoList = response.data.data;
                         this.searchData.pageId = '';
+                        this.searchData.positionId = '';
+                        this.weizhiList = [];
                     });
                 }
             },
             adpdClick() {
                 fapi.getPositionInfo(this.pdmode).then(response => {
                     this.adweizhiList = response.data.data;
+                    this.addIdeaNewsModal.positionId = '';
                 });
             },
             adzdClick() {
                 fapi.getChannelInfo(this.zdmode).then(response => {
                     this.adpingdaoList = response.data.data;
+                    this.pdmode.pageId = '';
+                    this.addIdeaNewsModal.positionId = '';
+                    this.adweizhiList = [];
                 });
             },
             visiblechange(v){

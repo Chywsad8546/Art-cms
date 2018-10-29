@@ -6,37 +6,38 @@
 
 
                 <Col span="24">
-               <Form ref="formAdd" :model="formItem" :rules="seniorValidate" :label-width="80" inline>
-                    <FormItem label="应用">
-                        <Select v-model="formItem.station" style="width:100px"clearable  @on-change = "zdClick">
+               <Form ref="formItem" :model="formItem" :rules="seniorValidate" :label-width="80" inline>
+                    <FormItem label="应用" prop="station">
+                        <Select v-model="formItem.station" style="width:100px"  @on-change = "zdClick">
                             <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="广告频道">
-                        <Select v-model="formItem.pageId" style="width:100px" clearable   @on-change = "pdClick">
+                    <FormItem label="广告频道" prop="pageId">
+                        <Select v-model="formItem.pageId" style="width:100px"   @on-change = "pdClick">
                             <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="广告位置">
-                        <Select v-model="formItem.positionId" clearable style="width:100px">
+                    <FormItem label="广告位置" prop="positionId">
+                        <Select v-model="formItem.positionId" style="width:100px">
                             <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                         </Select>
                     </FormItem>
 
-                    <FormItem label="付费状态">
+                    <FormItem label="付费状态" prop="isPay">
                         <Select v-model="formItem.isPay" style="width:100px">
                                 <Option value="1">付费</Option>
                                 <Option value="0">免费</Option>
                         </Select>
                     </FormItem>
 
-                    <FormItem label="时间" >
+                    <FormItem label="时间" prop="dateTime">
                         <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
 
                     <FormItem>
                         <Button type="primary" @click="queryBlank">查询</Button>
                         <Button type="primary" style="margin-left: 8px">下载排期</Button>
+                        <Button type="ghost" @click="handleCancel('formItem')" style="margin-left: 8px">清空</Button>
                     </FormItem>
 
                 </Form>
@@ -74,7 +75,8 @@
                 formItem: {
                     station: '',
                     pageId: '',
-                    positionId: ''
+                    positionId: '',
+                    isPay: ''
                 },
                 seniorValidate: {
 
@@ -116,6 +118,12 @@
             };
         },
         methods: {
+            handleCancel(name) {
+                this.$refs[name].resetFields();
+                this.weizhiList = [];
+                this.pingdaoList = [];
+                this.init();
+            },
             visiblechange(v) {
                 if (!v) {
                     this.search();
@@ -126,17 +134,25 @@
                 this.getStationInfo();
             },
             pdClick() {
-                api.getPositionInfo(this.formItem).then(response => {
-                    this.weizhiList = response.data.data;
-                });
+                if (typeof this.formItem.pageId !== 'undefined') {
+                    api.getPositionInfo({pageId: this.formItem.pageId, pageSize: 1000}).then(response => {
+                        this.weizhiList = response.data.data;
+                        this.formItem.positionId = '';
+                    });
+                }
             },
             zdClick() {
-                api.getChannelInfo(this.formItem).then(response => {
-                    this.pingdaoList = response.data.data;
-                });
+                if (typeof this.formItem.station !== 'undefined') {
+                    api.getChannelInfo({station: this.formItem.station, pageSize: 1000}).then(response => {
+                        this.pingdaoList = response.data.data;
+                        this.formItem.pageId = '';
+                        this.formItem.positionId = '';
+                        this.weizhiList = [];
+                    });
+                }
             },
             getStationInfo() {
-                api.getStationInfo().then(response => {
+                api.getStationInfo({pageSize: 1000}).then(response => {
                     this.zhandianList = response.data.data;
                     this.zhandianList.forEach(item => {
                         item.station = item.station + '';

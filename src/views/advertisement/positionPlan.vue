@@ -73,7 +73,7 @@
                                     'i-switch',
                                     {
                                         props: {
-                                           value: params.row.status == 0 ? true : false,     //设置它的值比如：true或false
+                                           value: params.row.status == 0 ? false : true,     //设置它的值比如：true或false
                                         },
                                         on: {
                                             input: function (event) {  //这里会起到监听的作用
@@ -81,7 +81,7 @@
                                                 if (event) { params.row.status = true } else { params.row.status = false }
                                                 },
                                                 'on-change':function () { //值发生了改变调用方法
-                                                    let statType = params.row.status == true ? 0 : 1;
+                                                    let statType = params.row.status == true ? 1 : 0;
                                                     adapi.editStatus({"id":params.row.id,"status":statType}).then(response=>{
                                                         that.init();
                                                     })
