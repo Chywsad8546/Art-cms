@@ -59,7 +59,7 @@
                         
                         <FormItem>
                             <Button type="primary" @click="save">保存</Button>
-                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
+                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem&&isEditShow" @click="preview">预览</Button>
                         </FormItem>
                     </Form>
                 </Card>
@@ -168,7 +168,8 @@
                         {required: true, message: '请填写appCode', trigger: 'blur'}
                     ]
                 },
-                isNewSystem: false
+                isNewSystem: false,
+                isEditShow: true
 
             };
         },
@@ -413,6 +414,7 @@
         created: function () {
             var that = this;
             if (this.$route.query.id) {
+                this.isEditShow = false;
                 ad.getIdea(this.$route.query.id).then(function (res) {
                     if (res.data.data.isNew) {
                         that.typeId = res.data.data.typeId;

@@ -67,31 +67,27 @@
                         title: '状态',
                         width: 80,
                         render: (h, params) => {
-                            var i = this;
+                            var that = this;
                             return h('div', [
                                 h(
-                                    'Button',
+                                    'i-switch',
                                     {
                                         props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            background: params.row.status == 0 ? 'red':'green',
-                                            marginRight: '5px',
-                                            borderColor: params.row.status == 0 ? 'red':'green',
+                                           value: params.row.status == 0 ? true : false,     //设置它的值比如：true或false
                                         },
                                         on: {
-                                            click: () => {
-                                                let statType = params.row.status == 0 ? 1 : 0;
-                                                adapi.editStatus({"id":params.row.id,"status":statType}).then(response=>{
-                                                    this.$Message.success('修改状态成功');
-                                                    this.init();
-                                                })
-                                            }
-                                        }
+                                            input: function (event) {  //这里会起到监听的作用
+                                                var that = this;
+                                                if (event) { params.row.status = true } else { params.row.status = false }
+                                                },
+                                                'on-change':function () { //值发生了改变调用方法
+                                                    let statType = params.row.status == true ? 0 : 1;
+                                                    adapi.editStatus({"id":params.row.id,"status":statType}).then(response=>{
+                                                        that.init();
+                                                    })
+                                                }
+                                            },
                                     },
-                                    params.row.status==0?"关闭":"启用"
                                 )
                             ]);
                         }
