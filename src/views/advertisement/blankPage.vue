@@ -31,7 +31,7 @@
                     </FormItem>
 
                     <FormItem label="时间" >
-                        <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
+                        <DatePicker type="daterange" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
 
                     <FormItem>
@@ -106,7 +106,7 @@
                 zhandianList: [],
                 weizhiList: [],
                 pingdaoList: [],
-                dateTime: moment().date(1).toDate(),
+                dateTime: [moment().toDate(),moment().add(1,'M').toDate()],
                 startTime: '',
                 endTime: '',
                 blankPageListDataDictus: {},
@@ -162,12 +162,12 @@
             },
             search() {
                 this.searchLoading = true;
-                let days = moment(this.dateTime).daysInMonth();
-                let month = moment(this.dateTime).format('M');
+                let days = moment(this.dateTime[0]).daysInMonth();
+                // let month = moment(this.dateTime[1]).format('M');
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
 
-                this.startTime = moment(this.dateTime).format('YYYY-MM-DD');
-                this.endTime = moment(this.dateTime).add(1, 'M').format('YYYY-MM-DD');
+                this.startTime = moment(this.dateTime[0]).format('YYYY-MM-DD');
+                this.endTime = moment(this.dateTime[1]).format('YYYY-MM-DD');
                 var that = this;
                 api.adListAll(this.formItem).then(response => {
                     that.blankPageListData.splice(0, that.blankPageListData.length);
@@ -193,11 +193,11 @@
                                 let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
                                 for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
                                     let newpaiqirow = _.cloneDeep(paiqirow);
-                                    that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
+                                    that.blankPageListDataDictus[paiqirow['positionId']][paiqistart.format('M-D')] = newpaiqirow;
                                     if (!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName) {
                                         that.blankPageListDataDictus[paiqirow['positionId']].cellClassName = {};
                                     }
-                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')] = 'cell-hold';
+                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[paiqistart.format('M-D')] = 'cell-hold';
                                 }
                             }
                             for (let i = 0; i < that.blankPageListData.length; i++) {
@@ -207,23 +207,23 @@
                                 for (let buchongstart = moment(that.startTime, 'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
                                     let daykey = buchongstart.format('M-D');
                                     let day = buchongstart.format('YYYY-MM-DD');
-                                    // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
                                     if (!item[daykey]) {
                                         item[daykey] = {};
                                     }
                                     item[daykey]['day'] = day;
-                                    // item[daykey]['xuanzhong'] = false;
                                     item[daykey]['positionId'] = item.positionId;
                                 }
                             }
-
-                            for (let i = 1; i <= days; i++) {
+                            let titleStart = moment(that.startTime);
+                            let titleEnd = moment(that.endTime);
+                            for (; titleStart.isBefore(titleEnd) ; titleStart=titleStart.add(1,'d')) {
+                                let daykey=titleStart.format('M-D');
                                 that.columblankPage.push({
-                                    title: month + '-' + i,
-                                    key: month + '-' + i,
+                                    title: daykey,
+                                    key: daykey,
                                     'width': 100,
                                     render: (h, params) => {
-                                        return h('tdpop', {props: params.row[month + '-' + i],
+                                        return h('tdpop', {props: params.row[daykey],
                                             on: {changepaiqi: that.cellclick}});//
                                     }
                                 });
