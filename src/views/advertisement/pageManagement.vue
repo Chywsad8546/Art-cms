@@ -104,6 +104,12 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            var isDelTip = '';
+                            if (params.row.isDel === 1) {
+                                isDelTip = '启用';
+                            }else if (params.row.isDel === 0){
+                                isDelTip = '删除';
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -128,7 +134,7 @@
                                             }
                                         }
                                     },
-                                    '删除'
+                                    isDelTip
                                 ),
                                 h(
                                     'Button',
@@ -194,6 +200,7 @@
                 if (typeof this.searchData.station !== 'undefined') {
                     fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.seratchPageList = response.data.data;
+                        this.searchData.pageId = '';
                     });
                 }
             },
@@ -224,9 +231,6 @@
                 });
             },
             addNewsChannel() {
-                // let index = this.addNewsChannelModal.adstationIndex;
-                // this.addNewsChannelModal.stationId = this.stationList[index].pageId;
-                // this.addNewsChannelModal.stationName = this.stationList[index].stationName;
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         adapi.addPage(this.addNewsChannelModal).then(response => {
@@ -246,10 +250,16 @@
                 });
             },
             delStation() {
+                var tip = '';
+                if (this.updateCahnnelValue.isDel === 0) {
+                    tip = '是否启用';
+                } else {
+                    tip = '是否删除';
+                }
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '更改删除状态',
-                    content: '<p>是否更改删除状态</p>',
+                    title: '更改状态',
+                    content: tip,
                     onOk: () => {
                         console.log(delDate);
                         adapi.updateStation(delDate).then(response => {

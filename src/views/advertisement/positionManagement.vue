@@ -24,6 +24,7 @@
                         </FormItem>
                         <FormItem label="未设置缺省广告" prop="defaultAd">
                             <Select v-model="searchData.defaultAd" style="width:140px">
+                                <Option value="">全部</Option>
                                 <Option value="1">是</Option>
                             </Select>
                         </FormItem>
@@ -161,8 +162,8 @@
     export default {
         data() {
             return {
-                upPreviewUrlIsShow:false,
-                showQuesheng:false,
+                upPreviewUrlIsShow: false,
+                showQuesheng: false,
                 queshengmodalColums: [
                     {
                         key: 'id',
@@ -259,7 +260,7 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$router.push({name:'ad_redirect',query:{isquesheng:1,templateid:params.row.id}});
+                                                this.$router.push({name: 'ad_redirect', query: {isquesheng: 1, templateid: params.row.id}});
                                             }
                                         }
                                     },
@@ -270,17 +271,17 @@
                         }
                     }
                 ],
-                queshengdata:[],
+                queshengdata: [],
                 adListListModal: false,
-                selectPostionId:'',
+                selectPostionId: '',
                 adListColums: [
                     {
                         key: 'adName',
-                        title: '广告名称',
+                        title: '广告名称'
                     },
                     {
                         key: 'createAt',
-                        title: '创建时间',
+                        title: '创建时间'
                     }, {
                         title: '管理',
                         key: 'action',
@@ -303,7 +304,7 @@
                                             click: () => {
                                                 this.$router.push({
                                                     name: 'ad_redirect',
-                                                    query: {id: params.row.ideaCode,isquesheng:1}
+                                                    query: {id: params.row.ideaCode, isquesheng: 1}
                                                 });
                                             }
                                         }
@@ -555,9 +556,13 @@
                                                 this.updateCahnnelValue.version = params.row.version;
                                                 this.updateCahnnelValue.positionName = params.row.positionName;
                                                 this.updateCahnnelValue.positionId = params.row.positionId;
-                                                this.updateCahnnelValue.previewType = params.row.previewType+'';
+                                                this.updateCahnnelValue.previewType = params.row.previewType + '';
                                                 if (params.row.previewType === 1) {
+                                                    this.upPreviewUrlIsShow = true;
                                                     this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                } else if (params.row.previewType === 2) {
+                                                    this.upPreviewUrlIsShow = false;
+                                                    this.updateCahnnelValue.previewUrl = '';
                                                 }
 
                                                 i.modal2 = true;
@@ -581,14 +586,14 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.selectPostionId=params.row.positionId;
+                                                this.selectPostionId = params.row.positionId;
                                                 this.addquesheng();
                                             }
                                         }
                                     },
                                     '添加缺省广告'
                                 ));
-                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd === 1) {
+                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd !== null) {
                                 optionArray.push(h(
                                     'Button',
                                     {
@@ -603,7 +608,7 @@
                                             click: () => {
                                                 api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
                                                     this.adListListModal = true;
-                                                    this.selectPostionId=params.row.positionId;
+                                                    this.selectPostionId = params.row.positionId;
                                                     this.adListData = response.data.data;
                                                 });
                                             }
@@ -637,10 +642,10 @@
                     previewType: ''
                 },
                 updateCahnnelValue: {
-                      version : '',
-                      positionName : '',
-                      positionId : '',
-                      previewType : ''
+                    version: '',
+                    positionName: '',
+                    positionId: '',
+                    previewType: ''
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
@@ -649,28 +654,28 @@
                     pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
                     isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],
                     isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }],
-                    previewType: [{ type: 'integer', required: true, message: '请选择预览模式', trigger: 'change' }],
+                    previewType: [{ type: 'integer', required: true, message: '请选择预览模式', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
                     version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
                     previewType: [{ required: true, message: '请选择预览模式', trigger: 'change' }],
-                    previewUrl: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
+                    previewUrl: [{ required: true, message: '预览URL不能为空', trigger: 'blur' }]
                 }
             };
         },
         methods: {
             changePreviewType(val) {
-                if(val==1){
-                     this.upPreviewUrlIsShow =true;
-                }else{
-                    this.upPreviewUrlIsShow=false;
+                if (val === '1') {
+                    this.upPreviewUrlIsShow = true;
+                } else {
+                    this.upPreviewUrlIsShow = false;
                 }
             },
-            addquesheng(){
-                this.adListListModal=false;
+            addquesheng() {
+                this.adListListModal = false;
                 api.templateList({positionId: this.selectPostionId}).then(response => {
-                    this.showQuesheng=true;
+                    this.showQuesheng = true;
                     this.queshengdata = response.data.data;
                 });
             },
@@ -703,7 +708,7 @@
                 });
                 /*       this.addNewsChannelModal = {
                 }; */
-                this.updateCahnnelValue = {};
+
                 adapi.getAllPositions(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
@@ -717,13 +722,7 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
-                console.log(this.pageList);
-                // this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
-                // this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
-                // this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
-                // this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
-                // console.log(this.addNewsChannelModal);
+            addNewsChannel() {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         console.log('addNewsChannelModal', this.addNewsChannelModal);
