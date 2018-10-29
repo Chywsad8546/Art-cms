@@ -48,7 +48,7 @@
     <Page :total="total"  show-total  @on-change="pageChange" style="margin-top:10px;"></Page>
 
     <Modal v-model="showPlan" title="选择创意" scrollable width="850" @on-visible-change="visiblechange">
-        <planselector :positionId="selectPostionId" :date="selectDate" :existData="blankPageListDataDictus" :showseed="showseed"></planselector>
+        <planselector :positionId="selectPostionId" :date="selectDate"  :showseed="showseed"></planselector>
         <span slot="footer"></span>
     </Modal>
 </div>

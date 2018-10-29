@@ -48,9 +48,6 @@
     Vue.component('tdpopreadonly', tdpopreadonly);
     export default {
         props: {
-            adCompany: String,
-            adName: String,
-            ideaCode: String,
             positionId: '',
             date: '',
             showseed: '',
@@ -205,6 +202,7 @@
             },
             'showseed': function (val) {
                 this.formItem.selectideacode='';
+                this.init();
                 // this.showPayDialog = false;
             },
             'date': function (val) {
