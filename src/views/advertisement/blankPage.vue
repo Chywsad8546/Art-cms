@@ -158,7 +158,12 @@
                 this.showseed = moment().valueOf();
                 this.selectPostionId = positionId;
                 this.selectDate = moment(day, 'YYYY-MM-DD').toDate();
-                this.showPlan = true;
+                if(isSelect) {
+                    this.showPlan = true;
+                }
+                else {
+                    this.visiblechange(false);
+                }
             },
             search() {
                 this.searchLoading = true;

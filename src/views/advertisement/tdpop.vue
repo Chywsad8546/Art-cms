@@ -17,6 +17,7 @@
 
 <script>
     import moment from 'moment';
+    import fapi from '../../api/advertisement/formtemplateApi.js';
     export default {
         name: 'tdpop',
         props: {
@@ -29,7 +30,8 @@
             positionId: '',
             // "startime":"2018-10-02 00:00:00+08",
             status: Boolean,
-            day: String
+            day: String,
+            schedulingId:''
             // xuanzhong:Boolean
         },
         data() {
@@ -50,25 +52,20 @@
                         title: '是否删除排期',
                         content: '<p>是否删除排期</p>',
                         onOk: () => {
-                            // fapi.deleteSchedulingById({schedulingId: params.row.schedulingId}).then(response => {
-                            //     if (response.data.data === '成功') {
-                            //         this.$Message.success('删除成功！');
-                            //         fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
-                            //             this.paiqiListData = response.data.data;
-                            //         });
-                            //     }
-                            // }).catch(error => {
-                            //     this.$Message.error(error.response.data.msg);
-                            //     fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
-                            //         this.paiqiListData = response.data.data;
-                            //     });
-                            // });
+                            console.log('schedulingId',this.schedulingId)
+                            fapi.deleteSchedulingById({schedulingId: this.schedulingId}).then(response => {
+                                if (response.data.data === '成功') {
+                                    this.$Message.success('删除成功！');
+                                    this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, false);
+                                }
+                            }).catch(error => {
+                            });
                         },
                         onCancel: () => {
                         }
                     });
                 }
-                // this.$emit('changepaiqi', this.ideaCode, this.adName, this.positionId, this.day, false);
+
             },
             goto() {
                 this.$router.push({name: 'ad_redirect', query: {id: this.ideaCode}});
