@@ -106,7 +106,7 @@
                 zhandianList: [],
                 weizhiList: [],
                 pingdaoList: [],
-                dateTime: moment().toDate(),
+                dateTime: moment().date(1).toDate(),
                 startTime: '',
                 endTime: '',
                 blankPageListDataDictus: {},

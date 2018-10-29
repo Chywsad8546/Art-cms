@@ -99,44 +99,13 @@
 
         </Modal>
 
-        <Modal v-model="showPostion" title="选择日期" scrollable width="850" @on-visible-change="visiblechange" >
-            <Form  ref="xuanzeriqi"  inline :label-width="120">
-
-                <FormItem label="创意:" >
-                    {{selectAdName}}
-                </FormItem>
-
-                <FormItem label="排期日期" >
-                    <DatePicker type="daterange" :options="dpoptions" @on-change="dpchange"  v-model="selectdate" format="yyyy-MM-dd" :clearable="false" placeholder=""></DatePicker>
-                </FormItem>
-                <FormItem label="付费状态" >
-                    <Select v-model="ispay" :key="'ispayslect'" style="width:290px">
-                        <Option :value="1" :key="'ispay1'">付费</Option>
-                        <Option :value="0" :key="'ispay0'">免费</Option>
-                    </Select>
-                </FormItem>
-                <FormItem>
-                    <Button v-show="!searchLoading" type="primary" @click="paiqi">完毕</Button>
-                </FormItem>
-            </Form>
-            <Alert v-if="existwarning" type="warning" show-icon>选择的日期范围内，有已经存在的广告</Alert>
-            <Table border :columns="daycolumns" :data="postionData" :loading="searchLoading" ></Table>
-            <span slot="footer"></span>
-        </Modal>
     </Row>
 </template>
 <script>
     import ideaApi from '../../api/advertisement/ideaList.js';
-    import dutil from '../../libs/util.js';
     import moment from 'moment';
     import fapi from '../../api/advertisement/formtemplateApi.js';
-    import tdpopreadonly from './tdpopreadonly.vue';
-    import Vue from 'vue';
-    Vue.component('tdpopreadonly', tdpopreadonly);
     export default {
-        components: {
-            tdpopreadonly,
-        },
         data() {
             return {
                 bjqloading:false,
@@ -214,55 +183,55 @@
                         key: 'endtime',
                         title: '结束时间'
                     },
-                    {
-                        title: '管理',
-                        key: 'action',
-                        width: 170,
-                        align: 'center',
-                        render: (h, params) => {
-                            var i = this;
-                            return h('div', [
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.$Modal.confirm({
-                                                    title: '是否删除排期',
-                                                    content: '<p>是否删除排期</p>',
-                                                    onOk: () => {
-                                                        fapi.deleteSchedulingById({schedulingId:params.row.schedulingId}).then(response => {
-                                                            if (response.data.data === '成功') {
-                                                                this.$Message.success('删除成功！');
-                                                                fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
-                                                                    this.paiqiListData = response.data.data;
-                                                                });
-                                                            }
-                                                        }).catch(error => {
-                                                            this.$Message.error(error.response.data.msg);
-                                                            fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
-                                                                this.paiqiListData = response.data.data;
-                                                            });
-                                                        });
-                                                    },
-                                                    onCancel: () => {
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    },
-                                    '删除'
-                                )
-                            ]);
-                        }
-                    }
+                    // {
+                    //     title: '管理',
+                    //     key: 'action',
+                    //     width: 170,
+                    //     align: 'center',
+                    //     render: (h, params) => {
+                    //         var i = this;
+                    //         return h('div', [
+                    //             h(
+                    //                 'Button',
+                    //                 {
+                    //                     props: {
+                    //                         type: 'primary',
+                    //                         size: 'small'
+                    //                     },
+                    //                     style: {
+                    //                         marginRight: '5px'
+                    //                     },
+                    //                     on: {
+                    //                         click: () => {
+                    //                             this.$Modal.confirm({
+                    //                                 title: '是否删除排期',
+                    //                                 content: '<p>是否删除排期</p>',
+                    //                                 onOk: () => {
+                    //                                     fapi.deleteSchedulingById({schedulingId:params.row.schedulingId}).then(response => {
+                    //                                         if (response.data.data === '成功') {
+                    //                                             this.$Message.success('删除成功！');
+                    //                                             fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                    //                                                 this.paiqiListData = response.data.data;
+                    //                                             });
+                    //                                         }
+                    //                                     }).catch(error => {
+                    //                                         this.$Message.error(error.response.data.msg);
+                    //                                         fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                    //                                             this.paiqiListData = response.data.data;
+                    //                                         });
+                    //                                     });
+                    //                                 },
+                    //                                 onCancel: () => {
+                    //                                 }
+                    //                             });
+                    //                         }
+                    //                     }
+                    //                 },
+                    //                 '删除'
+                    //             )
+                    //         ]);
+                    //     }
+                    // }
                 ],
                 paiqiListModal: false,
                 bjqList: [],
@@ -345,10 +314,10 @@
                             ];
                             if (params.row.paiqiZhuangtai === 0) {
                                 optionArray.push('未排期');
-                                return h('div', optionArray);
+                                return h('div',{style:{color:'red'}}, optionArray);
                             } else if (params.row.paiqiZhuangtai === 1) {
                                 optionArray.push('已排期');
-                                return h('div', optionArray);
+                                return h('div',{style:{color:'green'}} ,optionArray);
                             }
                         }
                     },
@@ -384,29 +353,6 @@
                                         }
                                     },
                                     '修改创意'
-                                ),
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.showPostion = true;
-                                                this.selectPostionId = params.row.positionId;
-                                                this.selectPositionName = params.row.positionName;
-                                                this.selectAdName = params.row.adName;
-                                                this.selectideacode = params.row.ideaCode;
-                                                this.getPostionPaiqi();
-                                            }
-                                        }
-                                    },
-                                    '排期'
                                 )
                             ]);
                         }
@@ -434,90 +380,7 @@
             };
         },
         methods: {
-            paiqi() {
-                let startTime = moment(this.selectdate[0]).format('YYYY-MM-DD');
-                let endTime = moment(this.selectdate[1]).format('YYYY-MM-DD');
-                var that = this;
 
-                fapi.addSchedules({positionId: this.selectPostionId, ideaCode: this.selectideacode, isPay: this.ispay, startTime: startTime, endTime: endTime}).then(response => {
-                    if (response.data.data.isRepeat == true) {
-                        let reAdSchedulesNow = JSON.stringify(response.data.data.adSchedules);
-                        fapi.forceCover({positionId: this.selectPostionId,
-                            ideaCode: this.selectideacode,
-                            isPay: this.ispay,
-                            startTime: startTime,
-                            endTime: endTime,
-                            reAdSchedulesNow: reAdSchedulesNow
-                        }).then(response => {
-                            that.showPostion = false;
-                            that.$Message.success('排期成功');
-                        });
-                    } else {
-                        that.showPostion = false;
-                        this.$Message.success('排期成功');
-                        // this.schedulesList();
-                    }
-                });
-            },
-            getPostionPaiqi() {
-                this.existwarning=false;
-                this.searchLoading = true;
-                var that = this;
-                let columnStart = moment(this.selectdate[0]);
-                let columnEnd = moment(this.selectdate[1]);
-                let data = {cellClassName: {},selectPositionName:this.selectPositionName};
-                that.daycolumns.splice(1,that.daycolumns.length-1);
-                for (; columnStart.isBefore(columnEnd); columnStart=columnStart.add(1,'d')) {
-
-                    let daykey = columnStart.format('M-D');
-                    that.daycolumns.push({
-                        title:columnStart.format('M-D'),
-                        key: columnStart.format('M-D'),
-                        'width': 100,
-                        render: (h, params) => {
-                            return h('tdpopreadonly', {props: params.row[daykey]});//
-                        }
-                    });
-                }
-
-                fapi.getPaiqiList({
-                    positionIds: this.selectPostionId,
-                    startTime: moment(this.selectdate[0]).format('YYYY-MM-DD'),
-                    endTime: moment(this.selectdate[1]).format('YYYY-MM-DD')
-                })
-                    .then(function (res) {
-
-                        for (let index = 0; index < res.data.data.length; index++) {
-                            that.existwarning=true;
-                            let paiqirow = res.data.data[index];
-                            let paiqistart = moment(paiqirow['startime'], 'YYYY-MM-DD');
-                            let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
-                            for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
-                                let newpaiqirow = _.cloneDeep(paiqirow);
-                                data[paiqistart.format('M-D')] = newpaiqirow;
-
-                                data.cellClassName[paiqistart.format('M-D')] = 'cell-hold';
-                            }
-                        }
-                        let buchongend= moment(that.selectdate[1]);
-                        for (let buchongstart = moment(that.selectdate[0]); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
-                            let daykey = buchongstart.format('M-D');
-                            let day = buchongstart.format('YYYY-MM-DD');
-                            if (!data[daykey]) {
-                                data[daykey] = {};
-                            }
-                            data[daykey]['day'] = day;
-                            // item[daykey]['xuanzhong'] = false;
-                            data[daykey]['positionId'] = that.selectPostionId;
-                        }
-                        that.postionData = [data];
-                        that.searchLoading = false;
-                        // console.log(data)
-                    });
-            },
-            dpchange(v) {
-                this.getPostionPaiqi();
-            },
             init() {
                 this.searchData.planId = this.plandetail.planid;
                 fapi.planDetails({id: this.plandetail.planid}).then(response => {
@@ -535,15 +398,6 @@
                 });
             },
             handleSearch () {
-                //
-                // this.searchData.startTime = this.searchData.timeRange[0];
-                // this.searchData.endTime = this.searchData.timeRange[1];
-                // if (typeof this.searchData.startTime !== 'string') {
-                //     this.searchData.startTime = dutil.dateformat(this.searchData.startTime, 'yyyy-MM-dd');
-                // }
-                // if (typeof this.searchData.endTime !== 'string') {
-                //     this.searchData.endTime = dutil.dateformat(this.searchData.endTime, 'yyyy-MM-dd');
-                // }
                 ideaApi.ideaList(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
