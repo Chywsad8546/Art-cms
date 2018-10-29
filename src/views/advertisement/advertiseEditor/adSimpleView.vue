@@ -1,4 +1,5 @@
 <template>
+<div>
     <Row>
         <Col span="24">
         <Card>
@@ -56,22 +57,6 @@
 
                         </template>
                         
-                        <Modal v-model="editorModal" width="300">
-                            <p slot="header" style="color:#f60;text-align:center">
-                                <span></span>
-                            </p>
-                            <div style="text-align:center" v-show="previewWapType">
-                                <p class="qrcode" id="qrcode4"></p>
-                            </div>
-                            <div class="appcodePop" v-show="previewAppType">
-                                <Input v-model="appCode" style="width:100px;float:left;margin-right:10px;" placeholder="请输入appCode"></Input>
-                                <FormItem>
-                                    <Button type="primary" @click="previewAppFun()">保存</Button>
-                                </FormItem>
-                            </div>
-                            <div slot="footer">
-                            </div>
-                        </Modal>
                         <FormItem>
                             <Button type="primary" @click="save">保存</Button>
                             <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
@@ -84,6 +69,27 @@
 
         </Col>
     </Row>
+    <Form ref="previeForm" :model="previeForm" :rules="previeFormRuleValidate" :label-width="80">
+        <Modal v-model="editorModal" width="300">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span></span>
+            </p>
+            <div style="text-align:center" v-show="previewWapType">
+                <p class="qrcode" id="qrcode4"></p>
+            </div>
+            <div v-show="previewAppType">
+                <FormItem  required prop="appCode" :label-width="80">
+                    <Input v-model="previeForm.appCode" placeholder="请输入appCode"></Input>
+                </FormItem>
+                <FormItem style="margin-left:20px;">
+                    <Button type="primary" @click="previewAppFun()">保存</Button>
+                </FormItem>
+            </div>
+            <div slot="footer">
+            </div>
+        </Modal>      
+    </form>
+    </div>
 </template>
 
 <script>
@@ -140,6 +146,11 @@
                 previewWapType:false,
                 previewAppType:false,
                 appCode:"",
+                previewType:0,
+                previewUrl:"",
+                previeForm:{
+                    appCode:''
+                },
                 commonForm: {
                     adCompany: '',
                     adName: ''
@@ -150,6 +161,11 @@
                     ],
                     adName: [
                         {required: true, message: '请填写', trigger: 'blur'}
+                    ]
+                },
+                previeFormRuleValidate:{
+                    appCode:[
+                        {required: true, message: '请填写appCode', trigger: 'blur'}
                     ]
                 },
                 isNewSystem: false
@@ -267,7 +283,8 @@
                     if (hasCommonInput) {
                         this.$refs['form'].validate((valid) => {
                             if (commvalid && valid && uploadvalid) {
-                                this.prevResponse();
+                                this.getAllPosition();
+                            //    this.prevResponse();
                                // that.saveajax();
                             } else {
                                 this.$Message.error('补充完善后，才能预览');
@@ -275,7 +292,8 @@
                         });
                     } else {
                         if (commvalid && uploadvalid) {
-                            this.prevResponse();
+                            this.getAllPosition();
+                         //   this.prevResponse();
                            // that.saveajax();
                         } else {
                             this.$Message.error('补充完善后，才能预览');
@@ -283,22 +301,54 @@
                     }
                 });
             },
-            previewAppFun(){
-                console.log("APP预览");
+            getAllPosition(){
+                    ad.getAllPosition({
+                        positionId:this.positionId
+                       // positionId:2051
+                    }).then(response=>{
+                        if(response.data.data[0].previewType && response.data.data[0].previewUrl){
+                            this.previewType = response.data.data[0].previewType;
+                            this.previewUrl = response.data.data[0].previewUrl;    
+                        }else{
+                            this.$Message.error('位置没有填写类型或url');
+                            return false;
+                        }              
+                        this.prevResponse();                          
+                    });
             },
-            prevResponse(response){                  
-               // let id = response.data.data.id || 123;
-               // let previewType = response.data.data.previewType || 1;
-               let id = 123;
-               let previewType = 2;
-               this.editorModal = true;
-                if(previewType == 1){
+            addPreView(){
+                ad.addPreView({
+                    positionId:this.positionId,
+                    adData:JSON.stringify(this.formItem),
+                }).then(response=>{
                     this.previewWapType = true;
-                   // let previewUrl = response.data.data.previewUrl;
-                  //  let url = previewUrl + '?id='+id+'&pre=1';
-                    let url = this.$domain.cityDomain + '?id='+id+'&pre=1';
+                    let url = this.previewUrl + '?id='+this.positionId+'&pre=1';
                     document.getElementById("qrcode4").innerHTML = "";
                     this.qrcode(url);
+                });
+            },
+            previewAppFun(){
+
+                this.$refs['previeForm'].validate((valid) => {
+                     if (valid) {
+                            ad.addPreView({
+                                positionId:this.positionId,
+                                adData:JSON.stringify(this.formItem),
+                                appCode:this.previeForm.appCode
+                            }).then(response=>{
+                                this.$Message.success('APP预览成功');
+                                this.editorModal = false;
+                            });
+                     }
+                });
+                
+
+            },
+            prevResponse(){
+               let id = this.positionId;
+               this.editorModal = true;
+                if(this.previewType == 1){
+                    this.addPreView()
                 }else {
                     this.previewAppType = true
                 }

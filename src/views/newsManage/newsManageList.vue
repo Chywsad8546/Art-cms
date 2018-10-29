@@ -553,8 +553,8 @@
                     let timestamp = response.data.data.timestamp;
                     this.qrcodeModal = !this.qrcodeModal;
                     document.getElementById("qrcode").innerHTML = "";
-                    url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    console.log(url);
+                    //url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    url+='&pre=1';
                     this.qrcode(url);
                 });
             },
