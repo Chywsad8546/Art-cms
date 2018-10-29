@@ -53,7 +53,6 @@
                                             </FormItem>
                                             <FormItem >
                                                 <Button type="primary" @click="addTemplate('formValidate')">保存</Button>
-                                                <Button type="ghost" style="margin-left: 8px">取消</Button>
                                             </FormItem>
                                         </Form>
                                     </Card>
