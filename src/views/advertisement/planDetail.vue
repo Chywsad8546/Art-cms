@@ -30,7 +30,6 @@
                             </Select>
                         </FormItem>
 
-
                         <FormItem label="选择时间"  prop="timeRange">
                             <DatePicker type="daterange" v-model="searchData.timeRange" split-panels placeholder="Select date" style="width: 200px"></DatePicker>
 
@@ -213,6 +212,55 @@
                     {
                         key: 'endtime',
                         title: '结束时间'
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        width: 170,
+                        align: 'center',
+                        render: (h, params) => {
+                            var i = this;
+                            return h('div', [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '是否删除排期',
+                                                    content: '<p>是否删除排期</p>',
+                                                    onOk: () => {
+                                                        fapi.deleteSchedulingById({schedulingId:params.row.schedulingId}).then(response => {
+                                                            if (response.data.data === '成功') {
+                                                                this.$Message.success('删除成功！');
+                                                                fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                                                                    this.paiqiListData = response.data.data;
+                                                                });
+                                                            }
+                                                        }).catch(error => {
+                                                            this.$Message.error(error.response.data.msg);
+                                                            fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                                                                this.paiqiListData = response.data.data;
+                                                            });
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '删除'
+                                )
+                            ]);
+                        }
                     }
                 ],
                 paiqiListModal: false,
@@ -364,9 +412,10 @@
                     }
                 ],
                 searchData: {
+                    pageId: '',
                     page: 1,
                     limit: 10,
-                    stationId: '',
+                    station: '',
                     pageName: '',
                     planId: '',
                     startTime: '',
@@ -499,6 +548,9 @@
                 this.init();
             },
             handleCancel (name) {
+                this.pingdaoList = [];
+                console.log(this)
+                //console.log(this.$refs[name])
                 this.$refs[name].resetFields();
                 this.searchData.startTime = this.searchData.timeRange[0];
                 this.searchData.endTime = this.searchData.timeRange[1];
