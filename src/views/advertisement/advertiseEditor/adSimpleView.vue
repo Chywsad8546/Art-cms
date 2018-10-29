@@ -58,7 +58,7 @@
                         </template>
                         
                         <FormItem>
-                            <Button type="primary" @click="save">保存</Button>
+                            <Button type="primary" @click="save" v-show="!issaving">保存</Button>
                             <Button type="primary" style="margin-left:20px;" v-if="isNewSystem&&isEditShow" @click="preview">预览</Button>
                         </FormItem>
                     </Form>
@@ -102,6 +102,8 @@
         name: 'ad-detail-view',
         data() {
             return {
+                issaving: false,
+                id: this.$route.query.id,
                 confs: [
                     // {
                     //     'type': 'input', // 类型输入框
@@ -142,14 +144,14 @@
                 positionId: 0,
                 typeId: 0,
                 adResource: '',
-                editorModal:false,
-                previewWapType:false,
-                previewAppType:false,
-                appCode:"",
-                previewType:0,
-                previewUrl:"",
-                previeForm:{
-                    appCode:''
+                editorModal: false,
+                previewWapType: false,
+                previewAppType: false,
+                appCode: '',
+                previewType: 0,
+                previewUrl: '',
+                previeForm: {
+                    appCode: ''
                 },
                 commonForm: {
                     adCompany: '',
@@ -163,8 +165,8 @@
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
                 },
-                previeFormRuleValidate:{
-                    appCode:[
+                previeFormRuleValidate: {
+                    appCode: [
                         {required: true, message: '请填写appCode', trigger: 'blur'}
                     ]
                 },
@@ -175,10 +177,11 @@
         },
         methods: {
             saveajax() {
+                this.issaving = true;
                 var that = this;
-                if (this.$route.query.id) {
+                if (this.id) {
                     ad.editIdea({
-                        ideaCode: this.$route.query.id,
+                        ideaCode: this.id,
                         ideaData: JSON.stringify(this.formItem),
                         typeId: this.typeId,
                         positionId: this.positionId,
@@ -186,6 +189,8 @@
                         adName: this.commonForm.adName,
                         adResource: this.adResource
                     }).then(function (res) {
+                        that.id = res.data.data.ideaCode;
+                        that.issaving = false;
                         that.$Message.success('修改成功');
                         // todo 跳回到列表页
                         // this.$router.push({});
@@ -201,6 +206,7 @@
                         planId: this.$route.query.planId || 0,
                         defaultAd: this.$route.query.isquesheng || 0
                     }).then(function (res) {
+                        that.issaving = false;
                         that.$Message.success('新增成功');
                         // that.$closePageAndActiveRouter({
                         //     name: 'planDetail', query: {planid: that.$route.query.planId, templateid: that.$route.query.templateid}
@@ -262,7 +268,7 @@
                     desc: ''
                 });
             },
-            preview(){
+            preview() {
                 /**
                  * 表单验证
                  */
@@ -286,7 +292,7 @@
                             if (commvalid && valid && uploadvalid) {
                                 this.getAllPosition();
                             //    this.prevResponse();
-                               // that.saveajax();
+                                // that.saveajax();
                             } else {
                                 this.$Message.error('补充完善后，才能预览');
                             }
@@ -294,64 +300,61 @@
                     } else {
                         if (commvalid && uploadvalid) {
                             this.getAllPosition();
-                         //   this.prevResponse();
-                           // that.saveajax();
+                            //   this.prevResponse();
+                            // that.saveajax();
                         } else {
                             this.$Message.error('补充完善后，才能预览');
                         }
                     }
                 });
             },
-            getAllPosition(){
-                    ad.getAllPosition({
-                        positionId:this.positionId
-                       // positionId:2051
-                    }).then(response=>{
-                        if(response.data.data[0].previewType){
-                            this.previewType = response.data.data[0].previewType;
-                            this.previewUrl = response.data.data[0].previewUrl;    
-                        }else{
-                            this.$Message.error('位置没有填写类型或url');
-                            return false;
-                        }              
-                        this.prevResponse();                          
-                    });
+            getAllPosition() {
+                ad.getAllPosition({
+                    positionId: this.positionId
+                    // positionId:2051
+                }).then(response => {
+                    if (response.data.data[0].previewType) {
+                        this.previewType = response.data.data[0].previewType;
+                        this.previewUrl = response.data.data[0].previewUrl;
+                    } else {
+                        this.$Message.error('位置没有填写类型或url');
+                        return false;
+                    }
+                    this.prevResponse();
+                });
             },
-            addPreView(){
+            addPreView() {
                 ad.addPreView({
-                    positionId:this.positionId,
-                    adData:JSON.stringify(this.formItem),
-                }).then(response=>{
+                    positionId: this.positionId,
+                    adData: JSON.stringify(this.formItem)
+                }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id='+this.positionId+'&pre=1';
-                    document.getElementById("qrcode4").innerHTML = "";
+                    let url = this.previewUrl + '?id=' + this.positionId + '&pre=1';
+                    document.getElementById('qrcode4').innerHTML = '';
                     this.qrcode(url);
                 });
             },
-            previewAppFun(){
-
+            previewAppFun() {
                 this.$refs['previeForm'].validate((valid) => {
-                     if (valid) {
-                            ad.addPreView({
-                                positionId:this.positionId,
-                                adData:JSON.stringify(this.formItem),
-                                appCode:this.previeForm.appCode
-                            }).then(response=>{
-                                this.$Message.success('APP预览成功');
-                                this.editorModal = false;
-                            });
-                     }
+                    if (valid) {
+                        ad.addPreView({
+                            positionId: this.positionId,
+                            adData: JSON.stringify(this.formItem),
+                            appCode: this.previeForm.appCode
+                        }).then(response => {
+                            this.$Message.success('APP预览成功');
+                            this.editorModal = false;
+                        });
+                    }
                 });
-                
-
             },
-            prevResponse(){
-               let id = this.positionId;
-               this.editorModal = true;
-                if(this.previewType == 1){
-                    this.addPreView()
-                }else {
-                    this.previewAppType = true
+            prevResponse() {
+                let id = this.positionId;
+                this.editorModal = true;
+                if (this.previewType == 1) {
+                    this.addPreView();
+                } else {
+                    this.previewAppType = true;
                 }
             },
             qrcode (url) {
@@ -362,7 +365,7 @@
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
-                })
+                });
             },
             init(created) {
                 /**
@@ -413,9 +416,9 @@
         },
         created: function () {
             var that = this;
-            if (this.$route.query.id) {
+            if (this.id) {
                 this.isEditShow = false;
-                ad.getIdea(this.$route.query.id).then(function (res) {
+                ad.getIdea(this.id).then(function (res) {
                     if (res.data.data.isNew) {
                         that.typeId = res.data.data.typeId;
                         let ideares = res.data.data;
