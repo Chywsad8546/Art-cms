@@ -473,9 +473,9 @@
                     let timestamp = response.data.data.timestamp;
                     let url = '';
                     if(this.form.type === 2 || this.form.type === '2'){
-                        url = this.$domain.hshipinDomainurl+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                        url = this.$domain.hshipinDomainurl+'?id='+id+'&pre=1';
                     }else if(this.form.type === 3 || this.form.type === '3'){
-                        url = this.$domain.sshipinDomainurl+'?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                        url = this.$domain.sshipinDomainurl+'?id='+id+'&pre=1';
                     }else{
                         this.$Notice.warning({
                             title: "请选择播放模式"

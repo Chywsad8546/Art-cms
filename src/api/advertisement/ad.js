@@ -83,4 +83,10 @@ export default {
     editStatus(params) {
         return http.post('/cmsapi/editStatus', params);
     },
+    addPreView(params) {
+        return http.post('/cmsapi/idea/addPreView', params);
+    },
+    getAllPosition(params) {
+        return http.post('/cmsapi/getAllPosition', params);
+    },
 };

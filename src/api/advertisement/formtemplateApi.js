@@ -86,4 +86,9 @@ export default {
     getDefaultAdByPositionId(params) {
         return http.get('/cmsapi/idea/getDefaultAdByPositionId', {params: params});
     },
+    //删除排期
+    deleteSchedulingById(params) {
+        return http.post('/cmsapi/deleteSchedulingById', params);
+    },
+
 };

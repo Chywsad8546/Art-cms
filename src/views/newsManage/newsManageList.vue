@@ -163,7 +163,8 @@
                                     "竖版视频"
                                 ]);
                             }
-                        }
+                        },
+                        width: 150
                     },
                     {
                         title: '栏目',
@@ -205,18 +206,18 @@
                                 ]);
                             }
                         },
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '编辑',
                         render: (h, params) => {
                             return h('div', params.row.sysUser.userName);
                         },
-                        width: 80
+                        width: 100
                     },
                     {
                         key: 'readCount',
-                        width: 80,
+                        width: 100,
                         title: '阅读量'
                     },
                     {
@@ -553,8 +554,8 @@
                     let timestamp = response.data.data.timestamp;
                     this.qrcodeModal = !this.qrcodeModal;
                     document.getElementById("qrcode").innerHTML = "";
-                    url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    console.log(url);
+                    //url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    url+='&pre=1';
                     this.qrcode(url);
                 });
             },

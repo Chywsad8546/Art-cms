@@ -292,7 +292,9 @@
                 this.init();
             },
             handleCancel (name) {
+                console.log(this)
                 this.seratchPageList = [];
+                //console.log(this.$refs[name]);
                 this.$refs[name].resetFields();
                 this.searchData.pageNum = 1;
                 this.init();

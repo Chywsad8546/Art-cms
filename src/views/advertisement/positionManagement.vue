@@ -81,6 +81,15 @@
                         <Option :value=1>高级</Option>
                     </Select>
                 </FormItem>
+                <FormItem label="预览模式" prop="previewType">
+                    <Select v-model="addNewsChannelModal.previewType" style="width:140px">
+                        <Option :value=1>WAP预览</Option>
+                        <Option :value=2>APP预览</Option>
+                    </Select>
+                </FormItem>
+                <FormItem v-if="addNewsChannelModal.previewType === 1" label="预览URL" prop="previewUrl">
+                    <Input v-model.trim="addNewsChannelModal.previewUrl" style="width:140px"></Input>
+                </FormItem>
             </Form>
         </Modal>
 
@@ -91,6 +100,15 @@
                 </FormItem>
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="updateCahnnelValue.version" style="width:140px"></Input>
+                </FormItem>
+                <FormItem label="预览模式" prop="previewType">
+                    <Select v-model="updateCahnnelValue.previewType" @on-change="changePreviewType" style="width:140px">
+                        <Option value='1'>WAP预览</Option>
+                        <Option value='2'>APP预览</Option>
+                    </Select>
+                </FormItem>
+                <FormItem v-if="upPreviewUrlIsShow" label="预览URL" prop="previewUrl">
+                    <Input v-model.trim="updateCahnnelValue.previewUrl" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -143,6 +161,7 @@
     export default {
         data() {
             return {
+                upPreviewUrlIsShow:false,
                 showQuesheng:false,
                 queshengmodalColums: [
                     {
@@ -441,7 +460,7 @@
                                                 on: {
                                                     click: () => {
                                                         if (params.row.isNew === 1) {
-                                                            that.modal3=false;
+                                                            that.modal3 = false;
                                                             that.$router.push({
                                                                 name: 'formtemplate',
                                                                 query: {advertId: params.row.id}
@@ -536,6 +555,11 @@
                                                 this.updateCahnnelValue.version = params.row.version;
                                                 this.updateCahnnelValue.positionName = params.row.positionName;
                                                 this.updateCahnnelValue.positionId = params.row.positionId;
+                                                this.updateCahnnelValue.previewType = params.row.previewType+'';
+                                                if (params.row.previewType === 1) {
+                                                    this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                }
+
                                                 i.modal2 = true;
                                             }
                                         }
@@ -609,9 +633,14 @@
                     stationIndex: '',
                     pageIndex: '',
                     positionName: '',
-                    version: ''
+                    version: '',
+                    previewType: ''
                 },
                 updateCahnnelValue: {
+                      version : '',
+                      positionName : '',
+                      positionId : '',
+                      previewType : ''
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
@@ -619,15 +648,25 @@
                     version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
                     pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
                     isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],
-                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }]
+                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }],
+                    previewType: [{ type: 'integer', required: true, message: '请选择预览模式', trigger: 'change' }],
                 },
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }]
+                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
+                    previewType: [{ required: true, message: '请选择预览模式', trigger: 'change' }],
+                    previewUrl: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
                 }
             };
         },
         methods: {
+            changePreviewType(val) {
+                if(val==1){
+                     this.upPreviewUrlIsShow =true;
+                }else{
+                    this.upPreviewUrlIsShow=false;
+                }
+            },
             addquesheng(){
                 this.adListListModal=false;
                 api.templateList({positionId: this.selectPostionId}).then(response => {
@@ -649,7 +688,7 @@
                 }
             },
             addModal() {
-                this.modal3=false;
+                this.modal3 = false;
                 this.$router.push({
                     name: 'formtemplate', query: {positionId: this.currentPosition}
                 });

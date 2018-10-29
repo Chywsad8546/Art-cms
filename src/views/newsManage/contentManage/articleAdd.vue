@@ -610,7 +610,8 @@
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                   // let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomain + '?id='+id+'&pre=1';
                     document.getElementById("qrcode1").innerHTML = "";
                     this.qrcode(url);
             },

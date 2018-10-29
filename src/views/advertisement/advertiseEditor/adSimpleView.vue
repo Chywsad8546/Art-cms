@@ -1,4 +1,5 @@
 <template>
+<div>
     <Row>
         <Col span="24">
         <Card>
@@ -55,29 +56,47 @@
                             </FormItem>
 
                         </template>
-
-
+                        
                         <FormItem>
                             <Button type="primary" @click="save">保存</Button>
+                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
                         </FormItem>
                     </Form>
                 </Card>
-
-
                 </Col>
             </Row>
         </Card>
 
         </Col>
-
-
     </Row>
+    <Form ref="previeForm" :model="previeForm" :rules="previeFormRuleValidate" :label-width="80">
+        <Modal v-model="editorModal" width="300">
+            <p slot="header" style="color:#f60;text-align:center">
+                <span></span>
+            </p>
+            <div style="text-align:center" v-show="previewWapType">
+                <p class="qrcode" id="qrcode4"></p>
+            </div>
+            <div v-show="previewAppType">
+                <FormItem  required prop="appCode" :label-width="80">
+                    <Input v-model="previeForm.appCode" placeholder="请输入appCode"></Input>
+                </FormItem>
+                <FormItem style="margin-left:20px;">
+                    <Button type="primary" @click="previewAppFun()">保存</Button>
+                </FormItem>
+            </div>
+            <div slot="footer">
+            </div>
+        </Modal>      
+    </form>
+    </div>
 </template>
 
 <script>
     import _ from 'lodash';
     import editortemplate from '@/api/advertisement/formtemplateApi';
     import ad from '@/api/advertisement/ad';
+    import QRCode from 'qrcodejs2';
     export default {
 
         name: 'ad-detail-view',
@@ -123,6 +142,15 @@
                 positionId: 0,
                 typeId: 0,
                 adResource: '',
+                editorModal:false,
+                previewWapType:false,
+                previewAppType:false,
+                appCode:"",
+                previewType:0,
+                previewUrl:"",
+                previeForm:{
+                    appCode:''
+                },
                 commonForm: {
                     adCompany: '',
                     adName: ''
@@ -133,6 +161,11 @@
                     ],
                     adName: [
                         {required: true, message: '请填写', trigger: 'blur'}
+                    ]
+                },
+                previeFormRuleValidate:{
+                    appCode:[
+                        {required: true, message: '请填写appCode', trigger: 'blur'}
                     ]
                 },
                 isNewSystem: false
@@ -228,6 +261,108 @@
                     desc: ''
                 });
             },
+            preview(){
+                /**
+                 * 表单验证
+                 */
+                let uploadvalid = true;
+                let hasCommonInput = false;
+                for (var i = 0; i < this.confs.length; i++) {
+                    let item = this.confs[i];
+                    if (item.type === 'upload' && item.required && uploadvalid) {
+                        if (!_.trim(this.formItem[item.name])) {
+                            uploadvalid = false;
+                        }
+                    }
+                    if (item.type !== 'upload') {
+                        hasCommonInput = true;
+                    }
+                }
+                var that = this;
+                this.$refs['commonForm'].validate((commvalid) => {
+                    if (hasCommonInput) {
+                        this.$refs['form'].validate((valid) => {
+                            if (commvalid && valid && uploadvalid) {
+                                this.getAllPosition();
+                            //    this.prevResponse();
+                               // that.saveajax();
+                            } else {
+                                this.$Message.error('补充完善后，才能预览');
+                            }
+                        });
+                    } else {
+                        if (commvalid && uploadvalid) {
+                            this.getAllPosition();
+                         //   this.prevResponse();
+                           // that.saveajax();
+                        } else {
+                            this.$Message.error('补充完善后，才能预览');
+                        }
+                    }
+                });
+            },
+            getAllPosition(){
+                    ad.getAllPosition({
+                        positionId:this.positionId
+                       // positionId:2051
+                    }).then(response=>{
+                        if(response.data.data[0].previewType && response.data.data[0].previewUrl){
+                            this.previewType = response.data.data[0].previewType;
+                            this.previewUrl = response.data.data[0].previewUrl;    
+                        }else{
+                            this.$Message.error('位置没有填写类型或url');
+                            return false;
+                        }              
+                        this.prevResponse();                          
+                    });
+            },
+            addPreView(){
+                ad.addPreView({
+                    positionId:this.positionId,
+                    adData:JSON.stringify(this.formItem),
+                }).then(response=>{
+                    this.previewWapType = true;
+                    let url = this.previewUrl + '?id='+this.positionId+'&pre=1';
+                    document.getElementById("qrcode4").innerHTML = "";
+                    this.qrcode(url);
+                });
+            },
+            previewAppFun(){
+
+                this.$refs['previeForm'].validate((valid) => {
+                     if (valid) {
+                            ad.addPreView({
+                                positionId:this.positionId,
+                                adData:JSON.stringify(this.formItem),
+                                appCode:this.previeForm.appCode
+                            }).then(response=>{
+                                this.$Message.success('APP预览成功');
+                                this.editorModal = false;
+                            });
+                     }
+                });
+                
+
+            },
+            prevResponse(){
+               let id = this.positionId;
+               this.editorModal = true;
+                if(this.previewType == 1){
+                    this.addPreView()
+                }else {
+                    this.previewAppType = true
+                }
+            },
+            qrcode (url) {
+                let qrcode = new QRCode('qrcode4', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: url // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
+            },
             init(created) {
                 /**
                  * 初始化 数据和校验 信息
@@ -320,5 +455,14 @@
 </script>
 
 <style scoped>
-
+.qrcode {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.appcodePop {
+    width: 170px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 </style>

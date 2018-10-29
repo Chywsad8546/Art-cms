@@ -251,7 +251,7 @@
             updateChannel() {
                 this.$refs['updateCahnnelValuefrom'].validate((valid) => {
                     if (valid) {
-                        adapi.updateStationName(this.updateCahnnelValue).then(response => {
+                        adapi.updateStation(this.updateCahnnelValue).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
                                 this.init();
