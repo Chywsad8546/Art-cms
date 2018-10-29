@@ -179,6 +179,7 @@
             saveajax() {
                 this.issaving = true;
                 var that = this;
+                console.log('this.id',this.id)
                 if (this.id) {
                     ad.editIdea({
                         ideaCode: this.id,
@@ -189,7 +190,7 @@
                         adName: this.commonForm.adName,
                         adResource: this.adResource
                     }).then(function (res) {
-                        that.id = res.data.data.ideaCode;
+
                         that.issaving = false;
                         that.$Message.success('修改成功');
                         // todo 跳回到列表页
@@ -206,6 +207,7 @@
                         planId: this.$route.query.planId || 0,
                         defaultAd: this.$route.query.isquesheng || 0
                     }).then(function (res) {
+                        that.id = res.data.data.ideaCode;
                         that.issaving = false;
                         that.$Message.success('新增成功');
                         // that.$closePageAndActiveRouter({
