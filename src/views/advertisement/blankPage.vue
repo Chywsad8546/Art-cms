@@ -254,6 +254,9 @@
             }
         },
         created() {
+
+        },
+        activated(){
             this.init();
         }
     };
