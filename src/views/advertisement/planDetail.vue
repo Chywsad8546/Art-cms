@@ -14,8 +14,8 @@
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData"  inline :label-width="120">
-                        <FormItem label="选择站点" prop="stationId" >
-                            <Select v-model="searchData.stationId" style="width:100px" @on-change = "zdClick">
+                        <FormItem label="选择站点" prop="station" >
+                            <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                                 <Option v-for="item in zhandianList" :value="item.station" :key="'station'+item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
@@ -237,8 +237,8 @@
                 bjqList: [],
                 addIdeaNewsModal: {bjq: ''},
                 isTrueAddTag: false,
-                pdmode: {pageName: ''},
-                zdmode: {stationId: ''},
+                pdmode: {pageId: ''},
+                zdmode: {station: ''},
                 zhandianList: [],
                 pingdaoList: [],
                 adpingdaoList: [],
@@ -365,7 +365,8 @@
                     stationId: '',
                     pageId:'',
                     planId: '',
-                    PaiqiZhuangtai:''
+                    PaiqiZhuangtai:'',
+                    ZhanshiZhuangtai:''
                 },
                 timeRange: moment().toDate(),
                 data: [],
@@ -407,18 +408,21 @@
                 this.$refs['searchData'].resetFields();
                 // this.searchData.page = 1;
                 // this.handleSearch();
+                this.init();
             },
             pdClick() {
-                if (typeof this.searchData.pageName !== 'undefined') {
-                    fapi.getPositionInfo(this.searchData).then(response => {
+                if (typeof this.searchData.pageId !== 'undefined') {
+                    fapi.getPositionInfo({pageId: this.searchData.pageId,pageSize :1000}).then(response => {
                         this.weizhiList = response.data.data;
+                        this.searchData.positionId = '';
                     });
                 }
             },
             zdClick() {
-                if (this.searchData.stationId) {
-                    fapi.getChannelInfo({station: this.searchData.stationId}).then(response => {
+                if (this.searchData.station) {
+                    fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.pingdaoList = response.data.data;
+                        this.searchData.pageId = '';
                     });
                 }
             },

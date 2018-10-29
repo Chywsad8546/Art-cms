@@ -103,6 +103,12 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            var isDelTip = '';
+                            if (params.row.isDel === 1) {
+                                isDelTip = '启用';
+                            }else if (params.row.isDel === 0){
+                                isDelTip = '删除';
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -116,7 +122,6 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue = {};
                                                 this.updateCahnnelValue.pageId = params.row.station;
                                                 if (params.row.isDel === 1) {
                                                     this.updateCahnnelValue.isDel = 0;
@@ -128,7 +133,7 @@
                                             }
                                         }
                                     },
-                                    '是否删除'
+                                    isDelTip
                                 ),
                                 h(
                                     'Button',
@@ -143,7 +148,7 @@
                                         on: {
                                             click: () => {
                                                 this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.stationNameUp = params.row.stationName;
+                                                this.updateCahnnelValue.pageId = params.row.station;
                                                 this.updateCahnnelValue.stationName = params.row.stationName;
                                                 i.modal2 = true;
                                             }
@@ -226,10 +231,16 @@
                 });
             },
             delStation() {
+                var tip = '';
+                if (this.updateCahnnelValue.isDel === 0) {
+                    tip = '是否启用'
+                } else {
+                    tip = '是否删除'
+                }
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '更改删除状态',
-                    content: '<p>是否更改删除状态</p>',
+                    title: '更改状态',
+                    content: tip,
                     onOk: () => {
                         console.log(delDate)
                         adapi.updateStation(delDate).then(response => {
