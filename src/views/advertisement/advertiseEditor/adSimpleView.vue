@@ -443,6 +443,7 @@
                      */
                     else {
                         that.isNewSystem = false;
+                        // console.log(res.data.data)
                         this.adResource = res.data.data.adResource;
                         $(this.$refs['stage']).html(res.data.data.adResource);
                     }

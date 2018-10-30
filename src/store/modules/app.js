@@ -115,7 +115,7 @@ const app = {
         },
         setCurrentPath (state, pathArr) {
             state.currentPath = pathArr;
-            console.log('pathArr',pathArr)
+            // console.log('pathArr',pathArr)
         },
         setCurrentPageName (state, name) {
             state.currentPageName = name;
