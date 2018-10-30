@@ -2,15 +2,15 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">计划详情</p>
-                <Card>
+                <!--<p slot="title">计划详情</p>-->
+                <!--<Card>-->
                     <Form inline :label-width="120">
                         <FormItem><p style="font-size: 18px">计划名称: {{plandetail.planName}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">创意数量：{{plandetail.ideaCount}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">展示数量：{{plandetail.zhanShiCount}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">排期数量：{{plandetail.paiQiCount}}</p></FormItem>
                     </Form>
-                </Card>
+                <!--</Card>-->
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData"  inline :label-width="120">
@@ -42,25 +42,34 @@
                                 <Option value="1" :key="'PaiqiZhuangtai1'">已排期</Option>
                             </Select>
                         </FormItem>
-                        <FormItem label="展示状态" prop="ZhanshiZhuangtai">
-                            <Select v-model="searchData.ZhanshiZhuangtai" style="width:140px">
-                                <Option value="">全部</Option>
-                                <Option value="1">展示</Option>
-                                <Option value="0">未展示</Option>
-                            </Select>
-                        </FormItem>
+                        <!--<FormItem label="展示状态" prop="ZhanshiZhuangtai">-->
+                            <!--<Select v-model="searchData.ZhanshiZhuangtai" style="width:140px">-->
+                                <!--<Option value="">全部</Option>-->
+                                <!--<Option value="1">展示</Option>-->
+                                <!--<Option value="0">未展示</Option>-->
+                            <!--</Select>-->
+                        <!--</FormItem>-->
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加创意</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="isTrueAddTag = true">添加创意</Button>-->
+                        <!--</FormItem>-->
                     </Form>
-
-                    <Table border :columns="columns" :data="data"></Table>
-                    <Page :total="total" show-total @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
+                    <Card >
+                        <p slot="title">
+                            <Icon type="ios-film-outline"></Icon>
+                            广告创意
+                        </p>
+                        <a href="#" slot="extra" @click.prevent="isTrueAddTag = true">
+                            <Icon type="plus-circled"></Icon>
+                            添加创意
+                        </a>
+                        <Table border :columns="columns" :data="data"></Table>
+                        <Page :total="total" show-total @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
+                    </Card>
                 </Row>
             </Card>
         </Col>
