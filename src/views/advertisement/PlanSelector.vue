@@ -125,10 +125,12 @@
                                     endTime: endTime,
                                     reAdSchedulesNow: reAdSchedulesNow
                                 }).then(response => {
+                                    that.$emit('closeme');
                                     that.$Message.success('排期成功');
                                 });
                             } else {
                                 this.$Message.success('排期成功');
+                                that.$emit('closeme');
                                 // this.schedulesList();
                             }
                         });
