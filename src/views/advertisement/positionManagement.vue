@@ -499,7 +499,7 @@
                     {
                         key: 'pageName',
                         title: '栏目名称',
-                        width: 100
+                        width: 200
                     },
                     {
                         key: 'positionName',
