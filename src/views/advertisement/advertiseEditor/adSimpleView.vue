@@ -205,7 +205,8 @@
                         adName: this.commonForm.adName,
                         adResource: this.adResource,
                         planId: this.$route.query.planId || 0,
-                        defaultAd: this.$route.query.isquesheng || 0
+                        defaultAd: this.$route.query.isquesheng || 0,
+                        PaiqiZhuangtai:this.$route.query.isquesheng || 0,
                     }).then(function (res) {
                         that.id = res.data.data.ideaCode;
                         that.issaving = false;
