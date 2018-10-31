@@ -22,7 +22,7 @@ export default {
     },
     //获取用户列表
     getUserList(params){
-        return http.postJson('/cmsapi/userlist',params);
+        return http.post('/cmsapi/userlist',params);
     },
     //添加用户
     addUser(params){
