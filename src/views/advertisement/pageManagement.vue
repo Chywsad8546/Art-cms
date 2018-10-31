@@ -46,7 +46,7 @@
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationId">
+                <FormItem label="应用名称" prop="stationId">
                     <Select v-model="addNewsChannelModal.stationId" :label-in-value="true" @on-change="sitechange" style="width:140px">
                         <Option v-for="(item,index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
@@ -180,7 +180,7 @@
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationId: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }]
+                    stationId: [{ type: 'integer', required: true, message: '应用不能为空', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
