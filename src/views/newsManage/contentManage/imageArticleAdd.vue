@@ -86,7 +86,7 @@
         </FormItem>
         <FormItem>
             <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
-            <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+            <!-- <Button v-show="isTimeFlag" @click="timingSubRelease" :disabled="isDisable">定时发布</Button> -->
             <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
             <Button v-show="isDraftFlag" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
         </FormItem>
