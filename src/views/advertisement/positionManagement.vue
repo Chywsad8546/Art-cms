@@ -9,13 +9,13 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="应用名称" prop="station">
-                            <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
+                        <FormItem label="站点名称" prop="station">
+                            <Select v-model="searchData.station" clearable @on-change = "zdClick" style="width:140px">
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageId">
-                            <Select v-model="searchData.pageId" style="width:140px">
+                            <Select v-model="searchData.pageId" clearable style="width:140px">
                                 <Option v-for="item in searchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
@@ -23,9 +23,15 @@
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="未设置缺省广告" prop="defaultAd">
-                            <Select v-model="searchData.defaultAd" style="width:140px">
+                            <Select v-model="searchData.defaultAd" clearable style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option value="1">是</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="是否删除" prop="isDel">
+                            <Select v-model="searchData.isDel" clearable style="width:140px">
+                                <Option value="1">是</Option>
+                                <Option value="0">否</Option>
                             </Select>
                         </FormItem>
                        <!-- <FormItem label="是否删除" prop="isDel">
@@ -520,6 +526,30 @@
                         width: 200
                     },
                     {
+                        key: 'isDel',
+                        title: '是否删除',
+                        width: 100,
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'span',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                   params.row.isDel == 1 ? '是' : '否'
+                                )
+                            ];
+                            return h('div', optionArray);
+                        }
+                    },
+                    {
                         title: '版本号',
                         key: 'version',
                         width: 100
@@ -540,15 +570,6 @@
                                         },
                                         style: {
                                             marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.modal3 = true;
-                                                this.currentPosition = params.row.positionId;
-                                                api.templateList({positionId: params.row.positionId}).then(response => {
-                                                    this.modalData = response.data.data;
-                                                });
-                                            }
                                         }
                                     },
                                    params.row.isFatherPosition == 1 ? '是' : '否'
@@ -699,7 +720,38 @@
                                     )
                                 ];
                             }
-
+                            optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '更改状态',
+                                                    content: '是否删除',
+                                                    onOk: () => {
+                                                        adapi.updatePosition({
+                                                            positionId:params.row.positionId,
+                                                            isDel:1
+                                                        }).then(response=>{
+                                                            this.init();
+                                                            //console.log(response);
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '删除'
+                                ));                      
                             return h('div', optionArray);
                         }
                     }
