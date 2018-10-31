@@ -13,7 +13,7 @@
                                             <Icon type="ios-film-outline"></Icon>
                                             基本信息
                                         </p>
-                                        <a href="#" slot="extra"  @click.prevent="formModal1 = true" >
+                                        <a href="#" slot="extra"  @click.prevent="formModal1 = true;editorEditIs = false;" >
                                             <Icon type="ios-paper"></Icon>
                                             设置编辑器
                                         </a>
@@ -58,8 +58,7 @@
                                     </Card>
 
                                     <Modal
-                                        v-model="formModal1"
-                                        title="新增选框">
+                                        v-model="formModal1" @on-cancel="isCancel" :title="editorEditIs == false ? '新增编辑器' : '修改编辑器'">
                                         <RadioGroup v-model="inputType" style="margin-bottom:20px;" @on-change="tabRadioClick">
                                             <Radio label="input">input</Radio>
                                             <Radio label="select">select</Radio>
@@ -99,12 +98,12 @@
                                             </FormItem>                        -->
                                         </Form>
                                         <div slot="footer">
-                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">新增</Button>
+                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">{{editorEditIs == false ? '新增' :'修改' }}</Button>
                                         </div>
                                     </Modal>
                                     </Col>
                                     <Col  span="12" >
-                                    <!--<Table :columns="columns" :data="confs"></Table>-->
+                                    <Table :columns="columns" :data="confs"></Table>
                                     </Col>
                                 </Row>
                         <Card shadow>
@@ -229,6 +228,8 @@ import { setTimeout } from 'timers';
                 editorRouterList: [],
                 seniorEditor: false,
                 ordinaryEditor:false,
+                editorEditIs:false,
+                confsIndex:0,
                 formAdd: {
                     name: '',
                     label: '',
@@ -256,6 +257,48 @@ import { setTimeout } from 'timers';
                     {
                         title: '组件类型',
                         key: 'type'
+                    },
+                    {
+                        title: '组件name',
+                        key: 'name'
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'left',
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.inputType = params.row.type;
+                                                this.formAdd.name = params.row.name;
+                                                this.formAdd.label = params.row.label;
+                                                this.formAdd.default = params.row.default;
+                                                this.formAdd.reg = params.row.reg;
+                                                this.formAdd.required = params.row.required;
+                                                this.formAdd.message = params.row.message;
+                                                this.confsIndex = params.index;
+                                                this.formModal1 = true;
+                                                this.editorEditIs = true;
+                                            }
+                                        }
+                                    },
+                                    '修改'
+                                )
+                            ];              
+                            return h('div', optionArray);
+                        }
                     }
                 ],
                 confs: [
@@ -444,16 +487,21 @@ import { setTimeout } from 'timers';
             confsRemove(index) {
                 this.confs.splice(index, 1);
             },
+            isCancel(){
+                this.cleanData();
+            },
             popupOk (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if (this.confs.length > 0) {
-                            this.confs.forEach(item => {
-                                if (item.name == this.formAdd.name) {
-                                    this.$Message.error('name名称不能重复');
-                                    return false;
-                                }
-                            });
+                            if(this.editorEditIs == false){
+                                this.confs.forEach(item => {
+                                    if (item.name == this.formAdd.name) {
+                                        this.$Message.error('name名称不能重复');
+                                        return false;
+                                    }
+                                });
+                            }
                         }
                         if (this.formAdd.reg == true && this.formAdd.message == '') {
                             this.$Message.error('请输入校验不通过提示信息');
@@ -474,7 +522,14 @@ import { setTimeout } from 'timers';
                         if (this.inputType == 'upload') {
                             strArr.format = this.formAdd.format;
                         }
-                        this.confs.push(strArr);
+                        // this.confsIndex = params.index;
+                        // this.formModal1 = true;
+                        // this.editorEditIs = true;
+                        if(this.editorEditIs == false){
+                            this.confs.push(strArr);
+                        }else{
+                            this.confs.splice(this.confsIndex,1,strArr);
+                        }                  
                         this.cleanData();
                         this.formModal1 = !this.formModal1;
                         this.editorTry();

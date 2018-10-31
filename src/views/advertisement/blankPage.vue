@@ -29,7 +29,12 @@
                                 <Option value="0">免费</Option>
                         </Select>
                     </FormItem>
-
+                    <FormItem label="是否删除" prop="isDel">
+                        <Select v-model="formItem.isDel" style="width:100px">
+                                <Option value="1">是</Option>
+                                <Option value="0">否</Option>
+                        </Select>
+                    </FormItem>
                     <FormItem label="时间" prop="dateTime">
                         <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
