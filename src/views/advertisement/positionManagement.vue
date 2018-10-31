@@ -584,175 +584,177 @@
                         align: 'left',
                         render: (h, params) => {
                             var i = this;
+                            if(params.row.isDel == 0){
                             if(params.row.isFatherPosition == 0){
-                            var optionArray = [
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.modal3 = true;
-                                                this.currentPosition = params.row.positionId;
-                                                api.templateList({positionId: params.row.positionId}).then(response => {
-                                                    this.modalData = response.data.data;
-                                                });
-                                            }
-                                        }
-                                    },
-                                    '设置编辑器'
-                                ),
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.version = params.row.version;
-                                                this.updateCahnnelValue.positionName = params.row.positionName;
-                                                this.updateCahnnelValue.positionId = params.row.positionId;
-                                                this.updateCahnnelValue.previewType = params.row.previewType + '';
-                                                if (params.row.previewType === 1) {
-                                                    this.upPreviewUrlIsShow = true;
-                                                    this.updateCahnnelValue.previewUrl = params.row.previewUrl;
-                                                } else if (params.row.previewType === 2) {
-                                                    this.upPreviewUrlIsShow = false;
-                                                    this.updateCahnnelValue.previewUrl = '';
-                                                }
-                                                i.judgefatherFlag = true;
-                                                i.modal2 = true;
-                                            }
-                                        }
-                                    },
-                                    '修改'
-                                )
-                            ];
-
-                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
-                                optionArray.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'error',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.selectPostionId = params.row.positionId;
-                                                this.addquesheng();
-                                            }
-                                        }
-                                    },
-                                    '添加缺省广告'
-                                ));
-                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd !== null) {
-                                optionArray.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
-                                                    this.adListListModal = true;
-                                                    this.selectPostionId = params.row.positionId;
-                                                    this.adListData = response.data.data;
-                                                });
-                                            }
-                                        }
-                                    },
-                                    '查看缺省广告！'
-                                ));
-                            }
-                            }else{
-                                var optionArray = [
-                                    h(
-                                        'Button',
-                                        {
-                                            props: {
-                                                type: 'primary',
-                                                size: 'small'
-                                            },
-                                            style: {
-                                                marginRight: '5px'
-                                            },
-                                            on: {
-                                                click: () => {
-                                                    this.updateCahnnelValue = {};
-                                                    this.updateCahnnelValue.version = params.row.version;
-                                                    this.updateCahnnelValue.positionName = params.row.positionName;
-                                                    this.updateCahnnelValue.positionId = params.row.positionId;
-                                                    this.updateCahnnelValue.previewType = params.row.previewType + '';
-                                                    if (params.row.previewType === 1) {
-                                                        this.upPreviewUrlIsShow = true;
-                                                        this.updateCahnnelValue.previewUrl = params.row.previewUrl;
-                                                    } else if (params.row.previewType === 2) {
-                                                        this.upPreviewUrlIsShow = false;
-                                                        this.updateCahnnelValue.previewUrl = '';
-                                                    }
-                                                    i.judgefatherFlag = false;
-                                                    i.modal2 = true;
-                                                }
-                                            }
-                                        },
-                                        '修改'
-                                    )
-                                ];
-                            }
-                            optionArray.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'error',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.$Modal.confirm({
-                                                    title: '更改状态',
-                                                    content: '是否删除',
-                                                    onOk: () => {
-                                                        adapi.updatePosition({
-                                                            positionId:params.row.positionId,
-                                                            isDel:1
-                                                        }).then(response=>{
-                                                            this.init();
-                                                            //console.log(response);
+                                    var optionArray = [
+                                        h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.modal3 = true;
+                                                        this.currentPosition = params.row.positionId;
+                                                        api.templateList({positionId: params.row.positionId}).then(response => {
+                                                            this.modalData = response.data.data;
                                                         });
-                                                    },
-                                                    onCancel: () => {
                                                     }
-                                                });
-                                            }
-                                        }
-                                    },
-                                    '删除'
-                                ));                      
-                            return h('div', optionArray);
+                                                }
+                                            },
+                                            '设置编辑器'
+                                        ),
+                                        h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.updateCahnnelValue = {};
+                                                        this.updateCahnnelValue.version = params.row.version;
+                                                        this.updateCahnnelValue.positionName = params.row.positionName;
+                                                        this.updateCahnnelValue.positionId = params.row.positionId;
+                                                        this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                        if (params.row.previewType === 1) {
+                                                            this.upPreviewUrlIsShow = true;
+                                                            this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                        } else if (params.row.previewType === 2) {
+                                                            this.upPreviewUrlIsShow = false;
+                                                            this.updateCahnnelValue.previewUrl = '';
+                                                        }
+                                                        i.judgefatherFlag = true;
+                                                        i.modal2 = true;
+                                                    }
+                                                }
+                                            },
+                                            '修改'
+                                        )
+                                    ];
+
+                                    if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
+                                        optionArray.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'error',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.selectPostionId = params.row.positionId;
+                                                        this.addquesheng();
+                                                    }
+                                                }
+                                            },
+                                            '添加缺省广告'
+                                        ));
+                                    } else if (params.row.isAddDefault === 0 && params.row.defaultAd !== null) {
+                                        optionArray.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
+                                                            this.adListListModal = true;
+                                                            this.selectPostionId = params.row.positionId;
+                                                            this.adListData = response.data.data;
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            '查看缺省广告！'
+                                        ));
+                                    }
+                                    }else{
+                                        var optionArray = [
+                                            h(
+                                                'Button',
+                                                {
+                                                    props: {
+                                                        type: 'primary',
+                                                        size: 'small'
+                                                    },
+                                                    style: {
+                                                        marginRight: '5px'
+                                                    },
+                                                    on: {
+                                                        click: () => {
+                                                            this.updateCahnnelValue = {};
+                                                            this.updateCahnnelValue.version = params.row.version;
+                                                            this.updateCahnnelValue.positionName = params.row.positionName;
+                                                            this.updateCahnnelValue.positionId = params.row.positionId;
+                                                            this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                            if (params.row.previewType === 1) {
+                                                                this.upPreviewUrlIsShow = true;
+                                                                this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                            } else if (params.row.previewType === 2) {
+                                                                this.upPreviewUrlIsShow = false;
+                                                                this.updateCahnnelValue.previewUrl = '';
+                                                            }
+                                                            i.judgefatherFlag = false;
+                                                            i.modal2 = true;
+                                                        }
+                                                    }
+                                                },
+                                                '修改'
+                                            )
+                                        ];
+                                    }
+                                    optionArray.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'error',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.$Modal.confirm({
+                                                            title: '更改状态',
+                                                            content: '是否删除',
+                                                            onOk: () => {
+                                                                adapi.updatePosition({
+                                                                    positionId:params.row.positionId,
+                                                                    isDel:1
+                                                                }).then(response=>{
+                                                                    this.init();
+                                                                    //console.log(response);
+                                                                });
+                                                            },
+                                                            onCancel: () => {
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            '删除'
+                                        ));                      
+                                    return h('div', optionArray);
+                            }
                         }
                     }
                 ],
