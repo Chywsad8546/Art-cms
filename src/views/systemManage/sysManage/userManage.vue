@@ -4,36 +4,6 @@
             <Card>
                 <p slot="title">用户列表管理</p>
                 <Row class="margin-top-10 searchable-table-con1">
-                   <!-- <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="标签分类" prop="type">
-                            <Select v-model="searchData.type" style="width:140px">
-                                <Option value="政策市场">政策市场</Option>
-                                <Option value="买房助手">买房助手</Option>
-                                <Option value="轻松一刻">轻松一刻</Option>
-                            </Select>
-                        </FormItem>
-                        <FormItem label="标签内容" prop="title">
-                            <Input v-model.trim="searchData.title" style="width:140px"></Input>
-                        </FormItem>
-
-                        &lt;!&ndash;            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                        <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                            <Option value="">全部</Option>
-                                            <Option value="0">未认证</Option>
-                                            <Option value="1">认证中</Option>
-                                            <Option value="2">认证通过</Option>
-                                            <Option value="3">认证不通过</Option>
-                                        </Select>
-                                    </FormItem>&ndash;&gt;
-                        <FormItem>
-                            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
-                            <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
-                        </FormItem>
-
-                        <FormItem>
-                            <Button type="primary" @click="isTrueAddTag = true">添加</Button>
-                        </FormItem>
-                    </Form>-->
                     <Button type="primary" @click="isTrueAddTag = true">添加</Button>
                     <Table border :columns="columns" :data="data"></Table>
                     <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
@@ -64,15 +34,6 @@
                         <Option value="1">否</Option>
                     </Select>
                 </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
             </Form>
         </Modal>
 
@@ -100,15 +61,6 @@
                         <Option :value="1">否</Option>
                     </Select>
                 </FormItem>
-                <!--            <FormItem label="名片认证状态" prop="businessCardAuth">
-                                <Select v-model="searchData.businessCardAuth" style="width:140px">
-                                    <Option value="">全部</Option>
-                                    <Option value="0">未认证</Option>
-                                    <Option value="1">认证中</Option>
-                                    <Option value="2">认证通过</Option>
-                                    <Option value="3">认证不通过</Option>
-                                </Select>
-                            </FormItem>-->
             </Form>
         </Modal>
     </Row>
@@ -189,8 +141,8 @@
                     }
                 ],
                 searchData: {
-                    title: '',
-                    type:'',
+                    page: 1,
+                    limit:10,
                 },
                 data: [],
                 initTable: [],
@@ -206,8 +158,7 @@
         },
         methods: {
             init(){
-                api.getUserList().then(response => {
-                    console.log(response.data.data);
+                api.getUserList(this.searchData).then(response => {
                     this.total=response.data.count;
                     this.data=response.data.data;
                 });
@@ -229,20 +180,21 @@
                 });
             },
             handleSearch () {
-                this.searchData.pageNum = 1;
+                this.searchData.page = 1;
                 this.init();
             },
             handleCancel (name) {
                 this.$refs[name].resetFields();
-                this.searchData.pageNum = 1;
+                this.searchData.page = 1;
                 this.init();
             },
             pageChange (page) {
-                this.searchData.pageNum = page;
+                console.log('pageChange')
+                this.searchData.page = page;
                 this.init();
             },
             sizeChange (size) {
-                this.searchData.pageSize = size;
+                this.searchData.limit = size;
                 this.init();
             }
         },

@@ -95,6 +95,7 @@
         },
         data() {
             return {
+                id:this.$route.query.id,
                 includeIds: [],
                 currentEditor: defaultEditor,
                 currentEditorKey: 'adHasMissEditor',
@@ -120,11 +121,13 @@
         },
         methods: {
             save(success, error) {
+                var that = this;
                 this.$refs['commonForm'].validate((commvalid) => {
                     if (commvalid) {
-                        if (this.$route.query.id) {
+                        this.issaving = true;
+                        if (this.id) {
                             ad.editIdea({
-                                idcode: this.$route.query.id,
+                                idcode: this.id,
                                 ideaData: JSON.stringify(this.share),
                                 typeId: this.typeId,
                                 positionId: this.positionId,
@@ -132,6 +135,7 @@
                                 adName: this.commonForm.adName,
                                 adResource: this.adResource
                             }).then(function (res) {
+                                that.issaving = false;
                                 if (success) {
                                     try {
                                         success();
@@ -140,6 +144,7 @@
                                     }
                                 }
                             }).catch(function (er) {
+                                that.issaving = false;
                                 if (error) {
                                     try {
                                         error(er);
@@ -157,6 +162,8 @@
                                 adName: this.commonForm.adName,
                                 adResource: this.adResource
                             }).then(function (res) {
+                                that.id = res.data.data.ideaCode;
+                                that.issaving = false;
                                 if (success) {
                                     try {
                                         success();
@@ -165,6 +172,7 @@
                                     }
                                 }
                             }).catch(function (er) {
+                                that.issaving = false;
                                 if (error) {
                                     try {
                                         error(er);
@@ -250,9 +258,9 @@
         },
         created() {
             var that = this;
-            if (this.$route.query.id) {
-                console.log('this.$route.query.id',this.$route.query.id)
-                ad.getIdea(this.$route.query.id).then(function (res) {
+            if (this.id) {
+                console.log('this.$route.query.id',this.id)
+                ad.getIdea(this.id).then(function (res) {
                     that.typeId = res.data.data.typeId;
                     let ideares = res.data.data;
                     let ideaData = JSON.parse(res.data.data.adData || {});
@@ -289,7 +297,7 @@
                     that.positionId = res.data.data.positionId;
                     if (editor) {
                         editor.component().then(function (res) {
-                            that.share = {a:'abc'};
+                            that.share = {};
                             that.hookWatch(res.default, {});
                             that.currentEditor = res.default;
                             that.currentEditorKey = editor.name;
