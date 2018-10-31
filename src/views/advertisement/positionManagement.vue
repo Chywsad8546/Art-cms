@@ -266,6 +266,7 @@
                         align: 'center',
                         render: (h, params) => {
                             var that = this;
+
                             return h('div', [
                                 h(
                                     'Button',
@@ -279,7 +280,10 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$router.push({name: 'ad_redirect', query: {isquesheng: 1, templateid: params.row.id}});
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {isquesheng: 1, templateid: params.row.id}
+                                                });
                                             }
                                         }
                                     },
@@ -399,7 +403,7 @@
                         key: 'status',
                         align: 'center',
                         render: (h, params) => {
-                            if (params.row.status === 0) {
+                            if (params.row.status === 0 || params.row.isNew === 0) {
                                 return h('div', {
                                     style: {
                                         color: 'red'
@@ -420,6 +424,9 @@
                         align: 'center',
                         render: (h, params) => {
                             var that = this;
+                            if (params.row.isNew === 0) {
+                                return h('div', ['']);
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -543,7 +550,7 @@
                                             marginRight: '5px'
                                         }
                                     },
-                                   params.row.isDel == 1 ? '是' : '否'
+                                    params.row.isDel == 1 ? '是' : '否'
                                 )
                             ];
                             return h('div', optionArray);
@@ -572,7 +579,7 @@
                                             marginRight: '5px'
                                         }
                                     },
-                                   params.row.isFatherPosition == 1 ? '是' : '否'
+                                    params.row.isFatherPosition == 1 ? '是' : '否'
                                 )
                             ];
                             return h('div', optionArray);
@@ -584,8 +591,8 @@
                         align: 'left',
                         render: (h, params) => {
                             var i = this;
-                            if(params.row.isDel == 0){
-                            if(params.row.isFatherPosition == 0){
+                            if (params.row.isDel == 0) {
+                                if (params.row.isFatherPosition == 0) {
                                     var optionArray = [
                                         h(
                                             'Button',
@@ -686,46 +693,13 @@
                                             '查看缺省广告！'
                                         ));
                                     }
-                                    }else{
-                                        var optionArray = [
-                                            h(
-                                                'Button',
-                                                {
-                                                    props: {
-                                                        type: 'primary',
-                                                        size: 'small'
-                                                    },
-                                                    style: {
-                                                        marginRight: '5px'
-                                                    },
-                                                    on: {
-                                                        click: () => {
-                                                            this.updateCahnnelValue = {};
-                                                            this.updateCahnnelValue.version = params.row.version;
-                                                            this.updateCahnnelValue.positionName = params.row.positionName;
-                                                            this.updateCahnnelValue.positionId = params.row.positionId;
-                                                            this.updateCahnnelValue.previewType = params.row.previewType + '';
-                                                            if (params.row.previewType === 1) {
-                                                                this.upPreviewUrlIsShow = true;
-                                                                this.updateCahnnelValue.previewUrl = params.row.previewUrl;
-                                                            } else if (params.row.previewType === 2) {
-                                                                this.upPreviewUrlIsShow = false;
-                                                                this.updateCahnnelValue.previewUrl = '';
-                                                            }
-                                                            i.judgefatherFlag = false;
-                                                            i.modal2 = true;
-                                                        }
-                                                    }
-                                                },
-                                                '修改'
-                                            )
-                                        ];
-                                    }
-                                    optionArray.push(h(
+                                } else {
+                                    var optionArray = [
+                                        h(
                                             'Button',
                                             {
                                                 props: {
-                                                    type: 'error',
+                                                    type: 'primary',
                                                     size: 'small'
                                                 },
                                                 style: {
@@ -733,27 +707,60 @@
                                                 },
                                                 on: {
                                                     click: () => {
-                                                        this.$Modal.confirm({
-                                                            title: '更改状态',
-                                                            content: '是否删除',
-                                                            onOk: () => {
-                                                                adapi.updatePosition({
-                                                                    positionId:params.row.positionId,
-                                                                    isDel:1
-                                                                }).then(response=>{
-                                                                    this.init();
-                                                                    //console.log(response);
-                                                                });
-                                                            },
-                                                            onCancel: () => {
-                                                            }
-                                                        });
+                                                        this.updateCahnnelValue = {};
+                                                        this.updateCahnnelValue.version = params.row.version;
+                                                        this.updateCahnnelValue.positionName = params.row.positionName;
+                                                        this.updateCahnnelValue.positionId = params.row.positionId;
+                                                        this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                        if (params.row.previewType === 1) {
+                                                            this.upPreviewUrlIsShow = true;
+                                                            this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                        } else if (params.row.previewType === 2) {
+                                                            this.upPreviewUrlIsShow = false;
+                                                            this.updateCahnnelValue.previewUrl = '';
+                                                        }
+                                                        i.judgefatherFlag = false;
+                                                        i.modal2 = true;
                                                     }
                                                 }
                                             },
-                                            '删除'
-                                        ));                      
-                                    return h('div', optionArray);
+                                            '修改'
+                                        )
+                                    ];
+                                }
+                                optionArray.push(h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '更改状态',
+                                                    content: '是否删除',
+                                                    onOk: () => {
+                                                        adapi.updatePosition({
+                                                            positionId: params.row.positionId,
+                                                            isDel: 1
+                                                        }).then(response => {
+                                                            this.init();
+                                                            // console.log(response);
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '删除'
+                                ));
+                                return h('div', optionArray);
                             }
                         }
                     }
@@ -771,14 +778,14 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 isAddTagLoading: true,
-                judgefatherFlag:true,
+                judgefatherFlag: true,
                 addNewsChannelModal: {
                     stationIndex: '',
                     pageIndex: '',
                     positionName: '',
                     version: '',
                     previewType: '',
-                    isFatherPosition:0
+                    isFatherPosition: 0
                 },
                 updateCahnnelValue: {
                     version: '',
