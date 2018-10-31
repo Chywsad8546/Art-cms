@@ -122,6 +122,7 @@
                     {
                         key: 'title',
                         title: '标题',
+                        width: 300,
                         "fixed": "left",
                     },
                     {
