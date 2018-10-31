@@ -6,7 +6,7 @@
             <p slot="title">编辑创意</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
-                <Alert type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
+                <Alert show-icon type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
                 <Alert show-icon v-if="this.$route.query.isquesheng">你当前在设置缺省广告</Alert>
                     <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #ffffff;overflow: hidden">
                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
@@ -444,9 +444,9 @@
                      */
                     else {
                         that.isNewSystem = false;
-                        // console.log(res.data.data)
-                        this.adResource = res.data.data.adResource;
-                        $(this.$refs['stage']).html(res.data.data.adResource);
+                        console.log(res.data.data.adResource)
+                        that.adResource = res.data.data.adResource;
+                        $(that.$refs['stage']).html(res.data.data.adResource);
                     }
                 });
             } else {
