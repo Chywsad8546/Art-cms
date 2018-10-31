@@ -205,7 +205,8 @@
                         adName: this.commonForm.adName,
                         adResource: this.adResource,
                         planId: this.$route.query.planId || 0,
-                        defaultAd: this.$route.query.isquesheng || 0
+                        defaultAd: this.$route.query.isquesheng || 0,
+                        PaiqiZhuangtai:this.$route.query.isquesheng || 0,
                     }).then(function (res) {
                         that.id = res.data.data.ideaCode;
                         that.issaving = false;
@@ -331,7 +332,7 @@
                     adData: JSON.stringify(this.formItem)
                 }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id=' + this.positionId + '&pre=1';
+                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
                     document.getElementById('qrcode4').innerHTML = '';
                     this.qrcode(url);
                 });
