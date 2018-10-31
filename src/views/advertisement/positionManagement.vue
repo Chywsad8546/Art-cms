@@ -111,8 +111,8 @@
                     <Input v-model.trim="updateCahnnelValue.version" style="width:140px"></Input>
                 </FormItem>
                 <div v-if="judgefatherFlag">
-                    <FormItem label="父ID" prop="isFatherPosition">
-                        <Input v-model.trim="updateCahnnelValue.isFatherPosition" placeholder="非必填" style="width:140px"></Input>
+                    <FormItem label="父ID" prop="fatherPositionId">
+                        <Input v-model.trim="updateCahnnelValue.fatherPositionId" placeholder="非必填" style="width:140px"></Input>
                     </FormItem>
                     <FormItem label="预览模式" prop="previewType">
                         <Select v-model="updateCahnnelValue.previewType" @on-change="changePreviewType" style="width:140px">
