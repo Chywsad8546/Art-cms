@@ -70,24 +70,32 @@
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="addNewsChannelModal.version" style="width:140px"></Input>
                 </FormItem>
-                <FormItem label="是否添加默认缺省页" prop="isAddDefault">
-                    <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
-                        <Option :value=0>是</Option>
-                        <Option :value=1>否</Option>
+                <FormItem label="父位置" prop="isFatherPosition">
+                    <Select v-model="addNewsChannelModal.isFatherPosition" style="width:140px">
+                        <Option :value=0>否</Option>
+                        <Option :value=1>是</Option>                    
                     </Select>
                 </FormItem>
-                <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
-                    <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
-                        <Option :value=0>低级</Option>
-                        <Option :value=1>高级</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="预览模式" prop="previewType">
-                    <Select v-model="addNewsChannelModal.previewType" style="width:140px">
-                        <Option :value=1>WAP预览</Option>
-                        <Option :value=2>APP预览</Option>
-                    </Select>
-                </FormItem>
+                <div v-if="addNewsChannelModal.isFatherPosition === 0">
+                    <FormItem label="是否添加默认缺省页" prop="isAddDefault">
+                        <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
+                            <Option :value=0>是</Option>
+                            <Option :value=1>否</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
+                        <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
+                            <Option :value=0>低级</Option>
+                            <Option :value=1>高级</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="预览模式" prop="previewType">
+                        <Select v-model="addNewsChannelModal.previewType" style="width:140px">
+                            <Option :value=1>WAP预览</Option>
+                            <Option :value=2>APP预览</Option>
+                        </Select>
+                    </FormItem>
+                </div>
                 <FormItem v-if="addNewsChannelModal.previewType === 1" label="预览URL" prop="previewUrl">
                     <Input v-model.trim="addNewsChannelModal.previewUrl" style="width:140px"></Input>
                 </FormItem>
@@ -102,13 +110,18 @@
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="updateCahnnelValue.version" style="width:140px"></Input>
                 </FormItem>
-                <FormItem label="预览模式" prop="previewType">
-                    <Select v-model="updateCahnnelValue.previewType" @on-change="changePreviewType" style="width:140px">
-                        <Option value='1'>WAP预览</Option>
-                        <Option value='2'>APP预览</Option>
-                    </Select>
-                </FormItem>
-                <FormItem v-if="upPreviewUrlIsShow" label="预览URL" prop="previewUrl">
+                <div v-if="judgefatherFlag">
+                    <FormItem label="父ID" prop="isFatherPosition">
+                        <Input v-model.trim="updateCahnnelValue.isFatherPosition" placeholder="非必填" style="width:140px"></Input>
+                    </FormItem>
+                    <FormItem label="预览模式" prop="previewType">
+                        <Select v-model="updateCahnnelValue.previewType" @on-change="changePreviewType" style="width:140px">
+                            <Option value='1'>WAP预览</Option>
+                            <Option value='2'>APP预览</Option>
+                        </Select>
+                    </FormItem>
+                </div>
+                <FormItem v-if="upPreviewUrlIsShow && judgefatherFlag" label="预览URL" prop="previewUrl">
                     <Input v-model.trim="updateCahnnelValue.previewUrl" style="width:140px"></Input>
                 </FormItem>
             </Form>
@@ -504,7 +517,7 @@
                     {
                         key: 'positionName',
                         title: '位置名称',
-                        width: 150
+                        width: 200
                     },
                     {
                         title: '版本号',
@@ -512,11 +525,45 @@
                         width: 100
                     },
                     {
+                        title: '是否父ID',
+                        key: 'isFatherPosition',
+                        width: 100,
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'span',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.modal3 = true;
+                                                this.currentPosition = params.row.positionId;
+                                                api.templateList({positionId: params.row.positionId}).then(response => {
+                                                    this.modalData = response.data.data;
+                                                });
+                                            }
+                                        }
+                                    },
+                                   params.row.isFatherPosition == 1 ? '是' : '否'
+                                )
+                            ];
+                            return h('div', optionArray);
+                        }
+                    },
+                    {
                         title: '管理',
                         key: 'action',
                         align: 'left',
                         render: (h, params) => {
                             var i = this;
+                            if(params.row.isFatherPosition == 0){
                             var optionArray = [
                                 h(
                                     'Button',
@@ -564,7 +611,7 @@
                                                     this.upPreviewUrlIsShow = false;
                                                     this.updateCahnnelValue.previewUrl = '';
                                                 }
-
+                                                i.judgefatherFlag = true;
                                                 i.modal2 = true;
                                             }
                                         }
@@ -617,6 +664,42 @@
                                     '查看缺省广告！'
                                 ));
                             }
+                            }else{
+                                var optionArray = [
+                                    h(
+                                        'Button',
+                                        {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginRight: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.updateCahnnelValue = {};
+                                                    this.updateCahnnelValue.version = params.row.version;
+                                                    this.updateCahnnelValue.positionName = params.row.positionName;
+                                                    this.updateCahnnelValue.positionId = params.row.positionId;
+                                                    this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                    if (params.row.previewType === 1) {
+                                                        this.upPreviewUrlIsShow = true;
+                                                        this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                    } else if (params.row.previewType === 2) {
+                                                        this.upPreviewUrlIsShow = false;
+                                                        this.updateCahnnelValue.previewUrl = '';
+                                                    }
+                                                    i.judgefatherFlag = false;
+                                                    i.modal2 = true;
+                                                }
+                                            }
+                                        },
+                                        '修改'
+                                    )
+                                ];
+                            }
+
                             return h('div', optionArray);
                         }
                     }
@@ -634,12 +717,14 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 isAddTagLoading: true,
+                judgefatherFlag:true,
                 addNewsChannelModal: {
                     stationIndex: '',
                     pageIndex: '',
                     positionName: '',
                     version: '',
-                    previewType: ''
+                    previewType: '',
+                    isFatherPosition:0
                 },
                 updateCahnnelValue: {
                     version: '',
