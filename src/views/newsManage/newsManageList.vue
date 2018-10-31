@@ -116,14 +116,13 @@
                     {
                         key: 'id',
                         title: 'id',
-                        width: 80,
-                        "fixed": "left",
+                        "fixed": "left"
                     },
                     {
                         key: 'title',
                         title: '标题',
                         width: 300,
-                        "fixed": "left",
+                        "fixed": "left"
                     },
                     {
                         title: '级别',
@@ -143,8 +142,7 @@
                                     "三级"
                                 ]);
                             }
-                        },
-                        width: 80
+                        }
                     },
                     {
                         title: '类型',
@@ -213,36 +211,31 @@
                                 ]);
                             }
                         },
-                        width: 100
+                        width: 90
+                    },
+                    {
+                        key: 'publishAt',
+                        title: '发布时间'
                     },
                     {
                         title: '编辑',
                         render: (h, params) => {
                             return h('div', params.row.sysUser.userName);
-                        },
-                        width: 100
+                        }
                     },
                     {
-                        key: 'readCount',
-                        width: 100,
+                        key: 'readCount'
                         title: '阅读量'
                     },
                     {
-                        key: 'sort',
-                        width: 80,
+                        key: 'sort'
                         title: '排序'
-                    },
-                    {
-                        key: 'publishAt',
-                        title: '发布时间',
-                        width: 200
                     },
                     {
                         title: '管理',
                         key: 'action',
                         align: 'center',
                         fixed: 'right',
-                        width: 300,
                         render: (h, params) => {
                             var i = this;
                             var guanliOpration=[];
