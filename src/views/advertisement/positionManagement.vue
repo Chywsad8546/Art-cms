@@ -9,7 +9,7 @@
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称" prop="station">
+                        <FormItem label="应用名称" prop="station">
                             <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
@@ -54,7 +54,7 @@
 
         <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="station">
+                <FormItem label="应用名称" prop="station">
                     <Select v-model="addNewsChannelModal.station" :label-in-value="true" @on-change = "changeStation" style="width:140px">
                         <Option v-for="(item, index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
@@ -734,7 +734,7 @@
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    station: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
+                    station: [{ type: 'integer', required: true, message: '应用不能为空', trigger: 'change' }],
                     version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
                     pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
                     isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],

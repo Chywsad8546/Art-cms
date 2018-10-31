@@ -36,7 +36,7 @@
 
                     <FormItem>
                         <Button type="primary" @click="queryBlank">查询</Button>
-                        <Button type="primary" style="margin-left: 8px">下载排期</Button>
+                        <!--<Button type="primary" style="margin-left: 8px">下载排期</Button>-->
                         <Button type="ghost" @click="handleCancel('formItem')" style="margin-left: 8px">清空</Button>
                     </FormItem>
 
