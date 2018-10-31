@@ -224,11 +224,11 @@
                         }
                     },
                     {
-                        key: 'readCount'
+                        key: 'readCount',
                         title: '阅读量'
                     },
                     {
-                        key: 'sort'
+                        key: 'sort',
                         title: '排序'
                     },
                     {
@@ -325,7 +325,7 @@
                                             }
                                         },
                                         '修改'
-                                    ))
+                                    ));
                                 }
                             }
                             if (params.row.isPublish == 1){
