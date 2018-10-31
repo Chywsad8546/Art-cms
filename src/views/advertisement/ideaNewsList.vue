@@ -11,7 +11,7 @@
                         </FormItem>
 -->
 
-                        <FormItem label="选择站点" prop="station">
+                        <FormItem label="选择应用" prop="station">
                             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                                 <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
@@ -77,7 +77,7 @@
 
         <Modal v-model="isTrueAddTag" width="1000" @on-ok="addIdeaNews">
             <Form  ref="addNewsChannelModalform" :model="addIdeaNewsModal" inline :label-width="120">
-                <FormItem label="站点">
+                <FormItem label="应用">
                 <Select v-model="zdmode.station" style="width:100px" @on-change = "adzdClick">
                     <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                 </Select>

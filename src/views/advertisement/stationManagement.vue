@@ -2,14 +2,14 @@
     <Row>
         <Col span="100">
             <Card>
-                <p slot="title">站点列表管理</p>
+                <p slot="title">应用列表</p>
                 <a href="#" slot="extra"  @click.prevent="addModeButton" >
                     <Icon type="plus-circled"></Icon>
-                    添加站点
+                    添加应用
                 </a>
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-                        <FormItem label="站点名称" prop="station">
+                        <FormItem label="应用名称" prop="station">
                             <Select v-model="searchData.station" style="width:140px">
                                 <Option value="">全部</Option>
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
@@ -40,7 +40,7 @@
 
         <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationName">
+                <FormItem label="应用名称" prop="stationName">
                     <Input v-model.trim="addNewsChannelModal.stationName" style="width:140px"></Input>
                 </FormItem>
             </Form>
@@ -48,7 +48,7 @@
 
         <Modal v-model="modal2"  width="360" @on-ok="updateChannel()">
             <Form  ref="updateCahnnelValuefrom" :model="updateCahnnelValue" :rules="updateruleValidate"  inline :label-width="120">
-                <FormItem label="站点名称" prop="stationName">
+                <FormItem label="应用名称" prop="stationName">
                     <Input v-model.trim="updateCahnnelValue.stationName" style="width:140px"></Input>
                 </FormItem>
             </Form>
@@ -68,12 +68,12 @@
                 columns: [
                     {
                         key: 'station',
-                        title: '站点id',
+                        title: '应用id',
                         width: 100
                     },
                     {
                         key: 'stationName',
-                        title: '站点'
+                        title: '应用'
                     },
                     {
                         title: '是否删除',
@@ -174,10 +174,10 @@
                 updateCahnnelValue: {
                 },
                 ruleValidate: {
-                    stationName: [{ required: true, message: '站点名称不能为空', trigger: 'blur' }],
+                    stationName: [{ required: true, message: '应用名称不能为空', trigger: 'blur' }],
                 },
                 updateruleValidate: {
-                    stationName: [{ required: true, message: '站点名称不能为空', trigger: 'blur' }],
+                    stationName: [{ required: true, message: '应用名称不能为空', trigger: 'blur' }],
                 }
             };
         },

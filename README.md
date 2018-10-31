@@ -3,27 +3,16 @@
 
 ## 一，项目概况
 
-本项目的代码包含四个不同的站点代码，由于历史原因，四个平台的代码放在了同一个项目中。
-四个平台分别是：
-- 经纪人平台
-- 企业平台
-- 客服城市平台
-- 全国平台
 
 
 #### 1.1 测试环境
-[经纪人平台](http://jingjiren.test.toutiaofangchan.com)
+[平台](http://cms.dev.bidewu.com)
 
-[企业平台](http://corp.test.toutiaofangchan.com)
 
-[城市平台](http://city.test.toutiaofangchan.com)
 
 #### 1.2 预上线环境
-[经纪人平台](http://agent.sim.toutiaofangchan.com)
+[平台](http://cms.sim.bidewu.com)
 
-[企业平台](http://corp.sim.toutiaofangchan.com)
-
-[城市平台](http://city.sim.toutiaofangchan.com)
 
 
 #### 1.3 技术依赖
@@ -46,49 +35,19 @@ npm install
 ### 2.2 运行
 ### 2.2.1 调试
 
-#### 经纪人平台
-```bush
-npm run dev
-```
-
-#### 企业平台
-```bush
-npm run corp
-```
-
-#### 城市平台
 ```bush
 npm run city
 ```
 
+
 ### 2.2.3 发布测试版本
-#### 经纪人平台
-```bush
-npm run build-test
-```
 
-#### 企业平台
-```bush
-npm run build-corp-test
-```
-
-#### 城市平台
 ```bush
 npm run build-city-test
 ```
 
 ### 2.2.3 发布线上版本
-#### 经纪人平台
-```bush
-npm run build-pro
-```
 
-#### 企业平台
-```bush
-npm run build-corp-pro
-```
-
-#### 城市平台
 ```bush
 npm run build-city-pro
 ```

@@ -306,7 +306,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择应用', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }
@@ -350,7 +350,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择应用', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }

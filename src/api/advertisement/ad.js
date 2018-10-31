@@ -37,15 +37,15 @@ export default {
         return http.post('/cmsapi/idea/setDefault', params);
     },
 
-    // 获取所有站点
+    // 获取所有应用
     getAllStation(params) {
         return http.get('/cmsapi/getStationInfo', {params: params});
     },
-    // 添加站点
+    // 添加应用
     addStation(params) {
         return http.post('/cmsapi/addStation', params);
     },
-    // 修改站点/cmsapi/updateStation
+    // 修改应用/cmsapi/updateStation
     updateStation(params) {
         return http.post('/cmsapi/updateStation', params);
     },

@@ -14,7 +14,7 @@
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData"  inline :label-width="120">
-                        <FormItem label="选择站点" prop="station" >
+                        <FormItem label="选择应用" prop="station" >
                             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                                 <Option v-for="item in zhandianList" :value="item.station" :key="'station'+item.station">{{ item.stationName }}</Option>
                             </Select>
