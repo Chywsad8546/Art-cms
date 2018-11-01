@@ -280,6 +280,7 @@
                                         },
                                         on: {
                                             click: () => {
+                                                this.adListListModal = false;
                                                 this.$router.push({
                                                     name: 'ad_redirect',
                                                     query: {isquesheng: 1, templateid: params.row.id}
@@ -325,6 +326,7 @@
                                         },
                                         on: {
                                             click: () => {
+                                                this.adListListModal = false;
                                                 this.$router.push({
                                                     name: 'ad_redirect',
                                                     query: {id: params.row.ideaCode, isquesheng: 1}
