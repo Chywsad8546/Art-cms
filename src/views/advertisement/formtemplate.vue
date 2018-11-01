@@ -224,12 +224,12 @@ import { setTimeout } from 'timers';
                 seniorWzList: [],
                 seniorPdList: [],
                 weizhiList: [],
-                positionName:"",
+                positionName: '',
                 editorRouterList: [],
                 seniorEditor: false,
-                ordinaryEditor:false,
-                editorEditIs:false,
-                confsIndex:0,
+                ordinaryEditor: false,
+                editorEditIs: false,
+                confsIndex: 0,
                 formAdd: {
                     name: '',
                     label: '',
@@ -295,8 +295,32 @@ import { setTimeout } from 'timers';
                                         }
                                     },
                                     '修改'
+                                ),
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '删除确认',
+                                                    content: '确定要删除这个组件么？',
+                                                    onOk: function () {
+                                                        i.confs.splice(params.index, params.index + 1);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '删除'
                                 )
-                            ];              
+                            ];
                             return h('div', optionArray);
                         }
                     }
@@ -361,7 +385,7 @@ import { setTimeout } from 'timers';
                 rulebdInsert: {
                     name: [
                         { required: true, message: '请填写name', trigger: 'blur' },
-                        { type: 'string',pattern:/^[0-9A-Za-z_]+$/, message:'只能输入字母数字和下划线', trigger:'blur'},
+                        { type: 'string', pattern: /^[0-9A-Za-z_]+$/, message: '只能输入字母数字和下划线', trigger: 'blur'}
                     ],
                     label: [
                         { required: true, message: '请填写label', trigger: 'blur' }
@@ -409,16 +433,16 @@ import { setTimeout } from 'timers';
                 },
                 ruleValidate: {
                 },
-                editorformunwatch:null,
-                editortemplateunwatch:null
+                editorformunwatch: null,
+                editortemplateunwatch: null
             };
         },
         methods: {
-            tabRadioClick(){
-                if(this.inputType == "upload"){
-                    this.formAdd.default = "http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/5b00600178e84b91b5f4fe78a5eed91c/1.png";
-                }else{
-                    this.formAdd.default = "";
+            tabRadioClick() {
+                if (this.inputType == 'upload') {
+                    this.formAdd.default = 'http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/5b00600178e84b91b5f4fe78a5eed91c/1.png';
+                } else {
+                    this.formAdd.default = '';
                 }
             },
             pdClick() {
@@ -443,24 +467,21 @@ import { setTimeout } from 'timers';
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
-
                     this.zhandianList = response.data.data;
-                    this.zhandianList.forEach(item=>{
-                      item.stationId = item.stationId+'';
+                    this.zhandianList.forEach(item => {
+                        item.stationId = item.stationId + '';
                     });
                     // console.log(this.zhandianList);
                 });
-
-
             },
             adListAll() {
-                api.adListAll({positionId:this.formItem.positionId}).then(response => {
+                api.adListAll({positionId: this.formItem.positionId}).then(response => {
                     if (response.data.data[0].isAdvancedEdit == 1) {
-                        this.seniorEditor= true;
+                        this.seniorEditor = true;
                     } else {
-                        this.ordinaryEditor=true;
+                        this.ordinaryEditor = true;
                     }
-                    this.positionName = response.data.data[0].pageName+' / '+ response.data.data[0].positionName;
+                    this.positionName = response.data.data[0].pageName + ' / ' + response.data.data[0].positionName;
                 });
             },
             show() {
@@ -487,14 +508,14 @@ import { setTimeout } from 'timers';
             confsRemove(index) {
                 this.confs.splice(index, 1);
             },
-            isCancel(){
+            isCancel() {
                 this.cleanData();
             },
             popupOk (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if (this.confs.length > 0) {
-                            if(this.editorEditIs == false){
+                            if (this.editorEditIs == false) {
                                 this.confs.forEach(item => {
                                     if (item.name == this.formAdd.name) {
                                         this.$Message.error('name名称不能重复');
@@ -525,11 +546,11 @@ import { setTimeout } from 'timers';
                         // this.confsIndex = params.index;
                         // this.formModal1 = true;
                         // this.editorEditIs = true;
-                        if(this.editorEditIs == false){
+                        if (this.editorEditIs == false) {
                             this.confs.push(strArr);
-                        }else{
-                            this.confs.splice(this.confsIndex,1,strArr);
-                        }                  
+                        } else {
+                            this.confs.splice(this.confsIndex, 1, strArr);
+                        }
                         this.cleanData();
                         this.formModal1 = !this.formModal1;
                         this.editorTry();
@@ -561,16 +582,16 @@ import { setTimeout } from 'timers';
                         this.senior.name = response.data.data.name;
                         this.senior.id = this.Lid.id;
                         this.senior.form = response.data.data.form;
-                        //this.senior.template = response.data.data.template;
+                        // this.senior.template = response.data.data.template;
                     } else {
-                       // this.ordinaryEditor=true;
+                        // this.ordinaryEditor=true;
                         this.formItem.name = response.data.data.name;
                         this.formItem.template = response.data.data.template;
                         this.formItem.id = this.Lid.id;
                         this.confs = JSON.parse(response.data.data.form);
                         this.editorTry(true);
                     }
-                    this.senior.positionId= response.data.data.positionId;
+                    this.senior.positionId = response.data.data.positionId;
                     this.formItem.positionId = response.data.data.positionId;
                     this.adListAll();
                 });
@@ -622,19 +643,17 @@ import { setTimeout } from 'timers';
                 });
             },
             editorTry(created) {
-                if(this.unwatch){
-                    try{
+                if (this.unwatch) {
+                    try {
                         this.unwatch();
-                    }
-                    catch (e){
+                    } catch (e) {
                         console.error(e);
                     }
                 }
-                if(this.editortemplateunwatch){
-                    try{
+                if (this.editortemplateunwatch) {
+                    try {
                         this.editortemplateunwatch();
-                    }
-                    catch (e){
+                    } catch (e) {
                         console.error(e);
                     }
                 }
@@ -659,7 +678,7 @@ import { setTimeout } from 'timers';
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        console.log('reg',item.reg)
+                        console.log('reg', item.reg);
                         rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
@@ -674,16 +693,14 @@ import { setTimeout } from 'timers';
                 /**
                  * 挂载watch钩子，当数据有变化的时候，更新预览显示
                  */
-                this.unwatch  = this.$watch('editorformItem', function (newVal, oldVal) {
+                this.unwatch = this.$watch('editorformItem', function (newVal, oldVal) {
                     // 做点什么
                     try {
                         var html = template.render(this.formItem.template, newVal);
                         $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
+                    } catch (e) {
                         $(this.$refs['stage']).html(html);
                     }
-
                 }, {
                     deep: true
                 });
@@ -692,18 +709,15 @@ import { setTimeout } from 'timers';
                     try {
                         var html = template.render(newVal, this.editorformItem);
                         $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
+                    } catch (e) {
                         $(this.$refs['stage']).html(html);
                     }
-
                 });
-                if(created){
+                if (created) {
                     try {
                         var html = template.render(this.formItem.template, this.editorformItem);
                         $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
+                    } catch (e) {
                         $(this.$refs['stage']).html(html);
                     }
                 }
@@ -717,10 +731,9 @@ import { setTimeout } from 'timers';
 
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
-            }
-            else {
+            } else {
                 this.formItem.positionId = this.$route.query.positionId;
-                this.senior.positionId= this.$route.query.positionId;
+                this.senior.positionId = this.$route.query.positionId;
                 this.adListAll();
             }
         }
