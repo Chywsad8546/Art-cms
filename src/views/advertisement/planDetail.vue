@@ -144,6 +144,9 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            if(params.row.isNew===0 || params.row.status===0){
+                                return h('div', {style:{color:'red'}},["已作废"]);
+                            }
                             return h('div', [
                                 h(
                                     'Button',
