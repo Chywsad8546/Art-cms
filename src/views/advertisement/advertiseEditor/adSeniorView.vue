@@ -38,7 +38,7 @@
 
         <Col span="24">
         <Card>
-            <!--<p slot="title">编辑创意</p>-->
+            <p slot="title">{{positionName}}</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert type="error" v-if="!canFindEditor">内容编辑器走丢了，不能修改了:(</Alert>
@@ -114,6 +114,7 @@
     import ad from '@/api/advertisement/ad';
     import regEditor from './adSeniorEditorRouter';
     import defaultEditor from './adSeniorEditor/defaultEditor.vue';
+    import api from '@/api/advertisement/formtemplateApi.js';
     import util from '@/libs/util';
     import QRCode from 'qrcodejs2';
     export default {
@@ -158,7 +159,8 @@
                         {required: true, message: '请填写appCode', trigger: 'blur'}
                     ]
                 },
-                isEditShow: true
+                isEditShow: true,
+                positionName:''
             };
         },
         methods: {
@@ -374,7 +376,12 @@
                     }
                 }
                 return null;
-            }
+            },
+            adListAll(positionId) {
+                api.adListAll({positionId: positionId}).then(response => {
+                    this.positionName = response.data.data[0].stationName+' / '+ response.data.data[0].pageName + ' / ' + response.data.data[0].positionName;
+                });
+            },
 
         },
         mounted() {
@@ -389,6 +396,7 @@
                     editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
                         let editor = that.getEditor(res.data.data.form);
                         that.positionId = res.data.data.positionId;
+                        that.adListAll(that.positionId);
                         if (editor) {
                             editor.component().then(function (res) {
                                 that.commonForm.adCompany = ideares.adCompany;
@@ -415,6 +423,7 @@
                     let editor = that.getEditor(res.data.data.form);
                     that.typeId = that.$route.query.templateid;
                     that.positionId = res.data.data.positionId;
+                    that.adListAll(that.positionId);
                     if (editor) {
                         editor.component().then(function (res) {
                             that.share = {};
