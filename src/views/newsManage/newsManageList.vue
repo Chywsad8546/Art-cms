@@ -79,7 +79,7 @@
         <Modal v-model="sortModal" width="360" @on-ok="updateSort(updateSortValue)">
             <Form  ref="updateSortForm" :model="updateSortValue" inline :label-width="120">
                 <FormItem label="排序"  prop="sort">
-                <InputNumber :precision="0" v-model="updateSortValue.sort" :min="1" ></InputNumber>
+                <InputNumber :precision="0" v-model="updateSortValue.sort" :min="0" ></InputNumber>
                 </FormItem>
             </Form>
         </Modal>
