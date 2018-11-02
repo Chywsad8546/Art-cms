@@ -11,12 +11,6 @@
                         <Input v-model="formItem.adName" placeholder="请填写内容"></Input>
                     </FormItem>
 
-
-
-                    <FormItem>
-                        <Button type="primary" @click="save">保存</Button>
-                        <Button type="ghost" style="margin-left: 8px">Cancel</Button>
-                    </FormItem>
                 </Form>
         </Col>
     </Row>
