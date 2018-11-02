@@ -88,6 +88,7 @@ import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
         name: 'xinfang-top5-editor',
         data() {
             return {
+                shareIncludes:['newcode'],
                 share: {
                     projName: '',  //楼盘名称
                     totalPrice: '',  //小区总价

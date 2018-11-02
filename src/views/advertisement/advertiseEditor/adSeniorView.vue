@@ -45,7 +45,7 @@
                 <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color:#ffffff;overflow: hidden">
                     <Row>
                         <Col :style="{backgroundColor:'#eee'}">
-                            <Button type="info" size="primary" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+                            <Button type="primary" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
                             <Button icon="iphone" type="primary" size="small" style="margin: 5px 10px" v-if="canFindEditor" @click="preview">预览</Button>
                         </Col>
                     </Row>
@@ -275,8 +275,9 @@
                         this.$refs.childcom.save(function () {
                             that.saveIdea(that);
                         }, function () {
-                            that.issaving = fasle;
-                            this.$Message.error('保存失败1');
+                            console.log('fffissaving')
+                            that.issaving = false;
+                            that.$Message.error('保存失败');
                         });
                     } else {
                         this.issaving = false;
