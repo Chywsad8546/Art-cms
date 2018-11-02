@@ -11,27 +11,56 @@
             </Form>
         </div>
         </Col>
+
+        <!-- <div style="width:375px; overflow: hidden;padding-left: 10px; padding-right: 10px;" class="recommendNouse">
+            <div>{{@ share.projName}}</div>
+            <div style="width: 375px; text-align: center; overflow: hidden; font-size:12px; height: 30px;line-height: 30px;" class="tab">
+                <span style="padding-right:30px;display: block; float:left; width: 50%;">面积 {{@ share.purposearea}}</span>
+                <span style="padding-right:30px;display: block; float:left; width: 50%;">户型 {{@ share.roomSet[0]}}层{{@ share.roomSet[1]}}居</span>
+            </div>
+            <div style="position: relative;overflow: hidden; margin-top:30px; width: 100%;">
+                <div style="position: absolute;bottom:10px;left:10px; color:#FFFFFF; ">{{@share.averagePrice}}元/㎡</div>
+                <img style="width: 375px;" src="{{@share.titleImagePath}}"/>
+            </div>
+            <div  style="text-align:left">{{@share.districtName}}</div>
+            <div  style="text-align:left">最近交房 {{@share.livindate}}</div>
+        </div>  -->
+
+
     </Row>
 </template>
+<style>
+.tab {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    position: absolute
+}
+.recommendNouse {
+    overflow: hidden;
+    display: inline-block;
+    width: 30%;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+</style>
+
 <stage-template>
-        <div class="list-item" style="padding-top:20px;padding-left:20px;">
-            <div class="title-img" style="position: relative;float: left;width: 100px;height: 80px;overflow: hidden;">
-                <img style="width:100%" src="{{@ share.titleImagePath}}"> 
+        <div style="width:375px; overflow: hidden;padding-left: 10px; padding-right: 10px;" class="recommendNouse">
+            <div>{{@ share.projName}}</div>
+            <div style="width: 375px; text-align: center; overflow: hidden; font-size:12px; height: 30px;line-height: 30px;" class="tab">
+                <span style="padding-right:30px;display: block; float:left; width: 50%;">面积 {{@ share.purposearea}}</span>
+                <span style="padding-right:30px;display: block; float:left; width: 50%;">户型 {{@ share.roomSet}}</span>
             </div>
-            <div class="title-content" style="position: absolute;left: 0; width: 100%;height: 80px;padding-left: 230px;-webkit-box-sizing: border-box; box-sizing: border-box;">
-                <h2 style="line-height: 1.43;font-weight: 700;overflow: hidden; font-size: 14px;-o-text-overflow: ellipsis; text-overflow: ellipsis;white-space: nowrap;">{{@ share.projName}}<span style="margin-left: 0.2rem;color: #666;">{{@ share.districtName}}</span></h2> 
-                <div class="price-set" style="position: absolute;top: 41%;">
-                    <div class="title-price" style="display: inline-block;color: #ff4848;">
-                        <span style="font-weight: 700;line-height: 0.6;font-size: 16px;">{{@ share.totalPrice}}</span> 
-                        <em style="font-size: 12px;display: inline-block;vertical-align: top;">万</em>
-                    </div>
-                </div> 
-            <div class="piece-bottom" style="position: absolute;left: 0;bottom: -20px;color: #666; width: 100%;padding-bottom: 10px;padding-left: 210px; -webkit-box-sizing: border-box;box-sizing: border-box;overflow: hidden;-o-text-overflow: ellipsis;text-overflow: ellipsis;white-space: nowrap;font-size: 12px;">
-                    <span style="display: inline-block;padding: 5px 5px; max-width: 200px; margin-left: 10px; -webkit-box-sizing: border-box;box-sizing: border-box;border-radius: 10px; overflow: hidden;font-size: 12px;-o-text-overflow: ellipsis;text-overflow: ellipsis; white-space: nowrap;">{{@ share.purposearea}}</span> 
-                    <span style="display: inline-block;padding: 5px 5px; max-width: 200px; margin-left: 10px; -webkit-box-sizing: border-box;box-sizing: border-box;border-radius: 10px; overflow: hidden;font-size: 12px;-o-text-overflow: ellipsis;text-overflow: ellipsis; white-space: nowrap;" >{{@ share.rightYear}}</span>
-                </div>
+            <div style="position: relative;overflow: hidden; margin-top:30px; width: 100%;">
+                <div style="position: absolute;bottom:10px;left:10px; color:#FFFFFF; ">{{@share.averagePrice}}元/㎡</div>
+                <img style="width: 375px;" src="{{@share.titleImagePath}}"/>
             </div>
-        </div> 
+            <div  style="text-align:left">{{@share.address}}</div>
+            <div  style="text-align:left">最近交房 {{@share.livindate}}</div>
+        </div>  
 </stage-template>
 <script>
 import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
@@ -48,7 +77,8 @@ import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
                     districtName: '',//区域名称
                     titleImagePath: '', //标题图
                     newcode: '',
-                    modeProName:0
+                    modeProName:0,
+                    roomSet:''
                 },
                 keyWord: "",
                 formisShow: false,
@@ -98,9 +128,15 @@ import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
                     this.share.totalPrice = response.data.data.totalPrice;
                     this.share.purposearea = response.data.data.minArea+"-"+response.data.data.maxArea+'㎡';
                     this.share.rightYear = response.data.data.livindate;
-                    this.share.districtName = response.data.data.districtName;
+                    this.share.address = response.data.data.address;
                     this.share.titleImagePath = response.data.data.titleImagePath;
                     this.share.newcode = response.data.data.newcode;
+                    this.share.livindate = response.data.data.livindate;
+                    this.share.averagePrice = response.data.data.averagePrice;
+                    this.share.roomSet = "";
+                    response.data.data.roomSet.forEach(item => {
+                        this.share.roomSet += item+"居"; 
+                    });
                     this.formisShow = true;
                 })
             },
