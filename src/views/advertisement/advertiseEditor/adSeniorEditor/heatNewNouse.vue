@@ -18,7 +18,7 @@
             <div class="title-img" style="position: relative;float: left;width: 100px;height: 80px;overflow: hidden;">
                 <img style="width:100%" src="{{@ share.titleImagePath}}"> 
             </div>
-            <div class="title-content" style="position: absolute;left: 0; width: 100%;height: 80px;padding-left: 230px;-webkit-box-sizing: border-box; box-sizing: border-box;">
+            <div class="title-content" style="position: absolute;left: 0; width: 100%;height: 80px;padding-left: 150px;-webkit-box-sizing: border-box; box-sizing: border-box;">
                 <h2 style="line-height: 1.43;font-weight: 700;overflow: hidden; font-size: 14px;-o-text-overflow: ellipsis; text-overflow: ellipsis;white-space: nowrap;">{{@ share.projName}}<span style="margin-left: 0.2rem;color: #666;">{{@ share.districtName}}</span></h2> 
                 <div class="price-set" style="position: absolute;top: 41%;">
                     <div class="title-price" style="display: inline-block;color: #ff4848;">
@@ -26,7 +26,7 @@
                         <em style="font-size: 12px;display: inline-block;vertical-align: top;">万</em>
                     </div>
                 </div> 
-            <div class="piece-bottom" style="position: absolute;left: 0;bottom: -20px;color: #666; width: 100%;padding-bottom: 10px;padding-left: 210px; -webkit-box-sizing: border-box;box-sizing: border-box;overflow: hidden;-o-text-overflow: ellipsis;text-overflow: ellipsis;white-space: nowrap;font-size: 12px;">
+            <div class="piece-bottom" style="position: absolute;left: 0;bottom: -20px;color: #666; width: 100%;padding-bottom: 10px;padding-left: 130px; -webkit-box-sizing: border-box;box-sizing: border-box;overflow: hidden;-o-text-overflow: ellipsis;text-overflow: ellipsis;white-space: nowrap;font-size: 12px;">
                     <span style="display: inline-block;padding: 5px 5px; max-width: 200px; margin-left: 10px; -webkit-box-sizing: border-box;box-sizing: border-box;border-radius: 10px; overflow: hidden;font-size: 12px;-o-text-overflow: ellipsis;text-overflow: ellipsis; white-space: nowrap;">{{@ share.purposearea}}</span> 
                     <span style="display: inline-block;padding: 5px 5px; max-width: 200px; margin-left: 10px; -webkit-box-sizing: border-box;box-sizing: border-box;border-radius: 10px; overflow: hidden;font-size: 12px;-o-text-overflow: ellipsis;text-overflow: ellipsis; white-space: nowrap;" >{{@ share.rightYear}}</span>
                 </div>
@@ -34,7 +34,8 @@
         </div> 
 </stage-template>
 <script>
-import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
+    import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
+    import ad from '@/api/advertisement/ad';
     export default {
         name: 'xinfang-top5-editor',
         data() {
@@ -101,9 +102,20 @@ import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
                     this.share.districtName = response.data.data.districtName;
                     this.share.titleImagePath = response.data.data.titleImagePath;
                     this.share.newcode = response.data.data.newcode;
+                    this.share.modeProName = response.data.data.newcode + '';
+                    this.keywordList = [{"newcode":response.data.data.newcode + '',"projName":response.data.data.projName}];
                     this.formisShow = true;
                 })
             },
+        },
+        created() {
+                if(this.$route.query.id){
+                    ad.getIdea(
+                        this.$route.query.id
+                    ).then(response => {
+                        this.handleAdd(JSON.parse(response.data.data.adData).newcode);
+                    })
+                }
         }
     };
 </script>

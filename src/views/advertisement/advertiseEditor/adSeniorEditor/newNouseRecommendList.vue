@@ -29,32 +29,14 @@
 
     </Row>
 </template>
-<style>
-.tab {
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    position: relative;
-    position: absolute
-}
-.recommendNouse {
-    overflow: hidden;
-    display: inline-block;
-    width: 30%;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-align: center;
-}
-</style>
-
 <stage-template>
         <div style="width:375px; overflow: hidden;padding-left: 10px; padding-right: 10px;" class="recommendNouse">
-            <div>{{@ share.projName}}</div>
+            <div style="text-align:center">{{@ share.projName}}</div>
             <div style="width: 375px; text-align: center; overflow: hidden; font-size:12px; height: 30px;line-height: 30px;" class="tab">
                 <span style="padding-right:30px;display: block; float:left; width: 50%;">面积 {{@ share.purposearea}}</span>
                 <span style="padding-right:30px;display: block; float:left; width: 50%;">户型 {{@ share.roomSet}}</span>
             </div>
-            <div style="position: relative;overflow: hidden; margin-top:30px; width: 100%;">
+            <div style="position: relative;overflow: hidden;  width: 100%;">
                 <div style="position: absolute;bottom:10px;left:10px; color:#FFFFFF; ">{{@share.averagePrice}}元/㎡</div>
                 <img style="width: 375px;" src="{{@share.titleImagePath}}"/>
             </div>
@@ -63,7 +45,8 @@
         </div>  
 </stage-template>
 <script>
-import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
+    import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
+    import ad from '@/api/advertisement/ad';
     export default {
         name: 'xinfang-top5-editor',
         data() {
@@ -134,12 +117,25 @@ import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
                     this.share.livindate = response.data.data.livindate;
                     this.share.averagePrice = response.data.data.averagePrice;
                     this.share.roomSet = "";
-                    response.data.data.roomSet.forEach(item => {
-                        this.share.roomSet += item+"居"; 
-                    });
+                    if(response.data.data.roomSet){
+                        response.data.data.roomSet.forEach(item => {
+                            this.share.roomSet += item+"居"; 
+                        });
+                    }
+                    this.share.modeProName = response.data.data.newcode + '';
+                    this.keywordList = [{"newcode":response.data.data.newcode + '',"projName":response.data.data.projName}];
                     this.formisShow = true;
                 })
             },
+        },
+        created() {
+            if(this.$route.query.id){
+                ad.getIdea(
+                    this.$route.query.id
+                ).then(response => {
+                    this.handleAdd(JSON.parse(response.data.data.adData).newcode);
+                })
+            }
         }
     };
 </script>

@@ -123,6 +123,7 @@
                 api.getProjDetail({
                     newcode:id
                 }).then(response => {
+                    console.log(this.share.modeProName);
                     this.share.projName = response.data.data.projName;
                     this.share.totalPrice = response.data.data.totalPrice;
                     this.share.purposearea = response.data.data.minArea+"-"+response.data.data.maxArea+'㎡';
@@ -133,11 +134,13 @@
                     this.share.livindate = response.data.data.livindate;
                     this.share.averagePrice = response.data.data.averagePrice;
                     this.share.roomSet = "";
-                    response.data.data.roomSet.forEach(item => {
-                        this.share.roomSet += item+"居"; 
-                    });
-                    console.log(response.data.data.projName);
-                    this.share.modeProName = response.data.data.projName;
+                    if(response.data.data.roomSet){
+                        response.data.data.roomSet.forEach(item => {
+                            this.share.roomSet += item+"居"; 
+                        });
+                    }
+                    this.share.modeProName = response.data.data.newcode + '';
+                    this.keywordList = [{"newcode":response.data.data.newcode + '',"projName":response.data.data.projName}];
                     this.formisShow = true;
                 })
             }
