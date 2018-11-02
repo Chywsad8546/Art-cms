@@ -38,11 +38,17 @@
 
         <Col span="24">
         <Card>
-            <p slot="title">编辑创意</p>
+            <!--<p slot="title">编辑创意</p>-->
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert type="error" v-if="!canFindEditor">内容编辑器走丢了，不能修改了:(</Alert>
                 <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color:#ffffff;overflow: hidden">
+                    <Row>
+                        <Col :style="{backgroundColor:'#eee'}">
+                            <Button type="info" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+                            <Button type="primary" size="small" style="margin: 5px 10px" v-if="canFindEditor" @click="preview">预览</Button>
+                        </Col>
+                    </Row>
                     <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
                     </div>
@@ -69,7 +75,7 @@
                         广告内容
                     </p>
                     <navigation :include="includeIds">
-                        <component v-bind:is="currentEditor" :key="currentEditorKey" v-on:sharechange="sharechange" v-on:save="save"></component>
+                        <component v-bind:is="currentEditor" :key="currentEditorKey" ref="childcom" @sharechange="sharechange" ></component>
                     </navigation>
                 </Card>
 
@@ -78,6 +84,26 @@
         </Card>
 
         </Col>
+        <Form ref="previeForm" :model="previeForm" :rules="previeFormRuleValidate" :label-width="80">
+            <Modal v-model="editorModal" width="300">
+                <p slot="header" style="color:#f60;text-align:center">
+                    <span></span>
+                </p>
+                <div style="text-align:center" v-show="previewWapType">
+                    <p class="qrcode" ref="qrcode4"></p>
+                </div>
+                <div v-show="previewAppType">
+                    <FormItem  required prop="appCode" :label-width="80">
+                        <Input v-model="previeForm.appCode" placeholder="请输入appCode"></Input>
+                    </FormItem>
+                    <FormItem style="margin-left:20px;">
+                        <Button type="primary" @click="previewAppFun()">保存</Button>
+                    </FormItem>
+                </div>
+                <div slot="footer">
+                </div>
+            </Modal>
+        </form>
     </Row>
 </template>
 
@@ -89,13 +115,15 @@
     import regEditor from './adSeniorEditorRouter';
     import defaultEditor from './adSeniorEditor/defaultEditor.vue';
     import util from '@/libs/util';
+    import QRCode from 'qrcodejs2';
     export default {
         components: {
             navigation
         },
         data() {
             return {
-                id:this.$route.query.id,
+                issaving: false,
+                id: this.$route.query.id,
                 includeIds: [],
                 currentEditor: defaultEditor,
                 currentEditorKey: 'adHasMissEditor',
@@ -116,73 +144,142 @@
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
                 },
-                canFindEditor:true
+                canFindEditor: true,
+                previewType: 0,
+                previewUrl: '',
+                editorModal:false,
+                previewWapType: false,
+                previewAppType: false,
+                previeForm: {
+                    appCode: ''
+                },
+                previeFormRuleValidate: {
+                    appCode: [
+                        {required: true, message: '请填写appCode', trigger: 'blur'}
+                    ]
+                },
+                isEditShow: true
             };
         },
         methods: {
-            save(success, error) {
+            saveIdea(that) {
+                if (that.id) {
+                    ad.editIdea({
+                        ideaCode: that.id,
+                        ideaData: JSON.stringify(that.share),
+                        typeId: that.typeId,
+                        positionId: that.positionId,
+                        adCompany: that.commonForm.adCompany,
+                        adName: that.commonForm.adName,
+                        adResource: that.adResource
+                    }).then(function (res) {
+                        that.issaving = false;
+                        that.$Message.success('保存成功');
+                    }).catch(function (er) {
+                        that.issaving = false;
+                        that.$Message.error('保存失败');
+                    });
+                } else {
+                    ad.addIdea({
+                        ideaData: JSON.stringify(that.share),
+                        typeId: that.typeId,
+                        positionId: that.positionId,
+                        adCompany: that.commonForm.adCompany,
+                        adName: that.commonForm.adName,
+                        adResource: that.adResource,
+                        planId: that.$route.query.planId || 0,
+                        defaultAd: that.$route.query.isquesheng || 0,
+                        PaiqiZhuangtai: that.$route.query.isquesheng || 0
+                    }).then(function (res) {
+                        that.id = res.data.data.ideaCode;
+                        that.issaving = false;
+                        that.$Message.success('保存成功');
+                    }).catch(function (er) {
+                        that.issaving = false;
+                        that.$Message.error('保存失败');
+                    });
+                }
+            },
+            checkPosition() {
+                ad.getAllPosition({
+                    positionId: this.positionId
+                }).then(response => {
+                    if (response.data.data[0].previewType) {
+                        this.previewType = response.data.data[0].previewType;
+                        this.previewUrl = response.data.data[0].previewUrl;
+                    } else {
+                        this.$Message.error('位置没有填写类型或url');
+                        return false;
+                    }
+                    this.prevResponse();
+                });
+            },
+            prevResponse() {
+                let id = this.positionId;
+                this.editorModal = true;
+                if (this.previewType == 1) {
+                    this.addPreView();
+                } else {
+                    this.previewAppType = true;
+                }
+            },
+            addPreView() {
+                ad.addPreView({
+                    positionId: this.positionId,
+                    adData: JSON.stringify(this.share)
+                }).then(response => {
+                    this.previewWapType = true;
+                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
+                    new QRCode(this.$refs.qrcode4, {
+                        width: 200,
+                        height: 200, // 高度
+                        text: url // 二维码内容
+                        // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                        // background: '#f0f'
+                        // foreground: '#ff0'
+                    });
+                });
+            },
+            preview() {
                 var that = this;
                 this.$refs['commonForm'].validate((commvalid) => {
                     if (commvalid) {
-                        this.issaving = true;
-                        if (this.id) {
-                            ad.editIdea({
-                                idcode: this.id,
-                                ideaData: JSON.stringify(this.share),
-                                typeId: this.typeId,
-                                positionId: this.positionId,
-                                adCompany: this.commonForm.adCompany,
-                                adName: this.commonForm.adName,
-                                adResource: this.adResource
-                            }).then(function (res) {
-                                that.issaving = false;
-                                if (success) {
-                                    try {
-                                        success();
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            }).catch(function (er) {
-                                that.issaving = false;
-                                if (error) {
-                                    try {
-                                        error(er);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            });
-                        } else {
-                            ad.addIdea({
-                                ideaData: JSON.stringify(this.formItem),
-                                typeId: this.typeId,
-                                positionId: this.positionId,
-                                adCompany: this.commonForm.adCompany,
-                                adName: this.commonForm.adName,
-                                adResource: this.adResource
-                            }).then(function (res) {
-                                that.id = res.data.data.ideaCode;
-                                that.issaving = false;
-                                if (success) {
-                                    try {
-                                        success();
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            }).catch(function (er) {
-                                that.issaving = false;
-                                if (error) {
-                                    try {
-                                        error(er);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            });
-                        }
+                        that.checkPosition();
                     } else {
+                        this.$Message.error('补充完善后，才能预览');
+                    }
+                });
+            },
+            previewAppFun() {
+                this.$refs['previeForm'].validate((valid) => {
+                    if (valid) {
+                        ad.addPreView({
+                            positionId: this.positionId,
+                            adData: JSON.stringify(this.share),
+                            appCode: this.previeForm.appCode
+                        }).then(response => {
+                            this.$Message.success('APP预览成功');
+                            this.editorModal = false;
+                        });
+                    }
+                });
+            },
+            save() {
+                var that = this;
+                this.issaving = true;
+                this.$refs['commonForm'].validate((commvalid) => {
+                    if (commvalid) {
+                        /**
+                         * 保存子组件的数据
+                         */
+                        this.$refs.childcom.save(function () {
+                            that.saveIdea(that);
+                        }, function () {
+                            that.issaving = fasle;
+                            this.$Message.error('保存失败1');
+                        });
+                    } else {
+                        this.issaving = false;
                         this.$Message.error('补充完善后，才能保存');
                     }
                 });
@@ -209,6 +306,16 @@
 
                 let mix = {
                     __wys_mixin_hook: true,
+                    data: function () {
+                        return {
+                            share: {}
+                        };
+                    },
+                    methods: {
+                        save(success, fail) {
+                            success();
+                        }
+                    },
                     created: function () {
                         for (var key in that.share) {
                             try {
@@ -217,7 +324,7 @@
                                 console.error(e);
                             }
                         }
-                        console.log('created');
+                        this.$emit('sharechange', this.share, this.$vnode.key);
                         /**
                         判断是不是右侧editor的子组件，如果不是一级子组件，不要触发这些钩子
                          */
@@ -259,14 +366,12 @@
         created() {
             var that = this;
             if (this.id) {
-                console.log('this.$route.query.id',this.id)
                 ad.getIdea(this.id).then(function (res) {
                     that.typeId = res.data.data.typeId;
                     let ideares = res.data.data;
                     let ideaData = JSON.parse(res.data.data.adData || {});
                     editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
-                        let editor = this.getEditor(res.data.data.form);
-                        that.typeId = that.$route.query.templateid;
+                        let editor = that.getEditor(res.data.data.form);
                         that.positionId = res.data.data.positionId;
                         if (editor) {
                             editor.component().then(function (res) {
@@ -279,18 +384,17 @@
                                 that.currentEditor = res.default;
                                 that.currentEditorKey = editor.name;
                             }).catch(function (res) {
-                                that.canFindEditor=false;
+                                that.canFindEditor = false;
                                 console.error('error', res);
                             });
                         } else {
-                            that.canFindEditor=false;
+                            that.canFindEditor = false;
                         }
                     });
                 }).catch(function () {
-                    that.canFindEditor=false;
+                    that.canFindEditor = false;
                 });
             } else {
-
                 editortemplate.getTemplate(this.$route.query.templateid).then(function (res) {
                     let editor = that.getEditor(res.data.data.form);
                     that.typeId = that.$route.query.templateid;
@@ -303,14 +407,14 @@
                             that.currentEditorKey = editor.name;
                             that.arttemplate = _.trim(res.default.wys_stageTemplate);
                         }).catch(function (res) {
-                            that.canFindEditor=false;
+                            that.canFindEditor = false;
                             console.error('error', res);
                         });
                     } else {
-                        that.canFindEditor=false;
+                        that.canFindEditor = false;
                     }
                 }).catch(function () {
-                    that.canFindEditor=false;
+                    that.canFindEditor = false;
                 });
             }
         }
