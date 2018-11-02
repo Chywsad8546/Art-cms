@@ -24,10 +24,10 @@ var editorRouters= [
 
     },
     {
-        name: 'ershouQuarters',
-        title:'二手房小区',
+        name: 'heatNewNouse',
+        title:'热销新房',
         component: () =>
-            import('@/views/advertisement/advertiseEditor/adSeniorEditor/ershouQuarters.vue'),
+            import('@/views/advertisement/advertiseEditor/adSeniorEditor/heatNewNouse.vue'),
 
     }   
 ];
