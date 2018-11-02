@@ -48,11 +48,11 @@
             };
         },
         methods: {
-            save() {
-                this.$refs['form'].validate((commvalid) => {
-                    console.log('commvalid',commvalid);
-                });
-            }
+            // save() {
+            //     this.$refs['form'].validate((commvalid) => {
+            //         console.log('commvalid',commvalid);
+            //     });
+            // }
         }
     };
 </script>

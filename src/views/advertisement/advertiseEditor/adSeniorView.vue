@@ -38,11 +38,18 @@
 
         <Col span="24">
         <Card>
-            <p slot="title">编辑创意</p>
+            <!--<p slot="title">编辑创意</p>-->
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert type="error" v-if="!canFindEditor">内容编辑器走丢了，不能修改了:(</Alert>
                 <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color:#ffffff;overflow: hidden">
+                    <Row>
+                        <Col>
+
+                                <Button type="info" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+
+                        </Col>
+                    </Row>
                     <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
                     </div>
@@ -69,7 +76,7 @@
                         广告内容
                     </p>
                     <navigation :include="includeIds">
-                        <component v-bind:is="currentEditor" :key="currentEditorKey" v-on:sharechange="sharechange" v-on:save="save"></component>
+                        <component v-bind:is="currentEditor" :key="currentEditorKey" ref="childcom" @sharechange="sharechange" ></component>
                     </navigation>
                 </Card>
 
@@ -95,7 +102,8 @@
         },
         data() {
             return {
-                id:this.$route.query.id,
+                issaving:false,
+                id: this.$route.query.id,
                 includeIds: [],
                 currentEditor: defaultEditor,
                 currentEditorKey: 'adHasMissEditor',
@@ -116,73 +124,66 @@
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
                 },
-                canFindEditor:true
+                canFindEditor: true
             };
         },
         methods: {
-            save(success, error) {
+            saveIdea(that) {
+                if (that.id) {
+                    ad.editIdea({
+                        ideaCode: that.id,
+                        ideaData: JSON.stringify(that.share),
+                        typeId: that.typeId,
+                        positionId: that.positionId,
+                        adCompany: that.commonForm.adCompany,
+                        adName: that.commonForm.adName,
+                        adResource: that.adResource
+                    }).then(function (res) {
+                        that.issaving = false;
+                        that.$Message.success('保存成功');
+                    }).catch(function (er) {
+                        that.issaving = false;
+                        that.$Message.error('保存失败');
+                    });
+                } else {
+                    ad.addIdea({
+                        ideaData: JSON.stringify(that.share),
+                        typeId: that.typeId,
+                        positionId: that.positionId,
+                        adCompany: that.commonForm.adCompany,
+                        adName: that.commonForm.adName,
+                        adResource: that.adResource,
+                        planId: that.$route.query.planId || 0,
+                        defaultAd: that.$route.query.isquesheng || 0,
+                        PaiqiZhuangtai: that.$route.query.isquesheng || 0
+                    }).then(function (res) {
+                        that.id = res.data.data.ideaCode;
+                        that.issaving = false;
+                        that.$Message.success('保存成功');
+                    }).catch(function (er) {
+                        that.issaving = false;
+                        that.$Message.error('保存失败');
+                    });
+                }
+            },
+            save() {
                 var that = this;
+                this.issaving = true;
                 this.$refs['commonForm'].validate((commvalid) => {
                     if (commvalid) {
-                        this.issaving = true;
-                        if (this.id) {
-                            ad.editIdea({
-                                idcode: this.id,
-                                ideaData: JSON.stringify(this.share),
-                                typeId: this.typeId,
-                                positionId: this.positionId,
-                                adCompany: this.commonForm.adCompany,
-                                adName: this.commonForm.adName,
-                                adResource: this.adResource
-                            }).then(function (res) {
-                                that.issaving = false;
-                                if (success) {
-                                    try {
-                                        success();
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            }).catch(function (er) {
-                                that.issaving = false;
-                                if (error) {
-                                    try {
-                                        error(er);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            });
-                        } else {
-                            ad.addIdea({
-                                ideaData: JSON.stringify(this.formItem),
-                                typeId: this.typeId,
-                                positionId: this.positionId,
-                                adCompany: this.commonForm.adCompany,
-                                adName: this.commonForm.adName,
-                                adResource: this.adResource
-                            }).then(function (res) {
-                                that.id = res.data.data.ideaCode;
-                                that.issaving = false;
-                                if (success) {
-                                    try {
-                                        success();
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            }).catch(function (er) {
-                                that.issaving = false;
-                                if (error) {
-                                    try {
-                                        error(er);
-                                    } catch (e) {
-                                        console.error(e);
-                                    }
-                                }
-                            });
-                        }
+                        console.log(that.$data)
+
+                        /**
+                         * 保存子组件的数据
+                         */
+                        this.$refs.childcom.save(function () {
+                            that.saveIdea(that);
+                        }, function () {
+                            that.issaving = fasle;
+                            this.$Message.error('保存失败1');
+                        });
                     } else {
+                        this.issaving = false;
                         this.$Message.error('补充完善后，才能保存');
                     }
                 });
@@ -209,6 +210,16 @@
 
                 let mix = {
                     __wys_mixin_hook: true,
+                    data: function () {
+                        return {
+                            share: {}
+                        };
+                    },
+                    methods: {
+                        save(success, fail) {
+                            success();
+                        }
+                    },
                     created: function () {
                         for (var key in that.share) {
                             try {
@@ -217,7 +228,7 @@
                                 console.error(e);
                             }
                         }
-                        console.log('created');
+                        this.$emit('sharechange', this.share, this.$vnode.key);
                         /**
                         判断是不是右侧editor的子组件，如果不是一级子组件，不要触发这些钩子
                          */
@@ -259,14 +270,14 @@
         created() {
             var that = this;
             if (this.id) {
-                console.log('this.$route.query.id',this.id)
+
                 ad.getIdea(this.id).then(function (res) {
+                    console.log('res', res.data.data);
                     that.typeId = res.data.data.typeId;
                     let ideares = res.data.data;
                     let ideaData = JSON.parse(res.data.data.adData || {});
                     editortemplate.getTemplate(res.data.data.typeId).then(function (res) {
-                        let editor = this.getEditor(res.data.data.form);
-                        that.typeId = that.$route.query.templateid;
+                        let editor = that.getEditor(res.data.data.form);
                         that.positionId = res.data.data.positionId;
                         if (editor) {
                             editor.component().then(function (res) {
@@ -279,18 +290,17 @@
                                 that.currentEditor = res.default;
                                 that.currentEditorKey = editor.name;
                             }).catch(function (res) {
-                                that.canFindEditor=false;
+                                that.canFindEditor = false;
                                 console.error('error', res);
                             });
                         } else {
-                            that.canFindEditor=false;
+                            that.canFindEditor = false;
                         }
                     });
                 }).catch(function () {
-                    that.canFindEditor=false;
+                    that.canFindEditor = false;
                 });
             } else {
-
                 editortemplate.getTemplate(this.$route.query.templateid).then(function (res) {
                     let editor = that.getEditor(res.data.data.form);
                     that.typeId = that.$route.query.templateid;
@@ -303,14 +313,14 @@
                             that.currentEditorKey = editor.name;
                             that.arttemplate = _.trim(res.default.wys_stageTemplate);
                         }).catch(function (res) {
-                            that.canFindEditor=false;
+                            that.canFindEditor = false;
                             console.error('error', res);
                         });
                     } else {
-                        that.canFindEditor=false;
+                        that.canFindEditor = false;
                     }
                 }).catch(function () {
-                    that.canFindEditor=false;
+                    that.canFindEditor = false;
                 });
             }
         }
