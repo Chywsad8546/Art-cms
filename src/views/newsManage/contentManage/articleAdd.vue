@@ -141,7 +141,7 @@
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
-                <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button>
+                <!-- <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button> -->
                 <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
                 <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
@@ -610,7 +610,8 @@
                     let sign = response.data.data.sign;
                     let id = response.data.data.id;
                     let timestamp = response.data.data.timestamp;
-                    let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                   // let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    let url = this.$domain.cityDomain + '?id='+id+'&pre=1';
                     document.getElementById("qrcode1").innerHTML = "";
                     this.qrcode(url);
             },

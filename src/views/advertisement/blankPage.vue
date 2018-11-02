@@ -6,37 +6,43 @@
 
 
                 <Col span="24">
-               <Form ref="formAdd" :model="formItem" :rules="seniorValidate" :label-width="80" inline>
-                    <FormItem label="应用">
-                        <Select v-model="formItem.station" style="width:100px"clearable  @on-change = "zdClick">
+               <Form ref="formItem" :model="formItem" :rules="seniorValidate" :label-width="80" inline>
+                    <FormItem label="应用" prop="station">
+                        <Select v-model="formItem.station" style="width:100px"  @on-change = "zdClick">
                             <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="广告频道">
-                        <Select v-model="formItem.pageId" style="width:100px" clearable   @on-change = "pdClick">
+                    <FormItem label="广告频道" prop="pageId">
+                        <Select v-model="formItem.pageId" style="width:100px"   @on-change = "pdClick">
                             <Option v-for="item in pingdaoList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="广告位置">
-                        <Select v-model="formItem.positionId" clearable style="width:100px">
+                    <FormItem label="广告位置" prop="positionId">
+                        <Select v-model="formItem.positionId" style="width:100px">
                             <Option v-for="item in weizhiList" :value="item.positionId" :key="item.positionId">{{ item.positionName }}</Option>
                         </Select>
                     </FormItem>
 
-                    <FormItem label="付费状态">
+                    <FormItem label="付费状态" prop="isPay">
                         <Select v-model="formItem.isPay" style="width:100px">
                                 <Option value="1">付费</Option>
                                 <Option value="0">免费</Option>
                         </Select>
                     </FormItem>
-
-                    <FormItem label="时间" >
+                    <FormItem label="是否删除" prop="isDel">
+                        <Select v-model="formItem.isDel" style="width:100px">
+                                <Option value="1">是</Option>
+                                <Option value="0">否</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="时间" prop="dateTime">
                         <DatePicker type="month" v-model="dateTime" format="yyyy-MM" :clearable="false" placeholder="上架时间"></DatePicker>
                      </FormItem>
 
                     <FormItem>
                         <Button type="primary" @click="queryBlank">查询</Button>
-                        <Button type="primary" style="margin-left: 8px">下载排期</Button>
+                        <!--<Button type="primary" style="margin-left: 8px">下载排期</Button>-->
+                        <Button type="ghost" @click="handleCancel('formItem')" style="margin-left: 8px">清空</Button>
                     </FormItem>
 
                 </Form>
@@ -45,10 +51,10 @@
             </div>
 
     <Table border :columns="columblankPage" :data="blankPageListData" :loading="searchLoading"></Table>
-    <Page :total="total"  show-total show-sizer  @on-change="pageChange" style="margin-top:10px;"></Page>
+    <Page :total="total"  show-total  @on-change="pageChange" style="margin-top:10px;"></Page>
 
     <Modal v-model="showPlan" title="选择创意" scrollable width="850" @on-visible-change="visiblechange">
-        <planselector :positionId="selectPostionId" :date="selectDate" :existData="blankPageListDataDictus" :showseed="showseed"></planselector>
+        <planselector :positionId="selectPostionId" :date="selectDate"  :showseed="showseed" @closeme="showPlan=false"></planselector>
         <span slot="footer"></span>
     </Modal>
 </div>
@@ -74,7 +80,8 @@
                 formItem: {
                     station: '',
                     pageId: '',
-                    positionId: ''
+                    positionId: '',
+                    isPay: ''
                 },
                 seniorValidate: {
 
@@ -116,6 +123,12 @@
             };
         },
         methods: {
+            handleCancel(name) {
+                this.$refs[name].resetFields();
+                this.weizhiList = [];
+                this.pingdaoList = [];
+                this.init();
+            },
             visiblechange(v) {
                 if (!v) {
                     this.search();
@@ -126,17 +139,25 @@
                 this.getStationInfo();
             },
             pdClick() {
-                api.getPositionInfo(this.formItem).then(response => {
-                    this.weizhiList = response.data.data;
-                });
+                if (typeof this.formItem.pageId !== 'undefined') {
+                    api.getPositionInfo({pageId: this.formItem.pageId, pageSize: 1000}).then(response => {
+                        this.weizhiList = response.data.data;
+                        this.formItem.positionId = '';
+                    });
+                }
             },
             zdClick() {
-                api.getChannelInfo(this.formItem).then(response => {
-                    this.pingdaoList = response.data.data;
-                });
+                if (typeof this.formItem.station !== 'undefined') {
+                    api.getChannelInfo({station: this.formItem.station, pageSize: 1000}).then(response => {
+                        this.pingdaoList = response.data.data;
+                        this.formItem.pageId = '';
+                        this.formItem.positionId = '';
+                        this.weizhiList = [];
+                    });
+                }
             },
             getStationInfo() {
-                api.getStationInfo().then(response => {
+                api.getStationInfo({pageSize: 1000}).then(response => {
                     this.zhandianList = response.data.data;
                     this.zhandianList.forEach(item => {
                         item.station = item.station + '';
@@ -158,16 +179,19 @@
                 this.showseed = moment().valueOf();
                 this.selectPostionId = positionId;
                 this.selectDate = moment(day, 'YYYY-MM-DD').toDate();
-                this.showPlan = true;
+                if(isSelect) {
+                    this.showPlan = true;
+                }
+                else {
+                    this.visiblechange(false);
+                }
             },
             search() {
                 this.searchLoading = true;
-                let days = moment(this.dateTime).daysInMonth();
-                let month = moment(this.dateTime).format('M');
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
 
                 this.startTime = moment(this.dateTime).format('YYYY-MM-DD');
-                this.endTime = moment(this.dateTime).add(1, 'M').format('YYYY-MM-DD');
+                this.endTime = moment(this.dateTime).add(1,'M').format('YYYY-MM-DD');
                 var that = this;
                 api.adListAll(this.formItem).then(response => {
                     that.blankPageListData.splice(0, that.blankPageListData.length);
@@ -193,11 +217,11 @@
                                 let paiqiend = moment(paiqirow['endtime'], 'YYYY-MM-DD');
                                 for (; paiqistart.isBefore(paiqiend); paiqistart = paiqistart.add(1, 'd')) {
                                     let newpaiqirow = _.cloneDeep(paiqirow);
-                                    that.blankPageListDataDictus[paiqirow['positionId']][month + '-' + paiqistart.format('D')] = newpaiqirow;
+                                    that.blankPageListDataDictus[paiqirow['positionId']][paiqistart.format('M-D')] = newpaiqirow;
                                     if (!that.blankPageListDataDictus[paiqirow['positionId']].cellClassName) {
                                         that.blankPageListDataDictus[paiqirow['positionId']].cellClassName = {};
                                     }
-                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[month + '-' + paiqistart.format('D')] = 'cell-hold';
+                                    that.blankPageListDataDictus[paiqirow['positionId']].cellClassName[paiqistart.format('M-D')] = 'cell-hold';
                                 }
                             }
                             for (let i = 0; i < that.blankPageListData.length; i++) {
@@ -207,23 +231,23 @@
                                 for (let buchongstart = moment(that.startTime, 'YYYY-MM-DD'); buchongstart.isBefore(buchongend); buchongstart = buchongstart.add(1, 'd')) {
                                     let daykey = buchongstart.format('M-D');
                                     let day = buchongstart.format('YYYY-MM-DD');
-                                    // paiqirow["day"]=paiqistart.format('YYYY-MM-DD');
                                     if (!item[daykey]) {
                                         item[daykey] = {};
                                     }
                                     item[daykey]['day'] = day;
-                                    // item[daykey]['xuanzhong'] = false;
                                     item[daykey]['positionId'] = item.positionId;
                                 }
                             }
-
-                            for (let i = 1; i <= days; i++) {
+                            let titleStart = moment(that.startTime);
+                            let titleEnd = moment(that.endTime);
+                            for (; titleStart.isBefore(titleEnd) ; titleStart=titleStart.add(1,'d')) {
+                                let daykey=titleStart.format('M-D');
                                 that.columblankPage.push({
-                                    title: month + '-' + i,
-                                    key: month + '-' + i,
+                                    title: daykey,
+                                    key: daykey,
                                     'width': 100,
                                     render: (h, params) => {
-                                        return h('tdpop', {props: params.row[month + '-' + i],
+                                        return h('tdpop', {props: params.row[daykey],
                                             on: {changepaiqi: that.cellclick}});//
                                     }
                                 });
@@ -251,6 +275,9 @@
             }
         },
         created() {
+
+        },
+        activated(){
             this.init();
         }
     };

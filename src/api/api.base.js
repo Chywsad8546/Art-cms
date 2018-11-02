@@ -44,13 +44,13 @@ function initInterceptors (store) {
         }
         let title = '';
         let message = '-';
-        if (response.data.code === "fail") {
+        if (response.data.code === "fail" || response.data.code=='no-login') {
             store.commit('setUserName', false);
             store.commit('setFontPermission', []);
             router.push({
                 name: 'login'
             });
-            title = response.msg;
+            title = '未登录';
         }
         if (title !== '' && config.errortip) {
             Vue.prototype.$Notice.error({

@@ -13,7 +13,7 @@
                                             <Icon type="ios-film-outline"></Icon>
                                             基本信息
                                         </p>
-                                        <a href="#" slot="extra"  @click.prevent="formModal1 = true" >
+                                        <a href="#" slot="extra"  @click.prevent="formModal1 = true;editorEditIs = false;" >
                                             <Icon type="ios-paper"></Icon>
                                             设置编辑器
                                         </a>
@@ -53,14 +53,12 @@
                                             </FormItem>
                                             <FormItem >
                                                 <Button type="primary" @click="addTemplate('formValidate')">保存</Button>
-                                                <Button type="ghost" style="margin-left: 8px">取消</Button>
                                             </FormItem>
                                         </Form>
                                     </Card>
 
                                     <Modal
-                                        v-model="formModal1"
-                                        title="新增选框">
+                                        v-model="formModal1" @on-cancel="isCancel" :title="editorEditIs == false ? '新增编辑器' : '修改编辑器'">
                                         <RadioGroup v-model="inputType" style="margin-bottom:20px;" @on-change="tabRadioClick">
                                             <Radio label="input">input</Radio>
                                             <Radio label="select">select</Radio>
@@ -100,12 +98,12 @@
                                             </FormItem>                        -->
                                         </Form>
                                         <div slot="footer">
-                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">新增</Button>
+                                            <Button type="primary" size="large"  @click="popupOk('formAdd')">{{editorEditIs == false ? '新增' :'修改' }}</Button>
                                         </div>
                                     </Modal>
                                     </Col>
                                     <Col  span="12" >
-                                    <!--<Table :columns="columns" :data="confs"></Table>-->
+                                    <Table :columns="columns" :data="confs"></Table>
                                     </Col>
                                 </Row>
                         <Card shadow>
@@ -226,10 +224,12 @@ import { setTimeout } from 'timers';
                 seniorWzList: [],
                 seniorPdList: [],
                 weizhiList: [],
-                positionName:"",
+                positionName: '',
                 editorRouterList: [],
                 seniorEditor: false,
-                ordinaryEditor:false,
+                ordinaryEditor: false,
+                editorEditIs: false,
+                confsIndex: 0,
                 formAdd: {
                     name: '',
                     label: '',
@@ -257,6 +257,72 @@ import { setTimeout } from 'timers';
                     {
                         title: '组件类型',
                         key: 'type'
+                    },
+                    {
+                        title: '组件name',
+                        key: 'name'
+                    },
+                    {
+                        title: '管理',
+                        key: 'action',
+                        align: 'left',
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.inputType = params.row.type;
+                                                this.formAdd.name = params.row.name;
+                                                this.formAdd.label = params.row.label;
+                                                this.formAdd.default = params.row.default;
+                                                this.formAdd.reg = params.row.reg;
+                                                this.formAdd.required = params.row.required;
+                                                this.formAdd.message = params.row.message;
+                                                this.confsIndex = params.index;
+                                                this.formModal1 = true;
+                                                this.editorEditIs = true;
+                                            }
+                                        }
+                                    },
+                                    '修改'
+                                ),
+                                h(
+                                    'Button',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Modal.confirm({
+                                                    title: '删除确认',
+                                                    content: '确定要删除这个组件么？',
+                                                    onOk: function () {
+                                                        i.confs.splice(params.index, params.index + 1);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    },
+                                    '删除'
+                                )
+                            ];
+                            return h('div', optionArray);
+                        }
                     }
                 ],
                 confs: [
@@ -307,7 +373,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择应用', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }
@@ -319,7 +385,7 @@ import { setTimeout } from 'timers';
                 rulebdInsert: {
                     name: [
                         { required: true, message: '请填写name', trigger: 'blur' },
-                        { type: 'string',pattern:/^[0-9A-Za-z_]+$/, message:'只能输入字母数字和下划线', trigger:'blur'},
+                        { type: 'string', pattern: /^[0-9A-Za-z_]+$/, message: '只能输入字母数字和下划线', trigger: 'blur'}
                     ],
                     label: [
                         { required: true, message: '请填写label', trigger: 'blur' }
@@ -351,7 +417,7 @@ import { setTimeout } from 'timers';
                         { required: true, message: '请填写模板', trigger: 'blur' }
                     ],
                     station: [
-                        { required: true, message: '请选择站点', trigger: 'change' }
+                        { required: true, message: '请选择应用', trigger: 'change' }
                     ],
                     pageName: [
                         { required: true, message: '请选择频道', trigger: 'change' }
@@ -367,16 +433,16 @@ import { setTimeout } from 'timers';
                 },
                 ruleValidate: {
                 },
-                editorformunwatch:null,
-                editortemplateunwatch:null
+                editorformunwatch: null,
+                editortemplateunwatch: null
             };
         },
         methods: {
-            tabRadioClick(){
-                if(this.inputType == "upload"){
-                    this.formAdd.default = "http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/5b00600178e84b91b5f4fe78a5eed91c/1.png";
-                }else{
-                    this.formAdd.default = "";
+            tabRadioClick() {
+                if (this.inputType == 'upload') {
+                    this.formAdd.default = 'http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/5b00600178e84b91b5f4fe78a5eed91c/1.png';
+                } else {
+                    this.formAdd.default = '';
                 }
             },
             pdClick() {
@@ -401,24 +467,21 @@ import { setTimeout } from 'timers';
             },
             getStationInfo() {
                 api.getStationInfo().then(response => {
-
                     this.zhandianList = response.data.data;
-                    this.zhandianList.forEach(item=>{
-                      item.stationId = item.stationId+'';
+                    this.zhandianList.forEach(item => {
+                        item.stationId = item.stationId + '';
                     });
                     // console.log(this.zhandianList);
                 });
-
-
             },
             adListAll() {
-                api.adListAll({positionId:this.formItem.positionId}).then(response => {
+                api.adListAll({positionId: this.formItem.positionId}).then(response => {
                     if (response.data.data[0].isAdvancedEdit == 1) {
-                        this.seniorEditor= true;
+                        this.seniorEditor = true;
                     } else {
-                        this.ordinaryEditor=true;
+                        this.ordinaryEditor = true;
                     }
-                    this.positionName = response.data.data[0].pageName+' / '+ response.data.data[0].positionName;
+                    this.positionName = response.data.data[0].pageName + ' / ' + response.data.data[0].positionName;
                 });
             },
             show() {
@@ -445,16 +508,21 @@ import { setTimeout } from 'timers';
             confsRemove(index) {
                 this.confs.splice(index, 1);
             },
+            isCancel() {
+                this.cleanData();
+            },
             popupOk (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if (this.confs.length > 0) {
-                            this.confs.forEach(item => {
-                                if (item.name == this.formAdd.name) {
-                                    this.$Message.error('name名称不能重复');
-                                    return false;
-                                }
-                            });
+                            if (this.editorEditIs == false) {
+                                this.confs.forEach(item => {
+                                    if (item.name == this.formAdd.name) {
+                                        this.$Message.error('name名称不能重复');
+                                        return false;
+                                    }
+                                });
+                            }
                         }
                         if (this.formAdd.reg == true && this.formAdd.message == '') {
                             this.$Message.error('请输入校验不通过提示信息');
@@ -475,7 +543,14 @@ import { setTimeout } from 'timers';
                         if (this.inputType == 'upload') {
                             strArr.format = this.formAdd.format;
                         }
-                        this.confs.push(strArr);
+                        // this.confsIndex = params.index;
+                        // this.formModal1 = true;
+                        // this.editorEditIs = true;
+                        if (this.editorEditIs == false) {
+                            this.confs.push(strArr);
+                        } else {
+                            this.confs.splice(this.confsIndex, 1, strArr);
+                        }
                         this.cleanData();
                         this.formModal1 = !this.formModal1;
                         this.editorTry();
@@ -505,16 +580,19 @@ import { setTimeout } from 'timers';
                         //     this.tabName = 'name2';
                         // }, 300);
                         this.senior.name = response.data.data.name;
+                        this.senior.id = this.Lid.id;
                         this.senior.form = response.data.data.form;
-                        //this.senior.template = response.data.data.template;
+                        // this.senior.template = response.data.data.template;
                     } else {
-                       // this.ordinaryEditor=true;
+                        // this.ordinaryEditor=true;
                         this.formItem.name = response.data.data.name;
+                        // console.log('response.data.data.template', response.data.data.template);
                         this.formItem.template = response.data.data.template;
+                        this.formItem.id = this.Lid.id;
                         this.confs = JSON.parse(response.data.data.form);
                         this.editorTry(true);
                     }
-                    this.senior.positionId= response.data.data.positionId;
+                    this.senior.positionId = response.data.data.positionId;
                     this.formItem.positionId = response.data.data.positionId;
                     this.adListAll();
                 });
@@ -527,7 +605,6 @@ import { setTimeout } from 'timers';
                             return false;
                         }
                         this.formItem.form = JSON.stringify(this.confs);
-                        console.log(this.formItem);
                         api.addTemplate(this.formItem).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
@@ -566,19 +643,17 @@ import { setTimeout } from 'timers';
                 });
             },
             editorTry(created) {
-                if(this.unwatch){
-                    try{
+                if (this.unwatch) {
+                    try {
                         this.unwatch();
-                    }
-                    catch (e){
+                    } catch (e) {
                         console.error(e);
                     }
                 }
-                if(this.editortemplateunwatch){
-                    try{
+                if (this.editortemplateunwatch) {
+                    try {
                         this.editortemplateunwatch();
-                    }
-                    catch (e){
+                    } catch (e) {
                         console.error(e);
                     }
                 }
@@ -603,7 +678,7 @@ import { setTimeout } from 'timers';
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        console.log('reg',item.reg)
+                        // console.log('reg', item.reg);
                         rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
@@ -618,16 +693,15 @@ import { setTimeout } from 'timers';
                 /**
                  * 挂载watch钩子，当数据有变化的时候，更新预览显示
                  */
-                this.unwatch  = this.$watch('editorformItem', function (newVal, oldVal) {
+                this.unwatch = this.$watch('editorformItem', function (newVal, oldVal) {
+                    // console.log(this.$refs['stage'])
                     // 做点什么
                     try {
                         var html = template.render(this.formItem.template, newVal);
                         $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
+                    } catch (e) {
                         $(this.$refs['stage']).html(html);
                     }
-
                 }, {
                     deep: true
                 });
@@ -636,24 +710,32 @@ import { setTimeout } from 'timers';
                     try {
                         var html = template.render(newVal, this.editorformItem);
                         $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
+                    } catch (e) {
                         $(this.$refs['stage']).html(html);
                     }
-
                 });
-                if(created){
-                    try {
-                        var html = template.render(this.formItem.template, this.editorformItem);
-                        $(this.$refs['stage']).html(html);
-                    }
-                    catch (e){
-                        $(this.$refs['stage']).html(html);
-                    }
+
+                if (created) {
+                //     this.$nextTick(function () {
+                    var that = this;
+                    var inteval=setInterval(function () {
+                        if(that.$refs['stage']){
+                            clearInterval(inteval);
+                            try {
+                                console.log(that.formItem.template, that.editorformItem);
+                                var html = template.render(that.formItem.template, that.editorformItem);
+                                $(that.$refs['stage']).html(html);
+                            } catch (e) {
+                                $(that.$refs['stage']).html(html);
+                            }
+                        }
+
+                    },1000);
+
+                //     });
                 }
             }
         },
-
         created: function () {
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;
@@ -661,10 +743,9 @@ import { setTimeout } from 'timers';
 
             if (this.Lid.id != undefined) {
                 this.getIdeaTypeData();
-            }
-            else {
+            } else {
                 this.formItem.positionId = this.$route.query.positionId;
-                this.senior.positionId= this.$route.query.positionId;
+                this.senior.positionId = this.$route.query.positionId;
                 this.adListAll();
             }
         }

@@ -48,9 +48,6 @@
     Vue.component('tdpopreadonly', tdpopreadonly);
     export default {
         props: {
-            adCompany: String,
-            adName: String,
-            ideaCode: String,
             positionId: '',
             date: '',
             showseed: '',
@@ -128,10 +125,12 @@
                                     endTime: endTime,
                                     reAdSchedulesNow: reAdSchedulesNow
                                 }).then(response => {
+                                    that.$emit('closeme');
                                     that.$Message.success('排期成功');
                                 });
                             } else {
                                 this.$Message.success('排期成功');
+                                that.$emit('closeme');
                                 // this.schedulesList();
                             }
                         });
@@ -205,6 +204,7 @@
             },
             'showseed': function (val) {
                 this.formItem.selectideacode='';
+                this.init();
                 // this.showPayDialog = false;
             },
             'date': function (val) {

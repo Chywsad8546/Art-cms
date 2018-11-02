@@ -1,11 +1,10 @@
 const jingjirenDomain = 'http://ht-secret.static.toutiaofangchan.com/';
 const companyDomain = '';
-const cityDomain = 'http://appdev.toutiaofangchan.com/#/look/news';
-const imgDomain = 'http://wap-qn.toutiaofangchan.com/';
-const cityDomain = 'http://appdev.toutiaofangchan.com/#/look/news';
-const cityDomainimg = 'http://appdev.toutiaofangchan.com/#/look/images';
-const hshipinDomainurl = 'http://appdev.toutiaofangchan.com/#/look/hvideo';
-const sshipinDomainurl = 'http://appdev.toutiaofangchan.com/#/look/vvideo';
+const cityDomain = 'http://m.sim.bidewu.com/#/look/news';
+const cityDomainimg = 'http://m.sim.bidewu/#/look/images';
+const hshipinDomainurl = 'http://m.sim.bidewu/#/look/hvideo';
+const sshipinDomainurl = 'http://m.sim.bidewu/#/look/vvideo';
+const imgDomain = 'http://wap-qn.bidewu.com/';
 export default {
     jingjirenDomain,
     companyDomain,

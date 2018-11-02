@@ -4,7 +4,7 @@
             <Card>
                 <p slot="title">编辑器列表管理</p>
     <Form  ref="searchData" :model="searchData" inline :label-width="120">
-        <FormItem label="选择站点" prop="station">
+        <FormItem label="选择应用" prop="station">
             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                 <Option v-for="item in zhandianList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
             </Select>

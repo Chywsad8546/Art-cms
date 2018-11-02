@@ -13,7 +13,7 @@ function install (Vue) {
      * @param location 路由信息
      */
     Vue.prototype.$replacePageAndActiveRouter = function (location) {
-        console.log('this.$vnode.key',this.$vnode.key)
+        // console.log('this.$vnode.key',this.$vnode.key)
         this.$store.commit('removeTag', this.$vnode.key);
         this.$router.replace(location);
     };

@@ -10,12 +10,12 @@
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData" inline :label-width="120">
                         <FormItem label="站点名称" prop="station">
-                            <Select v-model="searchData.station"  @on-change = "zdClick" style="width:140px">
+                            <Select v-model="searchData.station" clearable @on-change = "zdClick" style="width:140px">
                                 <Option v-for="item in searchStationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="栏目名称" prop="pageId">
-                            <Select v-model="searchData.pageId" style="width:140px">
+                            <Select v-model="searchData.pageId" clearable style="width:140px">
                                 <Option v-for="item in searchPageList" :value="item.pageId" :key="item.pageId">{{ item.pageName }}</Option>
                             </Select>
                         </FormItem>
@@ -23,8 +23,15 @@
                             <Input v-model.trim="searchData.positionName" style="width:140px"></Input>
                         </FormItem>
                         <FormItem label="未设置缺省广告" prop="defaultAd">
-                            <Select v-model="searchData.defaultAd" style="width:140px">
+                            <Select v-model="searchData.defaultAd" clearable style="width:140px">
+                                <Option value="">全部</Option>
                                 <Option value="1">是</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem label="是否删除" prop="isDel">
+                            <Select v-model="searchData.isDel" clearable style="width:140px">
+                                <Option value="1">是</Option>
+                                <Option value="0">否</Option>
                             </Select>
                         </FormItem>
                        <!-- <FormItem label="是否删除" prop="isDel">
@@ -53,7 +60,7 @@
 
         <Modal v-model="isTrueAddTag" :loading="isAddTagLoading" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="station">
+                <FormItem label="应用名称" prop="station">
                     <Select v-model="addNewsChannelModal.station" :label-in-value="true" @on-change = "changeStation" style="width:140px">
                         <Option v-for="(item, index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
@@ -69,17 +76,34 @@
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="addNewsChannelModal.version" style="width:140px"></Input>
                 </FormItem>
-                <FormItem label="是否添加默认缺省页" prop="isAddDefault">
-                    <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
-                        <Option :value=0>是</Option>
-                        <Option :value=1>否</Option>
+                <FormItem label="父位置" prop="isFatherPosition">
+                    <Select v-model="addNewsChannelModal.isFatherPosition" style="width:140px">
+                        <Option :value=0>否</Option>
+                        <Option :value=1>是</Option>                    
                     </Select>
                 </FormItem>
-                <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
-                    <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
-                        <Option :value=0>低级</Option>
-                        <Option :value=1>高级</Option>
-                    </Select>
+                <div v-if="addNewsChannelModal.isFatherPosition === 0">
+                    <FormItem label="是否添加默认缺省页" prop="isAddDefault">
+                        <Select v-model="addNewsChannelModal.isAddDefault" style="width:140px">
+                            <Option :value=0>是</Option>
+                            <Option :value=1>否</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="是否是高级编辑器" prop="isAdvancedEdit">
+                        <Select v-model="addNewsChannelModal.isAdvancedEdit" style="width:140px">
+                            <Option :value=0>低级</Option>
+                            <Option :value=1>高级</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="预览模式" prop="previewType">
+                        <Select v-model="addNewsChannelModal.previewType" style="width:140px">
+                            <Option :value=1>WAP预览</Option>
+                            <Option :value=2>APP预览</Option>
+                        </Select>
+                    </FormItem>
+                </div>
+                <FormItem v-if="addNewsChannelModal.previewType === 1" label="预览URL" prop="previewUrl">
+                    <Input v-model.trim="addNewsChannelModal.previewUrl" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -91,6 +115,20 @@
                 </FormItem>
                 <FormItem label="版本号" prop="version">
                     <Input v-model.trim="updateCahnnelValue.version" style="width:140px"></Input>
+                </FormItem>
+                <div v-if="judgefatherFlag">
+                    <FormItem label="父ID" prop="fatherPositionId">
+                        <Input v-model.trim="updateCahnnelValue.fatherPositionId" placeholder="非必填" style="width:140px"></Input>
+                    </FormItem>
+                    <FormItem label="预览模式" prop="previewType">
+                        <Select v-model="updateCahnnelValue.previewType" @on-change="changePreviewType" style="width:140px">
+                            <Option value='1'>WAP预览</Option>
+                            <Option value='2'>APP预览</Option>
+                        </Select>
+                    </FormItem>
+                </div>
+                <FormItem v-if="upPreviewUrlIsShow && judgefatherFlag" label="预览URL" prop="previewUrl">
+                    <Input v-model.trim="updateCahnnelValue.previewUrl" style="width:140px"></Input>
                 </FormItem>
             </Form>
         </Modal>
@@ -143,7 +181,8 @@
     export default {
         data() {
             return {
-                showQuesheng:false,
+                upPreviewUrlIsShow: false,
+                showQuesheng: false,
                 queshengmodalColums: [
                     {
                         key: 'id',
@@ -227,6 +266,7 @@
                         align: 'center',
                         render: (h, params) => {
                             var that = this;
+
                             return h('div', [
                                 h(
                                     'Button',
@@ -240,7 +280,11 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$router.push({name:'ad_redirect',query:{isquesheng:1,templateid:params.row.id}});
+                                                this.adListListModal = false;
+                                                this.$router.push({
+                                                    name: 'ad_redirect',
+                                                    query: {isquesheng: 1, templateid: params.row.id}
+                                                });
                                             }
                                         }
                                     },
@@ -251,17 +295,17 @@
                         }
                     }
                 ],
-                queshengdata:[],
+                queshengdata: [],
                 adListListModal: false,
-                selectPostionId:'',
+                selectPostionId: '',
                 adListColums: [
                     {
                         key: 'adName',
-                        title: '广告名称',
+                        title: '广告名称'
                     },
                     {
                         key: 'createAt',
-                        title: '创建时间',
+                        title: '创建时间'
                     }, {
                         title: '管理',
                         key: 'action',
@@ -282,9 +326,10 @@
                                         },
                                         on: {
                                             click: () => {
+                                                this.adListListModal = false;
                                                 this.$router.push({
                                                     name: 'ad_redirect',
-                                                    query: {id: params.row.ideaCode,isquesheng:1}
+                                                    query: {id: params.row.ideaCode, isquesheng: 1}
                                                 });
                                             }
                                         }
@@ -360,7 +405,7 @@
                         key: 'status',
                         align: 'center',
                         render: (h, params) => {
-                            if (params.row.status === 0) {
+                            if (params.row.status === 0 || params.row.isNew === 0) {
                                 return h('div', {
                                     style: {
                                         color: 'red'
@@ -381,6 +426,9 @@
                         align: 'center',
                         render: (h, params) => {
                             var that = this;
+                            if (params.row.isNew === 0) {
+                                return h('div', ['']);
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -441,7 +489,7 @@
                                                 on: {
                                                     click: () => {
                                                         if (params.row.isNew === 1) {
-                                                            that.modal3=false;
+                                                            that.modal3 = false;
                                                             that.$router.push({
                                                                 name: 'formtemplate',
                                                                 query: {advertId: params.row.id}
@@ -479,12 +527,36 @@
                     {
                         key: 'pageName',
                         title: '栏目名称',
-                        width: 100
+                        width: 200
                     },
                     {
                         key: 'positionName',
                         title: '位置名称',
-                        width: 150
+                        width: 200
+                    },
+                    {
+                        key: 'isDel',
+                        title: '是否删除',
+                        width: 100,
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'span',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    params.row.isDel == 1 ? '是' : '否'
+                                )
+                            ];
+                            return h('div', optionArray);
+                        }
                     },
                     {
                         title: '版本号',
@@ -492,79 +564,172 @@
                         width: 100
                     },
                     {
+                        title: '是否父ID',
+                        key: 'isFatherPosition',
+                        width: 100,
+                        render: (h, params) => {
+                            var i = this;
+                            var optionArray = [
+                                h(
+                                    'span',
+                                    {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        }
+                                    },
+                                    params.row.isFatherPosition == 1 ? '是' : '否'
+                                )
+                            ];
+                            return h('div', optionArray);
+                        }
+                    },
+                    {
                         title: '管理',
                         key: 'action',
                         align: 'left',
                         render: (h, params) => {
                             var i = this;
-                            var optionArray = [
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.modal3 = true;
-                                                this.currentPosition = params.row.positionId;
-                                                api.templateList({positionId: params.row.positionId}).then(response => {
-                                                    this.modalData = response.data.data;
-                                                });
-                                            }
-                                        }
-                                    },
-                                    '设置编辑器'
-                                ),
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.updateCahnnelValue = {};
-                                                this.updateCahnnelValue.version = params.row.version;
-                                                this.updateCahnnelValue.positionName = params.row.positionName;
-                                                this.updateCahnnelValue.positionId = params.row.positionId;
-                                                i.modal2 = true;
-                                            }
-                                        }
-                                    },
-                                    '修改'
-                                )
-                            ];
+                            if (params.row.isDel == 0) {
+                                if (params.row.isFatherPosition == 0) {
+                                    var optionArray = [
+                                        h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.modal3 = true;
+                                                        this.currentPosition = params.row.positionId;
+                                                        api.templateList({positionId: params.row.positionId}).then(response => {
+                                                            this.modalData = response.data.data;
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            '设置编辑器'
+                                        ),
+                                        h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.updateCahnnelValue = {};
+                                                        this.updateCahnnelValue.version = params.row.version;
+                                                        this.updateCahnnelValue.positionName = params.row.positionName;
+                                                        this.updateCahnnelValue.positionId = params.row.positionId;
+                                                        this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                        if (params.row.previewType === 1) {
+                                                            this.upPreviewUrlIsShow = true;
+                                                            this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                        } else if (params.row.previewType === 2) {
+                                                            this.upPreviewUrlIsShow = false;
+                                                            this.updateCahnnelValue.previewUrl = '';
+                                                        }
+                                                        i.judgefatherFlag = true;
+                                                        i.modal2 = true;
+                                                    }
+                                                }
+                                            },
+                                            '修改'
+                                        )
+                                    ];
 
-                            if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
-                                optionArray.push(h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'error',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.selectPostionId=params.row.positionId;
-                                                this.addquesheng();
-                                            }
-                                        }
-                                    },
-                                    '添加缺省广告'
-                                ));
-                            } else if (params.row.isAddDefault === 0 && params.row.defaultAd === 1) {
+                                    if (params.row.isAddDefault === 0 && params.row.defaultAd === null) {
+                                        optionArray.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'error',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.selectPostionId = params.row.positionId;
+                                                        this.addquesheng();
+                                                    }
+                                                }
+                                            },
+                                            '添加缺省广告'
+                                        ));
+                                    } else if (params.row.isAddDefault === 0 && params.row.defaultAd !== null) {
+                                        optionArray.push(h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
+                                                            this.adListListModal = true;
+                                                            this.selectPostionId = params.row.positionId;
+                                                            this.adListData = response.data.data;
+                                                        });
+                                                    }
+                                                }
+                                            },
+                                            '查看缺省广告！'
+                                        ));
+                                    }
+                                } else {
+                                    var optionArray = [
+                                        h(
+                                            'Button',
+                                            {
+                                                props: {
+                                                    type: 'primary',
+                                                    size: 'small'
+                                                },
+                                                style: {
+                                                    marginRight: '5px'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.updateCahnnelValue = {};
+                                                        this.updateCahnnelValue.version = params.row.version;
+                                                        this.updateCahnnelValue.positionName = params.row.positionName;
+                                                        this.updateCahnnelValue.positionId = params.row.positionId;
+                                                        this.updateCahnnelValue.previewType = params.row.previewType + '';
+                                                        if (params.row.previewType === 1) {
+                                                            this.upPreviewUrlIsShow = true;
+                                                            this.updateCahnnelValue.previewUrl = params.row.previewUrl;
+                                                        } else if (params.row.previewType === 2) {
+                                                            this.upPreviewUrlIsShow = false;
+                                                            this.updateCahnnelValue.previewUrl = '';
+                                                        }
+                                                        i.judgefatherFlag = false;
+                                                        i.modal2 = true;
+                                                    }
+                                                }
+                                            },
+                                            '修改'
+                                        )
+                                    ];
+                                }
                                 optionArray.push(h(
                                     'Button',
                                     {
@@ -577,18 +742,28 @@
                                         },
                                         on: {
                                             click: () => {
-                                                api.getDefaultAdByPositionId({positionId: params.row.positionId}).then(response => {
-                                                    this.adListListModal = true;
-                                                    this.selectPostionId=params.row.positionId;
-                                                    this.adListData = response.data.data;
+                                                this.$Modal.confirm({
+                                                    title: '更改状态',
+                                                    content: '是否删除',
+                                                    onOk: () => {
+                                                        adapi.updatePosition({
+                                                            positionId: params.row.positionId,
+                                                            isDel: 1
+                                                        }).then(response => {
+                                                            this.init();
+                                                            // console.log(response);
+                                                        });
+                                                    },
+                                                    onCancel: () => {
+                                                    }
                                                 });
                                             }
                                         }
                                     },
-                                    '查看缺省广告！'
+                                    '删除'
                                 ));
+                                return h('div', optionArray);
                             }
-                            return h('div', optionArray);
                         }
                     }
                 ],
@@ -605,33 +780,50 @@
                 isTrueAddTag: false,
                 modal_loading: false,
                 isAddTagLoading: true,
+                judgefatherFlag: true,
                 addNewsChannelModal: {
                     stationIndex: '',
                     pageIndex: '',
                     positionName: '',
-                    version: ''
+                    version: '',
+                    previewType: '',
+                    isFatherPosition: 0
                 },
                 updateCahnnelValue: {
+                    version: '',
+                    positionName: '',
+                    positionId: '',
+                    previewType: ''
                 },
                 ruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    station: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }],
+                    station: [{ type: 'integer', required: true, message: '应用不能为空', trigger: 'change' }],
                     version: [{ required: true, message: '请填写版本号', trigger: 'blur' }],
                     pageId: [{ type: 'integer', required: true, message: '请选择栏目', trigger: 'change' }],
                     isAddDefault: [{ type: 'integer', required: true, message: '请选择是否添加默认缺省页', trigger: 'change' }],
-                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }]
+                    isAdvancedEdit: [{ type: 'integer', required: true, message: '请选择是否为高级编辑器', trigger: 'change' }],
+                    previewType: [{ type: 'integer', required: true, message: '请选择预览模式', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     positionName: [{ required: true, message: '位置名称不能为空', trigger: 'blur' }],
-                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }]
+                    version: [{ required: true, message: '版本号不能为空', trigger: 'blur' }],
+                    previewType: [{ required: true, message: '请选择预览模式', trigger: 'change' }],
+                    previewUrl: [{ required: true, message: '预览URL不能为空', trigger: 'blur' }]
                 }
             };
         },
         methods: {
-            addquesheng(){
-                this.adListListModal=false;
+            changePreviewType(val) {
+                if (val === '1') {
+                    this.upPreviewUrlIsShow = true;
+                } else {
+                    this.upPreviewUrlIsShow = false;
+                }
+            },
+            addquesheng() {
+                this.adListListModal = false;
                 api.templateList({positionId: this.selectPostionId}).then(response => {
-                    this.showQuesheng=true;
+                    this.showQuesheng = true;
                     this.queshengdata = response.data.data;
                 });
             },
@@ -645,11 +837,12 @@
                 if (typeof this.searchData.station !== 'undefined') {
                     api.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.searchPageList = response.data.data;
+                        this.searchData.pageId = '';
                     });
                 }
             },
             addModal() {
-                this.modal3=false;
+                this.modal3 = false;
                 this.$router.push({
                     name: 'formtemplate', query: {positionId: this.currentPosition}
                 });
@@ -664,7 +857,7 @@
                 });
                 /*       this.addNewsChannelModal = {
                 }; */
-                this.updateCahnnelValue = {};
+
                 adapi.getAllPositions(this.searchData).then(response => {
                     this.total = response.data.count;
                     this.data = response.data.data;
@@ -678,13 +871,7 @@
                     }
                 });
             },
-            addNewsChannel(addChannelValue) {
-                console.log(this.pageList);
-                // this.addNewsChannelModal.pageName = this.pageList[this.addNewsChannelModal.pageIndex].pageName;
-                // this.addNewsChannelModal.station = this.stationList[this.addNewsChannelModal.stationIndex].station;
-                // this.addNewsChannelModal.pageId = this.pageList[this.addNewsChannelModal.pageIndex].pageId;
-                // this.addNewsChannelModal.stationName = this.stationList[this.addNewsChannelModal.stationIndex].stationName;
-                // console.log(this.addNewsChannelModal);
+            addNewsChannel() {
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         console.log('addNewsChannelModal', this.addNewsChannelModal);

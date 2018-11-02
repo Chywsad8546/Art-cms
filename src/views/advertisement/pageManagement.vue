@@ -46,7 +46,7 @@
 
         <Modal v-model="isTrueAddTag" width="360" @on-ok="addNewsChannel()">
             <Form  ref="addNewsChannelModalform" :model="addNewsChannelModal" :rules="ruleValidate" inline :label-width="120">
-                <FormItem label="站点名称" prop="stationId">
+                <FormItem label="应用名称" prop="stationId">
                     <Select v-model="addNewsChannelModal.stationId" :label-in-value="true" @on-change="sitechange" style="width:140px">
                         <Option v-for="(item,index) in stationList" :value="item.station" :key="item.station">{{ item.stationName }}</Option>
                     </Select>
@@ -104,6 +104,12 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
+                            var isDelTip = '';
+                            if (params.row.isDel === 1) {
+                                isDelTip = '启用';
+                            }else if (params.row.isDel === 0){
+                                isDelTip = '删除';
+                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -128,7 +134,7 @@
                                             }
                                         }
                                     },
-                                    '删除'
+                                    isDelTip
                                 ),
                                 h(
                                     'Button',
@@ -174,7 +180,7 @@
                 },
                 ruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }],
-                    stationId: [{ type: 'integer', required: true, message: '站点不能为空', trigger: 'change' }]
+                    stationId: [{ type: 'integer', required: true, message: '应用不能为空', trigger: 'change' }]
                 },
                 updateruleValidate: {
                     pageName: [{ required: true, message: '栏目名称不能为空', trigger: 'blur' }]
@@ -194,6 +200,7 @@
                 if (typeof this.searchData.station !== 'undefined') {
                     fapi.getChannelInfo({station: this.searchData.station, pageSize: 1000}).then(response => {
                         this.seratchPageList = response.data.data;
+                        this.searchData.pageId = '';
                     });
                 }
             },
@@ -224,9 +231,6 @@
                 });
             },
             addNewsChannel() {
-                // let index = this.addNewsChannelModal.adstationIndex;
-                // this.addNewsChannelModal.stationId = this.stationList[index].pageId;
-                // this.addNewsChannelModal.stationName = this.stationList[index].stationName;
                 this.$refs['addNewsChannelModalform'].validate((valid) => {
                     if (valid) {
                         adapi.addPage(this.addNewsChannelModal).then(response => {
@@ -246,10 +250,16 @@
                 });
             },
             delStation() {
+                var tip = '';
+                if (this.updateCahnnelValue.isDel === 0) {
+                    tip = '是否启用';
+                } else {
+                    tip = '是否删除';
+                }
                 var delDate = this.updateCahnnelValue;
                 this.$Modal.confirm({
-                    title: '更改删除状态',
-                    content: '<p>是否更改删除状态</p>',
+                    title: '更改状态',
+                    content: tip,
                     onOk: () => {
                         console.log(delDate);
                         adapi.updateStation(delDate).then(response => {
@@ -292,7 +302,9 @@
                 this.init();
             },
             handleCancel (name) {
+                console.log(this)
                 this.seratchPageList = [];
+                //console.log(this.$refs[name]);
                 this.$refs[name].resetFields();
                 this.searchData.pageNum = 1;
                 this.init();

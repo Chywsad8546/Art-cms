@@ -116,14 +116,17 @@
                     {
                         key: 'id',
                         title: 'id',
-                        width: 80
+                        width: 80,
+                        "fixed": "left",
                     },
                     {
                         key: 'title',
-                        title: '标题'
+                        title: '标题',
+                        "fixed": "left",
                     },
                     {
                         title: '级别',
+                        "fixed": "left",
                         render: (h, params) => {
                             var type = params.row.recommendLevel;
                             if (type == 1) {
@@ -144,6 +147,7 @@
                     },
                     {
                         title: '类型',
+                        "fixed": "left",
                         render: (h, params) => {
                             var type = params.row.type;
                             if (type == 0) {
@@ -164,10 +168,11 @@
                                 ]);
                             }
                         },
-                        width: 150
+                        width: 90
                     },
                     {
                         title: '栏目',
+                        "fixed": "left",
                         render: (h, params) => {
                             var topic = params.row.topicName;
                             var topicNameResult = " ";
@@ -184,6 +189,7 @@
                     },
                     {
                         title: '状态',
+                        "fixed": "left",
                         render: (h, params) => {
                             var status = params.row.isPublish;
                             if (status == 0) {
@@ -234,6 +240,8 @@
                         title: '管理',
                         key: 'action',
                         align: 'center',
+                        fixed: 'right',
+                        width: 300,
                         render: (h, params) => {
                             var i = this;
                             var guanliOpration=[];
@@ -554,8 +562,8 @@
                     let timestamp = response.data.data.timestamp;
                     this.qrcodeModal = !this.qrcodeModal;
                     document.getElementById("qrcode").innerHTML = "";
-                    url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    console.log(url);
+                    //url+='&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                    url+='&pre=1';
                     this.qrcode(url);
                 });
             },
