@@ -147,7 +147,7 @@
                 canFindEditor: true,
                 previewType: 0,
                 previewUrl: '',
-                editorModal:false,
+                editorModal: false,
                 previewWapType: false,
                 previewAppType: false,
                 previeForm: {
@@ -162,11 +162,25 @@
             };
         },
         methods: {
+            getShareIncludes() {
+                let result = {};
+                let shareIncludes = this.$refs.childcom.shareIncludes;
+                if (shareIncludes.shareIncludes && shareIncludes.shareIncludes.length > 0) {
+                    for (let i = 0; i < shareIncludes.length; i++) {
+                        let key = _.trim(shareIncludes[i]);
+                        if (key) {
+                            result[key] = this.share[key];
+                        }
+                    }
+                    return result;
+                }
+                return this.share;
+            },
             saveIdea(that) {
                 if (that.id) {
                     ad.editIdea({
                         ideaCode: that.id,
-                        ideaData: JSON.stringify(that.share),
+                        ideaData: JSON.stringify(that.getShareIncludes()),
                         typeId: that.typeId,
                         positionId: that.positionId,
                         adCompany: that.commonForm.adCompany,
@@ -181,7 +195,7 @@
                     });
                 } else {
                     ad.addIdea({
-                        ideaData: JSON.stringify(that.share),
+                        ideaData: JSON.stringify(that.getShareIncludes()),
                         typeId: that.typeId,
                         positionId: that.positionId,
                         adCompany: that.commonForm.adCompany,
@@ -229,7 +243,7 @@
                     adData: JSON.stringify(this.share)
                 }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
+                    let url = this.previewUrl + '?id=' + this.positionId + '&pre=' + response.data.data.pre;
                     new QRCode(this.$refs.qrcode4, {
                         width: 200,
                         height: 200, // 高度
@@ -275,7 +289,7 @@
                         this.$refs.childcom.save(function () {
                             that.saveIdea(that);
                         }, function () {
-                            console.log('fffissaving')
+                            console.log('fffissaving');
                             that.issaving = false;
                             that.$Message.error('保存失败');
                         });
@@ -309,7 +323,8 @@
                     __wys_mixin_hook: true,
                     data: function () {
                         return {
-                            share: {}
+                            share: {},
+                            shareIncludes: []
                         };
                     },
                     methods: {
