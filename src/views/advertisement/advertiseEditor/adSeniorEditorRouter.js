@@ -28,8 +28,19 @@ var editorRouters= [
         title:'热销新房',
         component: () =>
             import('@/views/advertisement/advertiseEditor/adSeniorEditor/heatNewNouse.vue'),
-
-    }   
+    },
+    {
+        name: 'newNouseRecommendList',
+        title:'新房推荐列表',
+        component: () =>
+            import('@/views/advertisement/advertiseEditor/adSeniorEditor/newNouseRecommendList.vue'),
+    }, 
+    {
+        name: 'mustseeCommunity',
+        title:'必看社区',
+        component: () =>
+            import('@/views/advertisement/advertiseEditor/adSeniorEditor/mustseeCommunity.vue'),
+    },  
 ];
 
 

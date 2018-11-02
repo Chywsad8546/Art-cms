@@ -167,7 +167,7 @@
             getShareIncludes() {
                 let result = {};
                 let shareIncludes = this.$refs.childcom.shareIncludes;
-                if (shareIncludes.shareIncludes && shareIncludes.shareIncludes.length > 0) {
+                if (shareIncludes && shareIncludes.length > 0) {
                     for (let i = 0; i < shareIncludes.length; i++) {
                         let key = _.trim(shareIncludes[i]);
                         if (key) {
