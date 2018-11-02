@@ -339,7 +339,7 @@
                     adData: JSON.stringify(this.formItem)
                 }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
+                    let url = this.previewUrl + '?id=' + response.data.data.positionId + '&pre='+response.data.data.pre;
                     document.getElementById('qrcode4').innerHTML = '';
                     this.qrcode(url);
                 });

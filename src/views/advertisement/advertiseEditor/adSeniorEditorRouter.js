@@ -22,7 +22,14 @@ var editorRouters= [
         component: () =>
             import('@/views/advertisement/advertiseEditor/adSeniorEditor/xinfangTop5Editor.vue'),
 
-    }
+    },
+    {
+        name: 'ershouQuarters',
+        title:'二手房小区',
+        component: () =>
+            import('@/views/advertisement/advertiseEditor/adSeniorEditor/ershouQuarters.vue'),
+
+    }   
 ];
 
 
