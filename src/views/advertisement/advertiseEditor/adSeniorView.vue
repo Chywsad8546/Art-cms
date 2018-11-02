@@ -44,10 +44,9 @@
                 <Alert type="error" v-if="!canFindEditor">内容编辑器走丢了，不能修改了:(</Alert>
                 <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color:#ffffff;overflow: hidden">
                     <Row>
-                        <Col>
-
-                                <Button type="info" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
-
+                        <Col :style="{backgroundColor:'#eee'}">
+                            <Button type="info" size="primary" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+                            <Button icon="iphone" type="primary" size="small" style="margin: 5px 10px" v-if="canFindEditor" @click="preview">预览</Button>
                         </Col>
                     </Row>
                     <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
@@ -85,6 +84,26 @@
         </Card>
 
         </Col>
+        <Form ref="previeForm" :model="previeForm" :rules="previeFormRuleValidate" :label-width="80">
+            <Modal v-model="editorModal" width="300">
+                <p slot="header" style="color:#f60;text-align:center">
+                    <span></span>
+                </p>
+                <div style="text-align:center" v-show="previewWapType">
+                    <p class="qrcode" ref="qrcode4"></p>
+                </div>
+                <div v-show="previewAppType">
+                    <FormItem  required prop="appCode" :label-width="80">
+                        <Input v-model="previeForm.appCode" placeholder="请输入appCode"></Input>
+                    </FormItem>
+                    <FormItem style="margin-left:20px;">
+                        <Button type="primary" @click="previewAppFun()">保存</Button>
+                    </FormItem>
+                </div>
+                <div slot="footer">
+                </div>
+            </Modal>
+        </form>
     </Row>
 </template>
 
@@ -96,13 +115,14 @@
     import regEditor from './adSeniorEditorRouter';
     import defaultEditor from './adSeniorEditor/defaultEditor.vue';
     import util from '@/libs/util';
+    import QRCode from 'qrcodejs2';
     export default {
         components: {
             navigation
         },
         data() {
             return {
-                issaving:false,
+                issaving: false,
                 id: this.$route.query.id,
                 includeIds: [],
                 currentEditor: defaultEditor,
@@ -124,7 +144,21 @@
                         {required: true, message: '请填写', trigger: 'blur'}
                     ]
                 },
-                canFindEditor: true
+                canFindEditor: true,
+                previewType: 0,
+                previewUrl: '',
+                editorModal:false,
+                previewWapType: false,
+                previewAppType: false,
+                previeForm: {
+                    appCode: ''
+                },
+                previeFormRuleValidate: {
+                    appCode: [
+                        {required: true, message: '请填写appCode', trigger: 'blur'}
+                    ]
+                },
+                isEditShow: true
             };
         },
         methods: {
@@ -166,13 +200,75 @@
                     });
                 }
             },
+            checkPosition() {
+                ad.getAllPosition({
+                    positionId: this.positionId
+                }).then(response => {
+                    if (response.data.data[0].previewType) {
+                        this.previewType = response.data.data[0].previewType;
+                        this.previewUrl = response.data.data[0].previewUrl;
+                    } else {
+                        this.$Message.error('位置没有填写类型或url');
+                        return false;
+                    }
+                    this.prevResponse();
+                });
+            },
+            prevResponse() {
+                let id = this.positionId;
+                this.editorModal = true;
+                if (this.previewType == 1) {
+                    this.addPreView();
+                } else {
+                    this.previewAppType = true;
+                }
+            },
+            addPreView() {
+                ad.addPreView({
+                    positionId: this.positionId,
+                    adData: JSON.stringify(this.share)
+                }).then(response => {
+                    this.previewWapType = true;
+                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
+                    new QRCode(this.$refs.qrcode4, {
+                        width: 200,
+                        height: 200, // 高度
+                        text: url // 二维码内容
+                        // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                        // background: '#f0f'
+                        // foreground: '#ff0'
+                    });
+                });
+            },
+            preview() {
+                var that = this;
+                this.$refs['commonForm'].validate((commvalid) => {
+                    if (commvalid) {
+                        that.checkPosition();
+                    } else {
+                        this.$Message.error('补充完善后，才能预览');
+                    }
+                });
+            },
+            previewAppFun() {
+                this.$refs['previeForm'].validate((valid) => {
+                    if (valid) {
+                        ad.addPreView({
+                            positionId: this.positionId,
+                            adData: JSON.stringify(this.share),
+                            appCode: this.previeForm.appCode
+                        }).then(response => {
+                            this.$Message.success('APP预览成功');
+                            this.editorModal = false;
+                        });
+                    }
+                });
+            },
             save() {
                 var that = this;
                 this.issaving = true;
                 this.$refs['commonForm'].validate((commvalid) => {
                     if (commvalid) {
-                        console.log(that.$data)
-
                         /**
                          * 保存子组件的数据
                          */
@@ -270,9 +366,7 @@
         created() {
             var that = this;
             if (this.id) {
-
                 ad.getIdea(this.id).then(function (res) {
-                    console.log('res', res.data.data);
                     that.typeId = res.data.data.typeId;
                     let ideares = res.data.data;
                     let ideaData = JSON.parse(res.data.data.adData || {});

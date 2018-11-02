@@ -3,12 +3,19 @@
     <Row>
         <Col span="24">
         <Card>
-            <p slot="title">编辑创意</p>
+            <!--<p slot="title">编辑创意</p>-->
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert show-icon type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
                 <Alert show-icon v-if="this.$route.query.isquesheng">你当前在设置缺省广告</Alert>
                     <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #ffffff;overflow: hidden">
+                        <Row>
+                            <Col>
+
+                            <Button  type="primary" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+                            <Button icon="iphone" type="primary" size="small" style="margin: 5px 10px" v-if="isNewSystem" @click="preview">预览</Button>
+                            </Col>
+                        </Row>
                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
                     </div>
@@ -57,10 +64,10 @@
 
                         </template>
                         
-                        <FormItem>
-                            <Button type="primary" @click="save" v-show="!issaving">保存</Button>
-                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="save" v-show="!issaving">保存</Button>-->
+                            <!--<Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>-->
+                        <!--</FormItem>-->
                     </Form>
                 </Card>
                 </Col>
