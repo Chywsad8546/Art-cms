@@ -245,7 +245,7 @@
                     adData: JSON.stringify(this.share)
                 }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id=' + this.positionId + '&pre=' + response.data.data.pre;
+                    let url = this.previewUrl + '?madid=' + this.positionId + '&pre=' + response.data.data.pre;
                     new QRCode(this.$refs.qrcode4, {
                         width: 200,
                         height: 200, // 高度
