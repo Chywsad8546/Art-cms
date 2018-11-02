@@ -59,7 +59,7 @@
                         
                         <FormItem>
                             <Button type="primary" @click="save" v-show="!issaving">保存</Button>
-                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem&&isEditShow" @click="preview">预览</Button>
+                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
                         </FormItem>
                     </Form>
                 </Card>
