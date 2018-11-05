@@ -37,14 +37,6 @@
         </div>
 </div>
 </stage-template>
-<style>
-.a {
-    background-image: url('http://wap-qn.toutiaofangchan.com/adideas/5d0e803ea0a44254be5ce5820875312a.jpg');
-    background-size: 375px 566px;
-    
-}
-</style>
-
 <script>
     import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
     import ad from '@/api/advertisement/ad';
