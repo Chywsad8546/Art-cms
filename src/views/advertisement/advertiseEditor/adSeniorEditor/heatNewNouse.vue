@@ -14,11 +14,11 @@
     </Row>
 </template>
 <stage-template>
-        <div class="list-item" style="padding-top:20px;padding-left:20px;">
+        <div class="list-item" style="padding-top:20px;padding-left:20px;width:375px;overflow: hidden; position: relative;">
             <div class="title-img" style="position: relative;float: left;width: 100px;height: 80px;overflow: hidden;">
                 <img style="width:100%" src="{{@ share.titleImagePath}}"> 
             </div>
-            <div class="title-content" style="position: absolute;left: 0; width: 100%;height: 80px;padding-left: 150px;-webkit-box-sizing: border-box; box-sizing: border-box;">
+            <div class="title-content" style="position: absolute;left: 0; width: 100%;height: 80px;padding-left: 145px;-webkit-box-sizing: border-box; box-sizing: border-box;">
                 <h2 style="line-height: 1.43;font-weight: 700;overflow: hidden; font-size: 14px;-o-text-overflow: ellipsis; text-overflow: ellipsis;white-space: nowrap;">{{@ share.projName}}<span style="margin-left: 0.2rem;color: #666;">{{@ share.districtName}}</span></h2> 
                 <div class="price-set" style="position: absolute;top: 41%;">
                     <div class="title-price" style="display: inline-block;color: #ff4848;">
