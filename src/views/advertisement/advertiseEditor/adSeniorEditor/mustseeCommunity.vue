@@ -100,7 +100,7 @@
             seachChange(query){
                     api.getProjInfos(
                         {
-                            nOrE:0,
+                            nOrE:1,
                             projName:query
                         }
                     ).then(response => {
