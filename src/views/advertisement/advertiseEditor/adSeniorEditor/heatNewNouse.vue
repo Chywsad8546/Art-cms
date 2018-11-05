@@ -14,7 +14,10 @@
     </Row>
 </template>
 <stage-template>
-        <div class="list-item" style="padding-top:20px;padding-left:20px;width:375px;overflow: hidden; position: relative;">
+<div  style="width:375px; position: relative; ">
+        <img style="width:375px; height:556px;position: absolute;top:0px; " src="http://wap-qn.toutiaofangchan.com/adideas/dda3cc7724d14903827951045ae1f64a.jpg"/>
+        <div class="list-item" style="padding-top:120px;padding-left:20px;width:375px; position: relative; ">
+             
             <div class="title-img" style="position: relative;float: left;width: 100px;height: 80px;overflow: hidden;">
                 <img style="width:100%" src="{{@ share.titleImagePath}}"> 
             </div>
@@ -31,8 +34,17 @@
                     <span style="display: inline-block;padding: 5px 5px; max-width: 200px; margin-left: 10px; -webkit-box-sizing: border-box;box-sizing: border-box;border-radius: 10px; overflow: hidden;font-size: 12px;-o-text-overflow: ellipsis;text-overflow: ellipsis; white-space: nowrap;" >{{@ share.rightYear}}</span>
                 </div>
             </div>
-        </div> 
+        </div>
+</div>
 </stage-template>
+<style>
+.a {
+    background-image: url('http://wap-qn.toutiaofangchan.com/adideas/5d0e803ea0a44254be5ce5820875312a.jpg');
+    background-size: 375px 566px;
+    
+}
+</style>
+
 <script>
     import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
     import ad from '@/api/advertisement/ad';

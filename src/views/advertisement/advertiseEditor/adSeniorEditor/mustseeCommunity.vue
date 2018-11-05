@@ -48,7 +48,9 @@
 </style>
 
 <stage-template>
-        <div style="width:375px; overflow: hidden;padding-left: 10px; padding-right: 10px;" class="recommendNouse">
+<div  style="width:375px; position: relative; ">
+        <img style="width:375px; height:556px;position: absolute;top:0px; " src="http://wap-qn.toutiaofangchan.com/adideas/a81fc0ff3c0047d59bf9bb9c228a1555.jpg"/>
+        <div style="width:375px; overflow: hidden;padding-left: 10px; padding-top:50px; padding-right: 10px;" class="recommendNouse">
             <div style="position: relative;overflow: hidden; margin-top:30px; width: 100%;">
                 
                 <img style="width: 375px;" src="{{@share.titleImagePath}}"/>
@@ -57,7 +59,9 @@
                 <span style="padding-right:30px;display: block; float:left; width: 50%; "><h1 style="font-size:14px;">{{@ share.projName}}</h1></span>
                 <span style="padding-right:30px;display: block; float:left; width: 50%; color:red;">{{@share.averagePrice}}元/㎡</span>
             </div>
-        </div>  
+        </div>
+</div>
+</div>
 </stage-template>
 <script>
     import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';

@@ -30,7 +30,9 @@
     </Row>
 </template>
 <stage-template>
-        <div style="width:375px; overflow: hidden;padding-left: 10px; padding-right: 10px;" class="recommendNouse">
+<div  style="width:375px; position: relative; ">
+        <img style="width:375px; height:556px;position: absolute;top:0px; " src="http://wap-qn.toutiaofangchan.com/adideas/3f2315b92f814906a7f3b37836b95ae1.jpg"/>
+        <div style="width:375px; overflow: hidden;padding-left: 10px; position: relative; padding-top:90px; padding-right: 10px;" class="recommendNouse">
             <div style="text-align:center">{{@ share.projName}}</div>
             <div style="width: 375px; text-align: center; overflow: hidden; font-size:12px; height: 30px;line-height: 30px;" class="tab">
                 <span style="padding-right:30px;display: block; float:left; width: 50%;">面积 {{@ share.purposearea}}</span>
@@ -43,6 +45,8 @@
             <div  style="text-align:left">{{@share.address}}</div>
             <div  style="text-align:left">最近交房 {{@share.livindate}}</div>
         </div>  
+</div>
+</div>
 </stage-template>
 <script>
     import api from '@/api/advertisement/advertiseEditor/adSeniorEditor';
