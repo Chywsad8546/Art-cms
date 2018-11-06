@@ -34,6 +34,9 @@ export default {
                             com.component.mixins.push(wysmixin);
                         }
                     }
+                    /**
+                     * 编译 html template
+                     */
                     // console.log('_.trim(com.component.wys_stageTemplate',_.trim(com.component.wys_stageTemplate))
                     if (_.trim(com.component.wys_stageTemplate)) {
                         com.arttemplate = template.compile(_.trim(com.component.wys_stageTemplate));
@@ -42,11 +45,27 @@ export default {
                             return '错误 没有定义stage-template模板内容';
                         };
                     }
-                    console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript, com.component.wys_stageTemplate);
+                    /**
+                     * 编译 stage-javascript
+                     */
+                    console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript);
                     if (_.trim(com.component.wys_stageJavascript)) {
                         com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
                     } else {
                         com.artjavascript = function () {
+                            return '';
+                        };
+                    }
+                    /**
+                     * 编译 stage-css
+                     */
+                    console.log('com.component.wys_stageCss', com.component.wys_stageCss);
+                    if (_.trim(com.component.wys_stageJavascript)) {
+                        com.artcss = function(){
+                            return _.trim(com.component.wys_stageCss);
+                        };
+                    } else {
+                        com.artcss = function () {
                             return '';
                         };
                     }
@@ -127,9 +146,11 @@ export default {
 
         var html = 'arttemplate render 错误';
         var js = '';
+        var css = targetStageComponent.editor.artcss();
         try {
             html = targetStageComponent.editor.arttemplate(data);
             js = targetStageComponent.editor.artjavascript(data);
+
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
@@ -147,6 +168,9 @@ export default {
         }
         if (_.trim(js)) {
             $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
+        }
+        if (_.trim(css)) {
+            $('body').append('<style>' + css + '</style>');
         }
         targetStageComponent.js = _.trim(js);
     },
