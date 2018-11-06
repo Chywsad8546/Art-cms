@@ -23,13 +23,13 @@
                     isPush: '0'
                 },
                 share:{
-                    
+                    loadimg:""  
                 }
             };
         },
         methods: {
             successPreview(file) {
-                console.log(file);
+                this.share.loadimg = file.data;
             },
         },
         created: function () {
@@ -47,6 +47,6 @@
 
 <stage-template>
    <div style="width:375px;overflow: hidden;">
-        <img src="{{@}}"/>
+        <img style="width:100%" src="{{@share.loadimg}}"/>
    </div>
 </stage-template>
