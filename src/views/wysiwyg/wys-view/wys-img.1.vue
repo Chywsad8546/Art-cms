@@ -1,12 +1,22 @@
 <template>
     <Row class="margin-top-10 searchable-table-con1">
         <Form  ref="searchData" :model="searchData" inline :label-width="120">
+            <FormItem label="消息标题" prop="title">
+                <Input v-model.trim="searchData.title" style="width:140px"></Input>
+            </FormItem>
 
-            <Upload id="iviewUp" action="/cmsapi/sys/uploadImg" :on-success="successPreview">
-                <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
-            </Upload>
+            <FormItem label="推送状态" prop="isPush">
+                <Select v-model="searchData.isPush" style="width:140px">
+                    <Option value="0">未推送</Option>
+                    <Option value="1">推送成功</Option>
+                    <Option value="2">推送失败</Option>
+                </Select>
+            </FormItem>
+
 
         </Form>
+
+
     </Row>
 </template>
 
@@ -21,16 +31,8 @@
                 searchData: {
                     title: 'title123',
                     isPush: '0'
-                },
-                share:{
-                    
                 }
             };
-        },
-        methods: {
-            successPreview(file) {
-                console.log(file);
-            },
         },
         created: function () {
             // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
@@ -39,14 +41,12 @@
 </script>
 
 <style scoped>
-.abc {
-    overflow: hidden;
 
-}
 </style>
 
 <stage-template>
-   <div style="width:375px;overflow: hidden;">
-        <img src="{{@}}"/>
-   </div>
+    {{@ searchData.title}}
+</stage-template>
+<stage-template>
+    {{@ searchData.isPush}}
 </stage-template>
