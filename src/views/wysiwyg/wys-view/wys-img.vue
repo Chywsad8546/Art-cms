@@ -2,24 +2,25 @@
     <Tabs>
         <TabPane label="内容" >
             <Form  :label-width="80" >
-
                 <FormItem label="" prop="title">
-                    <Upload action="cmsapi/upload/uploadimgNoDomainExt"   :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
+                    <Upload class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
                             :on-format-error="uploadFormatError"
                             :show-upload-list="false">
-                        <Button type="ghost" icon="ios-cloud-upload-outline">设置图片</Button>
+                        <Button type="ghost" >添加图片</Button>
                     </Upload>
                 </FormItem>
-
-                <!--<FormItem label="推送状态" prop="isPush">-->
-                    <!--<Select v-model="searchData.isPush" >-->
-                        <!--<Option value="0">未推送</Option>-->
-                        <!--<Option value="1">推送成功</Option>-->
-                        <!--<Option value="2">推送失败</Option>-->
-                    <!--</Select>-->
-                <!--</FormItem>-->
-
-
+                 <FormItem label="顶">
+                    <Slider v-model="share.value8" show-input></Slider>
+                </FormItem>
+                 <FormItem label="右">
+                    <Slider v-model="share.value8" show-input></Slider>
+                </FormItem>
+                 <FormItem label="底">
+                    <Slider v-model="share.value8" show-input></Slider>
+                </FormItem>
+                 <FormItem label="左">
+                    <Slider v-model="share.value8" show-input></Slider>
+                </FormItem>
             </Form>
         </TabPane>
 
@@ -34,6 +35,7 @@
         data() {
             return {
                 share:{
+                    value8: 25,
                     image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png'
                 }
             };
@@ -64,8 +66,8 @@
 </script>
 
 <style scoped>
-.abc {
-    overflow: hidden;
+.uploadWidth button {
+    width: 300px;
 
 }
 </style>
@@ -75,5 +77,5 @@
 
 </stage-template>
 <stage-javascript type="text/javascript">
-    alert($('#{{@ brickid}}').length)
+
 </stage-javascript>

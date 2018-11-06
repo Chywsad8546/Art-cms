@@ -43,9 +43,9 @@
 
     }
     .wys-content {
-        width: 1200px;
         float: left;
         box-sizing: border-box;
+        min-width: 400px;
         position: relative;
         max-height: 100%;
         height: 100%;
