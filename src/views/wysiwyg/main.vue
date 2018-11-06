@@ -59,6 +59,7 @@
     }
     .wys-contentOver {
         width: 375px;
+        height: 100%;
         text-align: center;
         background: #FFFFFF;
         overflow: hidden;
@@ -99,113 +100,28 @@
          <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
          <div class="wys-header-content"></div>
      </div>
-     <div class="wys-menu-left">建站模板列表</div>
+     <div class="wys-menu-left">
+            <div id="wysiwyg_componentbox" wys-container>
+                <div v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
+                    <img  :src="item.icon" style="width: 100px;height: 100px;"/>
+                </div>
+            </div>
+     </div>
      <div class="wys-content">
         <div class="wys_title"><Icon type="ios-home" style="margin-right:5px;"></Icon>站点编辑器</div>
          <div class="wys-isscrll">
             <div class="wys-contentOver"><!-- 自助建站网页html容器 -->
-                <ul>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                    <li>fdsfdsfdsfdsf</li>
-                </ul>
+                <div class="single-page" id="wysiwyg_stage" wys-container style="height: 100%">
+
+                </div>
             </div>
          </div>
      </div>
-     <div class="wys-edit-right">建站编辑器</div>
+     <div class="wys-edit-right">
+            <navigation :include="includeIds">
+                <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
+            </navigation>
+     </div>
  </div>
     <!-- <div class="main" >
         <div class="sidebar-menu-con" :style="{width: '200px', overflow:  'auto'}">
