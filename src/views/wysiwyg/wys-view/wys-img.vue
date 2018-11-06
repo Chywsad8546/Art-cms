@@ -64,7 +64,10 @@
 </script>
 
 <style scoped>
+.abc {
+    overflow: hidden;
 
+}
 </style>
 
 <stage-template>
