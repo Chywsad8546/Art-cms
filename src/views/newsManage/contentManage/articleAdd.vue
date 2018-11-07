@@ -141,7 +141,7 @@
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="releaseNews(1)" :disabled="isDisable">发布</Button>
-                <!-- <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">定时发布</Button> -->
+                 <Button v-show="isTimeFlag" style="margin-left: 8px" @click="timingSubRelease" :disabled="isDisable">推送文章</Button>
                 <Button style="margin-left: 8px" @click="previewFun(3)" :disabled="isDisable">预览</Button>
                 <Button v-show="isDraftFlag" style="margin-left: 8px" @click="releaseNews(3)" :disabled="isDisable">存为草稿</Button>
             </FormItem>
@@ -149,7 +149,7 @@
         </div>
         <uploadzhImg @child-event='confirmParEvent' @cancel-event='cancleCallBack'  @uploadEditorSuccess-event = 'successPreview' v-show="uplopopDisplay"></uploadzhImg>
 
-    <Modal v-model="qrcodeModal" width="500" @on-cancel="previewCancel">
+    <Modal v-model="qrcodeModal"  width="500" @on-cancel="previewCancel">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
         </p>
@@ -265,7 +265,9 @@
                         "6":[],
                         "7":[]
                     },
-                    appCode:''
+                    appCode:'',
+                    releaseType:'',
+                    equipmentNumber:''
                 },
                  ruleValidate: {
                     title: [
@@ -338,7 +340,9 @@
                         this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
                     }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 1 || isPublish === '1'){
+                    if(isPublish === 2 || isPublish === 3){
+                        this.isTimeFlag = true;
+                    }else {
                         this.isTimeFlag = false;
                     }
                     if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
@@ -375,7 +379,7 @@
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
                         //console.log(item);
-                        this.tagsJson[key].push(item.value);                   
+                        this.tagsJson[key].push(item.value);
                     })
                 });
             },
@@ -397,8 +401,12 @@
             onEditorFocus(){//获得焦点事件
 
             },
-            callBackTime(time) {
-                this.form.publishAt = time;
+            callBackTime(callBackValue) {
+                this.form.publishAt = callBackValue.callBackTime;
+                this.form.releaseType = callBackValue.releaseType;
+                if (callBackValue.releaseType === '4') {
+                    this.form.equipmentNumber = callBackValue.equipmentNumber;
+                }
                 this.vshowTimeSelect = !this.vshowTimeSelect;
                 this.releaseNews(0);
             },
@@ -479,14 +487,15 @@
                 this.form.preContent = this.form.content;
             },
             releaseNews(type) {//发布按钮
-                if(this.verification() == false){
+                if (this.verification() === false) {
                     return false;
                 }
                 this.preventRepeatClick();
-                this.typeKeepArr();//通过选项判断封面数组
+                this.typeKeepArr(); //通过选项判断封面数组
                 this.flagPreview = false;
                 this.form.isPublish = type;
-                if(this.Lid.id != undefined){
+                console.log(this.form);
+                if(this.Lid.id !== undefined){
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
                         this.prevResponse(response);
@@ -603,7 +612,7 @@
                         this.previewCancel();
                 });
             },
-            prevResponse(response){                  
+            prevResponse(response){
                     this.form.id = response.data.data.id;
                     this.qrcodeModal = !this.qrcodeModal;
                     let pre = response.data.data.pre;

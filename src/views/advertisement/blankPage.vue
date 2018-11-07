@@ -191,7 +191,7 @@
                 this.columblankPage.splice(3, this.columblankPage.length - 3);
 
                 this.startTime = moment(this.dateTime).format('YYYY-MM-DD');
-                this.endTime = moment(this.dateTime).add(1,'M').format('YYYY-MM-DD');
+                this.endTime = moment(this.dateTime).add(1, 'M').format('YYYY-MM-DD');
                 var that = this;
                 api.adListAll(this.formItem).then(response => {
                     that.blankPageListData.splice(0, that.blankPageListData.length);
