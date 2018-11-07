@@ -140,13 +140,11 @@ export default {
         /*
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
-        console.log('render', data, component_id, isCreateEventRender, editorRenderTriggerERROR);
 
         var html = 'arttemplate render 错误';
         var js = '';
         var css = targetStageComponent.editor.artcss();
         if (_.trim(css)) {
-            console.log('append css',css)
             $('head').append('<style>' + css + '</style>');
         }
         try {
