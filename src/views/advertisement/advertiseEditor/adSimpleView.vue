@@ -3,12 +3,19 @@
     <Row>
         <Col span="24">
         <Card>
-            <p slot="title">编辑创意</p>
+            <p slot="title">{{positionName}}</p>
             <Row >
                 <Col span="12" style="background-color:#eeeeee">
                 <Alert show-icon type="error" v-if="!isNewSystem">此创意由旧广告系统录入，不能修改了，用当前系统再录入一个吧:)</Alert>
                 <Alert show-icon v-if="this.$route.query.isquesheng">你当前在设置缺省广告</Alert>
                     <div style="display: block;width: 375px;min-height:500px;margin: 0px auto;background-color: #ffffff;overflow: hidden">
+                        <Row>
+                            <Col :style="{backgroundColor:'#eee'}">
+
+                            <Button  type="primary" size="small" style="margin: 5px 10px" @click="save" :disabled="issaving">保存</Button>
+                            <Button icon="iphone" type="primary" size="small" style="margin: 5px 10px" v-if="isNewSystem" @click="preview">预览</Button>
+                            </Col>
+                        </Row>
                         <img style="display: block;width: 375px;" src="http://wap-qn.bidewu.com/cms/shouji.png"/>
                     <div ref="stage" >
                     </div>
@@ -57,10 +64,10 @@
 
                         </template>
                         
-                        <FormItem>
-                            <Button type="primary" @click="save" v-show="!issaving">保存</Button>
-                            <Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>
-                        </FormItem>
+                        <!--<FormItem>-->
+                            <!--<Button type="primary" @click="save" v-show="!issaving">保存</Button>-->
+                            <!--<Button type="primary" style="margin-left:20px;" v-if="isNewSystem" @click="preview">预览</Button>-->
+                        <!--</FormItem>-->
                     </Form>
                 </Card>
                 </Col>
@@ -96,6 +103,7 @@
     import _ from 'lodash';
     import editortemplate from '@/api/advertisement/formtemplateApi';
     import ad from '@/api/advertisement/ad';
+    import api from '@/api/advertisement/formtemplateApi.js';
     import QRCode from 'qrcodejs2';
     export default {
 
@@ -171,8 +179,8 @@
                     ]
                 },
                 isNewSystem: false,
-                isEditShow: true
-
+                isEditShow: true,
+                positionName:''
             };
         },
         methods: {
@@ -332,7 +340,7 @@
                     adData: JSON.stringify(this.formItem)
                 }).then(response => {
                     this.previewWapType = true;
-                    let url = this.previewUrl + '?id=' + this.positionId + '&pre='+response.data.data.pre;
+                    let url = this.previewUrl + '?madid=' + response.data.data.positionId + '&pre='+response.data.data.pre;
                     document.getElementById('qrcode4').innerHTML = '';
                     this.qrcode(url);
                 });
@@ -365,9 +373,6 @@
                     width: 200,
                     height: 200, // 高度
                     text: url // 二维码内容
-                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
-                    // background: '#f0f'
-                    // foreground: '#ff0'
                 });
             },
             init(created) {
@@ -415,7 +420,12 @@
                         console.error(e);
                     }
                 }
-            }
+            },
+            adListAll(positionId) {
+                api.adListAll({positionId: positionId}).then(response => {
+                    this.positionName = response.data.data[0].stationName+' / '+ response.data.data[0].pageName + ' / ' + response.data.data[0].positionName;
+                });
+            },
         },
         created: function () {
             var that = this;
@@ -436,6 +446,7 @@
                             that.arttemplate = res.data.data.template;
                             that.positionId = res.data.data.positionId;
                             that.init();
+                            that.adListAll(that.positionId);
                             that.isNewSystem = true;
                         });
                     }
@@ -444,8 +455,8 @@
                      */
                     else {
                         that.isNewSystem = false;
-                        console.log(res.data.data.adResource)
                         that.adResource = res.data.data.adResource;
+                        that.adListAll(res.data.data.positionId);
                         $(that.$refs['stage']).html(res.data.data.adResource);
                     }
                 });
@@ -455,6 +466,7 @@
                     that.confs = JSON.parse(res.data.data.form);
                     that.arttemplate = res.data.data.template;
                     that.positionId = res.data.data.positionId;
+                    that.adListAll(that.positionId);
                     that.init(true);
                     that.isNewSystem = true;
                 });
