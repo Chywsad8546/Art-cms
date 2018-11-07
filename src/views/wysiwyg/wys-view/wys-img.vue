@@ -10,16 +10,16 @@
                     </Upload>
                 </FormItem>
                  <FormItem label="顶">
-                    <Slider v-model="share.value8" show-input></Slider>
+                    <Slider v-model="share.imgTop" show-input></Slider>
                 </FormItem>
                  <FormItem label="右">
-                    <Slider v-model="share.value8" show-input></Slider>
+                    <Slider v-model="share.imgRight" show-input></Slider>
                 </FormItem>
                  <FormItem label="底">
-                    <Slider v-model="share.value8" show-input></Slider>
+                    <Slider v-model="share.imgBottom" show-input></Slider>
                 </FormItem>
                  <FormItem label="左">
-                    <Slider v-model="share.value8" show-input></Slider>
+                    <Slider v-model="share.imgLeft" show-input></Slider>
                 </FormItem>
             </Form>
         </TabPane>
@@ -35,7 +35,10 @@
         data() {
             return {
                 share:{
-                    value8: 25,
+                    imgTop: 0,
+                    imgRight: 0,
+                    imgBottom:0,
+                    imgLeft:0,
                     image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png'
                 }
             };
@@ -73,9 +76,13 @@
 </style>
 
 <stage-template>
-    <img id="{{@ brickid}}" src="{{@ image}}" />
-
+<section style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
+    <img style="width:100%" id="{{@ share.brickid}}" src="{{@ share.image}}" />
+</section>
 </stage-template>
 <stage-javascript type="text/javascript">
 
 </stage-javascript>
+<stage-css>
+
+</stage-css>

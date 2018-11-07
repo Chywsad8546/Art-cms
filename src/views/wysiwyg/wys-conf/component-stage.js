@@ -60,10 +60,8 @@ export default {
                      * 编译 stage-css
                      */
                     console.log('com.component.wys_stageCss', com.component.wys_stageCss);
-                    if (_.trim(com.component.wys_stageJavascript)) {
-                        com.artcss = function(){
-                            return _.trim(com.component.wys_stageCss);
-                        };
+                    if (_.trim(com.component.wys_stageCss)) {
+                        com.artcss = template.compile(_.trim(com.component.wys_stageCss));
                     } else {
                         com.artcss = function () {
                             return '';
@@ -147,9 +145,13 @@ export default {
         var html = 'arttemplate render 错误';
         var js = '';
         var css = targetStageComponent.editor.artcss();
+        if (_.trim(css)) {
+            console.log('append css',css)
+            $('head').append('<style>' + css + '</style>');
+        }
         try {
-            html = targetStageComponent.editor.arttemplate(data);
-            js = targetStageComponent.editor.artjavascript(data);
+            html = targetStageComponent.editor.arttemplate({share:data});
+            js = targetStageComponent.editor.artjavascript({share:data});
 
         } catch (e) {
             console.error('arttemplate渲染报错', e);
@@ -169,9 +171,7 @@ export default {
         if (_.trim(js)) {
             $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
         }
-        if (_.trim(css)) {
-            $('body').append('<style>' + css + '</style>');
-        }
+        
         targetStageComponent.js = _.trim(js);
     },
     /*
