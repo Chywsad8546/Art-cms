@@ -214,6 +214,10 @@
                         width: 90
                     },
                     {
+                        key: 'createAt',
+                        title: '录入时间'
+                    },
+                    {
                         key: 'publishAt',
                         title: '发布时间'
                     },
