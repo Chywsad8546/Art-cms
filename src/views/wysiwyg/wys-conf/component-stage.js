@@ -122,8 +122,9 @@ export default {
         this._currentComponentChangeEvent(this.currentComponent);
     },
     save: function () {
+        console.log(this.stageComponentsDict);
         for (var key in this.stageComponentsDict) {
-
+        
         }
     },
     /**

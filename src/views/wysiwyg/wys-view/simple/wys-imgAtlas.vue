@@ -1,5 +1,53 @@
 <template>
-       <Form  class="imgWidthCont">
+       <Form  :label-width="60" class="imgWidthCont">
+    <Tabs>
+    
+        <TabPane label="内容" >
+ 
+ 
+                <FormItem label="" prop="title">
+                        <div v-for="item,index in share.uploadList">
+                            <div class="demo-upload-list">
+                                    <img :src="item.url">
+                                    <div class="demo-upload-list-cover">
+                                        <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                                    </div>
+                            </div>
+                            <div>当前图片尺寸: {{item.imgInformation}}</div>
+                            <CheckboxGroup>
+                                <Checkbox v-model="item.single" label="提示按钮"></Checkbox>
+                            </CheckboxGroup>
+                            <FormItem label="按钮内容" v-if="item.single">
+                                <Input v-model="item.buttonText"></Input>
+                            </FormItem>
+                            <FormItem label="标题">
+                                <Input v-model="item.title"></Input>
+                            </FormItem>
+                            <FormItem label="内容">
+                                <Input v-model="item.content"></Input>
+                            </FormItem>
+                            <FormItem label="链接">
+                                <Input v-model="item.httpUrl"></Input>
+                            </FormItem>
+                        </div>
+                        <Upload  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
+                                :on-format-error="uploadFormatError"
+                                :show-upload-list="false">
+                            <Button type="ghost" >添加图片</Button>
+                        </Upload>
+                </FormItem>
+                <Modal title="View Image" v-model="visible">
+                    <img :src="imgUrl" v-if="visible" style="width: 100%">
+                </Modal>
+
+        </TabPane>
+    </Tabs>
+    </Form>
+
+
+
+       <!-- <Form  class="imgWidthCont">
     <Tabs>
     
         <TabPane label="内容" :label-width="80">
@@ -42,7 +90,7 @@
 
         </TabPane>  
     </Tabs>
-    </Form>
+    </Form> -->
 </template>
 
 <script>
@@ -71,7 +119,6 @@
         methods: {
             uploadSuccess (res, file) {
                 if (res.code === 'success') {
-                   
                     // 创建对象
                     var img = new Image();
                     
@@ -80,9 +127,13 @@
                     var that = this;
                     // 加载完成执行
                     img.onload = function(){
-                         that.share.uploadList.push({'name':file.name,'url': res.data.url,'imgInformation':img.width+"px*"+img.height+"px","single":false});
+                         that.share.uploadList.push({
+                             name: file.name,
+                             url: res.data.url,
+                             imgInformation: img.width+"px*"+img.height+"px",
+                             single:false
+                         });
                     };
-                    
                 }
                 else {
                     this.$Notice.error({
@@ -128,7 +179,8 @@
 
 <style scoped>
 .uploadWidth button {
-    width: 300px;
+    width: 260px;
+    margin-top:20px;
 
 }
   .demo-upload-list{
@@ -171,6 +223,19 @@
         width: 95%;           
     }
 </style>
+<style>
+.ivu-form .ivu-form-item-label {
+    text-align: left !important;
+    vertical-align: middle;
+    float: left;
+    font-size: 12px;
+    color: #495060;
+    line-height: 1;
+    padding: 10px 12px 10px 0;
+    box-sizing: border-box;
+}
+
+</style>
 
 <stage-template>
 <div id="{{@ share.brickid}}" class="pictureset-box">
@@ -206,18 +271,6 @@
     });
 </stage-javascript>
 <stage-css>
-    html, body {
-      position: relative;
-      height: 100%;
-    }
-    body {
-      background: #eee;
-      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      color:#000;
-      margin: 0;
-      padding: 0;
-    }
     .swiper-container {
       width: 100%;
       height: 625px;

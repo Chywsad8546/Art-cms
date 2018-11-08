@@ -4,7 +4,6 @@
     @import "../../styles/table.less";
     @import "../../styles/css.less";
     @import '../../../node_modules/dragula/dist/dragula.css';
-    img{ max-width:100%; height:auto;border:none; interpolation-mode: bicubic; vertical-align: middle;}
     .wysi_active{
         border-color: red;
         border: 1px solid;
@@ -110,6 +109,7 @@
         position: relative;
         top: 10px;
         overflow: hidden;
+        height: calc(100% - 306px);
     }
     .phone-box {
         position: relative;
@@ -132,6 +132,7 @@
         left: 0;
         width: 320px;
         height: 43px;
+        padding: 5px;
         z-index: 10;
         background: #222;
         display: -ms-flexbox;
@@ -139,150 +140,45 @@
         -ms-flex-pack: justify;
         justify-content: space-between;
     }
-    .wys-edit-right {
-        position: absolute;
-        background-color: #fff;
-        box-shadow: 3px 3px 5px hsla(0,4%,69%,.1);
-        display: none;
-        box-sizing: border-box;
-        bottom: 0;
-    }
-    #right {
-        display: block;
-        width: 320px;
-        top: 0;
-        right: 0;
-    }
-#main {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    margin-top: 2px;
-}
-.layout.edit {
-    margin: 0 auto;
-    min-height: calc(100% - 66px);
-    min-width: 1200px;
-    box-sizing: border-box;
-    height: auto;
-}
-.phone-wrapper .screen-border {
-    position: relative;
-    top: 43px;
-    width: 375px;
-    height: 625px;
-    background-color: #fff;
-}
-.phone-wrapper .workarea {
-    overflow-x: hidden;
-    overflow-y: overlay;
-    box-sizing: border-box;
-    width: 330px;
-    height: 524px;
-    background: transparent;
-}
-.phone-wrapper .workarea::-webkit-scrollbar {
-    display: none;
-}
-.operate-bar-wrap {
-    float: right;
-    position: relative;
-}
-.operate-bar {
-    padding: 8px 25px 13px;
-    height: 32px;
-    box-sizing: content-box;
-}
-.operate-bar .btn {
-    font-size: 14px;
-    color: #222;
-    padding: 0 8px 0 0;
-    position: relative;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    cursor: pointer;
-    -ms-flex-align: center;
-    align-items: center;
-    line-height: 20px;
-    color: #444;
-}
-.btn {
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    max-height: 38px;
-    background-image: none;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    padding: 9px 16px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-} 
-.wysiwyg_rightScroll {
-    box-sizing: border-box;
-    height: 95%;
-    overflow-y: overlay;
-    overflow-x: hidden;
-}
-
 </style>
 
 <template>
-<div>
-<div class="wys-header">
-    <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
-    <div class="wys-header-content"></div>
-</div> 
- <div id="main" class="layout edit" >
 
-     <div class="wys-menu-left">
+ <div class="wys-main" >
+     <div class="wys-header">
+         <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
+         <div class="wys-header-content"></div>
+     </div>
+     <!-- <div class="wys-menu-left">
             <div id="wysiwyg_componentbox" wys-container>
                 <div v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
                     <img  :src="item.icon" style="width: 100px;height: 100px;"/>
                 </div>
             </div>
-     </div>
+     </div> -->
      <section id="middle" class="workarea-main">
-         <div class="operate-bar">
-            <div class="operate-bar-wrap">
-                <a href="http://h5.toutiao.com/tetris/site/lists/" class="btn">
-                    <a class="return_home">返回站点列表</a>
-                </a> 
-                    <span class="btn"> <Icon type="compose"></Icon><span>保存</span></span> 
-                    <span class="btn"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
-                    <span class="btn" @click="fbClick()"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
-            </div>
-         </div>
-         <div class="workarea-stage">
-           <div class="phone-box">
-              <div class="phone-wrapper" style="width: 375px; height: 668px;">
-                    <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png"/></div>
+        <div class="workarea-stage">
+            <div class="phone-box">
+                <div class="phone-wrapper" style="width: 375px; height: 668px;">
+                    <div class="signal-wrapper" style="width: 375px;"><i class="signal-icon"></i> <i class="time-icon"></i> <i class="battery-icon"></i></div>
                     
-                    <div class="screen-border">
-                        <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
+                </div>
+                <!-- <div class="wys_title"><Icon type="ios-home" style="margin-right:5px;"></Icon>站点编辑器</div>
+                <div class="wys-isscrll">
+                    <div class="wys-contentOver">
+                        <div class="single-page" id="wysiwyg_stage" wys-container style="height: 100%">
 
-                        </div>  
-                    </div>                 
-            </div> 
+                        </div>
+                    </div>
+                </div> -->
             </div>
-        </div> 
+        </div>
      </section>
-     <div id="right" class="wys-edit-right">
-         <div class="wysiwyg_rightScroll">
+     <!-- <div class="wys-edit-right">
             <navigation :include="includeIds">
                 <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
-            </navigation> 
-         </div>
-     </div>
+            </navigation>
+     </div> -->
  </div>
     <!-- <div class="main" >
         <div class="sidebar-menu-con" :style="{width: '200px', overflow:  'auto'}">
@@ -307,7 +203,6 @@
 
         </div>
     </div> -->
-</div>
 </template>
 <script>
     import navigation from '@/libs/navigation';
@@ -328,11 +223,6 @@
                 currentEditor: wys_default,
                 currentEditorKey: 'wys_default'
             };
-        },
-        methods: {
-            fbClick(){              
-                GlobalStage.save();
-            }
         },
         mounted() {
             console.log('mounteds')
