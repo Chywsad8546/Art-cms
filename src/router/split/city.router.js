@@ -537,7 +537,11 @@ export const aloneRouter = [
     },
     {
         path: '/wysiwygPreview',
-        name: 'wysiwygPreview',
+        name: 'wysiwygztPreview',
+        meta: {
+            requireAuth:false,
+            title: '专题预览页'
+        },
         component: () =>
             import ('@/views/wysiwyg/preview.vue')
     },

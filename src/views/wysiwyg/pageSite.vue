@@ -196,7 +196,6 @@
                     title: '更改状态',
                     content: tip,
                     onOk: () => {
-                        console.log(delDate);
                         adapi.updateStation(delDate).then(response => {
                             if (response.data.data > 0) {
                                 this.$Message.success('更改成功！');
