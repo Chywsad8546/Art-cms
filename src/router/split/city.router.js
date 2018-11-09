@@ -60,7 +60,6 @@ export const otherRouter = {
             component: () =>
                 import('@/views/advertisement/planDetail.vue')
         },
-
     ]
 };
 
@@ -366,7 +365,47 @@ export const appRouter = [
         //     // },
         ]
     },
+   //自助建站
+   {
+    path: '/cityManageEstablishWeb',
+    icon: 'social-buffer',
+    name: 'establishWeb',
+    title: '自助建站',
+    component: Main,
+    children: [
+        {
+            path: 'establishColumn',
+            name: 'establishColumn',
+            title: '添加站点',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/wysiwyg/pageSite.vue')
+        },
+        // {
+        //     path: 'establishMobileWeb',
+        //     name: 'establishMobileWeb',
+        //     title: '网站列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/wysiwyg/main.vue')
+        // },
 
+
+
+
+        // {
+        //     path: 'ownerList',
+        //     name: 'ownerList',
+        //     title: '业主管理',
+        //     component: () =>
+        //         import ('@/views/cityManageSystem/personManage/ownerList.vue')
+        // },
+    ]
+},
     //遗留功能
     {
         path: '/systemManage',

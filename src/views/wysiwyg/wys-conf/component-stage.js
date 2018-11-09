@@ -60,10 +60,8 @@ export default {
                      * 编译 stage-css
                      */
                     console.log('com.component.wys_stageCss', com.component.wys_stageCss);
-                    if (_.trim(com.component.wys_stageJavascript)) {
-                        com.artcss = function(){
-                            return _.trim(com.component.wys_stageCss);
-                        };
+                    if (_.trim(com.component.wys_stageCss)) {
+                        com.artcss = template.compile(_.trim(com.component.wys_stageCss));
                     } else {
                         com.artcss = function () {
                             return '';
@@ -89,6 +87,13 @@ export default {
         this.PageID = Pageid || 0;
         this._stage = $('#' + stageDomElId);
         this.canUseEditors.init();
+    },
+    initComponentFromDB:function(){
+        var dbdata = [];
+        for(var i=0;i<dbdata.length;i++){
+            var d= dbdata[i];
+            this.create(d.editor_regid,false,d.data,d.lastSaveHtml);
+        }
     },
     PageID: null, // 页面的数据库id
     _stage: null,
@@ -124,9 +129,25 @@ export default {
         this._currentComponentChangeEvent(this.currentComponent);
     },
     save: function () {
+        // console.log(this.stageComponentsDict.length);
+        var results = [];
         for (var key in this.stageComponentsDict) {
-
+            var index = this.stageComponentsDict[key].dom.prevAll().length;
+            results[index] ={
+                component_id: this.stageComponentsDict[key].component_id, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
+                js: this.stageComponentsDict[key].js, // 会最终展示出来shi
+                data: this.stageComponentsDict[key].data, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
+                editor_regid: this.stageComponentsDict[key].editor_regid, // vue编辑器组件的注册id
+                lastSaveHtml: this.stageComponentsDict[key].dom.html()
+            };
+            //  this.stageComponentsDict[key];
+            // console.log(this.stageComponentsDict[key].dom.prevAll().length)
         }
+        var strHtml = "";
+        results.forEach(item => {
+            strHtml += item.lastSaveHtml;
+        })
+        return results;    
     },
     /**
      * render方法负责2个事情：
@@ -142,18 +163,21 @@ export default {
         /*
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
-        console.log('render', data, component_id, isCreateEventRender, editorRenderTriggerERROR);
 
         var html = 'arttemplate render 错误';
         var js = '';
         var css = targetStageComponent.editor.artcss();
+        if (_.trim(css)) {
+            $('head').append('<style>' + css + '</style>');
+        }
         try {
-            html = targetStageComponent.editor.arttemplate(data);
-            js = targetStageComponent.editor.artjavascript(data);
+            html = targetStageComponent.editor.arttemplate({share:data});
+            js = targetStageComponent.editor.artjavascript({share:data});
 
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
+        targetStageComponent.js = js;
         targetStageComponent.dom.html(html);
 
         targetStageComponent.data = data;
@@ -169,9 +193,7 @@ export default {
         if (_.trim(js)) {
             $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
         }
-        if (_.trim(css)) {
-            $('body').append('<style>' + css + '</style>');
-        }
+        
         targetStageComponent.js = _.trim(js);
     },
     /*
@@ -179,7 +201,6 @@ export default {
     @param editor_regid 组件的注册id
      */
     create: function (editor_regid, isDragNew, data, lastSaveHtml) {
-        console.log('创建stage组件');
         var newStageComponent = {
             component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
