@@ -12,4 +12,12 @@ export default {
     updateAppPush(params) {
         return http.post('/cmsapi/setDel', params);
     },
+    // 获取推送类型
+    pushDict(params) {
+        return http.get('/cmsapi/pushDict', { params });
+    },
+    // 添加推送
+    addPush(params) {
+        return http.post('/cmsapi/addPush', params);
+    }
 }
