@@ -2,19 +2,19 @@
     <Row>
         <Col span="100">
             <Card>
-                <!--<p slot="title">计划详情</p>-->
-                <!--<Card>-->
+                <p slot="title">计划详情</p>
+                <Card>
                     <Form inline :label-width="120">
                         <FormItem><p style="font-size: 18px">计划名称: {{plandetail.planName}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">创意数量：{{plandetail.ideaCount}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">展示数量：{{plandetail.zhanShiCount}}</p></FormItem>
                         <FormItem><p style="font-size: 14px">排期数量：{{plandetail.paiQiCount}}</p></FormItem>
                     </Form>
-                <!--</Card>-->
+                </Card>
 
                 <Row class="margin-top-10 searchable-table-con1">
                     <Form  ref="searchData" :model="searchData"  inline :label-width="120">
-                        <FormItem label="选择应用" prop="station" >
+                        <FormItem label="选择站点" prop="station" >
                             <Select v-model="searchData.station" style="width:100px" @on-change = "zdClick">
                                 <Option v-for="item in zhandianList" :value="item.station" :key="'station'+item.station">{{ item.stationName }}</Option>
                             </Select>
@@ -42,34 +42,25 @@
                                 <Option value="1" :key="'PaiqiZhuangtai1'">已排期</Option>
                             </Select>
                         </FormItem>
-                        <!--<FormItem label="展示状态" prop="ZhanshiZhuangtai">-->
-                            <!--<Select v-model="searchData.ZhanshiZhuangtai" style="width:140px">-->
-                                <!--<Option value="">全部</Option>-->
-                                <!--<Option value="1">展示</Option>-->
-                                <!--<Option value="0">未展示</Option>-->
-                            <!--</Select>-->
-                        <!--</FormItem>-->
+                        <FormItem label="展示状态" prop="ZhanshiZhuangtai">
+                            <Select v-model="searchData.ZhanshiZhuangtai" style="width:140px">
+                                <Option value="">全部</Option>
+                                <Option value="1">展示</Option>
+                                <Option value="0">未展示</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem>
                             <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                             <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
                         </FormItem>
 
-                        <!--<FormItem>-->
-                            <!--<Button type="primary" @click="isTrueAddTag = true">添加创意</Button>-->
-                        <!--</FormItem>-->
+                        <FormItem>
+                            <Button type="primary" @click="isTrueAddTag = true">添加创意</Button>
+                        </FormItem>
                     </Form>
-                    <Card >
-                        <p slot="title">
-                            <Icon type="ios-film-outline"></Icon>
-                            广告创意
-                        </p>
-                        <a href="#" slot="extra" @click.prevent="isTrueAddTag = true">
-                            <Icon type="plus-circled"></Icon>
-                            添加创意
-                        </a>
-                        <Table border :columns="columns" :data="data"></Table>
-                        <Page :total="total" show-total @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
-                    </Card>
+
+                    <Table border :columns="columns" :data="data"></Table>
+                    <Page :total="total" show-total @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
                 </Row>
             </Card>
         </Col>
@@ -144,9 +135,6 @@
                         align: 'center',
                         render: (h, params) => {
                             var i = this;
-                            if(params.row.isNew===0 || params.row.status===0){
-                                return h('div', {style:{color:'red'}},["已作废"]);
-                            }
                             return h('div', [
                                 h(
                                     'Button',
@@ -189,20 +177,60 @@
                     },
                     {
                         key: 'startime',
-                        title: '开始时间',
-                        render: (h, params) => {
-                            var i = this;
-                            return h('div', [
-                                moment(params.row.startime,'YYYY-MM-DD').format('YYYY-MM-DD')
-                            ]);
-                        }
+                        title: '开始时间'
+                    },
+                    {
+                        key: 'endtime',
+                        title: '结束时间'
                     },
                     // {
                     //     title: '管理',
                     //     key: 'action',
                     //     width: 170,
                     //     align: 'center',
-
+                    //     render: (h, params) => {
+                    //         var i = this;
+                    //         return h('div', [
+                    //             h(
+                    //                 'Button',
+                    //                 {
+                    //                     props: {
+                    //                         type: 'primary',
+                    //                         size: 'small'
+                    //                     },
+                    //                     style: {
+                    //                         marginRight: '5px'
+                    //                     },
+                    //                     on: {
+                    //                         click: () => {
+                    //                             this.$Modal.confirm({
+                    //                                 title: '是否删除排期',
+                    //                                 content: '<p>是否删除排期</p>',
+                    //                                 onOk: () => {
+                    //                                     fapi.deleteSchedulingById({schedulingId:params.row.schedulingId}).then(response => {
+                    //                                         if (response.data.data === '成功') {
+                    //                                             this.$Message.success('删除成功！');
+                    //                                             fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                    //                                                 this.paiqiListData = response.data.data;
+                    //                                             });
+                    //                                         }
+                    //                                     }).catch(error => {
+                    //                                         this.$Message.error(error.response.data.msg);
+                    //                                         fapi.getIdeaTimeList({ideaCode: params.row.ideaCode}).then(response => {
+                    //                                             this.paiqiListData = response.data.data;
+                    //                                         });
+                    //                                     });
+                    //                                 },
+                    //                                 onCancel: () => {
+                    //                                 }
+                    //                             });
+                    //                         }
+                    //                     }
+                    //                 },
+                    //                 '删除'
+                    //             )
+                    //         ]);
+                    //     }
                     // }
                 ],
                 paiqiListModal: false,
