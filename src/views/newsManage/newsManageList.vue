@@ -97,7 +97,7 @@
 		</Modal>
 
 		<!-- 推送Modal -->
-		<Modal v-model="pushModal" @on-ok="pushOk" @on-cancel="pushCancel" width="600">
+		<Modal v-model="pushModal" :loading="pushLoading" @on-ok="pushOk" @on-cancel="pushCancel" width="600">
 			<p slot="header">
 				<span>定时推送</span>
 			</p>
@@ -106,8 +106,8 @@
 					<DatePicker type="datetime" :value="pushForm.pushTime" @on-change="pushTimeChange" formate="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" style="width: 150px"></DatePicker>
 				</FormItem>
 				<FormItem label="推送类型：">
-					<Select v-model="pushForm.pushType" style="width:450px">
-						<Option v-for="(item,index) in pushChannel" :key="index" :value="item.pushType">{{item.pushName}}</Option>
+					<Select :value="pushForm.pushType" style="width:450px" @on-change="pushTypeChange">
+						<Option v-for="(item,index) in pushChannel" :key="index" :value="index">{{item.pushName}}</Option>
 					</Select>
 				</FormItem>
 				<FormItem label="设备号：" v-if="pushForm.pushType===4">
@@ -116,12 +116,12 @@
 				</FormItem>
 			</Form>
 		</Modal>
-
 	</Row>
 </template>
 <script>
 import api from "../../api/system/index.js";
 import apiNewsManageme from "../../api/newsManageme/newsManageme.js";
+import apiPush from "@/api/advertisement/pushApi";
 import apiDictionary from "../../api/dictionary/channelDictionary.js";
 import apiTagDictionary from "../../api/dictionary/tagDictionary.js";
 import QRCode from "qrcodejs2";
@@ -133,12 +133,16 @@ export default {
     return {
       qrcodeModal: false,
       pushModal: false,
+      pushLoading: true,
       pushChannel: [],
       pushForm: {
         taskType: 1, // 1：新闻 2：通知
-        type: "",
-        newId: "",
-        content: "",
+        content: {
+          title: "",
+          newId: "",
+          type: "",
+          pushTime: ""
+        },
         pushSql: undefined,
         equipmentNumber: undefined,
         pushType: "",
@@ -651,15 +655,16 @@ export default {
     showPushModal(news) {
       this.pushDict();
       this.pushModal = true;
-      this.pushForm.type = news.type;
-      this.pushForm.newId = news.id;
-      this.pushForm.content = news.title;
-      this.pushForm.pushTime = moment()
+      this.pushForm.content.type = news.type;
+      this.pushForm.content.newId = news.id;
+      this.pushForm.content.title = news.title;
+      this.pushForm.pushTime = this.pushForm.content.pushTime = moment()
         .add(6, "minutes")
         .format("YYYY-MM-DD HH:mm:ss");
     },
     pushOk() {
-      const { pushTime, equipmentNumber, pushType } = this.pushForm;
+			let sendForm = JSON.parse(JSON.stringify(this.pushForm));
+      let { pushTime, equipmentNumber, pushType, content } = sendForm;
       if (
         !pushTime ||
         new Date(pushTime).getTime() - Date.now() <= 1000 * 60 * 5
@@ -668,24 +673,31 @@ export default {
           .add(6, "minutes")
           .format("YYYY-MM-DD HH:mm:ss");
         this.$Message.warning("推送时间至少为当前时间后5分钟");
+        this.changeLoading();
         return false;
       }
       if (!pushType) {
         this.$Message.warning("请选择推送类型");
+        this.changeLoading();
         return false;
       }
       if (pushType === 4 && !equipmentNumber) {
         this.$Message.warning("设备号不能为空");
+        this.changeLoading();
         return false;
-      }
-      apiNewsManageme.addPush(this.pushForm).then(({ data }) => {
+			}
+			sendForm.content = JSON.stringify(content)
+      apiPush.addPush(sendForm).then(({ data }) => {
         if (data.code === "success") {
           this.$Message.success("添加推送成功");
           this.pushForm = {
             taskType: 1, // 1：新闻 2：通知
-            type: "",
-            newId: "",
-            content: "",
+            content: {
+              title: "",
+              newId: "",
+              type: "",
+              pushTime: ""
+            },
             pushSql: undefined,
             equipmentNumber: undefined,
             pushType: "",
@@ -698,14 +710,27 @@ export default {
     pushCancel() {
       this.pushModal = false;
     },
+    pushTypeChange(index) {
+      if (!index && index !== 0) {
+        return false;
+      }
+      this.pushForm.pushType = this.pushChannel[index].pushType;
+      this.pushForm.pushSql = this.pushChannel[index].pushSql || undefined;
+    },
     pushTimeChange(val) {
-      this.pushForm.pushTime = val;
+      this.pushForm.content.pushTime = this.pushForm.pushTime = val;
     },
     pushDict() {
-      apiNewsManageme.pushDict().then(({ data }) => {
+      apiPush.pushDict().then(({ data }) => {
         if (data.code === "success") {
           this.pushChannel = data.data;
         }
+      });
+    },
+    changeLoading() {
+      this.pushLoading = false;
+      this.$nextTick(() => {
+        this.pushLoading = true;
       });
     }
   },
