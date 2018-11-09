@@ -17,16 +17,15 @@ export default {
         return http.post('/cmsapi/article/publishArticle', params);
     },
     //获取所有编辑姓名
-    getAllAuthor(){
+    getAllAuthor() {
         return http.get('/cmsapi/news/creator');
     },
     //排序
-    setSort(params){
-        return http.post('/cmsapi/article/articleSort',params);
+    setSort(params) {
+        return http.post('/cmsapi/article/articleSort', params);
     },
     //列表页预览api/cmsapi/article/listAddPreview
-    listAddPreview(params){
-        return http.post('/cmsapi/article/listAddPreview',params);
+    listAddPreview(params) {
+        return http.post('/cmsapi/article/listAddPreview', params);
     },
-
 };
