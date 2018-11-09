@@ -64,8 +64,8 @@
                         width: 100
                     },
                     {
-                        key: 'name',
-                        title: '站点名称'
+                        key: 'title',
+                        title: '网站名称'
                     },
                     {
                         title: '管理',
@@ -74,32 +74,7 @@
                         render: (h, params) => {
                             var i = this;
                             var isDelTip = '';
-                            if (params.row.isDel === 1) {
-                                isDelTip = '启用';
-                            }else if (params.row.isDel === 0){
-                                isDelTip = '删除';
-                            }
                             return h('div', [
-                                h(
-                                    'Button',
-                                    {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginRight: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
-                                                this.updateCahnnelValue.pageName = params.row.pageName;
-                                                i.modal2 = true;
-                                            }
-                                        }
-                                    },
-                                    '详情'
-                                ),
                                 h(
                                     'Button',
                                     {
@@ -168,7 +143,7 @@
             },
             addModeButton(){
                 this.$router.push({
-                    name: 'wysiwygWebList', query: {siteid: params.row.id}
+                    name: 'wysiwygmain', query: {siteid: this.$route.query.siteid}
                 });                
             },
             addNewsChannel() {

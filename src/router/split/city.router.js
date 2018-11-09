@@ -60,6 +60,13 @@ export const otherRouter = {
             component: () =>
                 import('@/views/advertisement/planDetail.vue')
         },
+        {
+            path: '/wysiwygWebList',
+            name: 'wysiwygWebList',
+            title: '网站列表',
+            component: () =>
+                import ('@/views/wysiwyg/webList.vue')
+        }, 
     ]
 };
 
@@ -527,7 +534,14 @@ export const aloneRouter = [
         },
         component: () =>
             import ('@/views/wysiwyg/main.vue')
-    }
+    },
+    {
+        path: '/wysiwygPreview',
+        name: 'wysiwygPreview',
+        component: () =>
+            import ('@/views/wysiwyg/preview.vue')
+    },
+
 ];
 
 export default {

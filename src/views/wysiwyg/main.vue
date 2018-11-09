@@ -8,6 +8,7 @@
     .wysi_active{
         border-color: red;
         border: 1px solid;
+        height: 100%;
     }
     .gu-mirror {
         position: fixed !important;
@@ -313,6 +314,22 @@
 
         </div>
     </div> -->
+    <Modal v-model="qrcodeModal"  width="500">
+        <p slot="header" style="color:#f60;text-align:center">
+            <span></span>
+        </p>
+        <Tabs type="card">
+            <TabPane label="WEB预览">
+                <div style="text-align:center">
+                    <p class="qrcode" id="qrcode10"></p>
+                </div>
+            </TabPane>
+        </Tabs>
+        <div slot="footer">
+        </div>
+    </Modal>
+
+
 </div>
 </template>
 <script>
@@ -323,6 +340,7 @@
     import wys_default from './wys-view/wys-default.vue';
     import GlobalStage from './wys-conf/component-stage';
     import api from '../../api/wysiwyg/main.js';
+    import QRCode from 'qrcodejs2';
     export default {
         components: {
             navigation
@@ -334,8 +352,12 @@
                 lefcomponents: GlobalStage.canUseEditors.coms,
                 currentEditor: wys_default,
                 currentEditorKey: 'wys_default',
+                qrcodeModal: false,
                 formMain: {
+                    siteId: '',
+                    html: '',
                     title: '',
+                    editor: ''
                 },
                 ruleMainValidate: {
                      title: [
@@ -348,34 +370,48 @@
             fbClick(){  
                 this.$refs.formMainValidate.validate((valid) => {
                     if(valid){
-                        var html = "";
-                        GlobalStage.save().forEach(item => {
-                            html += item.lastSaveHtml;
-                        });
-                        var editor = GlobalStage.save();
-                        api.saveDiyWebpage({
-                            //siteId:
-                            title:this.formMain.title,
-                            html:html,
-                            editor:JSON.stringify(editor)
-                        }).then(response => {
+                        this.addParameter();
+                        api.saveDiyWebpage(this.formMain).then(response => {
                             console.log(response);
                         }) 
                     }   
                  })                       
             },
             previewClick(){
-                var html = "";
-                GlobalStage.save().forEach(item => {
-                    html += item.lastSaveHtml;
-                });
-                var editor = GlobalStage.save();
-                 api.saveDiyWebpageHistory({
-                     html:html,
-                     editor:JSON.stringify(editor)
-                 }).then(response => {
-                    console.log(response);
-                 })                  
+                this.$refs.formMainValidate.validate((valid) => {
+                if(valid){
+                    this.addParameter();
+                    api.saveDiyWebpageHistory(this.formMain).then(response => {
+                        this.formMain.pid = response.data.data.pid;
+                        this.formMain.siteId = response.data.data.id;
+                        console.log(response.data.data.pid);
+                        this.qrcodeModal = true;
+                        var url = "http://newcms.dev.bidewu.com/#/wysiwygPreview?id="+response.data.data.pid;
+                        this.qrcode(url);
+                    }) 
+                }  
+               })              
+            },
+            addParameter(){
+                    var html = "";
+                    GlobalStage.save().forEach(item => {
+                        html += item.lastSaveHtml+item.js+item.css;
+                    });
+                    console.log(html);
+                    this.formMain.html = html;  
+                    this.formMain.editor = JSON.stringify(GlobalStage.save());
+                    this.formMain.siteId = this.$route.query.siteid;            
+            },
+            qrcode (url) {
+                console.log(url);
+                let qrcode = new QRCode('qrcode10', {
+                    width: 200,
+                    height: 200, // 高度
+                    text: url // 二维码内容
+                    // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+                    // background: '#f0f'
+                    // foreground: '#ff0'
+                })
             }
         },
         mounted() {

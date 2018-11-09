@@ -238,8 +238,8 @@
 </style>
 
 <stage-template>
-<div id="{{@ share.brickid}}" class="pictureset-box">
-    <div class="pictureset-container">
+<div id="{{@ share.brickid}}" class="pictureset-box" style="height:100%">
+    <div class="pictureset-container" style="height:100%">
     <div class="swiper-container">
         <div class="swiper-wrapper">
             {{each share.uploadList}}
@@ -273,7 +273,7 @@
 <stage-css>
     .swiper-container {
       width: 100%;
-      height: 625px;
+      height: 100%;
     }
     .swiper-slide {
       text-align: center;
