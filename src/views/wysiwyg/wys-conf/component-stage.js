@@ -88,6 +88,13 @@ export default {
         this._stage = $('#' + stageDomElId);
         this.canUseEditors.init();
     },
+    initComponentFromDB:function(){
+        var dbdata = [];
+        for(var i=0;i<dbdata.length;i++){
+            var d= dbdata[i];
+            this.create(d.editor_regid,false,d.data,d.lastSaveHtml);
+        }
+    },
     PageID: null, // 页面的数据库id
     _stage: null,
     _mainPage: null,
@@ -122,10 +129,25 @@ export default {
         this._currentComponentChangeEvent(this.currentComponent);
     },
     save: function () {
-        console.log(this.stageComponentsDict);
+        // console.log(this.stageComponentsDict.length);
+        var results = [];
         for (var key in this.stageComponentsDict) {
-        
+            var index = this.stageComponentsDict[key].dom.prevAll().length;
+            results[index] ={
+                component_id: this.stageComponentsDict[key].component_id, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
+                js: this.stageComponentsDict[key].js, // 会最终展示出来shi
+                data: this.stageComponentsDict[key].data, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
+                editor_regid: this.stageComponentsDict[key].editor_regid, // vue编辑器组件的注册id
+                lastSaveHtml: this.stageComponentsDict[key].dom.html()
+            };
+            //  this.stageComponentsDict[key];
+            // console.log(this.stageComponentsDict[key].dom.prevAll().length)
         }
+        var strHtml = "";
+        results.forEach(item => {
+            strHtml += item.lastSaveHtml;
+        })
+        return results;    
     },
     /**
      * render方法负责2个事情：
@@ -155,6 +177,7 @@ export default {
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
+        targetStageComponent.js = js;
         targetStageComponent.dom.html(html);
 
         targetStageComponent.data = data;
@@ -178,7 +201,6 @@ export default {
     @param editor_regid 组件的注册id
      */
     create: function (editor_regid, isDragNew, data, lastSaveHtml) {
-        console.log('创建stage组件');
         var newStageComponent = {
             component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它

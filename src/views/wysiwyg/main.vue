@@ -258,7 +258,7 @@
                     <a class="return_home">返回站点列表</a>
                 </a> 
                     <span class="btn"> <Icon type="compose"></Icon><span>保存</span></span> 
-                    <span class="btn"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
+                    <span class="btn" @click="previewClick()"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
                     <span class="btn" @click="fbClick()"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
             </div>
          </div>
@@ -278,6 +278,12 @@
      </section>
      <div id="right" class="wys-edit-right">
          <div class="wysiwyg_rightScroll">
+        <Form ref="formMainValidate" :model="formMain" :rules="ruleMainValidate" :label-width="80">
+            <FormItem label="标题" prop="title">
+                <Input v-model="formMain.title" placeholder="请填写标题"></Input>
+            </FormItem>
+            
+        </Form>          
             <navigation :include="includeIds">
                 <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
             </navigation> 
@@ -316,6 +322,7 @@
     import dragula_conf from './wys-conf/dragula-conf';
     import wys_default from './wys-view/wys-default.vue';
     import GlobalStage from './wys-conf/component-stage';
+    import api from '../../api/wysiwyg/main.js';
     export default {
         components: {
             navigation
@@ -326,12 +333,49 @@
                 includeIds: [],
                 lefcomponents: GlobalStage.canUseEditors.coms,
                 currentEditor: wys_default,
-                currentEditorKey: 'wys_default'
+                currentEditorKey: 'wys_default',
+                formMain: {
+                    title: '',
+                },
+                ruleMainValidate: {
+                     title: [
+                        { required: true, message: '请输入标题', trigger: 'blur' }
+                    ],
+                }
             };
         },
         methods: {
-            fbClick(){              
-                GlobalStage.save();
+            fbClick(){  
+                this.$refs.formMainValidate.validate((valid) => {
+                    if(valid){
+                        var html = "";
+                        GlobalStage.save().forEach(item => {
+                            html += item.lastSaveHtml;
+                        });
+                        var editor = GlobalStage.save();
+                        api.saveDiyWebpage({
+                            //siteId:
+                            title:this.formMain.title,
+                            html:html,
+                            editor:JSON.stringify(editor)
+                        }).then(response => {
+                            console.log(response);
+                        }) 
+                    }   
+                 })                       
+            },
+            previewClick(){
+                var html = "";
+                GlobalStage.save().forEach(item => {
+                    html += item.lastSaveHtml;
+                });
+                var editor = GlobalStage.save();
+                 api.saveDiyWebpageHistory({
+                     html:html,
+                     editor:JSON.stringify(editor)
+                 }).then(response => {
+                    console.log(response);
+                 })                  
             }
         },
         mounted() {
