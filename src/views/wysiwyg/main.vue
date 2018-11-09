@@ -387,6 +387,7 @@
                         console.log(response.data.data.pid);
                         this.qrcodeModal = true;
                         var url = "http://newcms.dev.bidewu.com/#/wysiwygPreview?id="+response.data.data.pid;
+                        document.getElementById("qrcode10").innerHTML = "";
                         this.qrcode(url);
                     }) 
                 }  
