@@ -74,6 +74,7 @@ export default {
                     throw '错误:重复注册组件 ' + com.id + '';
                 }
             }
+
         },
         getComponent: function (editorRegid) {
             return this._comsDict[editorRegid];
@@ -87,12 +88,13 @@ export default {
         this.PageID = Pageid || 0;
         this._stage = $('#' + stageDomElId);
         this.canUseEditors.init();
+        this.initComponentFromDB();
     },
     initComponentFromDB:function(){
         var dbdata = [];
         for(var i=0;i<dbdata.length;i++){
             var d= dbdata[i];
-            this.create(d.editor_regid,false,d.data,d.lastSaveHtml);
+            this.create(d.editor_regid,false,d.data,d.lastSaveHtml,d.js,d.css,d.component_id);
         }
     },
     PageID: null, // 页面的数据库id
@@ -110,7 +112,7 @@ export default {
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div class="comtest"></div>');
+        var dom = $('<div id="'+stageComponent.component_id+'"></div>');
         dom.data('stageCompontHook', stageComponent);
         dom.click(function (event) {
             if (that.currentComponent && $(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
@@ -136,6 +138,7 @@ export default {
             results[index] ={
                 component_id: this.stageComponentsDict[key].component_id, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
                 js: this.stageComponentsDict[key].js, // 会最终展示出来shi
+                css: this.stageComponentsDict[key].css,
                 data: this.stageComponentsDict[key].data, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
                 editor_regid: this.stageComponentsDict[key].editor_regid, // vue编辑器组件的注册id
                 lastSaveHtml: this.stageComponentsDict[key].dom.html()
@@ -166,16 +169,23 @@ export default {
 
         var html = 'arttemplate render 错误';
         var js = '';
-        var css = targetStageComponent.editor.artcss();
-        if (_.trim(css)) {
-            $('head').append('<style>' + css + '</style>');
-        }
-        try {
-            html = targetStageComponent.editor.arttemplate({share:data});
-            js = targetStageComponent.editor.artjavascript({share:data});
+        var css = '';
 
+        try {
+            html = targetStageComponent.editor.arttemplate({share:data,brickid:component_id});
+            js = targetStageComponent.editor.artjavascript({share:data,brickid:component_id});
+            css = targetStageComponent.editor.artcss({share:data,brickid:component_id});
         } catch (e) {
             console.error('arttemplate渲染报错', e);
+        }
+        if (_.trim(css) && $('#css-'+component_id).length==0) {
+            css = '<style id="css-'+component_id+'">' + css + '</style>';
+            $('head').append(css);
+            targetStageComponent.css = css;
+        }
+        if (_.trim(js)) {
+            js = '<script id="js-'+component_id+'" type=\'text/javascript\'>' + js + '</script>'
+            $('body').append(js);
         }
         targetStageComponent.js = js;
         targetStageComponent.dom.html(html);
@@ -190,21 +200,18 @@ export default {
             this._stage.find('.wysi_hold').remove();
             targetStageComponent.isDragNew = false;
         }
-        if (_.trim(js)) {
-            $('body').append('<script type=\'text/javascript\'>' + js + '</script>');
-        }
-        
-        targetStageComponent.js = _.trim(js);
+
     },
     /*
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, data, lastSaveHtml) {
+    create: function (editor_regid, isDragNew, data, lastSaveHtml,js,css,component_id) {
         var newStageComponent = {
-            component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
+            component_id: component_id || null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
-            js: '', // 会最终展示出来shi
+            js: js || '', // 会最终展示出来shi
+            css: css || '',
             data: null, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
             editor: null, // vue编辑器组件
             editor_regid: null, // vue编辑器组件的注册id
@@ -227,19 +234,26 @@ export default {
         if (!isDragNew) {
             newStageComponent.dom.html(newStageComponent.lastSaveHtml);
         }
-        newStageComponent.component_id = this._createComponentId(newStageComponent.editor_regid);
+        newStageComponent.component_id = this._createComponentId(component_id);
         newStageComponent.data = data || {};
         // this.stageComponents.push(newStageComponent);
         this.stageComponentsDict[newStageComponent.component_id] = newStageComponent;
         this.setCurrent(newStageComponent);
     },
-    _increase: 0,
+    _increase: 1,
     /*
     创建唯一id
      */
-    _createComponentId: function (editor_regid) {
-        this._increase = this._increase + 1;
-        // return 'wsycom_' + this.PageID + '_' + editor_regid + '_' + this._increase;
-        return 'wsy-block-' + this._increase;
+    _createComponentId: function (component_id) {
+        if(!component_id) {
+            this._increase = this._increase + 1;
+            // return 'wsycom_' + this.PageID + '_' + editor_regid + '_' + this._increase;
+            return 'wsyblock-' + this._increase;
+        }
+        var increaseSeed = parseInt(component_id.split('-')[1]);
+        if(increaseSeed>this._increase){
+            this._increase = increaseSeed;
+        }
+
     }
 };
