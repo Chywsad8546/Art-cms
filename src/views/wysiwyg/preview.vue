@@ -1,5 +1,6 @@
+
 <template>
-   <div id="previewId"></div>
+   <div style="height:100%" id="previewId"></div>
 </template>
 <script>
     import api from '../../api/wysiwyg/main.js';
