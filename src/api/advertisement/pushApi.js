@@ -19,5 +19,13 @@ export default {
     // 添加推送
     addPush(params) {
         return http.post('/cmsapi/addPush', params);
+    },
+    // 取消推送
+    cancelPush(params) {
+        return http.post('/cmsapi/cancelPush', params);
+    },
+    // 推送任务列表
+    pushList(params) {
+        return http.get('/cmsapi/pushList', { params });
     }
 }

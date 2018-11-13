@@ -1,18 +1,33 @@
 <template>
   <Card>
-    <!-- <Row class="margin-top-10 searchable-table-con1">
-      <Form ref="searchData" :model="searchData" inline :label-width="120">
-        <FormItem label="消息标题" prop="title">
-          <Input v-model.trim="searchData.title" style="width:140px"></Input>
-        </FormItem>
-      </Form>
-
-      <Table border :columns="columns" :data="data"></Table>
-      <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
-    </Row> -->
-
     <p slot="title">推送列表管理</p>
-    <Button type="primary" @click="showPushModal">添加推送</Button>
+    <Form ref="searchData" :model="searchData" inline :label-width="80">
+      <FormItem label="推送时间" prop="pushTime">
+        <DatePicker type="datetime" :value="searchData.pushTime" @on-change="(val)=>{searchData.pushTime=val}" formate="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" style="width: 140px"></DatePicker>
+      </FormItem>
+      <FormItem label="推送状态" prop="status">
+        <Select v-model="searchData.status" style="width:140px">
+          <Option value="">全部</Option>
+          <Option :value="0">推送中</Option>
+          <Option :value="1">已推送</Option>
+          <Option :value="2">已撤销</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="任务类型" prop="taskType">
+        <Select v-model="searchData.taskType" style="width:140px">
+          <Option value="">全部</Option>
+          <Option :value="1">新闻</Option>
+          <Option :value="2">通知</Option>
+        </Select>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="handleSearch">搜索</Button>
+        <Button type="ghost" @click="handleCancel" style="margin-left: 8px">清空</Button>
+        <Button type="success" @click="showPushModal" style="margin-left: 8px">添加推送</Button>
+      </FormItem>
+    </Form>
+    <Table border :columns="columns" :data="data"></Table>
+    <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
     <!-- 添加推送Modal -->
     <Modal v-model="pushModal" :loading="pushLoading" @on-ok="pushOk" @on-cancel="pushCancel" width="600">
       <p slot="header">
@@ -75,6 +90,110 @@ export default {
       }
     }
     return {
+      searchData: {
+        pageNum: 1,
+        pageSize: 10,
+        pushTime: '',
+        taskType: '',
+        status: ''
+      },
+      total: 1,
+      data: [],
+      columns: [
+        {
+          title: '推送ID',
+          key: 'id',
+          width: 90,
+          align: 'center'
+        },
+        {
+          title: '标题',
+          key: 'title',
+          align: 'center'
+        },
+        {
+          title: '推送时间',
+          key: 'pushTime',
+          width: 160,
+          align: 'center'
+        },
+        {
+          title: '推送类型',
+          width: 100,
+          align: 'center',
+          render(h, params) {
+            const { row: { taskType } } = params
+            return h(
+              "span",
+              taskType === 1 ? '新闻' : '通知'
+            )
+          }
+        },
+        {
+          title: '推送状态',
+          width: 100,
+          align: 'center',
+          render(h, params) {
+            const { row: { status } } = params
+            let pushStatus = ''
+            switch (status) {
+              case 0:
+                pushStatus = '推送中'
+                break;
+              case 1:
+                pushStatus = '已推送'
+                break;
+              case 2:
+                pushStatus = '已撤销'
+                break;
+              default:
+                break;
+            }
+            return h(
+              "span",
+              pushStatus
+            )
+          }
+        },
+        {
+          title: '管理',
+          width: 100,
+          align: 'center',
+          render: (h, params) => {
+            const { row: { status } } = params
+            let button = ''
+            if (status === 0) {
+              button = h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  on: {
+                    click: () => {
+                      this.cancelTask(params.row.id)
+                    }
+                  }
+                },
+                "撤销")
+            } else {
+              button = h(
+                "Button",
+                {
+                  props: {
+                    type: "success",
+                    size: "small",
+                    disabled: true
+                  }
+                },
+                status === 1 ? "已推送" : "已撤销")
+            }
+            return button
+          }
+        }
+      ],
+      // 推送相关
       pushModal: false,
       pushLoading: true,
       pushChannel: [],
@@ -117,6 +236,48 @@ export default {
     };
   },
   methods: {
+    init() {
+      apiPush.pushList(this.searchData).then(({ data }) => {
+        if (data.code === 'success') {
+          this.total = data.count
+          this.data = data.data.map(item => {
+            let content = JSON.parse(item.content || '{}')
+            return {
+              ...content,
+              ...item
+            }
+          })
+          console.log(this.data)
+        }
+      })
+    },
+    handleSearch() {
+      this.pageChange(1)
+    },
+    handleCancel() {
+      this.$refs.searchData.resetFields();
+      this.pageChange(1)
+    },
+    pageChange(pageNum) {
+      this.searchData.pageNum = pageNum
+      this.init()
+    },
+    sizeChange(pageSize) {
+      this.searchData.pageSize = pageSize
+      this.init()
+    },
+    cancelTask(id) {
+      apiPush.cancelPush({ id }).then(({ data }) => {
+        if (data.code === 'success') {
+          this.$Message.success('取消推送任务成功')
+          this.init()
+        } else {
+          this.$Message.error('取消推送任务失败')
+        }
+      }).catch((error) => {
+        this.$Message.error('取消推送任务失败')
+      })
+    },
     // 推送文章方法
     getImgFileName(response, file, fileList) {
       console.log(response.data);
@@ -152,13 +313,12 @@ export default {
           pushTime
         }
         sendForm.content = JSON.stringify(sendForm.content)
-        console.log('form', sendForm)
-        // apiPush.addPush(sendForm).then(({ data }) => {
-        //   if (data.code === "success") {
-        //     this.$Message.success("添加推送成功");
-        //     this.pushCancel();
-        //   }
-        // });
+        apiPush.addPush(sendForm).then(({ data }) => {
+          if (data.code === "success") {
+            this.$Message.success("添加推送成功");
+            this.pushCancel();
+          }
+        });
       })
     },
     pushCancel() {
@@ -201,7 +361,9 @@ export default {
       });
     }
   },
-  created() { }
+  created() {
+    this.init()
+  }
 };
 </script>
 
