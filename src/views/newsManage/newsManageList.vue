@@ -696,13 +696,15 @@ export default {
           return false
         }
         let sendForm = JSON.parse(JSON.stringify(this.pushForm));
-        sendForm.content = JSON.stringify(content);
+        sendForm.content = JSON.stringify(sendForm.content);
         apiPush.addPush(sendForm).then(({ data }) => {
           if (data.code === "success") {
             this.$Message.success("添加推送成功");
             this.pushCancel();
           }
-        });
+        }).catch((error) => {
+          console.log(error)
+        })
       })
     },
     pushCancel() {
