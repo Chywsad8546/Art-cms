@@ -1,122 +1,122 @@
 <template>
-	<Row>
-		<Col span="100">
-		<Card>
-			<p slot="title">资讯列表管理</p>
-			<Row class="margin-top-10 searchable-table-con1">
-				<Form ref="searchData" :model="searchData" inline :label-width="120">
-					<FormItem label="编号" prop="id">
-						<Input v-model.trim="searchData.id" style="width:140px" />
-					</FormItem>
-					<FormItem label="标题" prop="title">
-						<Input v-model.trim="searchData.title" style="width:140px" />
-					</FormItem>
-					<FormItem label="编辑" prop="creator">
-						<Select v-model="searchData.creator" style="width:140px">
-							<Option value="">全部</Option>
-							<Option v-for="item in allAuthor" v-bind:value="item.id">{{item.userName}}</Option>
-						</Select>
-					</FormItem>
-					<FormItem label="开始时间" prop="starTime">
-						<DatePicker type="date" v-model="searchData.starTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
-					</FormItem>
-					<FormItem label="结束时间" prop="endTime">
-						<DatePicker type="date" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
-					</FormItem>
-					<FormItem label="类别筛选" prop="type">
-						<Select v-model="searchData.type" style="width:140px">
-							<Option value="">全部</Option>
-							<Option value="0">图文</Option>
-							<Option value="1">图集</Option>
-							<Option value="2">横版视频</Option>
-							<Option value="3">竖版视频</Option>
-						</Select>
-					</FormItem>
-					<FormItem label="级别筛选" prop="type">
-						<Select v-model="searchData.recommendLevel" style="width:140px">
-							<Option value="">全部</Option>
-							<Option value="1">一级</Option>
-							<Option value="2">二级</Option>
-							<Option value="3">三级</Option>
-						</Select>
-					</FormItem>
-					<FormItem label="栏目筛选" prop="topic">
-						<CheckboxGroup v-model="searchData.topic">
-							<Checkbox v-bind:label="item.id" v-for="item in channelDatas"><span>{{item.title}}</span>
-							</Checkbox>
-						</CheckboxGroup>
-					</FormItem>
-					<FormItem label="标签筛选" prop="tags">
-						<Select v-model="searchData.tags" style="width:140px">
-							<Option value="">全部</Option>
-							<Option v-for="item in tagDatas" v-bind:value="item.id">{{item.title}}</Option>
-						</Select>
-					</FormItem>
-					<FormItem label="发布状态" prop="businessCardAuth">
-						<Select v-model="searchData.isPublish" style="width:140px">
-							<Option value="">全部</Option>
-							<Option value="0">待发布</Option>
-							<Option value="1">已发布</Option>
-							<Option value="2">已撤稿</Option>
-							<Option value="3">草稿</Option>
-						</Select>
-					</FormItem>
-					<FormItem>
-						<Button type="primary" @click="handleSearch('searchData')">搜索</Button>
-						<Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
-					</FormItem>
-				</Form>
+  <Row>
+    <Col span="100">
+    <Card>
+      <p slot="title">资讯列表管理</p>
+      <Row class="margin-top-10 searchable-table-con1">
+        <Form ref="searchData" :model="searchData" inline :label-width="120">
+          <FormItem label="编号" prop="id">
+            <Input v-model.trim="searchData.id" style="width:140px" />
+          </FormItem>
+          <FormItem label="标题" prop="title">
+            <Input v-model.trim="searchData.title" style="width:140px" />
+          </FormItem>
+          <FormItem label="编辑" prop="creator">
+            <Select v-model="searchData.creator" style="width:140px">
+              <Option value="">全部</Option>
+              <Option v-for="item in allAuthor" v-bind:value="item.id">{{item.userName}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="开始时间" prop="starTime">
+            <DatePicker type="date" v-model="searchData.starTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+          </FormItem>
+          <FormItem label="结束时间" prop="endTime">
+            <DatePicker type="date" v-model="searchData.endTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+          </FormItem>
+          <FormItem label="类别筛选" prop="type">
+            <Select v-model="searchData.type" style="width:140px">
+              <Option value="">全部</Option>
+              <Option value="0">图文</Option>
+              <Option value="1">图集</Option>
+              <Option value="2">横版视频</Option>
+              <Option value="3">竖版视频</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="级别筛选" prop="type">
+            <Select v-model="searchData.recommendLevel" style="width:140px">
+              <Option value="">全部</Option>
+              <Option value="1">一级</Option>
+              <Option value="2">二级</Option>
+              <Option value="3">三级</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="栏目筛选" prop="topic">
+            <CheckboxGroup v-model="searchData.topic">
+              <Checkbox v-bind:label="item.id" v-for="item in channelDatas"><span>{{item.title}}</span>
+              </Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+          <FormItem label="标签筛选" prop="tags">
+            <Select v-model="searchData.tags" style="width:140px">
+              <Option value="">全部</Option>
+              <Option v-for="item in tagDatas" v-bind:value="item.id">{{item.title}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="发布状态" prop="businessCardAuth">
+            <Select v-model="searchData.isPublish" style="width:140px">
+              <Option value="">全部</Option>
+              <Option value="0">待发布</Option>
+              <Option value="1">已发布</Option>
+              <Option value="2">已撤稿</Option>
+              <Option value="3">草稿</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
+            <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
+          </FormItem>
+        </Form>
 
-				<Table border :columns="columns" :data="data"></Table>
-				<Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
-			</Row>
-		</Card>
+        <Table border :columns="columns" :data="data"></Table>
+        <Page :total="total" show-total show-sizer @on-change="pageChange" @on-page-size-change="sizeChange" style="margin-top:10px; text-align:right"></Page>
+      </Row>
+    </Card>
 
-		</Col>
-		<Modal v-model="sortModal" width="360" @on-ok="updateSort(updateSortValue)">
-			<Form ref="updateSortForm" :model="updateSortValue" inline :label-width="120">
-				<FormItem label="排序" prop="sort">
-					<InputNumber :precision="0" v-model="updateSortValue.sort" :min="0"></InputNumber>
-				</FormItem>
-			</Form>
-		</Modal>
+    </Col>
+    <Modal v-model="sortModal" width="360" @on-ok="updateSort(updateSortValue)">
+      <Form ref="updateSortForm" :model="updateSortValue" inline :label-width="120">
+        <FormItem label="排序" prop="sort">
+          <InputNumber :precision="0" v-model="updateSortValue.sort" :min="0"></InputNumber>
+        </FormItem>
+      </Form>
+    </Modal>
 
-		<Modal v-model="qrcodeModal" width="230">
-			<p slot="header" style="color:#f60;text-align:center">
-				<span></span>
-			</p>
-			<Tabs type="card">
-				<TabPane label="WEB预览">
-					<div style="text-align:center">
-						<p class="qrcode" id="qrcode"></p>
-					</div>
-				</TabPane>
-			</Tabs>
-			<div slot="footer">
-			</div>
-		</Modal>
+    <Modal v-model="qrcodeModal" width="230">
+      <p slot="header" style="color:#f60;text-align:center">
+        <span></span>
+      </p>
+      <Tabs type="card">
+        <TabPane label="WEB预览">
+          <div style="text-align:center">
+            <p class="qrcode" id="qrcode"></p>
+          </div>
+        </TabPane>
+      </Tabs>
+      <div slot="footer">
+      </div>
+    </Modal>
 
-		<!-- 推送Modal -->
-		<Modal v-model="pushModal" :loading="pushLoading" @on-ok="pushOk" @on-cancel="pushCancel" width="600">
-			<p slot="header">
-				<span>定时推送</span>
-			</p>
-			<Form :label-width="100">
-				<FormItem label="推送时间：">
-					<DatePicker type="datetime" :value="pushForm.pushTime" @on-change="pushTimeChange" formate="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" style="width: 150px"></DatePicker>
-				</FormItem>
-				<FormItem label="推送类型：">
-					<Select :value="pushForm.pushType" style="width:450px" @on-change="pushTypeChange">
-						<Option v-for="(item,index) in pushChannel" :key="index" :value="index">{{item.pushName}}</Option>
-					</Select>
-				</FormItem>
-				<FormItem label="设备号：" v-if="pushForm.pushType===4">
-					<Input v-model="pushForm.equipmentNumber" style="width:450px"></Input>
-					<Alert style="width:450px;margin-top:5px;">多个设备码请使用英文逗号分隔（如：123,456）</Alert>
-				</FormItem>
-			</Form>
-		</Modal>
-	</Row>
+    <!-- 推送Modal -->
+    <Modal v-model="pushModal" :loading="pushLoading" @on-ok="pushOk" @on-cancel="pushCancel" width="600">
+      <p slot="header">
+        <span>定时推送</span>
+      </p>
+      <Form ref="pushForm" :model="pushForm" :rules="pushFormRules" :label-width="100">
+        <FormItem label="推送时间：" prop="pushTime">
+          <DatePicker type="datetime" :value="pushForm.pushTime" @on-change="pushTimeChange" formate="yyyy-MM-dd HH:mm:ss" placeholder="选择时间" style="width: 150px"></DatePicker>
+        </FormItem>
+        <FormItem label="推送类型：" prop="pushType" v-if="pushModal">
+          <Select :value="pushChannelIndex" style="width:450px" @on-change="pushTypeChange">
+            <Option v-for="(item,index) in pushChannel" :key="index" :value="index">{{item.pushName}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="设备码：" prop="equipmentNumber" v-if="pushForm.pushType===4">
+          <Input v-model="pushForm.equipmentNumber" style="width:450px"></Input>
+          <Alert style="width:450px;margin-top:5px;">多个设备码请使用英文逗号分隔（如：123,456）</Alert>
+        </FormItem>
+      </Form>
+    </Modal>
+  </Row>
 </template>
 <script>
 import api from "../../api/system/index.js";
@@ -130,11 +130,26 @@ import moment from "moment";
 
 export default {
   data() {
+    const pushTimeValidator = (rule, val, callback) => {
+      if (new Date(val).getTime() - Date.now() <= 1000 * 60 * 5) {
+        callback(new Error('推送时间至少为当前时间后5分钟'))
+      } else {
+        callback()
+      }
+    }
+    const equipmentNumberValidator = (rule, val, callback) => {
+      if (this.pushForm.pushType === 4 && !val) {
+        callback(new Error('设备码不能为空！'))
+      } else {
+        callback()
+      }
+    }
     return {
       qrcodeModal: false,
       pushModal: false,
       pushLoading: true,
       pushChannel: [],
+      pushChannelIndex: "",
       pushForm: {
         taskType: 1, // 1：新闻 2：通知
         content: {
@@ -147,6 +162,18 @@ export default {
         equipmentNumber: undefined,
         pushType: "",
         pushTime: ""
+      },
+      pushFormRules: {
+        pushTime: [
+          { required: true, message: '请选择推送时间！', trigger: 'change' },
+          { validator: pushTimeValidator, trigger: 'change' }
+        ],
+        pushType: [
+          { required: true, message: '请选择推送类型！' }
+        ],
+        equipmentNumber: [
+          { validator: equipmentNumberValidator, trigger: 'blur' }
+        ]
       },
       defaultList: [],
       columns: [
@@ -663,51 +690,41 @@ export default {
         .format("YYYY-MM-DD HH:mm:ss");
     },
     pushOk() {
-			let sendForm = JSON.parse(JSON.stringify(this.pushForm));
-      let { pushTime, equipmentNumber, pushType, content } = sendForm;
-      if (
-        !pushTime ||
-        new Date(pushTime).getTime() - Date.now() <= 1000 * 60 * 5
-      ) {
-        this.pushForm.pushTime = moment(Date.now())
-          .add(6, "minutes")
-          .format("YYYY-MM-DD HH:mm:ss");
-        this.$Message.warning("推送时间至少为当前时间后5分钟");
-        this.changeLoading();
-        return false;
-      }
-      if (!pushType) {
-        this.$Message.warning("请选择推送类型");
-        this.changeLoading();
-        return false;
-      }
-      if (pushType === 4 && !equipmentNumber) {
-        this.$Message.warning("设备号不能为空");
-        this.changeLoading();
-        return false;
-			}
-			sendForm.content = JSON.stringify(content)
-      apiPush.addPush(sendForm).then(({ data }) => {
-        if (data.code === "success") {
-          this.$Message.success("添加推送成功");
-          this.pushForm = {
-            taskType: 1, // 1：新闻 2：通知
-            content: {
-              title: "",
-              newId: "",
-              type: "",
-              pushTime: ""
-            },
-            pushSql: undefined,
-            equipmentNumber: undefined,
-            pushType: "",
-            pushTime: ""
-          };
-          this.pushCancel();
+      this.$refs.pushForm.validate((valid) => {
+        if (!valid) {
+          this.changeLoading()
+          return false
         }
-      });
+        let sendForm = JSON.parse(JSON.stringify(this.pushForm));
+        sendForm.content = JSON.stringify(sendForm.content);
+        apiPush.addPush(sendForm).then(({ data }) => {
+          if (data.code === "success") {
+            this.$Message.success("添加推送成功");
+            this.pushCancel();
+          } else {
+            this.$Message.error("添加推送失败");
+            this.changeLoading()
+          }
+        }).catch((error) => {
+          console.log(error)
+        })
+      })
     },
     pushCancel() {
+      this.pushForm = {
+        taskType: 1, // 1：新闻 2：通知
+        content: {
+          title: "",
+          newId: "",
+          type: "",
+          pushTime: ""
+        },
+        pushSql: undefined,
+        equipmentNumber: undefined,
+        pushType: "",
+        pushTime: ""
+      };
+      this.pushChannelIndex = "";
       this.pushModal = false;
     },
     pushTypeChange(index) {
