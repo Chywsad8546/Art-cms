@@ -166,7 +166,7 @@ export default {
       pushFormRules: {
         pushTime: [
           { required: true, message: '请选择推送时间！', trigger: 'change' },
-          { validator: pushTimeValidator, trigger: 'change' }
+          // { validator: pushTimeValidator, trigger: 'change' }
         ],
         pushType: [
           { required: true, message: '请选择推送类型！' }
