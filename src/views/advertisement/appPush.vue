@@ -215,7 +215,7 @@ export default {
         ],
         pushTime: [
           { required: true, message: '请选择推送时间！', trigger: 'change' },
-          { validator: pushTimeValidator, trigger: 'change' }
+          // { validator: pushTimeValidator, trigger: 'change' }
         ],
         pushLink: [
           { required: true, message: '请填写跳转链接！', trigger: 'blur' }
@@ -317,6 +317,7 @@ export default {
           if (data.code === "success") {
             this.$Message.success("添加推送成功");
             this.pushCancel();
+            this.init();
           }
         });
       })
@@ -335,7 +336,7 @@ export default {
       };
       this.pushChannelIndex = "";
       this.$refs.pushUpload.clearFiles()
-      this.$Modal.remove()
+      this.pushModal = false
     },
     pushTypeChange(index) {
       if (!index && index !== 0) {
