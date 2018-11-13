@@ -2,6 +2,7 @@ import wys_img from './wys-view/simple/wys-img.vue';
 import wys_imgAtlas from './wys-view/simple/wys-imgAtlas.vue';
 import wysHasMiss from './wys-view/simple/wys-wrong';
 import groupdrawing from './wys-view/simple/groupdrawing.vue';
+import wys_tab from './wys-view/simple/wys-tab.vue';
 
 export default {
 
@@ -25,6 +26,11 @@ export default {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/4901ee050c6045efbac845f5c7e03614.jpg',
             component: groupdrawing,
             id: 'groupdrawing'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/4901ee050c6045efbac845f5c7e03614.jpg',
+            component: wys_tab,
+            id: 'wys_tab'
         },
     ]
 };

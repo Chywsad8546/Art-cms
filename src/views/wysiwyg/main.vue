@@ -8,7 +8,6 @@
     .wysi_active{
         border-color: red;
         border: 1px solid;
-        height: 100%;
     }
     .gu-mirror {
         position: fixed !important;
@@ -384,9 +383,8 @@
                     api.saveDiyWebpageHistory(this.formMain).then(response => {
                         this.formMain.pid = response.data.data.pid;
                         this.formMain.siteId = response.data.data.id;
-                        console.log(response.data.data.pid);
                         this.qrcodeModal = true;
-                        var url = "http://newcms.dev.bidewu.com/#/wysiwygPreview?id="+response.data.data.pid;
+                        var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
                         document.getElementById("qrcode10").innerHTML = "";
                         this.qrcode(url);
                     }) 
