@@ -166,7 +166,7 @@ export default {
       pushFormRules: {
         pushTime: [
           { required: true, message: '请选择推送时间！', trigger: 'change' },
-          // { validator: pushTimeValidator, trigger: 'change' }
+          { validator: pushTimeValidator, trigger: 'change' }
         ],
         pushType: [
           { required: true, message: '请选择推送类型！' }
@@ -701,6 +701,9 @@ export default {
           if (data.code === "success") {
             this.$Message.success("添加推送成功");
             this.pushCancel();
+          } else {
+            this.$Message.error("添加推送失败");
+            this.changeLoading()
           }
         }).catch((error) => {
           console.log(error)
