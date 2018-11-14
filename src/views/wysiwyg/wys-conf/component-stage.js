@@ -187,8 +187,9 @@ export default {
             js = '<script id="js-'+component_id+'" type=\'text/javascript\'>' + js + '</script>'
             $('body').append(js);
         }
-        targetStageComponent.js = js;
         targetStageComponent.dom.html(html);
+        targetStageComponent.js = js;
+        
 
         targetStageComponent.data = data;
 

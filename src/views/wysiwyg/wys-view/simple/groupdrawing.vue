@@ -203,12 +203,14 @@
 </section>
 </stage-template>
 <stage-javascript type="text/javascript">
+  setTimeout(function(){
     var groupdrawing = new Swiper('.groupdrawing-container', {
       pagination: {
         el: '.swiper-pagination',
         dynamicBullets: true,
       },
     });
+    },300);
 </stage-javascript>
 <stage-css>
     body,html{
