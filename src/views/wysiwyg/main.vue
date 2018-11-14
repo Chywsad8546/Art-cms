@@ -273,7 +273,7 @@
                 <a href="http://h5.toutiao.com/tetris/site/lists/" class="btn">
                     <a class="return_home">返回站点列表</a>
                 </a> 
-                    <span class="btn"> <Icon type="compose"></Icon><span>保存</span></span> 
+                    <span class="btn" @click="fbClick()"> <Icon type="compose"></Icon><span>保存</span></span> 
                     <span class="btn" @click="previewClick()"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
                     <span class="btn" @click="fbClick()"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
             </div>
