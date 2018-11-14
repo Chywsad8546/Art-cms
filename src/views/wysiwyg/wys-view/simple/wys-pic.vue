@@ -252,7 +252,7 @@
         margin: 0 2px;
     }
     .imgWidthCont {
-        width: 95%;           
+        width: 95%;         
     }
     .ivu-form-item {
         padding-right: 10px !important;
@@ -290,6 +290,7 @@
         line-height: 20px;
         -webkit-flex-shrink: 0;
         flex-shrink: 0;
+        box-sizing: border-box;
         list-style: none;
     }
     .line1 li img{
@@ -311,6 +312,7 @@
         line-height: 20px;
         -webkit-flex-shrink: 0;
         flex-shrink: 0;
+        box-sizing: border-box;
         list-style: none;
     }
     .line2 li img{
@@ -332,6 +334,7 @@
         line-height: 20px;
         -webkit-flex-shrink: 0;
         flex-shrink: 0;
+        box-sizing: border-box;
         list-style: none;
     }
     .line3 li img{
@@ -353,6 +356,7 @@
         line-height: 20px;
         -webkit-flex-shrink: 0;
         flex-shrink: 0;
+        box-sizing: border-box;
         list-style: none;
     }
     .specialListUl ul{
@@ -360,5 +364,6 @@
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
+        box-sizing: border-box;
     }
 </stage-css>

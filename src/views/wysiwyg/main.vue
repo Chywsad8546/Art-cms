@@ -397,7 +397,7 @@
                 if(valid){
                     this.addParameter();
                     api.saveDiyWebpageHistory(this.formMain).then(response => {
-                        this.formMain.pid = response.data.data.pid;
+                        this.formMain.id = response.data.data.pid;
                         this.formMain.siteId = response.data.data.id;
                         this.qrcodeModal = true;
                         var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
