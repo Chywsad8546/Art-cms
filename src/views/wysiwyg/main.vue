@@ -252,7 +252,7 @@
 </style>
 
 <template>
-<div>
+<div style="height:100%">
 <div class="wys-header">
     <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
     <div class="wys-header-content"></div>
