@@ -453,8 +453,11 @@
             var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
             window.__drag=dra;
             dra.on('cloned', function (clone, original, type) {
+                // console.log('clone',clone)
                 if (!$(clone).hasClass('gu-mirror')) {
+                    $(clone).removeClass();
                     $(clone).addClass('wysi_hold');
+                    // $(clone).prop('outerHTML', '<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
                     $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
                 }
             });

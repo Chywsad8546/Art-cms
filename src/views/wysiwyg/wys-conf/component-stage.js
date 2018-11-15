@@ -107,28 +107,32 @@ export default {
     _currentComponentChangeEvent: function () {},
     currentComponent: null,
     stageComponentsDict: {},
-
-
     /*
     创建画布上的站位dom，是一个jquery对象
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div><div id="' + stageComponent.component_id + '" style="position: relative"></div></div>');
+        var dom = $('<div style="position: relative"><div id="' + stageComponent.component_id + '" ></div></div>');
         dom.data('stageCompontHook', stageComponent);
+        /**
+         * 鼠标经过的时候，增加一个“删除”按钮
+         */
         dom.mouseenter(function () {
-            console.log('over');
             dom.find('.wysiclose').remove();
             var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px">删除</span>');
             deletebtn.click(function () {
-                that.delete(stageComponent.component_id);
+                if(window.confirm('确定要删除么？')) {
+                    that.delete(stageComponent.component_id);
+                }
             });
             dom.prepend(deletebtn);
         });
         dom.mouseleave(function () {
-            console.log('out')
             dom.find('.wysiclose').remove();
         });
+        /**
+         * 鼠标点击的时候，设置当前的 高亮
+         */
         dom.click(function (event) {
             if (that.currentComponent && $(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
                 that.setCurrent($(this).data('stageCompontHook'));
@@ -142,7 +146,6 @@ export default {
     setCurrent: function (stageComponent) {
         this.currentComponent = stageComponent;
         this._stage.find('.wysi_active').removeClass('wysi_active');
-
         this.currentComponent.dom.addClass('wysi_active');
         this._currentComponentChangeEvent(this.currentComponent);
     },
@@ -226,6 +229,11 @@ export default {
             targetStageComponent.isDragNew = false;
         }
     },
+
+    /**
+     * 删除组件
+     * @param component_id
+     */
     delete:function (component_id) {
         var willdeleteComponent = this.stageComponentsDict[component_id];
         if(!willdeleteComponent){
