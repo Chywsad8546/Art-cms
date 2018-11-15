@@ -89,7 +89,7 @@
 
 <stage-template>
 <div id="{{@ brickid}}" class="pictureset-box">
-  <section style="padding: 0 {{@share.right}}px 0 {{@share.left}}px;">
+  <section style="padding: 0 {{@share.right}}px 0 {{@share.left}}px;overflow: hidden;">
     <div class="wysiwygSeparator" style="width: {{@share.width}}%; margin-top: {{@share.height/2}}px; margin-bottom: {{@share.height/2}}px; border-style: {{@share.lineType}}; border-color: {{@share.backColor}};"></div>
   </section>
 </div>
