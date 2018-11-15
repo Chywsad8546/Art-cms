@@ -166,6 +166,7 @@ export default {
             results[index] = {
                 component_id: this.stageComponentsDict[key].component_id, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
                 js: this.stageComponentsDict[key].js, // 会最终展示出来shi
+                jsincludes:this.stageComponentsDict[key].jsincludes,
                 css: this.stageComponentsDict[key].css,
                 data: this.stageComponentsDict[key].data, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
                 editor_regid: this.stageComponentsDict[key].editor_regid, // vue编辑器组件的注册id
@@ -175,9 +176,16 @@ export default {
             // console.log(this.stageComponentsDict[key].dom.prevAll().length)
         }
         var strHtml = '';
+        var jsincludes='';
         results.forEach(item => {
             strHtml += item.lastSaveHtml;
+            item.jsincludes.forEach(iteminclude => {
+                jsincludes = jsincludes+'<script type="text/javascript" src="'+iteminclude+'"></script>';
+            });
         });
+        strHtml = strHtml + jsincludes;
+        console.log('results',results);
+        console.log('strHtml',strHtml)
         return results;
     },
     /**
@@ -214,6 +222,7 @@ export default {
             for(var i=0;i<artjavascriptincludes.length;i++){
                 $('body').append('<script type="text/javascript" src="'+artjavascriptincludes[i]+'"></script>');
             }
+            targetStageComponent.jsincludes=artjavascriptincludes;
         }
 
         if (_.trim(css) && $('#css-' + component_id).length == 0) {

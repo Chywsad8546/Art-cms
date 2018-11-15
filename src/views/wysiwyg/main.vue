@@ -410,14 +410,19 @@
             addParameter(){
                     var html = "";
                     html += "<html lang=\"zh-CN\"><head>"
-                            +"<title>"+this.formMain.title+"</title><meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'><meta name='format-detection' content='telephone=no'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css'><script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script></head><body>";
-                   
+                            +"<title>"+this.formMain.title+"</title><meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'><meta name='format-detection' content='telephone=no'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css'>" +
+                        "<script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script>" +
+                        "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>" +
+                        "</head><body>";
+                    var jsincludes='';
                    GlobalStage.save().forEach(item => {
                         console.log(item);
                         html += item.lastSaveHtml+item.js+item.css;
-                    });                
-                    html += "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>";
-                    html += "";
+                       item.jsincludes.forEach(iteminclude => {
+                           jsincludes = jsincludes+'<script type="text/javascript" src="'+iteminclude+'"><\/script>';
+                        });
+                    });
+                    html+=jsincludes;
                     html += "</body>";
                     html += "</html>";
                     this.formMain.html = html;  

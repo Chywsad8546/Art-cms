@@ -278,7 +278,6 @@
 <stage-javascript-import>http://wap-qn.bidewu.com/test/2.js</stage-javascript-import>
 <stage-javascript type="text/javascript">
 
-    var q="";
 
 </stage-javascript>
 <stage-css>
