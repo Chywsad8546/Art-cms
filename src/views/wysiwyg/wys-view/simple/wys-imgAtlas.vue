@@ -274,7 +274,7 @@
   },300);
 </stage-javascript>
 <stage-css>
-    .swiper-container {
+     .swiper-container {
       width: 100%;
       height: 100%;
     }

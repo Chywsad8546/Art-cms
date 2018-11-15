@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import regComponentConf from '../reg-component';
 import wysmixin from './wys-mixin';
+import cssparse from 'css';
 /*
 引擎管理器，wysiwyg最核心的组件
  */
@@ -59,9 +60,10 @@ export default {
                     /**
                      * 编译 stage-css
                      */
-                    console.log('com.component.wys_stageCss', com.component.wys_stageCss);
+                    // console.log('com.component.wys_stageCss', com.component.wys_stageCss);
                     if (_.trim(com.component.wys_stageCss)) {
-                        com.artcss = template.compile(_.trim(com.component.wys_stageCss));
+                        var tmpcomwysstageCss = com.component.wys_stageCss;
+                        com.artcss = function() { return tmpcomwysstageCss; };
                     } else {
                         com.artcss = function () {
                             return '';
@@ -74,7 +76,6 @@ export default {
                     throw '错误:重复注册组件 ' + com.id + '';
                 }
             }
-
         },
         getComponent: function (editorRegid) {
             return this._comsDict[editorRegid];
@@ -90,11 +91,11 @@ export default {
         this.canUseEditors.init();
         this.initComponentFromDB();
     },
-    initComponentFromDB:function(){
+    initComponentFromDB: function() {
         var dbdata = [];
-        for(var i=0;i<dbdata.length;i++){
-            var d= dbdata[i];
-            this.create(d.editor_regid,false,d.data,d.lastSaveHtml,d.js,d.css,d.component_id);
+        for (var i = 0; i < dbdata.length; i++) {
+            var d = dbdata[i];
+            this.create(d.editor_regid, false, d.data, d.lastSaveHtml, d.js, d.css, d.component_id);
         }
     },
     PageID: null, // 页面的数据库id
@@ -112,7 +113,7 @@ export default {
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div id="'+stageComponent.component_id+'"></div>');
+        var dom = $('<div id="' + stageComponent.component_id + '"></div>');
         dom.data('stageCompontHook', stageComponent);
         dom.click(function (event) {
             if (that.currentComponent && $(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
@@ -135,7 +136,7 @@ export default {
         var results = [];
         for (var key in this.stageComponentsDict) {
             var index = this.stageComponentsDict[key].dom.prevAll().length;
-            results[index] ={
+            results[index] = {
                 component_id: this.stageComponentsDict[key].component_id, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
                 js: this.stageComponentsDict[key].js, // 会最终展示出来shi
                 css: this.stageComponentsDict[key].css,
@@ -146,11 +147,11 @@ export default {
             //  this.stageComponentsDict[key];
             // console.log(this.stageComponentsDict[key].dom.prevAll().length)
         }
-        var strHtml = "";
+        var strHtml = '';
         results.forEach(item => {
             strHtml += item.lastSaveHtml;
-        })
-        return results;    
+        });
+        return results;
     },
     /**
      * render方法负责2个事情：
@@ -172,21 +173,22 @@ export default {
         var css = '';
 
         try {
-            html = targetStageComponent.editor.arttemplate({share:data,brickid:component_id});
-            js = targetStageComponent.editor.artjavascript({share:data,brickid:component_id});
-            css = targetStageComponent.editor.artcss({share:data,brickid:component_id});
+            html = targetStageComponent.editor.arttemplate({share: data, brickid: component_id});
+            js = targetStageComponent.editor.artjavascript({share: data, brickid: component_id});
+            css = targetStageComponent.editor.artcss();
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
-        if (_.trim(css) && $('#css-'+component_id).length==0) {
-            css = '<style id="css-'+component_id+'">' + css + '</style>';
+        if (_.trim(css) && $('#css-' + component_id).length == 0) {
+            css = css.replace(/wys_stageCss_hook/g, component_id);
+            css = '<style id="css-' + component_id + '">' + css + '</style>';
             $('head').append(css);
             targetStageComponent.css = css;
         }
 
         targetStageComponent.dom.html(html);
         if (_.trim(js)) {
-            js = '<script id="js-'+component_id+'" type=\'text/javascript\'>' + js + '</script>'
+            js = '<script id="js-' + component_id + '" type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + js + '});</script>';
             $('body').append(js);
         }
         targetStageComponent.js = js;
@@ -200,13 +202,12 @@ export default {
             this._stage.find('.wysi_hold').remove();
             targetStageComponent.isDragNew = false;
         }
-
     },
     /*
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, data, lastSaveHtml,js,css,component_id) {
+    create: function (editor_regid, isDragNew, data, lastSaveHtml, js, css, component_id) {
         var newStageComponent = {
             component_id: component_id || null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
@@ -230,11 +231,12 @@ export default {
             newStageComponent.editor_regid = 'wysHasMiss';
             newStageComponent.editor = this.canUseEditors.getComponent('wysHasMiss');
         }
+        newStageComponent.component_id = this._createComponentId(component_id);
         newStageComponent.dom = this._createDom(newStageComponent);
         if (!isDragNew) {
             newStageComponent.dom.html(newStageComponent.lastSaveHtml);
         }
-        newStageComponent.component_id = this._createComponentId(component_id);
+
         newStageComponent.data = data || {};
         // this.stageComponents.push(newStageComponent);
         this.stageComponentsDict[newStageComponent.component_id] = newStageComponent;
@@ -245,15 +247,14 @@ export default {
     创建唯一id
      */
     _createComponentId: function (component_id) {
-        if(!component_id) {
+        if (!component_id) {
             this._increase = this._increase + 1;
             // return 'wsycom_' + this.PageID + '_' + editor_regid + '_' + this._increase;
             return 'wsyblock-' + this._increase;
         }
         var increaseSeed = parseInt(component_id.split('-')[1]);
-        if(increaseSeed>this._increase){
+        if (increaseSeed > this._increase) {
             this._increase = increaseSeed;
         }
-
     }
 };
