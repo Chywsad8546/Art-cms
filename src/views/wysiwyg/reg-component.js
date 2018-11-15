@@ -4,6 +4,8 @@ import wysHasMiss from './wys-view/simple/wys-wrong';
 import groupdrawing from './wys-view/simple/groupdrawing.vue';
 import wys_pic from './wys-view/simple/wys-pic.vue';
 import wys_Navigation from './wys-view/simple/wys-Navigation.vue';
+import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
+import wys_link from './wys-view/simple/wys-link.vue';
 
 export default {
 
@@ -41,6 +43,18 @@ export default {
             title:'导航',
             component: wys_Navigation,
             id: 'wys_Navigation'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/5d7a196160ee4e19ab8ad68b28c47215.png',
+            title:'分隔符',
+            component: splitcharacter,
+            id: 'wys_splitcharacter'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/0533226876f34c27b71feb7fb72e09dd.png',
+            title:'链接',
+            component: wys_link,
+            id: 'wys_link'
         },
     ]
 };

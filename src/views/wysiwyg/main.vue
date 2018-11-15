@@ -232,7 +232,7 @@
 } 
 .wysiwyg_rightScroll {
     box-sizing: border-box;
-    height: 95%;
+    height: 85%;
     overflow-y: overlay;
     overflow-x: hidden;
 }

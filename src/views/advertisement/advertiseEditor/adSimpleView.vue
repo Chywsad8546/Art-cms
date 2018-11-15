@@ -381,7 +381,7 @@
                  */
                 for (var i = 0; i < this.confs.length; i++) {
                     let item = this.confs[i];
-
+                   
                     this.$set(this.formItem, item.name, item.default);
     
                     let rule = {required: item.required, message: item.message, trigger: 'blur'};// Pattern
@@ -389,7 +389,7 @@
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        rule.Pattern = new RegExp(_.trim(item.reg));
+                        rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
                     if (item.type === 'input') {
@@ -397,7 +397,7 @@
                     } else if (item.type === 'select') {
                         rule.trigger = 'change';
                     }
-                    this.$set(this.ruleValidate, item.name, [rule]);
+                    this.$set(this.ruleValidate, item.name, [rule]);      
                 }
 
                 /**
