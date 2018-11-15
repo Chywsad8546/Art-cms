@@ -238,7 +238,7 @@
 </style>
 
 <stage-template>
-<div id="{{@ share.brickid}}" class="pictureset-box" style="height:100%">
+<div id="{{@ brickid}}" class="pictureset-box" style="height:100%">
     <div class="pictureset-container" style="height:100%">
     <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -267,8 +267,11 @@
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
+  setTimeout(function(){
+    $(".wysi_active").css("height","100%");
     var swiper = new Swiper('.swiper-container', {
     });
+  },300);
 </stage-javascript>
 <stage-css>
     .swiper-container {
@@ -304,6 +307,7 @@
         left: 0;
         width: 100%;
         color: #fff;
+        box-sizing: border-box;
         background-color: rgba(27,27,27,.7);
         max-height: 50%;
         overflow: hidden;

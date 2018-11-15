@@ -1,18 +1,79 @@
 <template>
        <Form  :label-width="60" class="imgWidthCont">
-    <Tabs>
-    
+    <Tabs>  
         <TabPane label="内容" >
- 
-                <Button type="primary" @click="previewAppFun(form.isPublish)">添加tab</Button>
-
+              
+                        <div v-for="item,index in share.uploadList">
+                            <div class="demo-upload-list">
+                                    <img :src="item.url">
+                                    <div class="demo-upload-list-cover">
+                                        <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                                    </div>
+                            </div>
+                            <div>当前图片尺寸: {{item.imgInformation}}</div>
+                            <!-- <CheckboxGroup>
+                                <Checkbox v-model="item.single" label="提示按钮"></Checkbox>
+                            </CheckboxGroup>
+                            <FormItem label="按钮内容" v-if="item.single">
+                                <Input v-model="item.buttonText"></Input>
+                            </FormItem>
+                            <FormItem label="标题">
+                                <Input v-model="item.title"></Input>
+                            </FormItem>
+                            <FormItem label="内容">
+                                <Input v-model="item.content"></Input>
+                            </FormItem> -->
+                            <FormItem label="链接">
+                                <Input v-model="item.httpUrl"></Input>
+                            </FormItem>
+                        </div>
+                        <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
+                                :on-format-error="uploadFormatError"
+                                :show-upload-list="false">
+                                <Button type="ghost" >添加图片</Button>
+                        </Upload>
+           
                 <Modal title="View Image" v-model="visible">
                     <img :src="imgUrl" v-if="visible" style="width: 100%">
                 </Modal>
+        </TabPane>
+        <TabPane label="样式" >
+                <FormItem label="图片选项">
+                    <Select v-model="share.imgSelect" style="width:200px">
+                        <Option value="line1">单列</Option>
+                        <Option value="line2">两列</Option>
+                        <Option value="line3">三列</Option>
+                        <Option value="lineAll">多列</Option>
+                    </Select>
+                </FormItem>
+                <FormItem v-if="share.imgSelect=='lineAll'" label="图片宽度百分比">
+                    <Slider v-model="share.imgWidth" :tip-format="format"></Slider>
+                </FormItem>
+             
+                 <FormItem label="上边距">
+                    <Slider v-model="share.imgTop" show-input></Slider>
+                </FormItem>
+                 <FormItem label="右边距">
+                    <Slider v-model="share.imgRight" show-input></Slider>
+                </FormItem>
+                 <FormItem label="下边距">
+                    <Slider v-model="share.imgBottom" show-input></Slider>
+                </FormItem>
+                 <FormItem label="左边距">
+                    <Slider v-model="share.imgLeft" show-input></Slider>
+                </FormItem>
+                 <FormItem label="背景颜色">
+                    <ColorPicker v-model="share.backColor" style="margin-left:30px; margin-bottom:400px;" recommend />
+                </FormItem>
 
+                    <!-- <ColorPicker v-model="share.backColor" recommend /> -->
         </TabPane>
     </Tabs>
     </Form>
+
+
+
        <!-- <Form  class="imgWidthCont">
     <Tabs>
     
@@ -58,31 +119,6 @@
     </Tabs>
     </Form> -->
 </template>
-<style>
-    .wysiwyg_tab {
-        width: 100%;
-        overflow-x: auto;
-    }
-    .wysiwyg_tab ul {
-        width: 100%;
-        padding: 20px 0 15px 0;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-    }
-    .wysiwyg_tab ul li {
-        padding: 0 10px 0 15px;
-        font-size: 12px;
-        color: #666666;
-        list-style: none;
-        line-height: 20px;
-        /* float: left; */
-        -webkit-flex-shrink: 0;
-        flex-shrink: 0;
-    }
-
-
-</style>
 
 <script>
 
@@ -95,6 +131,9 @@
                     imgRight: 0,
                     imgBottom:0,
                     imgLeft:0,
+                    imgWidth:30,
+                    imgSelect:"line1",
+                    backColor:"",
                     image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png',
                     defaultList:[],
                     uploadList:[
@@ -108,6 +147,9 @@
             };
         },
         methods: {
+            format (val) {
+                return 'width: ' + val + '%';
+            },
             uploadSuccess (res, file) {
                 if (res.code === 'success') {
                     // 创建对象
@@ -172,7 +214,6 @@
 .uploadWidth button {
     width: 260px;
     margin-top:20px;
-
 }
   .demo-upload-list{
         display: inline-block;
@@ -211,69 +252,118 @@
         margin: 0 2px;
     }
     .imgWidthCont {
-        width: 95%;           
+        width: 95%;         
+    }
+    .ivu-form-item {
+        padding-right: 10px !important;
     }
 </style>
-<style>
-.ivu-form .ivu-form-item-label {
-    text-align: left !important;
-    vertical-align: middle;
-    float: left;
-    font-size: 12px;
-    color: #495060;
-    line-height: 1;
-    padding: 10px 12px 10px 0;
-    box-sizing: border-box;
-}
 
-</style>
 
 <stage-template>
-<div id="{{@ share.brickid}}" class="pictureset-box">
-    <div class="wysiwyg_tab">
-        <ul>
-            <li>精选</li>
-            <li>11.11</li>
-            <li>水果</li>
-            <li>海鲜</li>
-            <li>肉禽蛋</li>
-            <li>精选</li>
-            <li>11.11</li>
-            <li>水果</li>
-            <li>海鲜</li>
-            <li>肉禽蛋</li>
+<div id="{{@ brickid}}" class="pictureset-box">
+    <div class="specialListUl {{@share.imgSelect}}">
+        <ul style="{{@share.backColor != "" ? "background:"+share.backColor : ""}}">
+          {{if share.uploadList==0}}
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="javascript:void(0)" target="_self"  class="link"><img src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/></a></li>
+          {{/if}}
+          {{each share.uploadList}}
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="{{$value.httpUrl}}" target="_self"  class="link"><img src="{{$value.url}}"/></a></li>
+          {{/each}} 
         </ul>
     </div>
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
-    setTimeout(function(){
-        $(".wysiwyg_tab").on("click","li",function(){
-            console.log($(this).html());
-        })
-        
-    },1000)
 </stage-javascript>
 <stage-css>
-    .wysiwyg_tab {
+    .specialListUl {
         width: 100%;
+    }
+    .line1 {
+        overflow: hidden;
+    }
+    .line1 li {
+        width: 100%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+    .line1 li img{
+        width: 100%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        list-style: none;
+    }
+    .line2 {
+        overflow: hidden;
+    }
+    .line2 li {
+        width: 50%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+    .line2 li img{
+        width: 100%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        list-style: none;
+    }
+    .line3 {
+        overflow: hidden;
+    }
+    .line3 li {
+        width: 33.33%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+    .line3 li img{
+        width: 100%;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        list-style: none;
+    }
+    .lineAll {
         overflow-x: auto;
     }
-    .wysiwyg_tab ul {
+    .lineAll li {
+        width: 100px;
+        font-size: 12px;
+        color: #666666;
+        line-height: 20px;
+        -webkit-flex-shrink: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        list-style: none;
+    }
+    .specialListUl ul{
         width: 100%;
-        padding: 20px 0 15px 0;
         display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
-    }
-    .wysiwyg_tab ul li {
-        padding: 0 10px 0 15px;
-        font-size: 12px;
-        color: #666666;
-        list-style: none;
-        line-height: 20px;
-        /* float: left; */
-        -webkit-flex-shrink: 0;
-        flex-shrink: 0;
+        box-sizing: border-box;
     }
 </stage-css>
