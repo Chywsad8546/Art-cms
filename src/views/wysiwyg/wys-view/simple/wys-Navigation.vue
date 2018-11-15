@@ -14,9 +14,15 @@
                         </FormItem>  
                     </Col>
                 </Row>
-                <Row> 
+                <Row style="padding-bottom:10px;">  
                     <Col span="24">
-                        <a class="btn" @click="addUrl(item)">
+                        <div v-if="item.url != ''">
+                            <span style="margin-right:10px;">链接到 {{item.url}}</span>
+                            <a v-if="item.url != ''"  @click="item.navVisible = true">
+                                编辑
+                            </a>
+                        </div>
+                        <a v-if="item.url == ''" class="btn" @click="addUrl(item)">
                             <Icon type="plus-round"></Icon>
                             添加链接
                         </a>
@@ -115,7 +121,6 @@
 .navdhName {
     margin-top: 20px;
     padding-right: 20px;
-
 }
 </style>
 
@@ -127,9 +132,9 @@
             <ul class="nav-inner">
                 {{each share.navigatList}}
                     {{if $index==0}}
-                        <li class="cur nav-item"><a>{{$value.name}}</a><i class="line"></i></li>
+                        <li class="cur nav-item"><a href="http://{{$value.url}}" >{{$value.name}}</a><i class="line"></i></li>
                         {{else}}
-                         <li class="nav-item"><a>{{$value.name}}</a><i class="line"></i></li>
+                         <li class="nav-item"><a href="http://{{$value.url}}">{{$value.name}}</a><i class="line"></i></li>
                     {{/if}}
                 {{/each}}
             </ul>
