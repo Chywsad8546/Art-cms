@@ -37,13 +37,12 @@
         background: #FFFFFF;
     }
     .wys-menu-left {
-        width: 320px;
+        width: 260px;
         overflow: hidden;
         float: left;
         background: #FFFFFF;
         box-sizing: border-box;
         height: 95%;
-
     }
     .wys-content {
         float: left;
@@ -439,6 +438,7 @@
         mounted() {
             console.log('mounteds')
             var that = this;
+
             // 初始化建站引擎
             GlobalStage.init(that,function (stageComponent) {
                 that.currentEditor = stageComponent.editor.component;

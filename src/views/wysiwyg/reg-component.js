@@ -3,6 +3,7 @@ import wys_imgAtlas from './wys-view/simple/wys-imgAtlas.vue';
 import wysHasMiss from './wys-view/simple/wys-wrong';
 import groupdrawing from './wys-view/simple/groupdrawing.vue';
 import wys_pic from './wys-view/simple/wys-pic.vue';
+import wys_Navigation from './wys-view/simple/wys-Navigation.vue';
 
 export default {
 
@@ -34,6 +35,12 @@ export default {
             title:'图片',
             component: wys_pic,
             id: 'wys_pic'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/d0e3b2864a554906a150e0951694e284.png',
+            title:'导航',
+            component: wys_Navigation,
+            id: 'wys_Navigation'
         },
     ]
 };
