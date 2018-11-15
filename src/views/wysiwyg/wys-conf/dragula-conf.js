@@ -14,6 +14,12 @@ export default {
             if ($(target).attr('id') == 'wysiwyg_componentbox') {
                 return false;
             }
+            if ($(target).attr('id') == 'qqq') {
+                return $(el).attr('editorregid')=='wys_link';
+            }
+
+
+            console.log(el)
             return true; // elements can be dropped in any of the `containers` by default
         },
         invalid: function (el, handle) {
