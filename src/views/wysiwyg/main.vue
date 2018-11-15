@@ -37,13 +37,12 @@
         background: #FFFFFF;
     }
     .wys-menu-left {
-        width: 320px;
+        width: 260px;
         overflow: hidden;
         float: left;
         background: #FFFFFF;
         box-sizing: border-box;
         height: 95%;
-
     }
     .wys-content {
         float: left;
@@ -233,7 +232,7 @@
 } 
 .wysiwyg_rightScroll {
     box-sizing: border-box;
-    height: 95%;
+    height: 85%;
     overflow-y: overlay;
     overflow-x: hidden;
 }
@@ -252,7 +251,7 @@
 </style>
 
 <template>
-<div>
+<div style="height:100%">
 <div class="wys-header">
     <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
     <div class="wys-header-content"></div>
@@ -444,6 +443,7 @@
         mounted() {
             console.log('mounteds')
             var that = this;
+
             // 初始化建站引擎
             GlobalStage.init(that,function (stageComponent) {
                 that.currentEditor = stageComponent.editor.component;
