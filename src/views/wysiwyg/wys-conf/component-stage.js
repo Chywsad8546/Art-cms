@@ -121,7 +121,7 @@ export default {
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div style="position: relative"><div id="' + stageComponent.component_id + '" ></div></div>');
+        var dom = $('<div style="position: relative" editorregid="'+stageComponent.editor.id+'"><div id="' + stageComponent.component_id + '" ></div></div>');
         dom.data('stageCompontHook', stageComponent);
         /**
          * 鼠标经过的时候，增加一个“删除”按钮
@@ -135,6 +135,9 @@ export default {
                 }
             });
             dom.prepend(deletebtn);
+            // todo 拖拽按钮
+            // var dragbtn=$('<span class="wysiclose" style="z-index: 1000000;position: absolute;left: 0px;top:0px">+</span>');
+            // dom.prepend(dragbtn);
         });
         dom.mouseleave(function () {
             dom.find('.wysiclose').remove();
@@ -149,7 +152,6 @@ export default {
             event.stopPropagation();
             event.preventDefault();
         });
-        // this._stage.find('.wysi_active').size()
         return dom;
     },
     setCurrent: function (stageComponent) {

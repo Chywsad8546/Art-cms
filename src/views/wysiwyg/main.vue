@@ -284,10 +284,10 @@
                     
                     <div class="screen-border">
                         <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
-                            <div>
-                                <ul><li>tit</li></ul>
-<div wys-container id="qqq" style="width: 100%;min-height: 100px;position: relative;background-color: #00a050"></div>
-                            </div>
+                            <!--<div>-->
+                                <!--<ul><li>tit</li></ul>-->
+<!--<div wys-container id="qqq" style="width: 100%;min-height: 100px;position: relative;background-color: #00a050"></div>-->
+                            <!--</div>-->
                         </div>  
                     </div>                 
             </div> 
