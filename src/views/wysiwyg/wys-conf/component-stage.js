@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import regComponentConf from '../reg-component';
 import wysmixin from './wys-mixin';
-import cssparse from 'css';
 /*
 引擎管理器，wysiwyg最核心的组件
  */
@@ -49,12 +48,22 @@ export default {
                     /**
                      * 编译 stage-javascript
                      */
-                    console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript);
+                    // console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript);
                     if (_.trim(com.component.wys_stageJavascript)) {
                         com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
                     } else {
                         com.artjavascript = function () {
                             return '';
+                        };
+                    }
+                    if (_.trim(com.component.wys_stageJavascript_import)) {
+                        var tmpstageJavascript_import=com.component.wys_stageJavascript_import;
+                        com.artjavascriptincludes = function () {
+                            return tmpstageJavascript_import;
+                        };
+                    } else {
+                        com.artjavascriptincludes = function () {
+                            return [];
                         };
                     }
                     /**
@@ -95,7 +104,7 @@ export default {
         var dbdata = [];
         for (var i = 0; i < dbdata.length; i++) {
             var d = dbdata[i];
-            this.create(d.editor_regid, false, d.data, d.lastSaveHtml, d.js, d.css, d.component_id);
+            this.create(d.editor_regid, false, d.data, d.lastSaveHtml, d.js,d.jsincludes, d.css, d.component_id);
         }
     },
     PageID: null, // 页面的数据库id
@@ -200,6 +209,13 @@ export default {
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
+        if(isCreateEventRender){
+            var artjavascriptincludes = targetStageComponent.editor.artjavascriptincludes();
+            for(var i=0;i<artjavascriptincludes.length;i++){
+                $('body').append('<script type="text/javascript" src="'+artjavascriptincludes[i]+'"></script>');
+            }
+        }
+
         if (_.trim(css) && $('#css-' + component_id).length == 0) {
             css = css.replace(/wys_stageCss_hook/g, component_id);
             css = '<style id="css-' + component_id + '">' + css + '</style>';
@@ -250,11 +266,12 @@ export default {
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, data, lastSaveHtml, js, css, component_id) {
+    create: function (editor_regid, isDragNew, data, lastSaveHtml, js,jsincludes, css, component_id) {
         var newStageComponent = {
             component_id: component_id || null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
             dom: null, // jquery对象,即stage上的内容变换全靠它
             js: js || '', // 会最终展示出来shi
+            jsincludes: jsincludes || '',
             css: css || '',
             data: null, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
             editor: null, // vue编辑器组件
