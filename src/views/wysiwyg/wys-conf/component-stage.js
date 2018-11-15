@@ -108,13 +108,27 @@ export default {
     currentComponent: null,
     stageComponentsDict: {},
 
+
     /*
     创建画布上的站位dom，是一个jquery对象
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div id="' + stageComponent.component_id + '"></div>');
+        var dom = $('<div><div id="' + stageComponent.component_id + '" style="position: relative"></div></div>');
         dom.data('stageCompontHook', stageComponent);
+        dom.mouseenter(function () {
+            console.log('over');
+            dom.find('.wysiclose').remove();
+            var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px">删除</span>');
+            deletebtn.click(function () {
+                that.delete(stageComponent.component_id);
+            });
+            dom.prepend(deletebtn);
+        });
+        dom.mouseleave(function () {
+            console.log('out')
+            dom.find('.wysiclose').remove();
+        });
         dom.click(function (event) {
             if (that.currentComponent && $(this).data('stageCompontHook').component_id != that.currentComponent.component_id) {
                 that.setCurrent($(this).data('stageCompontHook'));
@@ -128,6 +142,7 @@ export default {
     setCurrent: function (stageComponent) {
         this.currentComponent = stageComponent;
         this._stage.find('.wysi_active').removeClass('wysi_active');
+
         this.currentComponent.dom.addClass('wysi_active');
         this._currentComponentChangeEvent(this.currentComponent);
     },
@@ -164,6 +179,9 @@ export default {
      */
     render: function (data, component_id, isCreateEventRender, editorRenderTriggerERROR) {
         var targetStageComponent = this.stageComponentsDict[component_id];
+        if(!targetStageComponent){
+            return;
+        }
         /*
         如果没有找到编辑器，或者编辑器初始化报错，都会导致生成的新html出问题，所以这种情况下，不去更新html
          */
@@ -185,8 +203,13 @@ export default {
             $('head').append(css);
             targetStageComponent.css = css;
         }
+        // if(this.currentComponent && this.currentComponent.component_id==component_id){
+        //     targetStageComponent.dom.html('<span style="position: absolute;right: 0px;top:0px">关闭</span>'+html);
+        // }
+        // else {
+        targetStageComponent.dom.children('div').eq(0).html(html);
+        // }
 
-        targetStageComponent.dom.html(html);
         if (_.trim(js)) {
             js = '<script id="js-' + component_id + '" type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + js + '});</script>';
             $('body').append(js);
@@ -202,6 +225,18 @@ export default {
             this._stage.find('.wysi_hold').remove();
             targetStageComponent.isDragNew = false;
         }
+    },
+    delete:function (component_id) {
+        var willdeleteComponent = this.stageComponentsDict[component_id];
+        if(!willdeleteComponent){
+            return;
+        }
+        willdeleteComponent.canFindEditor = false;
+        willdeleteComponent.editor_regid = 'wysHasMiss';
+        willdeleteComponent.editor = this.canUseEditors.getComponent('wysHasMiss');
+        delete this.stageComponentsDict[component_id];
+        this.setCurrent(willdeleteComponent);
+        willdeleteComponent.dom.remove();
     },
     /*
     创建 stageComponent

@@ -12,11 +12,12 @@ export default {
         //     component: wys_img,
         //     id: 'wys_img'
         // },
-        // {
-        //     icon: 'http://wap-qn.bidewu.com/003a814f-a6d1-11e8-8d43-00cfe03e854e.jpg',
-        //     component: wysHasMiss,
-        //     id: 'wysHasMiss'
-        // },
+        {
+            icon: 'http://wap-qn.bidewu.com/003a814f-a6d1-11e8-8d43-00cfe03e854e.jpg',
+            component: wysHasMiss,
+            hide:true,
+            id: 'wysHasMiss'
+        },
         {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/f201497cc5804d7eae6162cb898b62d4.png',
             title:'图集',

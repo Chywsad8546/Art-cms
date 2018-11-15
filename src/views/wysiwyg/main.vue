@@ -261,7 +261,7 @@
      <div class="wys-menu-left">
             <div id="wysiwyg_componentbox" wys-container>
                 <div class="wysiwyg-contitle">内容模块</div>
-                <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
+                <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents" v-if="!item.hide" :editorregid="item.id" >
                     <img  :src="item.icon"/>
                     <p>{{item.title}}</p>
                 </div>
