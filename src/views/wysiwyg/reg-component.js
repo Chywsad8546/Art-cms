@@ -65,13 +65,5 @@ export default {
             component: wys_link,
             id: 'wys_link'
         },
-        {
-            icon: 'http://wap-qn.toutiaofangchan.com/adideas/807e55b1dde946af9aefe4ae46f31583.png',
-            title:'布局组件',
-            component: wys_layout,
-            id: 'wys_layout'
-        },
-
-        
     ]
 };
