@@ -238,7 +238,7 @@
 </style>
 
 <stage-template>
-<div id="{{@ brickid}}" class="pictureset-box" style="height:100%">
+<div  class="pictureset-box" style="height:100%">
     <div class="pictureset-container" style="height:100%">
     <div class="swiper-container">
         <div class="swiper-wrapper">
