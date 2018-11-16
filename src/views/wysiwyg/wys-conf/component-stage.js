@@ -137,7 +137,6 @@ export default {
          * 鼠标经过的时候，增加一个“删除”按钮
          */
         dom.mouseenter(function () {
-            console.log('enter')
             $('.wysiclose').remove();
             $('.wysidrag').remove();
             $('.wysi_hrive').removeClass('wysi_hrive');
