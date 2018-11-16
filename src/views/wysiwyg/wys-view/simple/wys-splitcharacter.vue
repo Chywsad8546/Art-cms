@@ -2,7 +2,6 @@
 <Form  :label-width="60" class="imgWidthCont">
     <Tabs>  
         <TabPane label="内容" >
-
                 <FormItem label="宽度">
                     <Slider v-model="share.width" show-input></Slider>
                 </FormItem>
@@ -16,7 +15,11 @@
                     <Slider v-model="share.right" show-input></Slider>
                 </FormItem>
                  <FormItem label="颜色">
-                    <ColorPicker v-model="share.backColor" style="margin-left:50px;" recommend />
+                    <Row>
+                        <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
+                        <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend /></Col>
+                    </Row>
+                    
                 </FormItem>
                 <Select v-model="share.lineType" style="width:200px; margin-left:30px; margin-bottom:300px">
                     <Option value="solid">实线</Option>
