@@ -260,7 +260,7 @@
      <div class="wys-menu-left">
             <div id="wysiwyg_componentbox" wys-container>
                 <div class="wysiwyg-contitle">内容模块</div>
-                <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
+                <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents" v-if="!item.hide" :editorregid="item.id" >
                     <img  :src="item.icon"/>
                     <p>{{item.title}}</p>
                 </div>
@@ -284,7 +284,10 @@
                     
                     <div class="screen-border">
                         <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
-
+                            <!--<div>-->
+                                <!--<ul><li>tit</li></ul>-->
+<!--<div wys-container id="qqq" style="width: 100%;min-height: 100px;position: relative;background-color: #00a050"></div>-->
+                            <!--</div>-->
                         </div>  
                     </div>                 
             </div> 
@@ -409,14 +412,19 @@
             addParameter(){
                     var html = "";
                     html += "<html lang=\"zh-CN\"><head>"
-                            +"<title>"+this.formMain.title+"</title><meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'><meta name='format-detection' content='telephone=no'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css'><script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script></head><body>";
-                   
+                            +"<title>"+this.formMain.title+"</title><meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'><meta name='format-detection' content='telephone=no'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css'>" +
+                        "<script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script>" +
+                        "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>" +
+                        "</head><body>";
+                    var jsincludes='';
                    GlobalStage.save().forEach(item => {
                         console.log(item);
                         html += item.lastSaveHtml+item.js+item.css;
-                    });                
-                    html += "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>";
-                    html += "";
+                       item.jsincludes.forEach(iteminclude => {
+                           jsincludes = jsincludes+'<script type="text/javascript" src="'+iteminclude+'"><\/script>';
+                        });
+                    });
+                    html+=jsincludes;
                     html += "</body>";
                     html += "</html>";
                     this.formMain.html = html;  
@@ -436,7 +444,13 @@
             }
         },
         mounted() {
-            console.log('mounteds')
+            console.log('mounteds');
+            // $('#qqq').mouseenter(function () {
+            //     $(this).removeAttr('wys-container');
+            // });
+            // $('#qqq').mouseleave(function () {
+            //     $(this).attr('wys-container','');
+            // });
             var that = this;
 
             // 初始化建站引擎
@@ -453,8 +467,11 @@
             var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
             window.__drag=dra;
             dra.on('cloned', function (clone, original, type) {
+                // console.log('clone',clone)
                 if (!$(clone).hasClass('gu-mirror')) {
+                    $(clone).removeClass();
                     $(clone).addClass('wysi_hold');
+                    // $(clone).prop('outerHTML', '<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
                     $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
                 }
             });
@@ -467,7 +484,8 @@
                 dragula_conf.default.copySortSource = false;
             });
             dra.on('drop', function (el, target, source, sibling) {
-                if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
+                // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
+                if ($(target).attr("id")!='wysiwyg_componentbox' && $(source).attr("id")=='wysiwyg_componentbox' ) {
                     var editorregid = $(el).attr('editorregid');
                     GlobalStage.create(editorregid,true);
                 }

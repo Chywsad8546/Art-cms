@@ -7,6 +7,10 @@ export default {
             return false; // only elements in drake.containers will be taken into account
         },
         moves: function (el, source, handle, sibling) {
+            // todo 判断是不是拖拽按钮
+            // if($(source).attr('id') != 'wysiwyg_componentbox'){
+            //     return $(handle).hasClass('wysiclose');
+            // }
             return true; // elements are always draggable by default
         },
         accepts: function (el, target, source, sibling) {
@@ -14,6 +18,13 @@ export default {
             if ($(target).attr('id') == 'wysiwyg_componentbox') {
                 return false;
             }
+            // todo 子容器是否接受这个组件
+            // if ($(target).attr('id') == 'qqq') {
+            //     return $(el).attr('editorregid')=='wys_link';
+            // }
+
+
+            // console.log(el)
             return true; // elements can be dropped in any of the `containers` by default
         },
         invalid: function (el, handle) {
