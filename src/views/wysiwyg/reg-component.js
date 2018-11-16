@@ -3,7 +3,7 @@ import wys_imgAtlas from './wys-view/simple/wys-imgAtlas.vue';
 import wysHasMiss from './wys-view/simple/wys-wrong';
 import groupdrawing from './wys-view/simple/groupdrawing.vue';
 import wys_pic from './wys-view/simple/wys-pic.vue';
-import wys_navigation from './wys-view/simple/wys-gation.vue';
+import wys_navigation from './wys-view/simple/wys-navigation.vue';
 import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
@@ -51,7 +51,7 @@ export default {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/d0e3b2864a554906a150e0951694e284.png',
             title:'导航',
             component: wys_navigation,
-            id: 'wys_Navigation'
+            id: 'wys_navigation'
         },
         {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/5d7a196160ee4e19ab8ad68b28c47215.png',
