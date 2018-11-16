@@ -77,25 +77,25 @@
 
 </stage-template>
 <stage-js-wys>
-    if($t.children('table').length<1){
-    $t.append('<table class="bk"><tr class="wys-placeholder-tr"></tr></table>');
+    if($t.children('ul').length<1){
+        $t.append('<ul style="background-color: #00a050"></ul>');
     }
     <% for(var i = 0; i < share.ids.length; i++){ %>
     if($('#<%= share.ids[i] %>').length<1){
         <% if (i==0) { %>
-            $('<td id="<%= share.ids[i] %>" wys-container width="<%= share.width %>%" height="height: 30px"></td>').insertAfter($t.find('.wys-placeholder-tr').children('td').eq(<%= i %>));
+            $('<li id="<%= share.ids[i] %>" wys-container ></li>').prependTo($t.children('ul'));
         <% } %>
         <% if (i!=0) { %>
-            $('<td id="<%= share.ids[i] %>" wys-container width="<%= share.width %>%" height="height: 30px"></td>').prependTo($t.find('.wys-placeholder-tr'));
+            $('<li id="<%= share.ids[i] %>" wys-container ></li>').insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
         <% } %>
 
     }
     else{
         <% if (i==0) { %>
-            $('#<%= share.ids[i] %>').prependTo($t.find('.wys-placeholder-tr'));
+            $('#<%= share.ids[i] %>').prependTo($t.children('ul'));
         <% } %>
         <% if (i!=0) { %>
-            $('#<%= share.ids[i] %>').insertAfter($t.find('.wys-placeholder-tr').children('td').eq(<%= i-1 %>));
+            $('#<%= share.ids[i] %>').insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
         <% } %>
 
     }
