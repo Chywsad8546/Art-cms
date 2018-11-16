@@ -28,9 +28,10 @@
         data() {
             return {
                 share:{
-                    count:1,
+                    count:0,
                     ids:[],
-                    increase:1
+                    increase:1,
+                    width:0
                 }
             };
         },
@@ -50,6 +51,11 @@
                         this.share.ids.push(this.$vnode.key+'-'+this.share.increase);
                     }
                 }
+                if(this.share.count>0){
+                    this.share.width = parseInt(100/this.share.count);
+                }
+
+
             }
         },
         created: function () {
@@ -71,25 +77,25 @@
 
 </stage-template>
 <stage-js-wys>
-    if($t.children('ul').length<1){
-        $t.append('<ul></ul>');
+    if($t.children('table').length<1){
+    $t.append('<table class="bk"><tr class="wys-placeholder-tr"></tr></table>');
     }
     <% for(var i = 0; i < share.ids.length; i++){ %>
     if($('#<%= share.ids[i] %>').length<1){
         <% if (i==0) { %>
-            $('<li id="<%= share.ids[i] %>" wys-container ></li>').insertAfter($t.children('ul').children().eq(<%= i %>));
+            $('<td id="<%= share.ids[i] %>" wys-container width="<%= share.width %>%" height="height: 30px"></td>').insertAfter($t.find('.wys-placeholder-tr').children('td').eq(<%= i %>));
         <% } %>
         <% if (i!=0) { %>
-            $('<li id="<%= share.ids[i] %>" wys-container ></li>').prependTo($t.children('ul'));
+            $('<td id="<%= share.ids[i] %>" wys-container width="<%= share.width %>%" height="height: 30px"></td>').prependTo($t.find('.wys-placeholder-tr'));
         <% } %>
 
     }
     else{
         <% if (i==0) { %>
-            $('#<%= share.ids[i] %>').prependTo($t.children('ul'));
+            $('#<%= share.ids[i] %>').prependTo($t.find('.wys-placeholder-tr'));
         <% } %>
         <% if (i!=0) { %>
-            $('#<%= share.ids[i] %>').insertAfter($t.children('ul').children().eq(<%= i-1 %>));
+            $('#<%= share.ids[i] %>').insertAfter($t.find('.wys-placeholder-tr').children('td').eq(<%= i-1 %>));
         <% } %>
 
     }
@@ -100,3 +106,9 @@
 
 
 </stage-javascript>
+<stage-css>
+    .bk td {
+    border:1px solid red;
+    }
+
+</stage-css>
