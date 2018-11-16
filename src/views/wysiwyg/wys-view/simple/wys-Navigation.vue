@@ -129,7 +129,7 @@
 
 
 <stage-template>
-<div id="{{@ brickid}}" class="pictureset-box">
+<div  class="pictureset-box">
     <section style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
         <div class="wys-nav-List {{@share.navVertical}}">
             <ul class="nav-inner">
