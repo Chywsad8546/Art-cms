@@ -138,6 +138,8 @@ export default {
          */
         dom.mouseenter(function () {
             dom.find('.wysiclose').remove();
+            dom.find('.wysidrag').remove();
+
             var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px">删除</span>');
             deletebtn.click(function () {
                 if(window.confirm('确定要删除么？')) {
@@ -146,11 +148,12 @@ export default {
             });
             dom.prepend(deletebtn);
             // todo 拖拽按钮
-            // var dragbtn=$('<span class="wysiclose" style="z-index: 1000000;position: absolute;left: 0px;top:0px">+</span>');
-            // dom.prepend(dragbtn);
+            var dragbtn=$('<span class="wysidrag" style="z-index: 1000000;position: absolute;left: 0px;top:0px">+</span>');
+            dom.prepend(dragbtn);
         });
         dom.mouseleave(function () {
             dom.find('.wysiclose').remove();
+            dom.find('.wysidrag').remove();
         });
         /**
          * 鼠标点击的时候，设置当前的 高亮
