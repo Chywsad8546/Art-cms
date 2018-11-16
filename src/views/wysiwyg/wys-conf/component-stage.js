@@ -48,7 +48,7 @@ export default {
                     /**
                      * 编译 stage-javascript
                      */
-                    // console.log('com.component.wys_stageJavascript', com.component.wys_stageJavascript);
+                    // 运行和保存最终前端js
                     if (_.trim(com.component.wys_stageJavascript)) {
                         com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
                     } else {
@@ -56,8 +56,9 @@ export default {
                             return '';
                         };
                     }
+                    // 导入外部js
                     if (_.trim(com.component.wys_stageJavascript_import)) {
-                        var tmpstageJavascript_import=com.component.wys_stageJavascript_import;
+                        var tmpstageJavascript_import=_.cloneDeep(com.component.wys_stageJavascript_import);
                         com.artjavascriptincludes = function () {
                             return tmpstageJavascript_import;
                         };
@@ -66,13 +67,22 @@ export default {
                             return [];
                         };
                     }
+                    // 编辑阶段使用的js,不会被保存
+                    if (_.trim(com.component.wys_stageJsWys)) {
+                        com.artjavascriptwys = template.compile(_.trim(com.component.wys_stageJsWys));
+                    } else {
+                        com.artjavascriptwys = function () {
+                            return '';
+                        };
+                    }
+
                     /**
                      * 编译 stage-css
                      */
                     // console.log('com.component.wys_stageCss', com.component.wys_stageCss);
                     if (_.trim(com.component.wys_stageCss)) {
-                        var tmpcomwysstageCss = com.component.wys_stageCss;
-                        com.artcss = function() { return tmpcomwysstageCss; };
+                        // var tmpcomwysstageCss = com.component.wys_stageCss;
+                        com.artcss = template.compile(_.trim(com.component.wys_stageCss));
                     } else {
                         com.artcss = function () {
                             return '';
@@ -128,6 +138,8 @@ export default {
          */
         dom.mouseenter(function () {
             dom.find('.wysiclose').remove();
+            dom.find('.wysidrag').remove();
+
             var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px">删除</span>');
             deletebtn.click(function () {
                 if(window.confirm('确定要删除么？')) {
@@ -136,11 +148,12 @@ export default {
             });
             dom.prepend(deletebtn);
             // todo 拖拽按钮
-            // var dragbtn=$('<span class="wysiclose" style="z-index: 1000000;position: absolute;left: 0px;top:0px">+</span>');
-            // dom.prepend(dragbtn);
+            var dragbtn=$('<span class="wysidrag" style="z-index: 1000000;position: absolute;left: 0px;top:0px">+</span>');
+            dom.prepend(dragbtn);
         });
         dom.mouseleave(function () {
             dom.find('.wysiclose').remove();
+            dom.find('.wysidrag').remove();
         });
         /**
          * 鼠标点击的时候，设置当前的 高亮
@@ -211,11 +224,12 @@ export default {
         var html = 'arttemplate render 错误';
         var js = '';
         var css = '';
-
+        var jswys = '';
         try {
             html = targetStageComponent.editor.arttemplate({share: data, brickid: component_id});
             js = targetStageComponent.editor.artjavascript({share: data, brickid: component_id});
             css = targetStageComponent.editor.artcss();
+            jswys = targetStageComponent.editor.artjavascriptwys({share: data, brickid: component_id});
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
@@ -233,12 +247,13 @@ export default {
             $('head').append(css);
             targetStageComponent.css = css;
         }
-        // if(this.currentComponent && this.currentComponent.component_id==component_id){
-        //     targetStageComponent.dom.html('<span style="position: absolute;right: 0px;top:0px">关闭</span>'+html);
-        // }
-        // else {
-        targetStageComponent.dom.children('div').eq(0).html(html);
-        // }
+        // console.log('jswys',jswys)
+        if(_.trim(jswys)){
+            $('body').append('<script  type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + jswys + '});</script>');
+        }
+        else {
+            targetStageComponent.dom.children('div').eq(0).html(html);
+        }
 
         if (_.trim(js)) {
             js = '<script id="js-' + component_id + '" type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + js + '});</script>';

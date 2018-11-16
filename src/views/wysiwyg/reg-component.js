@@ -6,7 +6,7 @@ import wys_pic from './wys-view/simple/wys-pic.vue';
 import wys_navigation from './wys-view/simple/wys-navigation.vue';
 import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
-import wys_layout from './wys-view/simple/wys-layout.vue';
+import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 
 export default {
 
@@ -21,6 +21,13 @@ export default {
             component: wysHasMiss,
             hide:true,
             id: 'wysHasMiss'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/f201497cc5804d7eae6162cb898b62d4.png',
+            title:'布局',
+            accepts:['wys_link','wys_splitcharacter'],
+            component: wys_placeholder,
+            id: 'wys_placeholder'
         },
         {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/f201497cc5804d7eae6162cb898b62d4.png',

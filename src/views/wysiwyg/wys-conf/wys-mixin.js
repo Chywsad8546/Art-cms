@@ -18,11 +18,12 @@ export default {
             },{
                 deep: true
             });
-            component_stage.render(this.share, this.$vnode.key, true); // this.$options.wys_stageTemplate,
+             // this.$options.wys_stageTemplate,
 
         }
     },
     activated: function () {
+        component_stage.render(this.share, this.$vnode.key, true);
         console.log('activated');
     },
     // watch: {
