@@ -137,9 +137,10 @@ export default {
          * 鼠标经过的时候，增加一个“删除”按钮
          */
         dom.mouseenter(function () {
-            dom.find('.wysiclose').remove();
-            dom.find('.wysidrag').remove();
-
+            console.log('enter')
+            $('.wysiclose').remove();
+            $('.wysidrag').remove();
+            $('.wysi_hrive').removeClass('wysi_hrive');
             var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px"><img style="width:20px;" src="http://wap-qn.toutiaofangchan.com/adideas/fae2789c085e47398b716e5adeec32df.png"/></span>');
             deletebtn.click(function () {
                 if(window.confirm('确定要删除么？')) {
@@ -151,6 +152,7 @@ export default {
             var dragbtn=$('<img class="wysidrag" style="z-index: 1000000;position: absolute;left: 50%; margin-left:-20px; top:-2px;width:40px;" src="http://wap-qn.toutiaofangchan.com/adideas/00a75c5ecdd343789003cc3d229cb8dc.png"/>');
             dom.prepend(dragbtn);
             dom.addClass("wysi_hrive");
+
         });
         dom.mouseleave(function () {
             dom.find('.wysiclose').remove();
