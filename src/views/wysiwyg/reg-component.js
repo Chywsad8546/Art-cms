@@ -3,7 +3,7 @@ import wys_imgAtlas from './wys-view/simple/wys-imgAtlas.vue';
 import wysHasMiss from './wys-view/simple/wys-wrong';
 import groupdrawing from './wys-view/simple/groupdrawing.vue';
 import wys_pic from './wys-view/simple/wys-pic.vue';
-import wys_navigation from './wys-view/simple/wys-navigation.vue';
+import wys_navigation from './wys-view/simple/wys-gation.vue';
 import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
