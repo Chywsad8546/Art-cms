@@ -2,7 +2,7 @@
        <Form  :label-width="60" class="imgWidthCont">
     <Tabs>  
         <TabPane label="内容" >
-            <div v-for="item,index in share.navigatList">
+            <div v-for="item,index in share.navigatList" v-dragging="{ item: item, list: share.navigatList, group: 'item' }">
                 <Row class="navdhFont">
                     <Col span="12">导航{{index+1}}</Col>
                     <Col span="12" style="text-align:right;"><Icon @click.native="removeNavigat(item)" type="trash-a"></Icon></Col>
@@ -104,9 +104,12 @@
         created: function () {
             // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
         },
-        mounted () {
-           // console.log(this.$refs.upload.fileList);
-           // this.uploadList = this.$refs.upload.fileList;
+        mounted() {
+            this.$dragging.$on('dragged', ({ value }) => {
+                console.log(value.item)
+                console.log(value.list)
+                console.log(value.group)
+            });
         }
     };
 </script>

@@ -6,8 +6,10 @@
     @import '../../../node_modules/dragula/dist/dragula.css';
     img{ max-width:100%; height:auto;border:none; interpolation-mode: bicubic; vertical-align: middle;}
     .wysi_active{
-        border-color: red;
-        border: 1px solid;
+        border: 1px solid #71A5F5;
+    }
+    .wysi_hrive{
+        border: 1px solid #71A5F5;
     }
     .gu-mirror {
         position: fixed !important;
@@ -381,7 +383,6 @@
         },
         methods: {
             fbClick(){
-                console.log($('#wysiwyg_stage').html())
                 this.$refs.formMainValidate.validate((valid) => {
                     if(valid){
                         this.addParameter();
@@ -415,7 +416,6 @@
                         "</head><body>";
                     var jsincludes='';
                    GlobalStage.save().forEach(item => {
-                        console.log(item);
                         html += item.lastSaveHtml+item.js+item.css;
                        item.jsincludes.forEach(iteminclude => {
                            jsincludes = jsincludes+'<script type="text/javascript" src="'+iteminclude+'"><\/script>';
@@ -452,7 +452,6 @@
 
             // 初始化建站引擎
             GlobalStage.init(that,function (stageComponent) {
-                console.log('stageComponent',stageComponent)
                 that.currentEditor = stageComponent.editor.component;
                 that.currentEditorKey = stageComponent.component_id;
                 if(!util.oneOf(that.currentEditorKey,that.includeIds)){

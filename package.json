@@ -53,7 +53,6 @@
     "vuex": "^3.0.1",
     "xlsx": "^0.11.17",
     "dragula": "^3.7.2"
-
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -101,6 +100,6 @@
     "webpack-dev-server": "^2.10.1",
     "webpack-merge": "^4.1.1",
     "webpack-uglify-parallel": "^0.1.4",
-    "css":"^2.2.4"
+    "css": "^2.2.4"
   }
 }

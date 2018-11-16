@@ -2,41 +2,39 @@
        <Form  :label-width="60" class="imgWidthCont">
     <Tabs>  
         <TabPane label="内容" >
-              
-                        <div v-for="item,index in share.uploadList">
-                            <div class="demo-upload-list">
-                                    <img :src="item.url">
-                                    <div class="demo-upload-list-cover">
-                                        <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                                    </div>
-                            </div>
-                            <div>当前图片尺寸: {{item.imgInformation}}</div>
-                            <!-- <CheckboxGroup>
-                                <Checkbox v-model="item.single" label="提示按钮"></Checkbox>
-                            </CheckboxGroup>
-                            <FormItem label="按钮内容" v-if="item.single">
-                                <Input v-model="item.buttonText"></Input>
-                            </FormItem>
-                            <FormItem label="标题">
-                                <Input v-model="item.title"></Input>
-                            </FormItem>
-                            <FormItem label="内容">
-                                <Input v-model="item.content"></Input>
-                            </FormItem> -->
-                            <FormItem label="链接">
-                                <Input v-model="item.httpUrl"></Input>
-                            </FormItem>
+            <div v-for="item,index in share.uploadList">
+                <div class="demo-upload-list">
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                         </div>
-                        <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
-                                :on-format-error="uploadFormatError"
-                                :show-upload-list="false">
-                                <Button type="ghost" >添加图片</Button>
-                        </Upload>
-           
-                <Modal title="View Image" v-model="visible">
-                    <img :src="imgUrl" v-if="visible" style="width: 100%">
-                </Modal>
+                </div>
+                <div>当前图片尺寸: {{item.imgInformation}}</div>
+                <!-- <CheckboxGroup>
+                    <Checkbox v-model="item.single" label="提示按钮"></Checkbox>
+                </CheckboxGroup>
+                <FormItem label="按钮内容" v-if="item.single">
+                    <Input v-model="item.buttonText"></Input>
+                </FormItem>
+                <FormItem label="标题">
+                    <Input v-model="item.title"></Input>
+                </FormItem>
+                <FormItem label="内容">
+                    <Input v-model="item.content"></Input>
+                </FormItem> -->
+                <FormItem label="链接">
+                    <Input v-model="item.httpUrl"></Input>
+                </FormItem>
+            </div>
+            <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
+                    :on-format-error="uploadFormatError"
+                    :show-upload-list="false">
+                    <Button type="ghost" >添加图片</Button>
+            </Upload>       
+            <Modal title="View Image" v-model="visible">
+                <img :src="imgUrl" v-if="visible" style="width: 100%">
+            </Modal>
         </TabPane>
         <TabPane label="样式" >
                 <FormItem label="图片选项">
@@ -64,7 +62,11 @@
                     <Slider v-model="share.imgLeft" show-input></Slider>
                 </FormItem>
                  <FormItem label="背景颜色">
-                    <ColorPicker v-model="share.backColor" style="margin-left:30px; margin-bottom:400px;" recommend />
+                    <Row>
+                        <Col span="12"><Input v-model="share.backColor"></Input></Col>
+                        <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;margin-bottom:300px;" size="default" recommend /></Col>
+                    </Row>
+         
                 </FormItem>
 
                     <!-- <ColorPicker v-model="share.backColor" recommend /> -->

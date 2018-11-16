@@ -1,10 +1,7 @@
 <template>
        <Form  :label-width="60" class="imgWidthCont">
     <Tabs>
-    
         <TabPane label="内容" >
- 
- 
                 <FormItem label="" prop="title">
                         <div v-for="item,index in share.uploadList">
                             <div class="demo-upload-list">
@@ -238,7 +235,7 @@
 </style>
 
 <stage-template>
-<div id="{{@ brickid}}" class="pictureset-box" style="height:100%">
+<div  class="pictureset-box" style="height:100%">
     <div class="pictureset-container" style="height:100%">
     <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -268,7 +265,8 @@
 </stage-template>
 <stage-javascript type="text/javascript">
   setTimeout(function(){
-    $(".wysi_active").css("height","100%");
+    $t.css("height","100%");
+    $t.parent().css("height","100%");
     var swiper = new Swiper('.swiper-container', {
     });
   },300);
@@ -361,7 +359,7 @@
         line-height: 30px;
         text-align: center;
         text-decoration: none;
-    }
+    }    
     .link {
         display: block;
         cursor: pointer;
