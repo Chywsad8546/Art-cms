@@ -6,6 +6,7 @@ import wys_pic from './wys-view/simple/wys-pic.vue';
 import wys_navigation from './wys-view/simple/wys-navigation.vue';
 import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
+import wys_layout from './wys-view/simple/wys-layout.vue';
 
 export default {
 
@@ -57,5 +58,13 @@ export default {
             component: wys_link,
             id: 'wys_link'
         },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/807e55b1dde946af9aefe4ae46f31583.png',
+            title:'布局组件',
+            component: wys_layout,
+            id: 'wys_layout'
+        },
+
+        
     ]
 };

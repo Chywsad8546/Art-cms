@@ -361,7 +361,7 @@
         line-height: 30px;
         text-align: center;
         text-decoration: none;
-    }
+    }    
     .link {
         display: block;
         cursor: pointer;
