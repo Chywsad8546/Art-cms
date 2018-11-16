@@ -83,19 +83,19 @@
     <% for(var i = 0; i < share.ids.length; i++){ %>
     if($('#<%= share.ids[i] %>').length<1){
         <% if (i==0) { %>
-            $('<li id="<%= share.ids[i] %>" wys-container ></li>').prependTo($t.children('ul'));
+            $('<li wys-container="<%= share.ids[i] %>" ></li>').prependTo($t.children('ul'));
         <% } %>
         <% if (i!=0) { %>
-            $('<li id="<%= share.ids[i] %>" wys-container ></li>').insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
+            $('<li wys-container="<%= share.ids[i] %>" ></li>').insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
         <% } %>
 
     }
     else{
         <% if (i==0) { %>
-            $('#<%= share.ids[i] %>').prependTo($t.children('ul'));
+            $("[wys-container='<%= share.ids[i] %>']").prependTo($t.children('ul'));
         <% } %>
         <% if (i!=0) { %>
-            $('#<%= share.ids[i] %>').insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
+            $("[wys-container='<%= share.ids[i] %>']").insertAfter($t.children('ul').children('li').eq(<%= i-1 %>));
         <% } %>
 
     }

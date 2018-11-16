@@ -131,7 +131,7 @@ export default {
      */
     _createDom: function (stageComponent) {
         var that = this;
-        var dom = $('<div style="position: relative" editorregid="'+stageComponent.editor.id+'"><div id="' + stageComponent.component_id + '" ></div></div>');
+        var dom = $('<div id="' + stageComponent.component_id + '" editorregid="'+stageComponent.editor.id+'" style="position: relative"></div>');
         dom.data('stageCompontHook', stageComponent);
         /**
          * 鼠标经过的时候，增加一个“删除”按钮
@@ -139,7 +139,7 @@ export default {
         dom.mouseenter(function () {
             dom.find('.wysiclose').remove();
             dom.find('.wysidrag').remove();
-
+            // dom.wrap('<div></div>')
             var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px">删除</span>');
             deletebtn.click(function () {
                 if(window.confirm('确定要删除么？')) {
@@ -154,6 +154,7 @@ export default {
         dom.mouseleave(function () {
             dom.find('.wysiclose').remove();
             dom.find('.wysidrag').remove();
+            // dom.unwrap();
         });
         /**
          * 鼠标点击的时候，设置当前的 高亮
@@ -252,7 +253,7 @@ export default {
             $('body').append('<script  type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + jswys + '});</script>');
         }
         else {
-            targetStageComponent.dom.children('div').eq(0).html(html);
+            targetStageComponent.dom.html(html); //children('div').eq(0)
         }
 
         if (_.trim(js)) {
