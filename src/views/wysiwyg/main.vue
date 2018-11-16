@@ -384,7 +384,8 @@
             };
         },
         methods: {
-            fbClick(){  
+            fbClick(){
+                console.log($('#wysiwyg_stage').html())
                 this.$refs.formMainValidate.validate((valid) => {
                     if(valid){
                         this.addParameter();
@@ -455,6 +456,7 @@
 
             // 初始化建站引擎
             GlobalStage.init(that,function (stageComponent) {
+                console.log('stageComponent',stageComponent)
                 that.currentEditor = stageComponent.editor.component;
                 that.currentEditorKey = stageComponent.component_id;
                 if(!util.oneOf(that.currentEditorKey,that.includeIds)){

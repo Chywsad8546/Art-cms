@@ -1,5 +1,6 @@
 const stage_template_Loader = require.resolve('../src/libs/stage-template-loader.js')
 const stage_script_Loader = require.resolve('../src/libs/stage-javascript-loader.js')
+const stage_js_wys_Loader = require.resolve('../src/libs/stage-js-wys-loader.js')
 const stage_script_include_Loader = require.resolve('../src/libs/stage-javascript-include-loader.js')
 const stage_css_Loader = require.resolve('../src/libs/stage-css-loader.js')
 const path = require('path');
@@ -34,7 +35,8 @@ module.exports = {
                         'stage-template': stage_template_Loader,
                         'stage-javascript': stage_script_Loader,
                         'stage-css': stage_css_Loader,
-                        'stage-javascript-import':stage_script_include_Loader
+                        'stage-javascript-import':stage_script_include_Loader,
+                        'stage-js-wys':stage_js_wys_Loader
                     },
                     postLoaders: {
                         html: 'babel-loader'
