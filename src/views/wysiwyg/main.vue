@@ -340,7 +340,7 @@
         },
         data() {
             return {
-                wysiwyg_prevent_mixin_isEditorRoot:true,
+                wysiwyg_prevent_mixin_isEditorRoot: true,
                 includeIds: [],
                 lefcomponents: GlobalStage.canUseEditors.coms,
                 currentEditor: wys_default,
@@ -353,27 +353,28 @@
                     editor: ''
                 },
                 ruleMainValidate: {
-                     title: [
+                    title: [
                         { required: true, message: '请输入标题', trigger: 'blur' }
-                    ],
-                }
+                    ]
+                },
+                id: this.$route.query.id
             };
         },
         methods: {
-            fbClick(){
+            fbClick() {
                 this.$refs.formMainValidate.validate((valid) => {
-                    if(valid){
+                    if (valid) {
                         this.addParameter();
                         api.saveDiyWebpage(this.formMain).then(response => {
                             console.log(response);
-                        })
-                    }   
-                 })                       
+                        });
+                    }
+                });
             },
-            previewClick(){
+            previewClick() {
                 this.$refs.formMainValidate.validate((valid) => {
-                if(valid){
-                    this.addParameter();
+                    if (valid) {
+                        this.addParameter();
                     // api.saveDiyWebpageHistory(this.formMain).then(response => {
                     //     this.formMain.id = response.data.data.pid;
                     //     this.formMain.siteId = response.data.data.id;
@@ -382,40 +383,81 @@
                     //     document.getElementById("qrcode10").innerHTML = "";
                     //     this.qrcode(url);
                     // })
-                }  
-               })              
+                    }
+                });
             },
-            runBack(){
+            runBack() {
                 this.$router.push({
                     name: 'wysiwygWebList', query: {siteid: this.$route.query.siteid}
-                });  
+                });
             },
-            getDiyWebpages() {
-                api.getDiyWebpages({
-                    id:this.$route.query.id
-                }).then(response => {
-                    console.log(response);
-                })
+            initStage(editor) {
+                console.log('editor',editor)
+                var that = this;
+                var stagedict=null;
+                var lastsavehtml = null;
+                if(editor){
+                    stagedict = editor.stagedict;
+                    lastsavehtml = editor.strhtml;
+                }
+                // 初始化建站引擎
+                GlobalStage.init(that, function (stageComponent) {
+                    that.currentEditor = stageComponent.editor.component;
+                    that.currentEditorKey = stageComponent.component_id;
+                    if (!util.oneOf(that.currentEditorKey, that.includeIds)) {
+                        that.includeIds.push(that.currentEditorKey);
+                    }
+                }, 'wysiwyg_stage',stagedict,lastsavehtml);
+                if (window.__drag) {
+                    window.__drag.destroy();
+                }
+                var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
+                window.__drag = dra;
+                dra.on('cloned', function (clone, original, type) {
+                    // console.log('clone',clone)
+                    console.log(!$(clone).hasClass('gu-mirror'));
+                    if (!$(clone).hasClass('gu-mirror')) {
+                        $(clone).removeClass();
+                        $(clone).addClass('wysi_hold');
+                        // $(clone).prop('outerHTML', '<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
+                        $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
+                    }
+                });
+                dra.on('drag', function (el, source) {
+                    if ($(source).attr('id') == 'wysiwyg_stage') {
+                        dragula_conf.default.copySortSource = true;
+                    }
+                });
+                dra.on('dragend', function (el, source) {
+                    dragula_conf.default.copySortSource = false;
+                });
+                dra.on('drop', function (el, target, source, sibling) {
+                    // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
+                    if ($(target).attr('id') != 'wysiwyg_componentbox' && $(source).attr('id') == 'wysiwyg_componentbox') {
+                        var editorregid = $(el).attr('editorregid');
+                        GlobalStage.create(editorregid, true);
+                    } else if ($(source).attr('id') == 'wysiwyg_stage') {
+                        $(el).click();
+                    }
+                });
             },
-            addParameter(){
-                    var html = "";
-                    html += "<html lang=\"zh-CN\"><head>"
-                            +"<title>"+this.formMain.title+"</title><meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'><meta name='format-detection' content='telephone=no'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css'><link rel='stylesheet' href='http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css'>" +
-                        "<script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script>" +
-                        "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>" +
-                        "</head><body>";
-                    var stagereslut = GlobalStage.save()
+            addParameter() {
+                var html = '';
+                html += '<html lang="zh-CN"><head>' +
+                        '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
+                        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
+                        '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
+                        '</head><body>';
+                var stagereslut = GlobalStage.save();
                 html += stagereslut.html;
-                    html += "</body>";
-                    html += "</html>";
+                html += '</body>';
+                html += '</html>';
 
                 this.formMain.html = html;
-                this.formMain.editor = JSON.stringify(stagereslut.stage)
+                this.formMain.editor = JSON.stringify(stagereslut.stage);
                 this.formMain.siteId = this.$route.query.siteid;
-
             },
             qrcode (url) {
-                console.log(url);
                 let qrcode = new QRCode('qrcode10', {
                     width: 200,
                     height: 200, // 高度
@@ -423,65 +465,25 @@
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
-                })
+                });
             }
         },
         mounted() {
-            console.log('mounteds');
-            // $('#qqq').mouseenter(function () {
-            //     $(this).removeAttr('wys-container');
-            // });
-            // $('#qqq').mouseleave(function () {
-            //     $(this).attr('wys-container','');
-            // });
             var that = this;
-
-            // 初始化建站引擎
-            GlobalStage.init(that,function (stageComponent) {
-                that.currentEditor = stageComponent.editor.component;
-                that.currentEditorKey = stageComponent.component_id;
-                if(!util.oneOf(that.currentEditorKey,that.includeIds)){
-                    that.includeIds.push(that.currentEditorKey);
-                }
-            }, 'wysiwyg_stage', this.$route.query.id);
-            if(window.__drag){
-                window.__drag.destroy();
+            if(this.id){
+                api.getDiyWebpages({
+                    id: this.id
+                }).then(response => {
+                    that.formMain.title = response.data.data[0].title;
+                    that.initStage(JSON.parse(response.data.data[0].editor));
+                });
             }
-            var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
-            window.__drag=dra;
-            dra.on('cloned', function (clone, original, type) {
-                // console.log('clone',clone)
-                console.log(!$(clone).hasClass('gu-mirror'))
-                if (!$(clone).hasClass('gu-mirror')) {
-                    $(clone).removeClass();
-                    $(clone).addClass('wysi_hold');
-                    // $(clone).prop('outerHTML', '<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
-                    $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
-                }
-            });
-            dra.on('drag', function (el, source) {
-                if ($(source).attr('id') == 'wysiwyg_stage') {
-                    dragula_conf.default.copySortSource = true;
-                }
-            });
-            dra.on('dragend', function (el, source) {
-                dragula_conf.default.copySortSource = false;
-            });
-            dra.on('drop', function (el, target, source, sibling) {
-                // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
-                if ($(target).attr("id")!='wysiwyg_componentbox' && $(source).attr("id")=='wysiwyg_componentbox' ) {
-                    var editorregid = $(el).attr('editorregid');
-                    GlobalStage.create(editorregid,true);
-                }
-                else if($(source).attr("id")=='wysiwyg_stage'){
-                    $(el).click();
-                }
-            });
+            else {
+                that.initStage();
+            }
+
         },
         created() {
-            if(this.$route.query.id){
-                this.getDiyWebpages();
-            }
         }
     };
 </script>
