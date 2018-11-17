@@ -146,7 +146,10 @@
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
-
+    $t.children().children().children().on("click","li",function(){
+        $($t.children().children().children()).find("li").removeClass("cur");
+        $(this).addClass("cur");
+    });
 </stage-javascript>
 <stage-css>
 

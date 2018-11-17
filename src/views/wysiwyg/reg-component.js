@@ -52,7 +52,7 @@ export default {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/d0e3b2864a554906a150e0951694e284.png',
             title:'导航',
             component: wys_navigation,
-            id: 'wys_Navigation'
+            id: 'wys_navigation'
         },
         {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/5d7a196160ee4e19ab8ad68b28c47215.png',
