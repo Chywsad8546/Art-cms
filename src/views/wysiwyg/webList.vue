@@ -88,11 +88,8 @@
                                         on: {
                                             click: () => {
                                                 this.$router.push({
-                                                    name: 'wysiwygmaindemo', query: {id: params.row.id}
-                                                });  
-                                                // this.updateCahnnelValue.pageId = params.row.pageId;
-                                                // this.updateCahnnelValue.pageName = params.row.pageName;
-                                                // i.modal2 = true;
+                                                    name: 'wysiwygmain', query: {siteid: params.row.siteId,id: params.row.id}
+                                                });
                                             }
                                         }
                                     },

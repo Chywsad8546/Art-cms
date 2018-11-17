@@ -271,7 +271,7 @@
      <section id="middle" class="workarea-main">
          <div class="operate-bar">
             <div class="operate-bar-wrap">
-                <a href="http://h5.toutiao.com/tetris/site/lists/" class="btn">
+                <a  @click="runBack()" class="btn">
                     <a class="return_home">返回站点列表</a>
                 </a> 
                     <span class="btn" @click="fbClick()"> <Icon type="compose"></Icon><span>保存</span></span> 
@@ -407,6 +407,18 @@
                 }  
                })              
             },
+            runBack(){
+                this.$router.push({
+                    name: 'wysiwygWebList', query: {siteid: this.$route.query.siteid}
+                });  
+            },
+            getDiyWebpages() {
+                api.getDiyWebpages({
+                    id:this.$route.query.id
+                }).then(response => {
+                    console.log(response);
+                })
+            },
             addParameter(){
                     var html = "";
                     html += "<html lang=\"zh-CN\"><head>"
@@ -489,7 +501,9 @@
             });
         },
         created() {
-            // console.log('created');
+            if(this.$route.query.id){
+                this.getDiyWebpages();
+            }
         }
     };
 </script>
