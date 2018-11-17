@@ -177,9 +177,9 @@
 <stage-template>
 <section style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
    <div class="groupdrawing-container">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper swiperHeight">
     {{if share.uploadList==0}}
-        <div class="swiper-slide image-con">
+        <div class="swiper-slide image-con swiperHeight">
                 <img style="width:100%" id="{{@ share.brickid}}" src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/>   
             {{if share.label!=""}}
                 <span class="image-text {{@ share.position}}">{{@ share.label}}</span>
@@ -187,7 +187,7 @@
         </div>
     {{/if}}
     {{each share.uploadList}}
-        <div class="swiper-slide image-con">
+        <div class="swiper-slide image-con swiperHeight">
             <a href="{{$value.httpUrl}}" target="_self"  class="link">
                 <img style="width:100%" id="{{@ share.brickid}}" src="{{$value.url}}"/>   
             </a>
@@ -196,24 +196,24 @@
             {{/if}}       
         </div>
     {{/each}} 
-
         </div>
         <div class="swiper-pagination"></div>
-    </div
+    </div>
 </section>
 </stage-template>
 <stage-javascript type="text/javascript">
+  setTimeout(function(){
     var groupdrawing = new Swiper('.groupdrawing-container', {
       pagination: {
         el: '.swiper-pagination',
         dynamicBullets: true,
       },
     });
+    },300);
 </stage-javascript>
 <stage-css>
-    body,html{
-        padding:0;
-        margin:0;
+    .swiperHeight {
+        height: auto !important; 
     }
     .image-text {
         position: absolute;
@@ -281,11 +281,11 @@
         padding-right: 10px;
     }
     .groupdrawing-container {
-        margin: 0 auto;
-        position: relative;
-        overflow: hidden;
-        list-style: none;
-        padding: 0;
-        z-index: 1;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+     height: auto;
+    visibility: visible;
     }
 </stage-css>

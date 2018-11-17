@@ -6,9 +6,10 @@
     @import '../../../node_modules/dragula/dist/dragula.css';
     img{ max-width:100%; height:auto;border:none; interpolation-mode: bicubic; vertical-align: middle;}
     .wysi_active{
-        border-color: red;
-        border: 1px solid;
-        height: 100%;
+        border: 1px solid #71A5F5;
+    }
+    .wysi_hrive{
+        border: 1px solid #71A5F5;
     }
     .gu-mirror {
         position: fixed !important;
@@ -38,11 +39,12 @@
         background: #FFFFFF;
     }
     .wys-menu-left {
-        width: 320px;
+        width: 260px;
         overflow: hidden;
         float: left;
+        background: #FFFFFF;
         box-sizing: border-box;
-
+        height: 95%;
     }
     .wys-content {
         float: left;
@@ -151,6 +153,8 @@
     #right {
         display: block;
         width: 320px;
+        padding-left:20px;
+        box-sizing: border-box;
         top: 0;
         right: 0;
     }
@@ -230,35 +234,47 @@
 } 
 .wysiwyg_rightScroll {
     box-sizing: border-box;
-    height: 95%;
+    height: 85%;
     overflow-y: overlay;
     overflow-x: hidden;
 }
-
+.wysiwyg-leftIcon {
+    width: 64px;
+    height: 90px;
+    float: left;
+    margin-left: 15px;
+    text-align: center;
+}
+.wysiwyg-contitle {
+    font-size: 16px;
+    padding-left: 20px;
+    margin: 10px 0 10px 0; 
+}
 </style>
 
 <template>
-<div>
+<div style="height:100%">
 <div class="wys-header">
     <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg"/> </div>
     <div class="wys-header-content"></div>
 </div> 
  <div id="main" class="layout edit" >
-
      <div class="wys-menu-left">
             <div id="wysiwyg_componentbox" wys-container>
-                <div v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
-                    <img  :src="item.icon" style="width: 100px;height: 100px;"/>
+                <div class="wysiwyg-contitle">内容模块</div>
+                <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents" v-if="!item.hide" :editorregid="item.id" >
+                    <img  :src="item.icon"/>
+                    <p>{{item.title}}</p>
                 </div>
             </div>
      </div>
      <section id="middle" class="workarea-main">
          <div class="operate-bar">
             <div class="operate-bar-wrap">
-                <a href="http://h5.toutiao.com/tetris/site/lists/" class="btn">
+                <a  @click="runBack()" class="btn">
                     <a class="return_home">返回站点列表</a>
                 </a> 
-                    <span class="btn"> <Icon type="compose"></Icon><span>保存</span></span> 
+                    <span class="btn" @click="fbClick()"> <Icon type="compose"></Icon><span>保存</span></span> 
                     <span class="btn" @click="previewClick()"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
                     <span class="btn" @click="fbClick()"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
             </div>
@@ -270,8 +286,7 @@
                     
                     <div class="screen-border">
                         <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
-
-                        </div>  
+                        </div>
                     </div>                 
             </div> 
             </div>
@@ -291,30 +306,8 @@
          </div>
      </div>
  </div>
-    <!-- <div class="main" >
-        <div class="sidebar-menu-con" :style="{width: '200px', overflow:  'auto'}">
 
-            <div id="wysiwyg_componentbox" wys-container>
-                <div v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
-                    <img  :src="item.icon" style="width: 100px;height: 100px;"/>
-                </div>
-            </div>
-        </div>
-        <div class="single-page-con" :style="{left: '200px',right:'300px',top:'0px',backgroundColor: '#7f8c8d'}">
-            <div class="single-page" id="wysiwyg_stage" wys-container style="height: 100%">
-
-            </div>
-        </div>
-        <div style="position: fixed;right: 0px;top:0px;width: 300px; background-color: white ">
-
-                    <navigation :include="includeIds">
-                        <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
-                    </navigation>
-
-
-        </div>
-    </div> -->
-    <Modal v-model="qrcodeModal"  width="500">
+    <Modal v-model="qrcodeModal"  width="200">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
         </p>
@@ -347,7 +340,7 @@
         },
         data() {
             return {
-                wysiwyg_prevent_mixin_isEditorRoot:true,
+                wysiwyg_prevent_mixin_isEditorRoot: true,
                 includeIds: [],
                 lefcomponents: GlobalStage.canUseEditors.coms,
                 currentEditor: wys_default,
@@ -360,50 +353,110 @@
                     editor: ''
                 },
                 ruleMainValidate: {
-                     title: [
+                    title: [
                         { required: true, message: '请输入标题', trigger: 'blur' }
-                    ],
-                }
+                    ]
+                },
+                id: this.$route.query.id
             };
         },
         methods: {
-            fbClick(){  
+            fbClick() {
                 this.$refs.formMainValidate.validate((valid) => {
-                    if(valid){
+                    if (valid) {
                         this.addParameter();
                         api.saveDiyWebpage(this.formMain).then(response => {
                             console.log(response);
-                        }) 
-                    }   
-                 })                       
+                        });
+                    }
+                });
             },
-            previewClick(){
+            previewClick() {
                 this.$refs.formMainValidate.validate((valid) => {
-                if(valid){
-                    this.addParameter();
-                    api.saveDiyWebpageHistory(this.formMain).then(response => {
-                        this.formMain.pid = response.data.data.pid;
-                        this.formMain.siteId = response.data.data.id;
-                        console.log(response.data.data.pid);
-                        this.qrcodeModal = true;
-                        var url = "http://newcms.dev.bidewu.com/#/wysiwygPreview?id="+response.data.data.pid;
-                        this.qrcode(url);
-                    }) 
-                }  
-               })              
+                    if (valid) {
+                        this.addParameter();
+                    // api.saveDiyWebpageHistory(this.formMain).then(response => {
+                    //     this.formMain.id = response.data.data.pid;
+                    //     this.formMain.siteId = response.data.data.id;
+                    //     this.qrcodeModal = true;
+                    //     var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
+                    //     document.getElementById("qrcode10").innerHTML = "";
+                    //     this.qrcode(url);
+                    // })
+                    }
+                });
             },
-            addParameter(){
-                    var html = "";
-                    GlobalStage.save().forEach(item => {
-                        html += item.lastSaveHtml+item.js+item.css;
-                    });
-                    console.log(html);
-                    this.formMain.html = html;  
-                    this.formMain.editor = JSON.stringify(GlobalStage.save());
-                    this.formMain.siteId = this.$route.query.siteid;            
+            runBack() {
+                this.$router.push({
+                    name: 'wysiwygWebList', query: {siteid: this.$route.query.siteid}
+                });
+            },
+            initStage(editor) {
+                var that = this;
+                var stagedict=null;
+                var lastsavehtml = null;
+                if(editor){
+                    stagedict = editor.stagedict;
+                    lastsavehtml = editor.strhtml;
+                }
+                // 初始化建站引擎
+                GlobalStage.init(that, function (stageComponent) {
+                    that.currentEditor = stageComponent.editor.component;
+                    that.currentEditorKey = stageComponent.component_id;
+                    if (!util.oneOf(that.currentEditorKey, that.includeIds)) {
+                        that.includeIds.push(that.currentEditorKey);
+                    }
+                }, 'wysiwyg_stage',stagedict,lastsavehtml);
+                if (window.__drag) {
+                    window.__drag.destroy();
+                }
+                var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
+                window.__drag = dra;
+                dra.on('cloned', function (clone, original, type) {
+                    // console.log('clone',clone)
+                    console.log(!$(clone).hasClass('gu-mirror'));
+                    if (!$(clone).hasClass('gu-mirror')) {
+                        $(clone).removeClass();
+                        $(clone).addClass('wysi_hold');
+                        // $(clone).prop('outerHTML', '<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
+                        $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
+                    }
+                });
+                dra.on('drag', function (el, source) {
+                    if ($(source).attr('id') == 'wysiwyg_stage') {
+                        dragula_conf.default.copySortSource = true;
+                    }
+                });
+                dra.on('dragend', function (el, source) {
+                    dragula_conf.default.copySortSource = false;
+                });
+                dra.on('drop', function (el, target, source, sibling) {
+                    // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
+                    if ($(target).attr('id') != 'wysiwyg_componentbox' && $(source).attr('id') == 'wysiwyg_componentbox') {
+                        var editorregid = $(el).attr('editorregid');
+                        GlobalStage.create(editorregid, true);
+                    } else if ($(source).attr('id') == 'wysiwyg_stage') {
+                        $(el).click();
+                    }
+                });
+            },
+            addParameter() {
+                var html = '';
+                html += '<html lang="zh-CN"><head>' +
+                        '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
+                        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
+                        '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
+                        '</head><body>';
+                var stagereslut = GlobalStage.save();
+                html += stagereslut.html;
+                html += '</body>';
+                html += '</html>';
+
+                this.formMain.html = html;
+                this.formMain.editor = JSON.stringify(stagereslut.stage);
+                this.formMain.siteId = this.$route.query.siteid;
             },
             qrcode (url) {
-                console.log(url);
                 let qrcode = new QRCode('qrcode10', {
                     width: 200,
                     height: 200, // 高度
@@ -411,51 +464,25 @@
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
-                })
+                });
             }
         },
         mounted() {
-            console.log('mounteds')
             var that = this;
-            // 初始化建站引擎
-            GlobalStage.init(that,function (stageComponent) {
-                that.currentEditor = stageComponent.editor.component;
-                that.currentEditorKey = stageComponent.component_id;
-                if(!util.oneOf(that.currentEditorKey,that.includeIds)){
-                    that.includeIds.push(that.currentEditorKey);
-                }
-            }, 'wysiwyg_stage', this.$route.query.id);
-            if(window.__drag){
-                window.__drag.destroy();
+            if(this.id){
+                api.getDiyWebpages({
+                    id: this.id
+                }).then(response => {
+                    that.formMain.title = response.data.data[0].title;
+                    that.initStage(JSON.parse(response.data.data[0].editor));
+                });
             }
-            var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
-            window.__drag=dra;
-            dra.on('cloned', function (clone, original, type) {
-                if (!$(clone).hasClass('gu-mirror')) {
-                    $(clone).addClass('wysi_hold');
-                    $(clone).html('<div  style="display: block;width: 100%; height: 50px;background-color:#a67f59;border:1px #aa5500 dashed; text-align: center;vertical-align:middle;font-size: 26px">放这里</div>');
-                }
-            });
-            dra.on('drag', function (el, source) {
-                if ($(source).attr('id') == 'wysiwyg_stage') {
-                    dragula_conf.default.copySortSource = true;
-                }
-            });
-            dra.on('dragend', function (el, source) {
-                dragula_conf.default.copySortSource = false;
-            });
-            dra.on('drop', function (el, target, source, sibling) {
-                if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
-                    var editorregid = $(el).attr('editorregid');
-                    GlobalStage.create(editorregid,true);
-                }
-                else if($(source).attr("id")=='wysiwyg_stage'){
-                    $(el).click();
-                }
-            });
+            else {
+                that.initStage();
+            }
+
         },
         created() {
-            // console.log('created');
         }
     };
 </script>

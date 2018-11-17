@@ -383,7 +383,7 @@ export const appRouter = [
         {
             path: 'establishColumn',
             name: 'establishColumn',
-            title: '添加站点',
+            title: '站点列表',
             // meta: {
             //     keepalive: true
             // },

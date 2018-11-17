@@ -87,14 +87,25 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.updateCahnnelValue.pageId = params.row.pageId;
-                                                this.updateCahnnelValue.pageName = params.row.pageName;
-                                                i.modal2 = true;
+                                                this.$router.push({
+                                                    name: 'wysiwygmain', query: {siteid: params.row.siteId,id: params.row.id}
+                                                });
                                             }
                                         }
                                     },
                                     '修改'
-                                )
+                                ),
+                                //  h('Button', {
+                                //     props: {
+                                //         type: 'error',
+                                //         size: 'small'
+                                //     },
+                                //     on: {
+                                //         click: () => {
+                                //           //  this.remove(params.index)
+                                //         }
+                                //     }
+                                // }, 'Delete')
                             ]);
                         }
                     }
@@ -127,8 +138,7 @@
         },
         methods: {
             init() {
-                api.getDiyWebpages().then(response => {
-                     console.log(response);
+                api.getDiyWebpages(this.searchData).then(response => {
                      this.total = response.data.count;
                      this.data = response.data.data;
                 });

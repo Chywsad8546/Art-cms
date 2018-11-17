@@ -120,6 +120,8 @@ async function get (url, config) {
  * @param config
  */
  async function post (url, data, config) {
+     console.log('post')
+    console.log(Qs.stringify(data || {}))
     let response =await axios.post(url, Qs.stringify(data || {}), config || {});
     return response
 }
