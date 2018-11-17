@@ -306,29 +306,7 @@
          </div>
      </div>
  </div>
-    <!-- <div class="main" >
-        <div class="sidebar-menu-con" :style="{width: '200px', overflow:  'auto'}">
 
-            <div id="wysiwyg_componentbox" wys-container>
-                <div v-for="(item, index) in lefcomponents"  :editorregid="item.id" >
-                    <img  :src="item.icon" style="width: 100px;height: 100px;"/>
-                </div>
-            </div>
-        </div>
-        <div class="single-page-con" :style="{left: '200px',right:'300px',top:'0px',backgroundColor: '#7f8c8d'}">
-            <div class="single-page" id="wysiwyg_stage" wys-container style="height: 100%">
-
-            </div>
-        </div>
-        <div style="position: fixed;right: 0px;top:0px;width: 300px; background-color: white ">
-
-                    <navigation :include="includeIds">
-                        <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
-                    </navigation>
-
-
-        </div>
-    </div> -->
     <Modal v-model="qrcodeModal"  width="200">
         <p slot="header" style="color:#f60;text-align:center">
             <span></span>
