@@ -286,11 +286,7 @@
                     
                     <div class="screen-border">
                         <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
-                            <!--<div>-->
-                                <!--<ul><li>tit</li></ul>-->
-<!--<div wys-container id="qqq" style="width: 100%;min-height: 100px;position: relative;background-color: #00a050"></div>-->
-                            <!--</div>-->
-                        </div>  
+                        </div>
                     </div>                 
             </div> 
             </div>
@@ -392,7 +388,7 @@
                         this.addParameter();
                         api.saveDiyWebpage(this.formMain).then(response => {
                             console.log(response);
-                        }) 
+                        })
                     }   
                  })                       
             },
@@ -400,14 +396,14 @@
                 this.$refs.formMainValidate.validate((valid) => {
                 if(valid){
                     this.addParameter();
-                    api.saveDiyWebpageHistory(this.formMain).then(response => {
-                        this.formMain.id = response.data.data.pid;
-                        this.formMain.siteId = response.data.data.id;
-                        this.qrcodeModal = true;
-                        var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
-                        document.getElementById("qrcode10").innerHTML = "";
-                        this.qrcode(url);
-                    }) 
+                    // api.saveDiyWebpageHistory(this.formMain).then(response => {
+                    //     this.formMain.id = response.data.data.pid;
+                    //     this.formMain.siteId = response.data.data.id;
+                    //     this.qrcodeModal = true;
+                    //     var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
+                    //     document.getElementById("qrcode10").innerHTML = "";
+                    //     this.qrcode(url);
+                    // })
                 }  
                })              
             },
@@ -418,19 +414,15 @@
                         "<script type='text/javascript' src='http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js'><\/script>" +
                         "<script type='text/javascript' src='http://wap-qn.bidewu.com/jquery-3.3.1.min.js'><\/script>" +
                         "</head><body>";
-                    var jsincludes='';
-                   GlobalStage.save().forEach(item => {
-                        html += item.lastSaveHtml+item.js+item.css;
-                       item.jsincludes.forEach(iteminclude => {
-                           jsincludes = jsincludes+'<script type="text/javascript" src="'+iteminclude+'"><\/script>';
-                        });
-                    });
-                    html+=jsincludes;
+                    var stagereslut = GlobalStage.save()
+                html += stagereslut.html;
                     html += "</body>";
                     html += "</html>";
-                    this.formMain.html = html;  
-                    this.formMain.editor = JSON.stringify(GlobalStage.save());
-                    this.formMain.siteId = this.$route.query.siteid;            
+
+                this.formMain.html = html;
+                this.formMain.editor = JSON.stringify(stagereslut.stage)
+                this.formMain.siteId = this.$route.query.siteid;
+
             },
             qrcode (url) {
                 console.log(url);
@@ -469,6 +461,7 @@
             window.__drag=dra;
             dra.on('cloned', function (clone, original, type) {
                 // console.log('clone',clone)
+                console.log(!$(clone).hasClass('gu-mirror'))
                 if (!$(clone).hasClass('gu-mirror')) {
                     $(clone).removeClass();
                     $(clone).addClass('wysi_hold');

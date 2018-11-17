@@ -78,7 +78,7 @@
     if($t.children('ul').length<1){
         $t.append('<ul class="layout-container-table edit-page"></ul>');
     }
-   
+
     <% for(var i = 0; i < share.ids.length; i++){ %>
     if($('#<%= share.ids[i] %>').length<1){
         <% if (i==0) { %>
