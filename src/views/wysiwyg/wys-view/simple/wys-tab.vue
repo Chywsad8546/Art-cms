@@ -67,6 +67,7 @@
                 this.share.tabList.push({id:this.$vnode.key+'-'+this.share.increase,cid:'con-'+this.$vnode.key+'-'+this.share.increase,name:"新导航",url:"",navVisible:false});
             },
             navClick(item){
+                this.share.isDel = false;
                 this.share.tabDomid = item.id;
                 this.share.tabListDomid = item.cid;
             },
@@ -148,10 +149,10 @@
     }
     else{
         <% if (i==0) { %>
-            $('#<%= share.tabList[i].id %>').prependTo($t.children().children('ul'));
+           $('#<%= share.tabList[i].id %>').html('<%= share.tabList[i].name %>');
         <% } %>
         <% if (i!=0) { %>
-            $('#<%= share.tabList[i].id %>').insertAfter($t.children().children('ul').children('li').eq(<%= i-1 %>));
+            $('#<%= share.tabList[i].id %>').html('<%= share.tabList[i].name %>');
         <% } %>
     }
     <% } %>
