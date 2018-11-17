@@ -104,7 +104,6 @@ export default {
         this._mainPage = mainPage;
         this._currentComponentChangeEvent = editchangeEvent;
         this._stage = $('#' + stageDomElId);
-        console.log('lasthtml',lasthtml)
         if (lasthtml) {
             this._stage.html(lasthtml);
         }
@@ -113,6 +112,11 @@ export default {
         if (editor) {
             for (var key in editor) {
                 var tmpstagecomponent = editor[key];
+                $('head').append(tmpstagecomponent.css);
+                for(var i=0;i<tmpstagecomponent.jsincludes.length;i++){
+                    $('body').append('<script type="text/javascript" src="' + tmpstagecomponent.jsincludes[i] + '"></script>');
+                }
+                $('body').append(tmpstagecomponent.js);
                 (function (tmpcom) {
                     that.create(tmpcom.editor_regid, false, tmpcom);
                 })(tmpstagecomponent);
@@ -137,7 +141,6 @@ export default {
             dom = $('<div id="' + stageComponent.component_id + '" editorregid="' + stageComponent.editor.id + '" style="position: relative"></div>');
         } else {
             dom = $('#' + stageComponent.component_id);
-            console.log('stageComponent.component_id',dom.length)
             if (dom.length < 1) {
                 return {ack: false, dom: null};
             }

@@ -392,7 +392,6 @@
                 });
             },
             initStage(editor) {
-                console.log('editor',editor)
                 var that = this;
                 var stagedict=null;
                 var lastsavehtml = null;
