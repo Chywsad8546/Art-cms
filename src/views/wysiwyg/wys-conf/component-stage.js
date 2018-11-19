@@ -248,7 +248,7 @@ export default {
         try {
             html = targetStageComponent.editor.arttemplate({share: data, brickid: 'share' + component_id});
             js = targetStageComponent.editor.artjavascript({share: data, brickid: 'share' + component_id});
-            css = targetStageComponent.editor.artcss();
+            css = targetStageComponent.editor.artcss({share: data, brickid: 'share' + component_id});
             jswys = targetStageComponent.editor.artjavascriptwys({share: data, brickid: 'share' + component_id});
         } catch (e) {
             console.error('arttemplate渲染报错', e);
@@ -261,7 +261,7 @@ export default {
             targetStageComponent.jsincludes = artjavascriptincludes;
         }
 
-        if (_.trim(css) && $('#css-' + component_id).length == 0) {
+        if (_.trim(css)) {
             css = css.replace(/wys_stageCss_hook/g, component_id);
             css = '<style id="css-' + component_id + '">' + css + '</style>';
             $('head').append(css);
