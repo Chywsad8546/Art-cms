@@ -60,6 +60,12 @@
                 <FormItem label="左">
                 <Slider v-model="share.imgLeft" show-input></Slider>
             </FormItem>
+            <FormItem label="颜色">
+                    <Row>
+                        <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
+                        <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend /></Col>
+                    </Row>        
+            </FormItem>
         </TabPane>
     </Tabs>
     </Form>
@@ -80,6 +86,7 @@
                     imgBottom:0,
                     imgLeft:0,
                     navVertical:"navitem0",
+                    backColor:"#F85A58",
                     navigatList:[
                         {name:"导航1",url:"",navVisible:false},
                         {name:"导航2",url:"",navVisible:false},
@@ -124,6 +131,7 @@
 .navdhName {
     margin-top: 20px;
     padding-right: 20px;
+    
 }
 </style>
 
@@ -159,11 +167,11 @@
         height: 46px;
         line-height: 46px;
         text-align: center;
-        background-color: #fff;
+        background-color: #FFFFFF;
     }
     .wys-nav-List .nav-inner {
         border-top: 1px solid #f4f5f6;
-        border-bottom: 2px solid #f85959;
+        border-bottom: 2px solid <%= share.backColor %>;
         margin: 0;
         padding: 0;
         height: 46px;
@@ -203,16 +211,16 @@
         box-sizing: border-box;
     }
     .navitem0 .cur a {
-        background-color: #f85959;
+        background-color: <%= share.backColor %>;
         border-radius: 12px;
         color: #fff;
     }
     .navitem1 .cur a {
         line-height: 44px;
         height: 44px;
-        border-bottom: 2px solid #f85959;
+        border-bottom: 2px solid <%= share.backColor %>;
     }
     .navitem2 .cur a {
-        color: #f85959;
+        color: <%= share.backColor %>;
     } 
 </stage-css>

@@ -10,6 +10,7 @@ import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 import wys_button from './wys-view/simple/wys-button.vue';
 import wys_tab from './wys-view/simple/wys-tab.vue';
 import wys_title from './wys-view/simple/wys-title.vue';
+import wys_video from './wys-view/simple/wys-video.vue';
 export default {
 
     stageComponents: [
@@ -86,6 +87,12 @@ export default {
             title:'标题',
             component: wys_title,
             id: 'wys_title'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/d3f56f515b354a6889d1c31ff7b519c5.png',
+            title:'视频',
+            component: wys_video,
+            id: 'wys_video'
         },
     ]
 };
