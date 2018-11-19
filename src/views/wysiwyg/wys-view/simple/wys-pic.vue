@@ -24,7 +24,7 @@
                     <Input v-model="item.content"></Input>
                 </FormItem> -->
                 <FormItem label="链接">
-                    <Input v-model="item.httpUrl"></Input>
+                    <Input placeholder="http://" v-model="item.httpUrl"></Input>
                 </FormItem>
             </div>
             <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
@@ -267,10 +267,10 @@
     <div class="specialListUl {{@share.imgSelect}}">
         <ul style="{{@share.backColor != "" ? "background:"+share.backColor : ""}}">
           {{if share.uploadList==0}}
-             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="javascript:void(0)" target="_self"  class="link"><img src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/></a></li>
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="javascript:void(0)" target="_blank"  class="link"><img src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/></a></li>
           {{/if}}
           {{each share.uploadList}}
-             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="{{$value.httpUrl}}" target="_self"  class="link"><img src="{{$value.url}}"/></a></li>
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="http://{{$value.httpUrl}}" target="_blank"  class="link"><img src="{{$value.url}}"/></a></li>
           {{/each}} 
         </ul>
     </div>

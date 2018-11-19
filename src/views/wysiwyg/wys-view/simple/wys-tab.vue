@@ -15,7 +15,15 @@
                     </Col>
                 </Row>
             </div>
-            <Button style="width:280px; margin-top:20px;" @click="addNaviPush()"><Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加</Button>
+            <Button style="width:280px; margin-top:20px; margin-bottom:200px;" @click="addNaviPush()"><Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加</Button>
+        </TabPane>
+        <TabPane label="样式" >
+            <FormItem label="颜色">
+                <Row>
+                    <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
+                    <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend /></Col>
+                </Row>                  
+            </FormItem>
         </TabPane>
     </Tabs>
     </Form>
@@ -35,7 +43,8 @@
                     navVertical:"navitem0",
                     tabCount:2,
                     increase:1,
-                    tabListDomid:"",
+                    tabListDomid: "",
+                    backColor: "#f85959",
                     tabDomid:"",
                     isDel:false,
                     tabList:[
@@ -233,8 +242,8 @@
     .navitem1 .cur {
         line-height: 44px;
         height: 44px;
-        color: #f85959;
-        border-bottom: 2px solid #f85959;
+        color: <%= share.backColor %>;
+        border-bottom: 2px solid <%= share.backColor %>;
     }
     .navitem2 .cur  {
         color: #f85959;
