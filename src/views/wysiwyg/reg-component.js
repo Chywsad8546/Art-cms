@@ -8,6 +8,7 @@ import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 import wys_tab from './wys-view/simple/wys-tab.vue';
+import wys_video from './wys-view/simple/wys-video.vue';
 
 export default {
 
@@ -72,6 +73,12 @@ export default {
             title:'Tab',
             component: wys_tab,
             id: 'wys_tab'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/d3f56f515b354a6889d1c31ff7b519c5.png',
+            title:'视频',
+            component: wys_video,
+            id: 'wys_video'
         },
     ]
 };
