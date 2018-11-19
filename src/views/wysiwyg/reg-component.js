@@ -70,7 +70,7 @@ export default {
         },
         {
 
-            icon: 'http://wap-qn.toutiaofangchan.com/adideas/0533226876f34c27b71feb7fb72e09dd.png',
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/bfffb025a38b4be5963457fc85a007f6.png',
             title: '按钮',
             component: wys_button,
             id: 'wys_button'
