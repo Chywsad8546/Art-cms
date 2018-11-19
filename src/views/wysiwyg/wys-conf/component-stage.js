@@ -56,6 +56,17 @@ export default {
                             return '';
                         };
                     }
+                    // 导入外部css
+                    if (_.trim(com.component.wys_stageCss_import)) {
+                        var tmpstageCss_import = _.cloneDeep(com.component.wys_stageCss_import);
+                        com.artcssincludes = function () {
+                            return tmpstageCss_import;
+                        };
+                    } else {
+                        com.artcssincludes = function () {
+                            return [];
+                        };
+                    }
                     // 导入外部js
                     if (_.trim(com.component.wys_stageJavascript_import)) {
                         var tmpstageJavascript_import = _.cloneDeep(com.component.wys_stageJavascript_import);
@@ -196,14 +207,18 @@ export default {
     },
     save: function () {
         console.log('save');
-        // console.log(this.stageComponentsDict.length);
+
         var jsincludes = '';
+        var cssincludes = '';
         var css = '';
         var js = '';
         var stagedict = {};
         for (var key in this.stageComponentsDict) {
             this.stageComponentsDict[key].jsincludes.forEach(iteminclude => {
                 jsincludes = jsincludes + '<script type="text/javascript" src="' + iteminclude + '"></script>';
+            });
+            this.stageComponentsDict[key].cssincludes.forEach(iteminclude => {
+                cssincludes = cssincludes + '<link rel="stylesheet" href="' + iteminclude + '">';
             });
             css += this.stageComponentsDict[key].css;
             js += this.stageComponentsDict[key].js;
@@ -213,6 +228,7 @@ export default {
                 js: this.stageComponentsDict[key].js, // 会最终展示出来shi
                 css: this.stageComponentsDict[key].css,
                 jsincludes: this.stageComponentsDict[key].jsincludes,
+                cssincludes: this.stageComponentsDict[key].cssincludes,
                 data: this.stageComponentsDict[key].data, // vue组件 和 stageComponent 交互的数据，同时也会保存到数据库中
                 editor_regid: this.stageComponentsDict[key].editor_regid // vue编辑器组件的注册id
             };
@@ -220,7 +236,7 @@ export default {
         var strHtml = $('#wysiwyg_stage').html();
 
         var fullhtml  = css + strHtml;
-        fullhtml = fullhtml + jsincludes + js;
+        fullhtml = fullhtml + jsincludes + cssincludes + js;
         return { html: fullhtml, stage: {stagedict:stagedict,strhtml:strHtml}};
     },
     /**
@@ -260,7 +276,13 @@ export default {
             }
             targetStageComponent.jsincludes = artjavascriptincludes;
         }
-
+        if(isCreateEventRender){
+            var artcssincludes = targetStageComponent.editor.artcssincludes();
+            for (var i = 0; i < artcssincludes.length; i++) {
+                $('head').append('<link rel="stylesheet" href="' + artcssincludes[i] + '">');
+            }
+            targetStageComponent.cssincludes = artcssincludes;
+        }
         if (_.trim(css)) {
             css = css.replace(/wys_stageCss_hook/g, component_id);
             css = '<style id="css-' + component_id + '">' + css + '</style>';
