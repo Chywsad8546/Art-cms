@@ -8,6 +8,7 @@ import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 import wys_button from './wys-view/simple/wys-button.vue';
+import wys_tab from './wys-view/simple/wys-tab.vue';
 export default {
 
     stageComponents: [
@@ -67,10 +68,17 @@ export default {
             id: 'wys_link'
         },
         {
+
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/0533226876f34c27b71feb7fb72e09dd.png',
             title: '按钮',
             component: wys_button,
             id: 'wys_button'
-        }
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/fe3142c7596d47789df1c2b84d3d88d6.png',
+            title:'Tab',
+            component: wys_tab,
+            id: 'wys_tab'
+        },
     ]
 };

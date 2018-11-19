@@ -274,9 +274,9 @@
                 <a  @click="runBack()" class="btn">
                     <a class="return_home">返回站点列表</a>
                 </a> 
-                    <span class="btn" @click="fbClick()"> <Icon type="compose"></Icon><span>保存</span></span> 
+                    <span class="btn" @click="fbClick(0)"> <Icon type="compose"></Icon><span>保存</span></span> 
                     <span class="btn" @click="previewClick()"> <Icon type="ios-eye"></Icon><span>预览</span></span> 
-                    <span class="btn" @click="fbClick()"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
+                    <span class="btn" @click="fbClick(1)"> <Icon type="ios-color-filter"></Icon><span>发布</span></span>
             </div>
          </div>
          <div class="workarea-stage">
@@ -361,12 +361,14 @@
             };
         },
         methods: {
-            fbClick() {
+            fbClick(status) {
                 this.$refs.formMainValidate.validate((valid) => {
                     if (valid) {
                         this.addParameter();
-                        api.saveDiyWebpage(this.formMain).then(response => {
-                            console.log(response);
+                        this.formMain.status = status;
+                        api.saveDiyWebpage(this.formMain).then(response => {               
+                            this.formMain.id = response.data.data.id;
+                            this.$Message.success(status==0?"保存成功":"发布成功");
                         });
                     }
                 });
@@ -375,14 +377,13 @@
                 this.$refs.formMainValidate.validate((valid) => {
                     if (valid) {
                         this.addParameter();
-                    // api.saveDiyWebpageHistory(this.formMain).then(response => {
-                    //     this.formMain.id = response.data.data.pid;
-                    //     this.formMain.siteId = response.data.data.id;
-                    //     this.qrcodeModal = true;
-                    //     var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
-                    //     document.getElementById("qrcode10").innerHTML = "";
-                    //     this.qrcode(url);
-                    // })
+                        api.saveDiyWebpageHistory(this.formMain).then(response => {
+                            this.formMain.id = response.data.data.id;
+                            this.qrcodeModal = true;
+                            var url = "http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id="+response.data.data.pid;
+                            document.getElementById("qrcode10").innerHTML = "";
+                            this.qrcode(url);
+                        })
                     }
                 });
             },
