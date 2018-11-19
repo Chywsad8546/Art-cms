@@ -7,7 +7,7 @@ import wys_navigation from './wys-view/simple/wys-navigation.vue';
 import splitcharacter from './wys-view/simple/wys-splitcharacter.vue';
 import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
-
+import wys_button from './wys-view/simple/wys-button.vue';
 export default {
 
     stageComponents: [
@@ -66,5 +66,11 @@ export default {
             component: wys_link,
             id: 'wys_link'
         },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/0533226876f34c27b71feb7fb72e09dd.png',
+            title: '按钮',
+            component: wys_button,
+            id: 'wys_button'
+        }
     ]
 };
