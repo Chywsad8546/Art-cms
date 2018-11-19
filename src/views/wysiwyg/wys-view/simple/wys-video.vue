@@ -243,8 +243,8 @@
     </div>
 </div>
 </stage-template>
-<stage-javascript-import>https://g.alicdn.com/de/prismplayer/2.7.2/aliplayer-min.js</stage-javascript-import>
-<stage-css-import>https://g.alicdn.com/de/prismplayer/2.7.2/skins/default/aliplayer-min.css</stage-css-import>
+<stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/55ad396d497544678af4f5c8e42386f6.js</stage-javascript-import>
+<stage-css-import>http://wap-qn.toutiaofangchan.com/adideas/a85bfd05564440409e5ac8026a25ac72.css</stage-css-import>
 <stage-javascript type="text/javascript">
 setTimeout(function(){
     var player = new Aliplayer({
