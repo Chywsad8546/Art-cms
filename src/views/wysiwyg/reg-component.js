@@ -9,6 +9,7 @@ import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 import wys_button from './wys-view/simple/wys-button.vue';
 import wys_tab from './wys-view/simple/wys-tab.vue';
+import wys_title from './wys-view/simple/wys-title.vue';
 export default {
 
     stageComponents: [
@@ -79,6 +80,12 @@ export default {
             title:'Tab',
             component: wys_tab,
             id: 'wys_tab'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/fe3142c7596d47789df1c2b84d3d88d6.png',
+            title:'标题',
+            component: wys_title,
+            id: 'wys_title'
         },
     ]
 };

@@ -135,13 +135,32 @@
               </FormItem>
             </div>
           </Panel>
-          <Panel name="6">
+          <Panel name="6"  v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
               边框
-              <FormItem label="边框类型" slot="content">
-              <Select >
-                <Option value=""></Option>
+              <div slot="content">
+                <FormItem label="边框类型">
+              <Select v-model="share.borderType">
+                <Option value="none">无</Option>
+                <Option value="solid">实线</Option>
+                <Option value="dashed">虚线</Option>
+                <Option value="double">双实现</Option>
+                <Option value="dotted">点线</Option>
               </Select>
             </FormItem>
+             <FormItem label="宽度">
+                 <Slider show-input v-model="share.borderSize"> </Slider>
+              </FormItem>
+               <FormItem label="背景色" slot="content">
+              <Col span="17">
+                <Input :placeholder="share.borderColor" v-model="share.borderColor">
+                </Input>
+              </Col>
+              <Col span="1">
+                <ColorPicker v-model="share.borderColor" format="rgb" />
+              </Col>
+            </FormItem>
+              </div>
+              
           </Panel>
         </Collapse>
       </TabPane>
@@ -161,9 +180,12 @@ export default {
                 buttontext: '按钮标题',
                 buttonWidth: 90,
                 buttonHeight: 60,
+                borderSize:2,
+                borderColor:'rgb(232,89,91)',
+                borderType:'none',
                 buttonBorderColor: 'rgb(232,89,91)',
-                buttonColor: 'rgb(25, 190,107)',
-                fontColor: 'rgb(0,0,0)',
+                buttonColor: 'rgb(232,89,91)',
+                fontColor: 'rgb(255,255,255)',
                 fontSize: 17,
                 backgroundColor: 'rgb(255,255,255)',
                 buttonBackgroundImg: '',
@@ -204,9 +226,9 @@ export default {
 </style>
 <stage-template>
 <div id="{{@ brickid}}" class="button-box">
-  <section class="{{@share.position}} wys-container"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%" >
+  <section class="{{@share.position}} wys-container"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
     <a herf="http://"+{{share.url }} class="wys-link">
-      <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}%;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px">
+      <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}px;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px; border: {{@share.borderSize}}px; border-style: {{@share.borderType}}; border-color: {{@share.borderColor}}">
           {{@share.buttontext}}
       </div>
     </a>
@@ -242,9 +264,11 @@ export default {
   .buttonType_2 {
     width: 93% ;
     height: 20%;
-    color: rgb(232,89,91);
-    border: 2px solid rgb(232,89,91);
-    box-sizing: border-content;
+    color:  rgb(232,89,91) !important;
+    background: rgb(255,255,255) !important;
+    border: 2px solid rgb(232,89,91) !important;
+    border-radius:8px !important;
+    box-sizing: border-content !important;
 
   }
   .buttonType_3 {
