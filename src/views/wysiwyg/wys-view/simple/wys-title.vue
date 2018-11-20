@@ -122,7 +122,7 @@ export default {
 <stage-template>
   <div id="{{@ brickid}}">
     <section style="padding:{{@share.titlePaddingTop}}% {{@share.titlePaddingRight}}% {{@share.titlePaddingBottom}}% {{@share.titlePaddingLeft}}%" >
-      <a herf="<%= share.url %>">
+      <a href="<%= share.url %>">
         <div class="wys-main">
           <div class="wsy-title-before {{@share.titleType}}"  ></div>
           <h2 class="wsy-title-text" style="color: {{@share.fontColor}}"> {{@share.titleText}} </h2>
