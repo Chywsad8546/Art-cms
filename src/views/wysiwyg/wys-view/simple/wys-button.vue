@@ -32,12 +32,12 @@
         </Row>
       </TabPane>
       <TabPane label="样式">
-        <Collapse simple>
+        <Collapse simple style="overflow: -webkit-paged-y">
           <Panel name="1">
             样式调整
             <div slot="content" class="my-style">
               <RadioGroup v-model="share.buttonType" vertical>
-                <Radio label="buttonType_1" style="height: 100px " @click="test" on-change="test">
+                <Radio label="buttonType_1" style="height: 100px ">
                  <img src="http://wap-qn.toutiaofangchan.com/adideas/5b878a776f614fa0bf9835930d6c8b93.png">
                 </Radio>
                 <Radio label="buttonType_2" style="height: 100px ">
@@ -105,18 +105,63 @@
           </Panel>
           <Panel name="4">
             背景
-            <FormItem label="背景色" slot="content">
-              <Col span="17">
-                <Input :placeholder="share.backgroundColor" v-model="share.backgroundColor">
-                </Input>
-              </Col>
-              <Col span="1">
-                <ColorPicker v-model="share.backgroundColor" format="rgb" />
-              </Col>
-            </FormItem>
-            <FormItem label="背景图" slot="content">
-              <Button long>添加图片</Button>
-            </FormItem>
+            <div slot="content">
+              <FormItem label="背景色" >
+                <Col span="17">
+                  <Input :placeholder="share.backgroundColor" v-model="share.backgroundColor"></Input>
+                </Col>
+                <Col span="1">
+                  <ColorPicker v-model="share.backgroundColor" format="rgb" />
+                </Col>
+              </FormItem>
+              <FormItem>
+              <div class="demo-upload-list" v-for="item in share.uploadList">
+                <img :src="item.url">
+                  <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                  </div>
+              </div>
+              </FormItem>
+              <FormItem v-if="share.uploadList.length>0">
+                            当前图片尺寸: {{share.imgInformation}}
+              </FormItem>
+              <FormItem v-if="share.uploadList.length == 0" label="背景图" >
+                <Row>
+                  <Upload  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
+                        :on-format-error="uploadFormatError"
+                        :show-upload-list="false">
+                    <Button type="ghost" >添加图片</Button>
+                  </Upload>
+                </Row>
+              </FormItem>
+              <FormItem  label="横向">
+                <Select v-model="share.horizontalDir">
+                  <Option value="adapt_hor">适配</Option>
+                  <Option value="repeat_hor">重复</Option>
+                  <Option value="center_hor">居中</Option>
+                </Select>
+              </FormItem>
+              <FormItem  label="纵向" v-model="share.verticalDir">
+                <Select v-model="share.verticalDir">
+                  <Option value="adapt_ver">适配</Option>
+                  <Option value="repeat_ver">重复</Option>
+                  <Option value="center_ver">居中</Option>
+                  <Option value="top_ver">置顶</Option>
+                </Select>
+              </FormItem>
+               <!-- <FormItem label="遮罩色" >
+                <Col span="17">
+                  <Input :placeholder="share.maskColor" v-model="share.maskColor"></Input>
+                </Col>
+                <Col span="1">
+                  <ColorPicker v-model="share.maskColor" alpha  />
+                </Col>
+              </FormItem> -->
+              <Modal title="View Image" v-model="visible">
+                <img :src="imgUrl" v-if="visible" style="width: 100%">
+              </Modal>
+            </div>
           </Panel>
           <Panel name="5">
             边距
@@ -136,31 +181,31 @@
             </div>
           </Panel>
           <Panel name="6"  v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              边框
-              <div slot="content">
-                <FormItem label="边框类型">
-              <Select v-model="share.borderType">
-                <Option value="none">无</Option>
-                <Option value="solid">实线</Option>
-                <Option value="dashed">虚线</Option>
-                <Option value="double">双实现</Option>
-                <Option value="dotted">点线</Option>
-              </Select>
-            </FormItem>
-             <FormItem label="宽度">
-                 <Slider show-input v-model="share.borderSize"> </Slider>
+            边框
+            <div slot="content">
+              <FormItem label="边框类型">
+                <Select v-model="share.borderType">
+                  <Option value="none">无</Option>
+                  <Option value="solid">实线</Option>
+                  <Option value="dashed">虚线</Option>
+                  <Option value="double">双实线</Option>
+                  <Option value="dotted">点线</Option>
+                </Select>
               </FormItem>
-               <FormItem label="背景色" slot="content">
-              <Col span="17">
-                <Input :placeholder="share.borderColor" v-model="share.borderColor">
-                </Input>
-              </Col>
-              <Col span="1">
-                <ColorPicker v-model="share.borderColor" format="rgb" />
-              </Col>
-            </FormItem>
+              <div slot="content" v-if="share.borderType !== 'none'">
+                <FormItem label="宽度">
+                  <Slider show-input v-model="share.borderSize"> </Slider>
+                </FormItem>
+                <FormItem label="背景色">
+                  <Col span="17">
+                    <Input :placeholder="share.borderColor" v-model="share.borderColor"></Input>
+                  </Col>
+                  <Col span="1">
+                    <ColorPicker v-model="share.borderColor" format="rgb" />
+                  </Col>
+                </FormItem>
               </div>
-              
+            </div>    
           </Panel>
         </Collapse>
       </TabPane>
@@ -169,41 +214,89 @@
 </template>
 <script>
 export default {
-    data () {
-        return {
-            share: {
-                buttonPaddingTop: 10,
-                buttonPaddingBottom: 10,
-                buttonPaddingRight: 0,
-                buttonPaddingLeft: 0,
-                buttonType: 'buttonType_1',
-                buttontext: '按钮标题',
-                buttonWidth: 90,
-                buttonHeight: 60,
-                borderSize:2,
-                borderColor:'rgb(232,89,91)',
-                borderType:'none',
-                buttonBorderColor: 'rgb(232,89,91)',
-                buttonColor: 'rgb(232,89,91)',
-                fontColor: 'rgb(255,255,255)',
-                fontSize: 17,
-                backgroundColor: 'rgb(255,255,255)',
-                buttonBackgroundImg: '',
-                buttonRadius: 0,
-                position: 'button-default',
-                url:''
-            }
-
-        };
+  data() {
+    return {
+      share: {
+        buttonPaddingTop: 10,
+        buttonPaddingBottom: 10,
+        buttonPaddingRight: 0,
+        buttonPaddingLeft: 0,
+        buttonType: "buttonType_1",
+        buttontext: "按钮标题",
+        buttonWidth: 90,
+        buttonHeight: 60,
+        borderSize: 2,
+        borderColor: "rgb(232,89,91)",
+        borderType: "none",
+        buttonBorderColor: "rgb(232,89,91)",
+        buttonColor: "rgb(232,89,91)",
+        fontColor: "rgb(255,255,255)",
+        fontSize: 17,
+        backgroundColor: "rgb(255,255,255)",
+        buttonBackgroundImg: "",
+        buttonRadius: 0,
+        position: "button-default",
+        url: "",
+        colortext:'green',
+        // 背景图片部分
+        image: "http://wap-qn.toutiaofangchan.com/tpzw_image.png",
+        defaultList: [],
+        uploadList: [],
+        imgInformation: "",
+        pic: "",
+        horizontalDir: "adapt_hor",
+        verticalDir: "adapt_ver",
+        maskColor: "rgba(0,0,0,0)"
+      },
+      imgUrl:"",
+      visible:false
+    };
+  },
+  methods: {
+    format(val) {
+      return "Progress:" + val + "%";
     },
-    methods: {
-        format (val) {
-            return 'Progress:' + val + '%';
-        },
-        test () {
-            alert('hello');
-        }
+    uploadSuccess(res, file) {
+      if (res.code === "success") {
+        console.log(res)
+        console.log(file)
+        this.share.uploadList.push({ name: file.name, url: res.data.url });
+        this.share.pic = res.data.url
+        console.log(this.share.uploadList)
+        // 创建对象
+        var img = new Image();
+
+        // 改变图片的src
+        img.src = res.data.url;
+        var that = this;
+        // 加载完成执行
+        img.onload = function() {
+          that.share.imgInformation = img.width + "px*" + img.height + "px";
+        };
+      } else {
+        this.$Notice.error({
+          title: "上传失败",
+          desc: res.data.url
+        });
+      }
+    },
+    uploadFormatError(file) {
+      this.$Notice.error({
+        title: "不能上传此格式的文件",
+        desc: ""
+      });
+    },
+    handleView(imgUrl) {
+      this.imgUrl = imgUrl;
+      this.visible = true;
+    },
+    handleRemove(file) {
+      // let index = this.share.uploadList.indexOf(file);
+      // this.share.uploadList.splice(index, 1);
+      this.share.pic = ''
     }
+  },
+  
 };
 </script>
 <style scoped>
@@ -220,29 +313,51 @@ export default {
   width: 300px;
   height: 40px;
   margin-bottom: 10px;
-  
-  
 }
 </style>
 <stage-template>
 <div id="{{@ brickid}}" class="button-box">
-  <section class="{{@share.position}} wys-container"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
+  <section class="{{@share.position}} wys-contant {{@share.horizontalDir}}  {{@share.verticalDir}}"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
     <a herf="http://"+{{share.url }} class="wys-link">
       <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}px;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px; border: {{@share.borderSize}}px; border-style: {{@share.borderType}}; border-color: {{@share.borderColor}}">
-          {{@share.buttontext}}
+          <span>{{@share.buttontext}}</span>
       </div>
     </a>
+    <div class="text">hello</div>
   </section>
 </div>
 </stage-template>   
 <stage-javascript type="text/javascript>
 </stage-javascipt>
 <stage-css>
-    .wys-main {
-  
-  }
-  .wys-container {
+  .wys-contant {
     box-sizing: border-content;
+    background-image: url(<%= share.pic %>) !important;
+    background-size: 100% !important;
+  }
+  .adapt_hor, adapt_ver {
+    background-size:  100% auto !important;
+    background-repeat:no-repeat !important;
+  }
+  .repeat_hor {
+    background-repeat: repeat-x !important;
+  }
+  .center_hor {
+    background-position:center center !important;
+    background-repeat:no-repeat !important;
+  }
+  .repeat_ver {
+    background-repeat: repeat-y !important;
+  }
+  .center_ver {
+    background-position:center center !important;
+    background-repeat:no-repeat !important;
+  }
+  .top_ver {
+     background-repeat:no-repeat !important;
+  }
+  .text {
+    color: <%= share.colortext %>
   }
   .button-bottom {
     bottom: 0;
@@ -253,6 +368,7 @@ export default {
   }
   .wys-button{
     display:inline-block;
+    vertical-align:middle;
   }
   .buttonType_1 {
     width: 93%;
