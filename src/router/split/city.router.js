@@ -381,7 +381,7 @@ export const appRouter = [
     component: Main,
     children: [
         {
-            path: 'establishColumn',
+            path: 'cityManageEstablishWeb/establishColumn',
             name: 'establishColumn',
             title: '站点列表',
             // meta: {
@@ -544,6 +544,16 @@ export const aloneRouter = [
         },
         component: () =>
             import ('@/views/wysiwyg/preview.vue')
+    },
+    {
+        path: '/newlybuildForm',
+        name: 'newlybuildForm',
+        title: '新建表单',
+        // meta: {
+        //     keepalive: true
+        // },
+        component: () =>
+            import('@/views/wysiwyg/wys-view/marketing/wys-formtemplate.vue')
     },
 
 ];

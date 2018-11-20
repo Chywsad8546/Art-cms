@@ -200,7 +200,6 @@
 </section>
 </stage-template>
 <stage-javascript type="text/javascript">
-
 </stage-javascript>
 <stage-css>
     body,html{
