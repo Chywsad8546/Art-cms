@@ -16,18 +16,18 @@
                     <Radio label="title-type_1" style="height: 40px">
                         <img src="//p1.pstatp.com/origin/588900062c27ff4bc647" alt="样式1">
                     </Radio>
-                    <Radio label="title-type_2" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_3" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_4" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_5" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_6" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_7" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_8" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_9" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_10" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_11" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_12" style="height: 40px">选我</Radio>
-                    <Radio label="title-type_13" style="height: 40px">选我</Radio>
+                    <Radio label="title-type_2" style="height: 40px"></Radio>
+                    <Radio label="title-type_3" style="height: 40px"></Radio>
+                    <Radio label="title-type_4" style="height: 40px"></Radio>
+                    <Radio label="title-type_5" style="height: 40px"></Radio>
+                    <Radio label="title-type_6" style="height: 40px"></Radio>
+                    <Radio label="title-type_7" style="height: 40px"></Radio>
+                    <Radio label="title-type_8" style="height: 40px"></Radio>
+                    <Radio label="title-type_9" style="height: 40px"></Radio>
+                    <Radio label="title-type_10" style="height: 40px"></Radio>
+                    <Radio label="title-type_11" style="height: 40px"></Radio>
+                    <Radio label="title-type_12" style="height: 40px"></Radio>
+                    <Radio label="title-type_13" style="height: 40px"></Radio>
                   </RadioGroup>
                     <FormItem label="装饰颜色">
                       <Col span="17">
@@ -77,7 +77,7 @@ export default {
                 titleText:'标题内容...',
                 titleColor: 'rgb(248,89,89)',
                 fontColor: 'rgb(248,89,89)',
-                titleType:'title-type',
+                titleType:'title-type_1',
                 titlePaddingTop: 3,
                 titlePaddingBottom: 3,
                 titlePaddingRight: 0,
@@ -94,9 +94,9 @@ export default {
   <div id="{{@ brickid}}">
     <section style="padding:{{@share.titlePaddingTop}}% {{@share.titlePaddingRight}}% {{@share.titlePaddingBottom}}% {{@share.titlePaddingLeft}}%" >
       <div class="wys-main">
-        <div class="wsy-title-before" ></div>
+        <div class="wsy-title-before {{@share.titleType}}"  ></div>
         <h2 class="wsy-title-text" style="color: {{@share.fontColor}}"> {{@share.titleText}} </h2>
-        <div class="wsy-title-after" ></div>
+        <div class="wsy-title-after {{@share.titleType}}"  ></div>
       </div>
     </section>
   </div>
@@ -116,18 +116,54 @@ export default {
 .wsy-title-before {
   display:inline-block;
   width:30%;
-  height:3px;
-  background:-webkit-linear-gradient(left,rgba(0,0,0,0), rgb(248,89,89));
+  height:2px;
+  margin:0 10px;
+  background:-webkit-linear-gradient(left,rgba(0,0,0,0), <%= share.titleColor %>);
   
 }
 .wsy-title-text {
   display:inline-block;
-  vertical-align:middle;
+  vertical-align:top;
+  font-size:14px;
 }
 .wsy-title-after {
   display:inline-block;
   width:30%;
-  height:3px;
-  background:-webkit-linear-gradient(left, rgb(248,89,89),rgba(0,0,0,0));
+  height:2px;
+  margin:0 10px;
+  background:-webkit-linear-gradient(left,<%= share.titleColor %>,rgba(0,0,0,0));
+}
+.title-type_2 {
+  border-top: 2px dotted <%= share.titleColor %> !important;
+  height: 0px !important;
+}
+
+.title-type_3 {
+   position:relative;
+   border-top: 2px solid <%= share.titleColor %> !important;
+   height: 0px !important;
+}
+
+.title-type_3::after {
+  position:absolute;
+  display:block;
+  content:'';
+  width:4px;
+  height:4px;
+  top:-3px;
+  right:0;
+  border-radius:50%;
+  background:<%= share.titleColor %>;
+}
+.title-type_3:nth-child(1)::after {
+  position:absolute;
+  display:block;
+  content:'';
+  width:4px;
+  height:4px;
+  top:-3px;
+  right:0;
+  border-radius:50%;
+  background:<%= share.titleColor %>;
 }
 </stage-css>

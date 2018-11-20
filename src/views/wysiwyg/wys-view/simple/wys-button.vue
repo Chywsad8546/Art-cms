@@ -291,8 +291,8 @@ export default {
       this.visible = true;
     },
     handleRemove(file) {
-      // let index = this.share.uploadList.indexOf(file);
-      // this.share.uploadList.splice(index, 1);
+      let index = this.share.uploadList.indexOf(file);
+      this.share.uploadList.splice(index, 1);
       this.share.pic = ''
     }
   },
@@ -323,26 +323,30 @@ export default {
           <span>{{@share.buttontext}}</span>
       </div>
     </a>
-    <div class="text">hello</div>
   </section>
 </div>
 </stage-template>   
 <stage-javascript type="text/javascript>
+$t.css({
+  'position':'absolute'
+})
 </stage-javascipt>
 <stage-css>
   .wys-contant {
     box-sizing: border-content;
     background-image: url(<%= share.pic %>) !important;
-    background-size: 100% !important;
   }
   .adapt_hor, adapt_ver {
-    background-size:  100% auto !important;
+    background-size: 100% auto !important;
+    background-position:center center !important;
     background-repeat:no-repeat !important;
   }
   .repeat_hor {
+    background-size: 100% auto !important;
     background-repeat: repeat-x !important;
   }
   .center_hor {
+    background-size: 100% auto !important;
     background-position:center center !important;
     background-repeat:no-repeat !important;
   }
@@ -354,7 +358,8 @@ export default {
     background-repeat:no-repeat !important;
   }
   .top_ver {
-     background-repeat:no-repeat !important;
+    background-position:top center !important;
+    background-repeat:no-repeat !important;
   }
   .text {
     color: <%= share.colortext %>
