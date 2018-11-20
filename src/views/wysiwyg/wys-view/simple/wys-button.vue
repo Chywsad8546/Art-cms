@@ -5,18 +5,15 @@
         <Row>
           <Col span="20">
           <FormItem label="文本">
-            <Input v-model="share.buttontext" placeholder="按钮内容 "></Input>
+            <Input v-model="share.buttontext" placeholder="按钮文本 "></Input>
           </FormItem>
           </Col>
         </Row>
         <Row>
           <Row>
-            <Col span="12"
-                 style="line-height: 38px">Android链接</Col>
-            <Col span="12">
             <div href=""class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
-              添加CDN链接
+              添加链接
             </div>
             </Col>
           </Row>
@@ -25,14 +22,12 @@
                 <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>  
           </Modal>
-        </Row>
-        <Row>
-          <textarea style="width: 280px; height: 100px" v-model="share.androidUrl"></textarea>
-        </Row>
-        <Row>
-          <Col span="12"
-               style="line-height: 38px">IOS链接</Col>
-          <textarea style="width: 280px; height: 100px" v-model="share.iosUrl"></textarea>
+  
+              <p><strong>提示</strong></p>
+              <p>1. 建议图片宽度在320至640之间;</p>
+              <p>2. 图片大小不能超过1M; 支持jpg,jpeg,png,gif等格式;</p>
+              <p>3. 作为按钮的图片宽高比不能低于3:1并且不能高于10:1</p>
+         
         </Row>
       </TabPane>
       <TabPane label="样式">

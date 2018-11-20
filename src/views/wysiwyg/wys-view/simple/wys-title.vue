@@ -141,8 +141,11 @@ export default {
     
 }
 .wys-main{
+    display:flex;
     width:100%;
     text-align: center;
+    justify-content:center;
+    align-items:center;
 }
 .wsy-title-before {
   display:inline-block;

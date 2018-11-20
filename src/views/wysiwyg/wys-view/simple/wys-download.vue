@@ -5,15 +5,18 @@
         <Row>
           <Col span="20">
           <FormItem label="文本">
-            <Input v-model="share.buttontext" placeholder="按钮文本 "></Input>
+            <Input v-model="share.buttontext" placeholder="按钮内容 "></Input>
           </FormItem>
           </Col>
         </Row>
         <Row>
           <Row>
+            <Col span="12"
+                 style="line-height: 38px">Android链接</Col>
+            <Col span="12">
             <div href=""class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
-              添加链接
+              添加CDN链接
             </div>
             </Col>
           </Row>
@@ -22,12 +25,14 @@
                 <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>  
           </Modal>
-  
-              <p><strong>提示</strong></p>
-              <p>1. 建议图片宽度在320至640之间;</p>
-              <p>2. 图片大小不能超过1M; 支持jpg,jpeg,png,gif等格式;</p>
-              <p>3. 作为按钮的图片宽高比不能低于3:1并且不能高于10:1</p>
-         
+        </Row>
+        <Row>
+          <textarea style="width: 280px; height: 100px" v-model="share.androidUrl"></textarea>
+        </Row>
+        <Row>
+          <Col span="12"
+               style="line-height: 38px">IOS链接</Col>
+          <textarea style="width: 280px; height: 100px" v-model="share.iosUrl"></textarea>
         </Row>
       </TabPane>
       <TabPane label="样式">
@@ -331,24 +336,25 @@ export default {
 <stage-template>
 <div id="{{@ brickid}}" class="button-box">
   <section class="{{@share.position}} wys-contant {{@share.horizontalDir}}  {{@share.verticalDir}}"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
-    <a class="wys-link" clas="wys-linkPart">
+    <div class="wys-link">
       <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}px;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px; border: {{@share.borderSize}}px; border-style: {{@share.borderType}}; border-color: {{@share.borderColor}}">
           <span>{{@share.buttontext}}</span>
       </div>
-    </a>
+    </div>
   </section>
 </div>
 </stage-template>   
-<stage-javascript type="text/javascript>
-  var wys-link = $t.children('.wys-content').children('.wys-linkPart');
-  const ua = window.navigator.userAgent.toLowerCase();
-  if(ua.indexOf('iphone') !== -1) {
-    wys-link.attr('href','{{@share.iosUrl}}');
+<stage-javascript type="text/javascript">
+const ua = window.navigator.userAgent.toLowerCase()
+$($t.children(".wys-contant").children(".wys-link")).on("click",function(){
+  if(ua.indexOf("iphone") !== -1){
+     window.open("{{@share.iosUrl}}")
   } else {
-    wys-link.attr('href','{{@share.androidUrl}}');
+    window.open("{{@share.androidUrl}}")
   }
+ 
 })
-</stage-javascipt>
+</stage-javascript>
 <stage-css>
   .wys-contant {
     box-sizing: border-content;
