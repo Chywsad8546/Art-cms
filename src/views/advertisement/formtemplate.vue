@@ -586,6 +586,7 @@ import { setTimeout } from 'timers';
                     } else {
                         // this.ordinaryEditor=true;
                         this.formItem.name = response.data.data.name;
+                        // console.log('response.data.data.template', response.data.data.template);
                         this.formItem.template = response.data.data.template;
                         this.formItem.id = this.Lid.id;
                         this.confs = JSON.parse(response.data.data.form);
@@ -604,7 +605,6 @@ import { setTimeout } from 'timers';
                             return false;
                         }
                         this.formItem.form = JSON.stringify(this.confs);
-                        console.log(this.formItem);
                         api.addTemplate(this.formItem).then(response => {
                             this.$Message.success('添加成功');
                             this.$router.push({
@@ -678,7 +678,7 @@ import { setTimeout } from 'timers';
                      * 如果需要正则验证，注入正则表达式
                      */
                     if (_.trim(item.reg)) {
-                        console.log('reg', item.reg);
+                        // console.log('reg', item.reg);
                         rule.pattern = new RegExp(_.trim(item.reg));
                     }
 
@@ -694,6 +694,7 @@ import { setTimeout } from 'timers';
                  * 挂载watch钩子，当数据有变化的时候，更新预览显示
                  */
                 this.unwatch = this.$watch('editorformItem', function (newVal, oldVal) {
+                    // console.log(this.$refs['stage'])
                     // 做点什么
                     try {
                         var html = template.render(this.formItem.template, newVal);
@@ -713,17 +714,28 @@ import { setTimeout } from 'timers';
                         $(this.$refs['stage']).html(html);
                     }
                 });
+
                 if (created) {
-                    try {
-                        var html = template.render(this.formItem.template, this.editorformItem);
-                        $(this.$refs['stage']).html(html);
-                    } catch (e) {
-                        $(this.$refs['stage']).html(html);
-                    }
+                //     this.$nextTick(function () {
+                    var that = this;
+                    var inteval=setInterval(function () {
+                        if(that.$refs['stage']){
+                            clearInterval(inteval);
+                            try {
+                                console.log(that.formItem.template, that.editorformItem);
+                                var html = template.render(that.formItem.template, that.editorformItem);
+                                $(that.$refs['stage']).html(html);
+                            } catch (e) {
+                                $(that.$refs['stage']).html(html);
+                            }
+                        }
+
+                    },1000);
+
+                //     });
                 }
             }
         },
-
         created: function () {
             this.getStationInfo();
             this.editorRouterList = adSeniorEditorRouter.editorRouters;

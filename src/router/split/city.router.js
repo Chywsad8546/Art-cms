@@ -60,7 +60,13 @@ export const otherRouter = {
             component: () =>
                 import('@/views/advertisement/planDetail.vue')
         },
-
+        {
+            path: '/wysiwygWebList',
+            name: 'wysiwygWebList',
+            title: '网站列表',
+            component: () =>
+                import ('@/views/wysiwyg/webList.vue')
+        }, 
     ]
 };
 
@@ -366,7 +372,47 @@ export const appRouter = [
         //     // },
         ]
     },
+   //自助建站
+   {
+    path: '/cityManageEstablishWeb',
+    icon: 'social-buffer',
+    name: 'establishWeb',
+    title: '自助建站',
+    component: Main,
+    children: [
+        {
+            path: 'establishColumn',
+            name: 'establishColumn',
+            title: '站点列表',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () =>
+                import('@/views/wysiwyg/pageSite.vue')
+        },
+        // {
+        //     path: 'establishMobileWeb',
+        //     name: 'establishMobileWeb',
+        //     title: '网站列表',
+        //     // meta: {
+        //     //     keepalive: true
+        //     // },
+        //     component: () =>
+        //         import('@/views/wysiwyg/main.vue')
+        // },
 
+
+
+
+        // {
+        //     path: 'ownerList',
+        //     name: 'ownerList',
+        //     title: '业主管理',
+        //     component: () =>
+        //         import ('@/views/cityManageSystem/personManage/ownerList.vue')
+        // },
+    ]
+},
     //遗留功能
     {
         path: '/systemManage',
@@ -488,7 +534,18 @@ export const aloneRouter = [
         },
         component: () =>
             import ('@/views/wysiwyg/main.vue')
-    }
+    },
+    {
+        path: '/wysiwygPreview',
+        name: 'wysiwygztPreview',
+        meta: {
+            requireAuth:false,
+            title: '专题预览页'
+        },
+        component: () =>
+            import ('@/views/wysiwyg/preview.vue')
+    },
+
 ];
 
 export default {

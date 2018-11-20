@@ -38,7 +38,7 @@
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.4.0",
-    "moment": "^2.21.0",
+    "moment": "^2.22.2",
     "pg": "^7.4.1",
     "qrcodejs2": "0.0.2",
     "rasterizehtml": "^1.2.4",
@@ -52,8 +52,7 @@
     "vue-virtual-scroller": "^0.10.6",
     "vuex": "^3.0.1",
     "xlsx": "^0.11.17",
-    "dragula": "^3.7.2",
-    "moment":"^2.22.2"
+    "dragula": "^3.7.2"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -100,6 +99,7 @@
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.1",
     "webpack-merge": "^4.1.1",
-    "webpack-uglify-parallel": "^0.1.4"
+    "webpack-uglify-parallel": "^0.1.4",
+    "css": "^2.2.4"
   }
 }

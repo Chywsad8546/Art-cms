@@ -4,7 +4,7 @@
                 <div class="timingclassfb">定时发表</div>
                 <div style="padding-left:80px;margin-top:20px;margin-bottom:20px;">
                     请选择发表时间：
-                    <Select v-model="dateValue"  style="width:100px">
+                    <Select v-model="dateValue"  style="width:100px" @on-change="dateEvent">
                         <Option v-for="item in dateoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Select v-model="timeValue" style="width:100px">
@@ -14,6 +14,18 @@
                         <Option v-for="item in branchoptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>分
                 </div>
+                <div style="padding-left:80px;margin-top:20px;margin-bottom:20px;">
+                    请选择发布方式：
+                    <Select v-model="releaseType"  style="width:100px">
+                        <Option value="1">ios</Option>
+                        <Option value="2">安卓</Option>
+                        <Option value="3">全局</Option>
+                        <Option value="4">输入设备号</Option>
+                    </Select>
+                  <span v-if="releaseType === '4'">设备号(用逗号隔开)：<Input  style="width:200px" v-model="equipmentNumber"/></span>
+                </div>
+
+
                 <p>(只能选择2小时-7天范围内的时间)</p>
                 <p>本文将于 {{stryear}} 年 {{dateExhibition}} {{timeValue > 9  ? timeValue : "0"+timeValue}}:{{branchValue > 9 ? branchValue : "0"+branchValue }} 发表  </p>
                 <div class="botton">
@@ -29,91 +41,96 @@
 <script>
      import dutil from '../../../../libs/util.js';
      export default {
-        props: {
+         props: {
 
-        },
-        data () {
-            return {
-                dateoptions: [],
-                timeoptions: [],
-                branchoptions: [],
-                    dateValue: '',
-                    timeValue: 0,
-                    branchValue: 0,
-                    dateExhibition: "0",
-                    stryear: "",
-                    dateArr: [],
-                    dateCallValue:''
-            }
-        },
-        created() {
-
-            this.getMySplitDate();
-            this.stryear = this.dateArr[0].strYear;
-            let stryear = this.dateArr[0].strYear;//年份
-            let strMonth = this.dateArr[0].strMonth;//月份
-            let strmyDate = this.dateArr[0].strmyDate;//日
-            for(let i = 0;i < 7; i++){
-                this.dateoptions.push({"value":strMonth+"/"+(strmyDate+i),"label":strMonth+"月"+(strmyDate+i)+"日"});
-            }
-            for(let k=0;k<24;k++){
-                this.timeoptions.push({"value":k,"label":k});
-            }
-            for(let j=0;j<60;j++){
-                this.branchoptions.push({"value":j,"label":j});
-            }
-            this.dateValue = strMonth+"/"+strmyDate;
-            this.dateCallValue = strMonth+"-"+strmyDate;
-            this.forArrFun(strMonth+"/"+strmyDate);
-        },
-        methods: {
-            confirmxz() {
-                let callBackTime = this.stryear+"-"+this.dateCallValue+ " "+this.transformTime(this.timeValue)+":"+this.transformTime(this.branchValue)+":00";
-                let dateInput = dutil.stringToDate(callBackTime);
-                let dateNow = new Date();
-                var min=dateNow.getMinutes();
-                dateNow.setMinutes(min + 5);
-                //console.log(dateInput.getTime() , dateNow.getTime())
-                if (dateInput.getTime() > dateNow.getTime()){
-                    this.$emit("confirm-event",callBackTime);
-                }else {
-                    this.$Modal.error({
-                        title: '',
-                        content: "输入时间必须在当前时间五分钟后！"
-                    });
-                }
-            },
-            transformTime(time) {
-                let strTime = time>9 ? time : "0"+time;
-                return strTime;
-            },
-            cancelFun() {
-                this.$emit("cancel-event","");
-            },
-            uploadImg() {
-                this.$emit("cancel-event","");
-            },
-            dateEvent(selVal) {
-                this.forArrFun(selVal);
-            },
-            forArrFun(selVal) {
-                let self = this;
-                this.dateoptions.forEach(function(obj){
-                    if(obj.value == selVal){
-                       self.dateExhibition = obj.label;
-                    }
-                });
-            },
-            getMySplitDate(){
-                let myDate = new Date();
-                let strYear = myDate.getFullYear();
-                let strMonth =  myDate.getMonth()+1; //获取当前月份(0-11,0代表1月)
-                let strmyDate = myDate.getDate(); //获取当前日(1-31)
-                let arr = {"strYear":strYear,"strMonth":strMonth,"strmyDate":strmyDate};
-                this.dateArr.push(arr);
-            }
-        }
-    }
+         },
+         data () {
+             return {
+                 dateoptions: [],
+                 timeoptions: [],
+                 branchoptions: [],
+                 dateValue: '',
+                 releaseType: '1',
+                 equipmentNumber: '',
+                 timeValue: 0,
+                 branchValue: 0,
+                 dateExhibition: '0',
+                 stryear: '',
+                 dateArr: [],
+                 dateCallValue: ''
+             };
+         },
+         created() {
+             this.getMySplitDate();
+             this.stryear = this.dateArr[0].strYear;
+             let stryear = this.dateArr[0].strYear;// 年份
+             let strMonth = this.dateArr[0].strMonth;// 月份
+             let strmyDate = this.dateArr[0].strmyDate;// 日
+             for (let i = 0; i < 7; i++) {
+                 this.dateoptions.push({'value': strMonth + '-' + (strmyDate + i), 'label': strMonth + '月' + (strmyDate + i) + '日'});
+             }
+             for (let k = 0; k < 24; k++) {
+                 this.timeoptions.push({'value': k, 'label': k});
+             }
+             for (let j = 0; j < 60; j++) {
+                 this.branchoptions.push({'value': j, 'label': j});
+             }
+             this.dateValue = strMonth + '-' + strmyDate;
+             this.dateCallValue = strMonth + '-' + strmyDate;
+             this.forArrFun(this.dateValue);
+         },
+         methods: {
+             confirmxz() {
+                 let callBackTime = this.stryear + '-' + this.dateValue + ' ' + this.transformTime(this.timeValue) + ':' + this.transformTime(this.branchValue) + ':00';
+                 let dateInput = dutil.stringToDate(callBackTime);
+                 let dateNow = new Date();
+                 let callBackValue = {callBackTime: callBackTime, releaseType: this.releaseType};
+                 if (this.releaseType === '4') {
+                     callBackValue.equipmentNumber = this.equipmentNumber;
+                 }
+                 var min = dateNow.getMinutes();
+                 dateNow.setMinutes(min + 5);
+                 console.log(callBackTime)
+                 if (dateInput.getTime() > dateNow.getTime()) {
+                     this.$emit('confirm-event', callBackValue);
+                 } else {
+                     this.$Modal.error({
+                         title: '',
+                         content: '输入时间必须在当前时间五分钟后！'
+                     });
+                 }
+             },
+             transformTime(time) {
+                 let strTime = time > 9 ? time : '0' + time;
+                 return strTime;
+             },
+             cancelFun() {
+                 this.$emit('cancel-event', '');
+             },
+             uploadImg() {
+                 this.$emit('cancel-event', '');
+             },
+             dateEvent() {
+                 this.forArrFun(this.dateValue);
+             },
+             forArrFun(selVal) {
+                 let self = this;
+                 this.dateoptions.forEach(function(obj) {
+                     if (obj.value === selVal) {
+                         self.dateExhibition = obj.label;
+                     }
+                 });
+             },
+             getMySplitDate() {
+                 let myDate = new Date();
+                 let strYear = myDate.getFullYear();
+                 let strMonth = myDate.getMonth() + 1; // 获取当前月份(0-11,0代表1月)
+                 let strmyDate = myDate.getDate(); // 获取当前日(1-31)
+                 let arr = {'strYear': strYear, 'strMonth': strMonth, 'strmyDate': strmyDate};
+                 this.dateArr.push(arr);
+             }
+         }
+};
 </script>
 <style scoped>
 .el-form-item__label {
