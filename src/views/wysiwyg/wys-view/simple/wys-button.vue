@@ -14,21 +14,25 @@
             <Col span="12"
                  style="line-height: 38px">Android链接</Col>
             <Col span="12">
-            <a href=""
-               class="btn">
+            <div href=""class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
               添加CDN链接
-            </a>
+            </div>
             </Col>
           </Row>
+          <Modal title="URL" v-model="share.navVisible">
+            <FormItem  label="链接地址" v-if="share.navVisible">
+                <Input v-model="share.url" placeholder="http://"></Input>
+            </FormItem>  
+          </Modal>
         </Row>
         <Row>
-          <textarea style="width: 280px; height: 100px" v-model="share.url"></textarea>
+          <textarea style="width: 280px; height: 100px" v-model="share.androidUrl"></textarea>
         </Row>
         <Row>
           <Col span="12"
                style="line-height: 38px">IOS链接</Col>
-          <textarea style="width: 280px; height: 100px" v-model="share.url"></textarea>
+          <textarea style="width: 280px; height: 100px" v-model="share.iosUrl"></textarea>
         </Row>
       </TabPane>
       <TabPane label="样式">
@@ -196,7 +200,7 @@
                 <FormItem label="宽度">
                   <Slider show-input v-model="share.borderSize"> </Slider>
                 </FormItem>
-                <FormItem label="背景色">
+                <FormItem label="边框颜色">
                   <Col span="17">
                     <Input :placeholder="share.borderColor" v-model="share.borderColor"></Input>
                   </Col>
@@ -217,17 +221,25 @@ export default {
   data() {
     return {
       share: {
+        // 内容链接部分
+        androidUrl: '',
+        iosUrl: '',
+        // 控制padding
         buttonPaddingTop: 10,
         buttonPaddingBottom: 10,
         buttonPaddingRight: 0,
         buttonPaddingLeft: 0,
+        // 标题样式
         buttonType: "buttonType_1",
+        // 按钮标题
         buttontext: "按钮标题",
+        // 按钮大小
         buttonWidth: 90,
         buttonHeight: 60,
+        // border相关
         borderSize: 2,
         borderColor: "rgb(232,89,91)",
-        borderType: "none",
+        borderType: "solid",
         buttonBorderColor: "rgb(232,89,91)",
         buttonColor: "rgb(232,89,91)",
         fontColor: "rgb(255,255,255)",
@@ -246,7 +258,8 @@ export default {
         pic: "",
         horizontalDir: "adapt_hor",
         verticalDir: "adapt_ver",
-        maskColor: "rgba(0,0,0,0)"
+        maskColor: "rgba(0,0,0,0)",
+        navVisible: false
       },
       imgUrl:"",
       visible:false
@@ -314,11 +327,16 @@ export default {
   height: 40px;
   margin-bottom: 10px;
 }
+.btn {
+    font-size:12px;
+    color:#2d8cf0;
+    cursor: pointer;
+}
 </style>
 <stage-template>
 <div id="{{@ brickid}}" class="button-box">
   <section class="{{@share.position}} wys-contant {{@share.horizontalDir}}  {{@share.verticalDir}}"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
-    <a herf="http://"+{{share.url }} class="wys-link">
+    <a class="wys-link" clas="wys-linkPart">
       <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}px;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px; border: {{@share.borderSize}}px; border-style: {{@share.borderType}}; border-color: {{@share.borderColor}}">
           <span>{{@share.buttontext}}</span>
       </div>
@@ -327,8 +345,13 @@ export default {
 </div>
 </stage-template>   
 <stage-javascript type="text/javascript>
-$t.css({
-  'position':'absolute'
+  var wys-link = $t.children('.wys-content').children('.wys-linkPart');
+  const ua = window.navigator.userAgent.toLowerCase();
+  if(ua.indexOf('iphone') !== -1) {
+    wys-link.attr('href','{{@share.iosUrl}}');
+  } else {
+    wys-link.attr('href','{{@share.androidUrl}}');
+  }
 })
 </stage-javascipt>
 <stage-css>
@@ -387,7 +410,7 @@ $t.css({
     height: 20%;
     color:  rgb(232,89,91) !important;
     background: rgb(255,255,255) !important;
-    border: 2px solid rgb(232,89,91) !important;
+    border: <%= share.borderSize%> <%= share.borderType%> <%= share.borderColor%> !important;
     border-radius:8px !important;
     box-sizing: border-content !important;
 
