@@ -17,12 +17,20 @@
                     <Input v-model="share.httpUrl"></Input>
                 </FormItem>
             </div>
-            <Upload  v-if="share.uploadList <= 0"  ref="upload" class="uploadWidth"          
+            <Upload  v-if="share.uploadList <= 0 && !share.isloading"  ref="upload" class="uploadWidth"          
                     action="/cmsapi/sys/uploadVideo" :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess"
                     :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost" >添加视频</Button>
-            </Upload>       
+            </Upload>  
+
+            <Col v-if="share.isloading" class="demo-spin-col" span="8">
+                <Spin fix>
+                    <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+                    <div>Loading</div>
+                </Spin>
+            </Col>
+
             <Modal title="View Image" v-model="visible">
                 <img :src="imgUrl" v-if="visible" style="width: 100%">
             </Modal>
@@ -70,6 +78,7 @@
                     imgSelect:"line1",
                     httpUrl:"",
                     backColor:"",
+                    isloading: false,
                     videoSize:0,
                     image:'http://wap-qn.toutiaofangchan.com/tpzw_image.png',
                     defaultList:[],
@@ -99,6 +108,7 @@
                         }, 3000);
                         return false;
                     }
+                    this.share.isloading = false;
                     this.share.uploadList.push({
                         url: response.data.data.coverURL,
                       //  imgInformation: img.width+"px*"+img.height+"px",
@@ -107,19 +117,10 @@
                     this.share.videoUrl = response.data.data.playURL;
                     this.share.videoImg = response.data.data.coverURL;
                     this.share.videoSize = _.floor((response.data.data.size / 102400),2);
-                    // this.$refs.videoUpDom.src = response.data.data.coverURL;
-                    // this.form.content.duration = response.data.data.duration;
-                    // this.form.content.coverURL = response.data.data.coverURL;
-                    // this.form.content.playURL = response.data.data.playURL;
-                    // if(this.form.content.coverURL != null){
-                    //     this.uploadImgMsg = this.form.content.coverURL;
-                    // }
-                    // this.form.content.size = response.data.data.size;
-                    // this.loadingFlag = false;
                 })
             },
             uploadSuccess (res, file) {
-
+                this.share.isloading = true;
                 let self = this;
                 setTimeout(function(){
                     self.apiuploadVideo(file.response.data);
@@ -232,6 +233,19 @@
     .ivu-form-item {
         padding-right: 10px !important;
     }
+    .demo-spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+    @keyframes ani-demo-spin {
+        from { transform: rotate(0deg);}
+        50%  { transform: rotate(180deg);}
+        to   { transform: rotate(360deg);}
+    }
+    .demo-spin-col{
+        height: 100px;
+        position: relative;
+        border: 1px solid #eee;
+    }
 </style>
 
 
@@ -243,8 +257,8 @@
     </div>
 </div>
 </stage-template>
-<stage-javascript-import>https://g.alicdn.com/de/prismplayer/2.7.2/aliplayer-min.js</stage-javascript-import>
-<stage-css-import>https://g.alicdn.com/de/prismplayer/2.7.2/skins/default/aliplayer-min.css</stage-css-import>
+<stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/55ad396d497544678af4f5c8e42386f6.js</stage-javascript-import>
+<stage-css-import>http://wap-qn.toutiaofangchan.com/adideas/a85bfd05564440409e5ac8026a25ac72.css</stage-css-import>
 <stage-javascript type="text/javascript">
 setTimeout(function(){
     var player = new Aliplayer({
