@@ -17,7 +17,9 @@
                         当前图片尺寸: {{share.imgInformation}}
                     </FormItem>
                     <FormItem v-if="share.uploadList.length == 0">
-                        <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError" :show-upload-list="false">
+                        <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                            :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
+                            :on-format-error="uploadFormatError" :show-upload-list="false">
                             <Button type="ghost">添加图片</Button>
                         </Upload>
                     </FormItem>
@@ -62,68 +64,68 @@
 
 <script>
 export default {
-  name: "wys-img",
-  data() {
-    return {
-      share: {
-        imgTop: 0,
-        imgRight: 0,
-        imgBottom: 0,
-        imgLeft: 0,
-        image: "http://wap-qn.toutiaofangchan.com/tpzw_image.png",
-        defaultList: [],
-        uploadList: [],
-        imgInformation: "",
-        label: "",
-        position: "text-label-1"
-      },
-      imgUrl: "",
-      visible: false
-    };
-  },
-  methods: {
-    uploadSuccess(res, file) {
-      if (res.code === "success") {
-        this.share.uploadList.push({ name: file.name, url: res.data.url });
-        // 创建对象
-        var img = new Image();
-
-        // 改变图片的src
-        img.src = res.data.url;
-        var that = this;
-        // 加载完成执行
-        img.onload = function() {
-          that.share.imgInformation = img.width + "px*" + img.height + "px";
+    name: 'wys-img',
+    data () {
+        return {
+            share: {
+                imgTop: 0,
+                imgRight: 0,
+                imgBottom: 0,
+                imgLeft: 0,
+                image: 'http://wap-qn.toutiaofangchan.com/tpzw_image.png',
+                defaultList: [],
+                uploadList: [],
+                imgInformation: '',
+                label: '',
+                position: 'text-label-1'
+            },
+            imgUrl: '',
+            visible: false
         };
-      } else {
-        this.$Notice.error({
-          title: "上传失败",
-          desc: res.data.url
-        });
-      }
     },
-    uploadFormatError(file) {
-      this.$Notice.error({
-        title: "不能上传此格式的文件",
-        desc: ""
-      });
+    methods: {
+        uploadSuccess (res, file) {
+            if (res.code === 'success') {
+                this.share.uploadList.push({ name: file.name, url: res.data.url });
+                // 创建对象
+                var img = new Image();
+
+                // 改变图片的src
+                img.src = res.data.url;
+                var that = this;
+                // 加载完成执行
+                img.onload = function () {
+                    that.share.imgInformation = img.width + 'px*' + img.height + 'px';
+                };
+            } else {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: res.data.url
+                });
+            }
+        },
+        uploadFormatError (file) {
+            this.$Notice.error({
+                title: '不能上传此格式的文件',
+                desc: ''
+            });
+        },
+        handleView (imgUrl) {
+            this.imgUrl = imgUrl;
+            this.visible = true;
+        },
+        handleRemove (file) {
+            let index = this.share.uploadList.indexOf(file);
+            this.share.uploadList.splice(index, 1);
+        }
     },
-    handleView(imgUrl) {
-      this.imgUrl = imgUrl;
-      this.visible = true;
+    created: function () {
+        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
     },
-    handleRemove(file) {
-      let index = this.share.uploadList.indexOf(file);
-      this.share.uploadList.splice(index, 1);
+    mounted () {
+        // console.log(this.$refs.upload.fileList);
+        // this.uploadList = this.$refs.upload.fileList;
     }
-  },
-  created: function() {
-    // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
-  },
-  mounted() {
-    // console.log(this.$refs.upload.fileList);
-    // this.uploadList = this.$refs.upload.fileList;
-  }
 };
 </script>
 

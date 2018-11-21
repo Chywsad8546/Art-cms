@@ -5,28 +5,21 @@
         <Row>
           <Col span="20">
           <FormItem label="文本">
-            <Input v-model="share.buttontext"
-                   placeholder="按钮文本 "></Input>
+            <Input v-model="share.buttontext" placeholder="按钮文本 "></Input>
           </FormItem>
           </Col>
         </Row>
         <Row>
           <Row>
-            <div href=""
-                 class="btn"
-                 @click="share.navVisible = true"
-                 style="">
+            <div href="" class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
               添加链接
             </div>
             </Col>
           </Row>
-          <Modal title="URL"
-                 v-model="share.navVisible">
-            <FormItem label="链接地址"
-                      v-if="share.navVisible">
-              <Input v-model="share.url"
-                     placeholder="http://"></Input>
+          <Modal title="URL" v-model="share.navVisible">
+            <FormItem label="链接地址" v-if="share.navVisible">
+              <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>
           </Modal>
 
@@ -38,36 +31,27 @@
         </Row>
       </TabPane>
       <TabPane label="样式">
-        <Collapse simple
-                  style="overflow: -webkit-paged-y">
+        <Collapse simple style="overflow: -webkit-paged-y">
           <Panel name="1">
             样式调整
-            <div slot="content"
-                 class="my-style">
-              <RadioGroup v-model="share.buttonType"
-                          vertical>
-                <Radio label="buttonType_1"
-                       style="height: 100px ">
+            <div slot="content" class="my-style">
+              <RadioGroup v-model="share.buttonType" vertical>
+                <Radio label="buttonType_1" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/5b878a776f614fa0bf9835930d6c8b93.png">
                 </Radio>
-                <Radio label="buttonType_2"
-                       style="height: 100px ">
+                <Radio label="buttonType_2" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/cd2dbe33240248a78c1c5725843cd044.png">
                 </Radio>
-                <Radio label="buttonType_3"
-                       style="height: 100px ">
+                <Radio label="buttonType_3" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/ce226b4491cd401691d6837d624ad311.png">
                 </Radio>
-                <Radio label="buttonType_4"
-                       style="height: 100px ">
+                <Radio label="buttonType_4" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/b1e0b9cea36c44678932018550542bab.png">
                 </Radio>
-                <Radio label="buttonType_5"
-                       style="height: 100px ">
+                <Radio label="buttonType_5" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/70b4b07d65fb43fa9aaeca68d961b9d0.png">
                 </Radio>
-                <Radio label="buttonType_6"
-                       style="height: 100px ">
+                <Radio label="buttonType_6" style="height: 100px ">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/f2ea77681b544f4f9d11ff969e59de0c.png">
                 </Radio>
               </RadioGroup>
@@ -75,60 +59,42 @@
           </Panel>
           <Panel name="2">
             基本
-            <div slot="content"
-                 v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              <FormItem label="宽度"
-                        slot="content">
-                <Slider show-input
-                        v-model="share.buttonWidth"></Slider>
+            <div slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
+              <FormItem label="宽度" slot="content">
+                <Slider show-input v-model="share.buttonWidth"></Slider>
               </FormItem>
-              <FormItem label="高度"
-                        slot="content">
-                <Slider show-input
-                        v-model="share.buttonHeight"> </Slider>
+              <FormItem label="高度" slot="content">
+                <Slider show-input v-model="share.buttonHeight"> </Slider>
               </FormItem>
             </div>
-            <FormItem label="字体大小"
-                      slot="content">
-              <Slider show-input
-                      v-model="share.fontSize"></Slider>
+            <FormItem label="字体大小" slot="content">
+              <Slider show-input v-model="share.fontSize"></Slider>
             </FormItem>
-            <FormItem label="按钮颜色"
-                      slot="content"
-                      v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
+            <FormItem label="按钮颜色" slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
               <Col span="17">
-              <Input :placeholder="share.buttonColor"
-                     v-model="share.buttonColor">
+              <Input :placeholder="share.buttonColor" v-model="share.buttonColor">
               </Input>
               </Col>
               <Col span="1">
-              <ColorPicker v-model="share.buttonColor"
-                           format="rgb" />
+              <ColorPicker v-model="share.buttonColor" format="rgb" />
               </Col>
             </FormItem>
-            <FormItem label="字体颜色"
-                      slot="content">
+            <FormItem label="字体颜色" slot="content">
               <Col span="17">
-              <Input :placeholder="share.fontColor"
-                     v-model="share.fontColor">
+              <Input :placeholder="share.fontColor" v-model="share.fontColor">
               </Input>
               </Col>
               <Col span="1">
-              <ColorPicker v-model="share.fontColor"
-                           format="rgb" />
+              <ColorPicker v-model="share.fontColor" format="rgb" />
               </Col>
             </FormItem>
-            <FormItem label="圆角"
-                      slot="content"
-                      v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              <Slider show-input
-                      v-model="share.buttonRadius"> </Slider>
+            <FormItem label="圆角" slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
+              <Slider show-input v-model="share.buttonRadius"> </Slider>
             </FormItem>
           </Panel>
           <Panel name="3">
             展示效果
-            <FormItem label="展示效果"
-                      slot="content">
+            <FormItem label="展示效果" slot="content">
               <Select v-model="share.position">
                 <Option value="button_default">默认位置</Option>
                 <Option value="button_top">顶部悬浮</Option>
@@ -141,40 +107,29 @@
             <div slot="content">
               <FormItem label="背景色">
                 <Col span="17">
-                <Input :placeholder="share.backgroundColor"
-                       v-model="share.backgroundColor"></Input>
+                <Input :placeholder="share.backgroundColor" v-model="share.backgroundColor"></Input>
                 </Col>
                 <Col span="1">
-                <ColorPicker v-model="share.backgroundColor"
-                             format="rgb" />
+                <ColorPicker v-model="share.backgroundColor" format="rgb" />
                 </Col>
               </FormItem>
               <FormItem>
-                <div class="demo-upload-list"
-                     v-for="item in share.uploadList">
+                <div class="demo-upload-list" v-for="item in share.uploadList">
                   <img :src="item.url">
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline"
-                          @click.native="handleView(item.url)"></Icon>
-                    <Icon type="ios-trash-outline"
-                          @click.native="handleRemove(item)"></Icon>
+                    <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                   </div>
                 </div>
               </FormItem>
               <FormItem v-if="share.uploadList.length>0">
                 当前图片尺寸: {{share.imgInformation}}
               </FormItem>
-              <FormItem v-if="share.uploadList.length == 0"
-                        label="背景图">
+              <FormItem v-if="share.uploadList.length == 0" label="背景图">
                 <Row>
-                  <Upload ref="upload"
-                          class="uploadWidth"
-                          action="cmsapi/upload/uploadimgNoDomainExt"
-                          :default-file-list="share.defaultList"
-                          :format="['jpg','jpeg','png']"
-                          :on-success="uploadSuccess"
-                          :on-format-error="uploadFormatError"
-                          :show-upload-list="false">
+                  <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                    :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
+                    :on-format-error="uploadFormatError" :show-upload-list="false">
                     <Button type="ghost">添加图片</Button>
                   </Upload>
                 </Row>
@@ -186,8 +141,7 @@
                   <Option value="center_hor">居中</Option>
                 </Select>
               </FormItem>
-              <FormItem label="纵向"
-                        v-model="share.verticalDir">
+              <FormItem label="纵向" v-model="share.verticalDir">
                 <Select v-model="share.verticalDir">
                   <Option value="adapt_ver">适配</Option>
                   <Option value="repeat_ver">重复</Option>
@@ -203,11 +157,8 @@
                   <ColorPicker v-model="share.maskColor" alpha  />
                 </Col>
               </FormItem> -->
-              <Modal title="View Image"
-                     v-model="visible">
-                <img :src="imgUrl"
-                     v-if="visible"
-                     style="width: 100%">
+              <Modal title="View Image" v-model="visible">
+                <img :src="imgUrl" v-if="visible" style="width: 100%">
               </Modal>
             </div>
           </Panel>
@@ -215,29 +166,20 @@
             边距
             <div slot="content">
               <FormItem label="顶">
-                <Slider show-input
-                        v-model="share.buttonPaddingTop"
-                        :tip-format="format"> </Slider>
+                <Slider show-input v-model="share.buttonPaddingTop" :tip-format="format"> </Slider>
               </FormItem>
               <FormItem label="右">
-                <Slider show-input
-                        v-model="share.buttonPaddingRight"
-                        :tip-format="format"> </Slider>
+                <Slider show-input v-model="share.buttonPaddingRight" :tip-format="format"> </Slider>
               </FormItem>
               <FormItem label="底">
-                <Slider show-input
-                        v-model="share.buttonPaddingBottom"
-                        :tip-format="format"> </Slider>
+                <Slider show-input v-model="share.buttonPaddingBottom" :tip-format="format"> </Slider>
               </FormItem>
               <FormItem label="左">
-                <Slider show-input
-                        v-model="share.buttonPaddingLeft"
-                        :tip-format="format"> </Slider>
+                <Slider show-input v-model="share.buttonPaddingLeft" :tip-format="format"> </Slider>
               </FormItem>
             </div>
           </Panel>
-          <Panel name="6"
-                 v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
+          <Panel name="6" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
             边框
             <div slot="content">
               <FormItem label="边框类型">
@@ -249,20 +191,16 @@
                   <Option value="dotted">点线</Option>
                 </Select>
               </FormItem>
-              <div slot="content"
-                   v-if="share.borderType !== 'none'">
+              <div slot="content" v-if="share.borderType !== 'none'">
                 <FormItem label="宽度">
-                  <Slider show-input
-                          v-model="share.borderSize"> </Slider>
+                  <Slider show-input v-model="share.borderSize"> </Slider>
                 </FormItem>
                 <FormItem label="边框颜色">
                   <Col span="17">
-                  <Input :placeholder="share.borderColor"
-                         v-model="share.borderColor"></Input>
+                  <Input :placeholder="share.borderColor" v-model="share.borderColor"></Input>
                   </Col>
                   <Col span="1">
-                  <ColorPicker v-model="share.borderColor"
-                               format="rgb" />
+                  <ColorPicker v-model="share.borderColor" format="rgb" />
                   </Col>
                 </FormItem>
               </div>
@@ -275,7 +213,7 @@
 </template>
 <script>
 export default {
-    data() {
+    data () {
         return {
             share: {
                 // 内容链接部分
@@ -323,10 +261,10 @@ export default {
         };
     },
     methods: {
-        format(val) {
+        format (val) {
             return 'Progress:' + val + '%';
         },
-        uploadSuccess(res, file) {
+        uploadSuccess (res, file) {
             if (res.code === 'success') {
                 console.log(res);
                 console.log(file);
@@ -340,7 +278,7 @@ export default {
                 img.src = res.data.url;
                 var that = this;
                 // 加载完成执行
-                img.onload = function() {
+                img.onload = function () {
                     that.share.imgInformation = img.width + 'px*' + img.height + 'px';
                 };
             } else {
@@ -350,17 +288,17 @@ export default {
                 });
             }
         },
-        uploadFormatError(file) {
+        uploadFormatError (file) {
             this.$Notice.error({
                 title: '不能上传此格式的文件',
                 desc: ''
             });
         },
-        handleView(imgUrl) {
+        handleView (imgUrl) {
             this.imgUrl = imgUrl;
             this.visible = true;
         },
-        handleRemove(file) {
+        handleRemove (file) {
             let index = this.share.uploadList.indexOf(file);
             this.share.uploadList.splice(index, 1);
             this.share.pic = '';

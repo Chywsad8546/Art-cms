@@ -3,24 +3,18 @@
     <Tabs>
       <TabPane label="内容">
         <Row>
-          <Col span="12"
-               style="line-height: 38px">标题内容</Col>
-          <Input style="width: 280px; height: 40px"
-                 v-model="share.titleText"></Input>
+          <Col span="12" style="line-height: 38px">标题内容</Col>
+          <Input style="width: 280px; height: 40px" v-model="share.titleText"></Input>
         </Row>
         <Row>
-          <div class="addLink"
-               @click="addLink">
+          <div class="addLink" @click="addLink">
             <Icon type="plus-round"></Icon>
             添加链接
           </div>
         </Row>
-        <Modal title="URL"
-               v-model="share.navVisible">
-          <FormItem label="链接地址"
-                    v-if="share.navVisible">
-            <Input v-model="share.url"
-                   placeholder="http://"></Input>
+        <Modal title="URL" v-model="share.navVisible">
+          <FormItem label="链接地址" v-if="share.navVisible">
+            <Input v-model="share.url" placeholder="http://"></Input>
           </FormItem>
         </Modal>
       </TabPane>
@@ -29,65 +23,43 @@
           <Panel name="1">
             样式调整
             <div slot="content">
-              <RadioGroup v-model="share.titleType"
-                          vertical>
-                <Radio label="title-type_1"
-                       style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/8363e591e67343938c60972d75fb65a5.png"
-                       alt="样式1">
+              <RadioGroup v-model="share.titleType" vertical>
+                <Radio label="title-type_1" style="height: 40px">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/8363e591e67343938c60972d75fb65a5.png" alt="样式1">
                 </Radio>
-                <Radio label="title-type_2"
-                       style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/58fe98e8b8ad41b0963bb61f400606ec.png"
-                       alt="样式1">
+                <Radio label="title-type_2" style="height: 40px">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/58fe98e8b8ad41b0963bb61f400606ec.png" alt="样式1">
                 </Radio>
-                <Radio label="title-type_3"
-                       style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/1e148826a99b480b8b781cddea2bd47b.png"
-                       alt="样式1">
+                <Radio label="title-type_3" style="height: 40px">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/1e148826a99b480b8b781cddea2bd47b.png" alt="样式1">
                 </Radio>
-                <Radio label="title-type_4"
-                       style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/9083fd8440584d56aed52d82138694c0.png"
-                       alt="样式1">
+                <Radio label="title-type_4" style="height: 40px">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/9083fd8440584d56aed52d82138694c0.png" alt="样式1">
                 </Radio>
-                <Radio label="待定_5"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_6"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_7"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_8"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_9"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_10"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_11"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_12"
-                       style="height: 40px"></Radio>
-                <Radio label="待定_13"
-                       style="height: 40px"></Radio>
+                <Radio label="待定_5" style="height: 40px"></Radio>
+                <Radio label="待定_6" style="height: 40px"></Radio>
+                <Radio label="待定_7" style="height: 40px"></Radio>
+                <Radio label="待定_8" style="height: 40px"></Radio>
+                <Radio label="待定_9" style="height: 40px"></Radio>
+                <Radio label="待定_10" style="height: 40px"></Radio>
+                <Radio label="待定_11" style="height: 40px"></Radio>
+                <Radio label="待定_12" style="height: 40px"></Radio>
+                <Radio label="待定_13" style="height: 40px"></Radio>
               </RadioGroup>
               <FormItem label="装饰颜色">
                 <Col span="17">
-                <Input :placeholder="share.titleColor"
-                       v-model="share.titleColor"></Input>
+                <Input :placeholder="share.titleColor" v-model="share.titleColor"></Input>
                 </Col>
                 <Col>
-                <ColorPicker v-model="share.titleColor"
-                             format="rgb" />
+                <ColorPicker v-model="share.titleColor" format="rgb" />
                 </Col>
               </FormItem>
               <FormItem label="字体颜色">
                 <Col span="17">
-                <Input :placeholder="share.fontColor"
-                       v-model="share.fontColor"></Input>
+                <Input :placeholder="share.fontColor" v-model="share.fontColor"></Input>
                 </Col>
                 <Col>
-                <ColorPicker v-model="share.fontColor"
-                             format="rgb" />
+                <ColorPicker v-model="share.fontColor" format="rgb" />
                 </Col>
               </FormItem>
             </div>
@@ -96,20 +68,16 @@
             边距
             <div slot="content">
               <FormItem label="顶">
-                <Slider show-input
-                        v-model="share.titlePaddingTop"></Slider>
+                <Slider show-input v-model="share.titlePaddingTop"></Slider>
               </FormItem>
               <FormItem label="右">
-                <Slider show-input
-                        v-model="share.titlePaddingRight"></Slider>
+                <Slider show-input v-model="share.titlePaddingRight"></Slider>
               </FormItem>
               <FormItem label="低">
-                <Slider show-input
-                        v-model="share.titlePaddingBottom"></Slider>
+                <Slider show-input v-model="share.titlePaddingBottom"></Slider>
               </FormItem>
               <FormItem label="左">
-                <Slider show-input
-                        v-model="share.titlePaddingLeft"></Slider>
+                <Slider show-input v-model="share.titlePaddingLeft"></Slider>
               </FormItem>
             </div>
           </Panel>
@@ -137,7 +105,7 @@ export default {
         };
     },
     methods: {
-        addLink: function() {
+        addLink: function () {
             console.log(this);
             this.share.navVisible = !this.share.navVisible;
         }
@@ -178,6 +146,7 @@ export default {
     text-align: center;
     justify-content:center;
     align-items:center;
+
 }
 .wsy-title-before {
   display:inline-block;
@@ -191,6 +160,7 @@ export default {
   display:inline-block;
   vertical-align:top;
   font-size:14px;
+  white-space: nowrap;
 }
 .wsy-title-after {
   display:inline-block;
