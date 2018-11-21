@@ -5,9 +5,9 @@ export default {
     //     return http.post('/cmsapi/editPlan', params);
     // },
     getProjInfos(params) {
-        return http.get('/cmsapi/ad/getProjInfos', {params: params});
+        return http.get('/officedictapi/v1.0.0/projAd/getProjInfos', {params: params});
     },
     getProjDetail(params) {
-        return http.get('/cmsapi/ad/getProjDetail', {params: params});
+        return http.get('/officedictapi/v1.0.0/projAd/getProjDetail', {params: params});
     },
 };
