@@ -9,9 +9,10 @@ import wys_link from './wys-view/simple/wys-link.vue';
 import wys_placeholder from './wys-view/simple/wys-placeholder.vue';
 import wys_button from './wys-view/simple/wys-button.vue';
 import wys_tab from './wys-view/simple/wys-tab.vue';
+import wys_title from './wys-view/simple/wys-title.vue';
 import wys_video from './wys-view/simple/wys-video.vue';
 import wys_form from './wys-view/marketing/wys-form.vue';
-
+import wys_download from './wys-view/simple/wys-download.vue';
 export default {
 
     stageComponents: [
@@ -84,6 +85,12 @@ export default {
             id: 'wys_tab'
         },
         {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/fe3142c7596d47789df1c2b84d3d88d6.png',
+            title:'标题',
+            component: wys_title,
+            id: 'wys_title'
+        },
+        {
             icon: 'http://wap-qn.toutiaofangchan.com/adideas/d3f56f515b354a6889d1c31ff7b519c5.png',
             title:'视频',
             component: wys_video,
@@ -94,6 +101,12 @@ export default {
             title:'表单',
             component: wys_form,
             id: 'wys_form'
+        },
+        {
+            icon: 'http://wap-qn.toutiaofangchan.com/adideas/d3f56f515b354a6889d1c31ff7b519c5.png',
+            title:'下载按钮',
+            component: wys_download,
+            id: 'wys_download'
         },
     ]
 };

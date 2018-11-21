@@ -5,15 +5,17 @@
         <Row>
           <Col span="20">
           <FormItem label="文本">
-            <Input v-model="share.buttontext" placeholder="按钮文本 "></Input>
+            <Input v-model="share.buttontext" placeholder="按钮内容 "></Input>
           </FormItem>
           </Col>
         </Row>
         <Row>
           <Row>
+            <Col span="12" style="line-height: 38px">Android链接</Col>
+            <Col span="12">
             <div href="" class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
-              添加链接
+              添加CDN链接
             </div>
             </Col>
           </Row>
@@ -22,12 +24,13 @@
               <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>
           </Modal>
-
-          <p><strong>提示</strong></p>
-          <p>1. 建议图片宽度在320至640之间;</p>
-          <p>2. 图片大小不能超过1M; 支持jpg,jpeg,png,gif等格式;</p>
-          <p>3. 作为按钮的图片宽高比不能低于3:1并且不能高于10:1</p>
-
+        </Row>
+        <Row>
+          <textarea style="width: 280px; height: 100px" v-model="share.androidUrl"></textarea>
+        </Row>
+        <Row>
+          <Col span="12" style="line-height: 38px">IOS链接</Col>
+          <textarea style="width: 280px; height: 100px" v-model="share.iosUrl"></textarea>
         </Row>
       </TabPane>
       <TabPane label="样式">
@@ -113,15 +116,15 @@
                 <ColorPicker v-model="share.backgroundColor" format="rgb" />
                 </Col>
               </FormItem>
-              <FormItem>
-                <div class="demo-upload-list" v-for="item in share.uploadList">
-                  <img :src="item.url">
-                  <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                  </div>
+
+              <div class="demo-upload-list" v-for="item in share.uploadList">
+                <img :src="item.url">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                 </div>
-              </FormItem>
+              </div>
+
               <FormItem v-if="share.uploadList.length>0">
                 当前图片尺寸: {{share.imgInformation}}
               </FormItem>
@@ -307,6 +310,49 @@ export default {
 };
 </script>
 <style scoped>
+.uploadWidth button {
+  width: 260px;
+  margin-top: 20px;
+}
+.demo-upload-list {
+  display: inline-block;
+  width: 279px;
+  height: 176px;
+  text-align: center;
+  line-height: 176px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin-right: 4px;
+}
+.demo-upload-list img {
+  width: 100%;
+  height: 100%;
+}
+.demo-upload-list-cover {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover {
+  display: block;
+}
+.demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
+}
+.imgWidthCont {
+  width: 95%;
+}
 .my-style {
   display: flex;
   flex-wrap: wrap;
@@ -326,6 +372,9 @@ export default {
   color: #2d8cf0;
   cursor: pointer;
 }
+.ivu-form-item-content {
+  margin-left: 0;
+}
 </style>
 <stage-template>
 <div id="{{@ brickid}}" class="button-box">
@@ -339,10 +388,15 @@ export default {
 </div>
 </stage-template>   
 <stage-javascript type="text/javascript">
-  $($t.find(".wys-contant").find(".wys-link")).on("click",function(){
-    window.open("{{@share.url}}")
+console.log($t.children(".wys-contant").children(".wys-link"))
+const ua = window.navigator.userAgent.toLowerCase()
+ $($t.find(".wys-contant").find(".wys-link")).on("click",function(){
+    if(ua.indexOf("iphone") !== -1){
+     window.open("{{@share.iosUrl}}")
+    } else {
+      window.open("{{@share.androidUrl}}")
+    }
   })
-
 </stage-javascript>
 <stage-css>
   .wys-contant {
@@ -401,7 +455,7 @@ export default {
     color:  rgb(232,89,91) !important;
     background: rgb(255,255,255) !important;
     border: <%= share.borderSize%> <%= share.borderType%> <%= share.borderColor%> !important;
-    border-radius:<%= borderRadius%> !important;
+    border-radius:<%= share.borderRadius> !important;
     box-sizing: border-content !important;
 
   }
