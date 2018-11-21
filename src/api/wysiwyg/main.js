@@ -19,5 +19,12 @@ export default {
             params: params
         });
     },
-    
+    getDiyFormStructure (params) {
+        return http.get('/cmsapi/diyForm/getDiyFormStructure', {
+            params: params
+        });
+    },
+    saveDiyFormStructure (params) {
+        return http.postJson('/cmsapi/diyForm/saveDiyFormStructure', params);
+    },    
 }
