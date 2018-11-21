@@ -96,9 +96,9 @@
             展示效果
             <FormItem label="展示效果" slot="content">
               <Select v-model="share.position">
-                <Option value="button_default">默认位置</Option>
-                <Option value="button_top">顶部悬浮</Option>
-                <Option value="button_bottom"> 底部悬浮</Option>
+                <Option value="default">默认位置</Option>
+                <Option value="top">顶部悬浮</Option>
+                <Option value="bottom"> 底部悬浮</Option>
               </Select>
             </FormItem>
           </Panel>
@@ -110,7 +110,7 @@
                 <Input :placeholder="share.backgroundColor" v-model="share.backgroundColor"></Input>
                 </Col>
                 <Col span="1">
-                <ColorPicker v-model="share.backgroundColor" format="rgb" />
+                <ColorPicker v-model="share.backgroundColor" alpha />
                 </Col>
               </FormItem>
               <FormItem>
@@ -239,10 +239,10 @@ export default {
                 buttonColor: 'rgb(232,89,91)',
                 fontColor: 'rgb(255,255,255)',
                 fontSize: 17,
-                backgroundColor: 'rgb(255,255,255)',
+                backgroundColor: 'rgb(255,255,255,0)',
                 buttonBackgroundImg: '',
                 buttonRadius: 8,
-                position: 'button-default',
+                position: 'default',
                 url: '',
                 colortext: 'green',
                 // 背景图片部分
@@ -343,6 +343,14 @@ export default {
     window.open("{{@share.url}}")
   })
 
+  if("{{@share.position}}" == "top") {
+    $t.removeAttr("botton_bottom")
+    $t.attr("class","botton_top")
+  } 
+  if ("{{@share.position}}" == "bottom") {
+    $t.removeAttr("botton_top")
+    $t.attr("class","botton_bottom")
+  }
 </stage-javascript>
 <stage-css>
   .wys-contant {

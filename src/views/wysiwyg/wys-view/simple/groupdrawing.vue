@@ -1,124 +1,124 @@
 <template>
-       <Form  :label-width="40" class="imgWidthCont">
-    <Tabs>
-      <TabPane label="内容" >
-        <div v-for="item in share.uploadList">
-          <div class="demo-upload-list">
-            <img :src="item.url">
-            <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-            </div>
-                </div>
-                <FormItem v-if="share.uploadList.length>0">
+    <Form :label-width="40" class="imgWidthCont">
+        <Tabs>
+            <TabPane label="内容">
+                <div v-for="item in share.uploadList">
+                    <div class="demo-upload-list">
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                        </div>
+                    </div>
+                    <FormItem v-if="share.uploadList.length>0">
                         当前图片尺寸: {{item.imgInformation}}
-                </FormItem>
-                <FormItem label="标签">
-                    <Input v-model="item.label"></Input>
-                </FormItem>
-            </div>
-                <Upload  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
-                        :on-format-error="uploadFormatError"
-                        :show-upload-list="false">
-                    <Button type="ghost" >添加图片</Button>
+                    </FormItem>
+                    <FormItem label="标签">
+                        <Input v-model="item.label"></Input>
+                    </FormItem>
+                </div>
+                <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList"
+                    :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
+                    :show-upload-list="false">
+                    <Button type="ghost">添加图片</Button>
                 </Upload>
-            <Modal title="View Image" v-model="visible">
-                <img :src="imgUrl" v-if="visible" style="width: 100%">
-            </Modal>
-        </TabPane>
-        <TabPane label="样式" >
+                <Modal title="View Image" v-model="visible">
+                    <img :src="imgUrl" v-if="visible" style="width: 100%">
+                </Modal>
+            </TabPane>
+            <TabPane label="样式">
                 <FormItem label="标签位置">
                     <Select v-model="share.position">
                         <Option value="text-label-1">顶部</Option>
                         <Option value="text-label-4">底部</Option>
                     </Select>
                 </FormItem>
-                 <FormItem label="顶">
+                <FormItem label="顶">
                     <Slider v-model="share.imgTop" show-input></Slider>
                 </FormItem>
-                 <FormItem label="右">
+                <FormItem label="右">
                     <Slider v-model="share.imgRight" show-input></Slider>
                 </FormItem>
-                 <FormItem label="底">
+                <FormItem label="底">
                     <Slider v-model="share.imgBottom" show-input></Slider>
                 </FormItem>
-                 <FormItem label="左">
+                <FormItem label="左">
                     <Slider v-model="share.imgLeft" show-input></Slider>
                 </FormItem>
-        </TabPane>
-     
-    </Tabs>
+            </TabPane>
+
+        </Tabs>
     </Form>
 </template>
 
 <script>
 export default {
-  name: "wys-img",
-  data() {
-    return {
-      share: {
-        imgTop: 0,
-        imgRight: 0,
-        imgBottom: 0,
-        imgLeft: 0,
-        image: "http://wap-qn.toutiaofangchan.com/tpzw_image.png",
-        defaultList: [],
-        uploadList: [],
-        imgInformation: "",
-        label: "",
-        position: "text-label-1"
-      },
-      imgUrl: "",
-      visible: false
-    };
-  },
-  methods: {
-    uploadSuccess(res, file) {
-      if (res.code === "success") {
-        // 创建对象
-        var img = new Image();
-        // 改变图片的src
-        img.src = res.data.url;
-        var that = this;
-        // 加载完成执行
-        img.onload = function() {
-          that.share.uploadList.push({
-            name: file.name,
-            url: res.data.url,
-            imgInformation: img.width + "px*" + img.height + "px",
-            single: false,
-            label: ""
-          });
+    name: 'wys-img',
+    data () {
+        return {
+            share: {
+                imgTop: 0,
+                imgRight: 0,
+                imgBottom: 0,
+                imgLeft: 0,
+                image: 'http://wap-qn.toutiaofangchan.com/tpzw_image.png',
+                defaultList: [],
+                uploadList: [],
+                imgInformation: '',
+                label: '',
+                position: 'text-label-1'
+            },
+            imgUrl: '',
+            visible: false
         };
-      } else {
-        this.$Notice.error({
-          title: "上传失败",
-          desc: res.data.url
-        });
-      }
     },
-    uploadFormatError(file) {
-      this.$Notice.error({
-        title: "不能上传此格式的文件",
-        desc: ""
-      });
+    methods: {
+        uploadSuccess (res, file) {
+            if (res.code === 'success') {
+                // 创建对象
+                var img = new Image();
+                // 改变图片的src
+                img.src = res.data.url;
+                var that = this;
+                // 加载完成执行
+                img.onload = function () {
+                    that.share.uploadList.push({
+                        name: file.name,
+                        url: res.data.url,
+                        imgInformation: img.width + 'px*' + img.height + 'px',
+                        single: false,
+                        label: ''
+                    });
+                };
+            } else {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: res.data.url
+                });
+            }
+        },
+        uploadFormatError (file) {
+            this.$Notice.error({
+                title: '不能上传此格式的文件',
+                desc: ''
+            });
+        },
+        handleView (imgUrl) {
+            this.imgUrl = imgUrl;
+            this.visible = true;
+        },
+        handleRemove (file) {
+            let index = this.share.uploadList.indexOf(file);
+            this.share.uploadList.splice(index, 1);
+        }
     },
-    handleView(imgUrl) {
-      this.imgUrl = imgUrl;
-      this.visible = true;
+    created: function () {
+        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
     },
-    handleRemove(file) {
-      let index = this.share.uploadList.indexOf(file);
-      this.share.uploadList.splice(index, 1);
+    mounted () {
+        // console.log(this.$refs.upload.fileList);
+        // this.uploadList = this.$refs.upload.fileList;
     }
-  },
-  created: function() {
-    // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
-  },
-  mounted() {
-    // console.log(this.$refs.upload.fileList);
-    // this.uploadList = this.$refs.upload.fileList;
-  }
 };
 </script>
 
