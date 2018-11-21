@@ -14,6 +14,20 @@ img {
 .wysi_active {
   border: 1px solid #71a5f5;
 }
+.botton_top {
+  position: absolute !important;
+  width: 100%;
+  z-index: 1000;
+  top: 0;
+  border: 1px solid #71a5f5;
+}
+.botton_bottom {
+  position: absolute !important;
+  width: 100%;
+  z-index: 1000;
+  bottom: 0;
+  border: 1px solid #71a5f5;
+}
 .wysi_hrive {
   border: 1px solid #71a5f5;
 }
