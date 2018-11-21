@@ -372,7 +372,8 @@ img {
                         <div class="device">
                             <div class="screen">
                                 <template v-for="(item,index) in formArr">
-                                    <div v-if="item.type == 'radio' || item.type == 'checkbox'" class="form-preview-radio">
+                                    <div v-if="item.type == 'radio' || item.type == 'sex' || item.type == 'checkbox'"
+                                        class="form-preview-radio">
                                         <span class="input-group-addon-i">
                                             {{item.label}}
                                         </span>
@@ -388,7 +389,7 @@ img {
                                         <select class="form-control select-list">
                                         </select>
                                     </div>
-                                    <div v-if="item.type == 'name' || item.type == 'tel'" class="input-group-i">
+                                    <div v-else class="input-group-i">
                                         <span class="input-group-addon-i">
                                             {{item.label}}
                                         </span>
@@ -520,7 +521,7 @@ export default {
                     label: '文本'
                 },
                 {
-                    value: 'alltext',
+                    value: 'textarea',
                     type: 'textarea',
                     label: '多文本'
                 },
@@ -575,20 +576,27 @@ export default {
         },
         formSelectClick (item) {
             item.optionArr = [];
+            console.log(item.type);
             if (item.type == 'checkbox' || item.type == 'radio' || item.type == 'select') {
                 item.isCheckbox = true;
             }
-            if (item.type == 'name' || item.type == 'text') {
+            if (item.type === 'name' || item.type === 'text') {
                 item.optionArr.push({ name: 'text' });
             }
-            if (item.type == 'tel') {
+            if (item.type === 'tel') {
                 item.optionArr.push({ name: 'number' });
             }
-            if (item.type == 'email') {
+            if (item.type === 'email') {
                 item.optionArr.push({ name: 'email' });
             }
-            if (item.type == 'date') {
+            if (item.type === 'date') {
                 item.optionArr.push({ name: 'date' });
+            }
+            if (item.type === 'textarea') {
+                item.optionArr.push({ name: 'textarea' });
+            }
+            if (item.type === 'sex') {
+                item.optionArr.push({ name: '男' }, { name: '女' });
             }
         },
         addJsonPush () {

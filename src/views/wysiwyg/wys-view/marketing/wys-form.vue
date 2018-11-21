@@ -72,7 +72,8 @@ export default {
                 bottom: 10,
                 left: 15,
                 formList: [],
-                formRender: []
+                formRender: [],
+                formBottonRender: ''
             }
         };
     },
@@ -89,7 +90,7 @@ export default {
                 if (item._id === value) {
                     this.share.formRender = JSON.parse(item.form);
                     this.share.formBottonRender = JSON.parse(item.formBotton);
-                    console.log(JSON.parse(item.form));
+                    console.log(this.share.formRender);
                 }
             });
         }
@@ -119,30 +120,118 @@ export default {
 
 
 <stage-template>
-<div  class="form-piece">
-        {{each share.formRender}}
-             {{if $value.optionArr.length==1}}
-
-                <div validate="name" class="input-group-i">
-                    <span id="label" class="input-group-addon-i warn-star"">{{$value.label}}</span> 
-                    <div class="m-input-text">
-                         <input type="{{$value.optionArr[0].name}}" name="{{$value.name}}" class="input-style form-input-i" />
+<div  class="form-piece label-style">
+    <form id="Form01" action="" method="post" class="form-group-i input-style2"> 
+            {{each share.formRender}}
+                {{if $value.optionArr.length==1}}
+                    {{if $value.type=='textarea'}}
+                        <div class="textarea-group">
+                            <span class="textarea-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}</span> 
+                            <textarea required="required" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%"></textarea> 
+                        </div>
+                    {{else}}
+                    <div validate="name" class="input-group-i">
+                        <span class="input-group-addon-i warn-star"">{{$value.label}}</span> 
+                        <div class="m-input-text">
+                            <input type="{{$value.optionArr[0].name}}" name="{{$value.name}}" required  class="input-style form-input-i" />
+                        </div>
                     </div>
+                    {{/if}} 
+                {{else}}
+                <div class="gender-group">
+                    {{if $value.type=='checkbox'}}
+                        <div class="checkbox-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}
+                        <span>（可多选）</span></div>
+                    {{else}}
+                        <span class="gender-addon" style="color: rgb(128, 128, 128);">{{$value.label}}</span>
+                    {{/if}} 
+                    {{if $value.type=='select'}}
+                        <div class="selectMulti-wrapper">
+                            <div class="select-wrapper select-list1">
+                                <select class="input-style" name="{{$value.name}}">
+                                    <option value="null">--请选择--</option>
+                                      <%for( j = 0; j < $value.optionArr.length; j++) {%>
+                                            <option value="<%=$value.optionArr[j].name%>"><%=$value.optionArr[j].name%></option>
+                                      <%}%>
+                                </select>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="radio-box gender-box">
+                        <%for( j = 0; j < $value.optionArr.length; j++) {%>
+                            {{if j==1}}
+                                <label class="radio-item">
+                                    <input type="{{$value.type == 'sex' ? 'radio' : $value.type}}" value="<%=$value.optionArr[j].name%>" checked="checked" name="{{$value.name}}" class="radio-style">
+                                    <span><%=$value.optionArr[j].name%></span>
+                                </label> 
+                            {{else}}
+                                <label class="radio-item">
+                                    <input type="{{$value.type == 'sex' ? 'radio' : $value.type}}" value="<%=$value.optionArr[j].name%>"  name="{{$value.name}}" class="radio-style">
+                                    <span><%=$value.optionArr[j].name%></span>
+                                </label> 
+                            {{/if}} 
+                        <%}%>
+                        </div>
+                    {{/if}} 
+                    </div>
+                {{/if}}
+            {{/each}}
+            {{if share.formBottonRender}}
+                <div validate="name" class="input-group-i">
+                        <button type="{{@ share.formBottonRender.optionArr[0].name }}" class="btn-i" style="border-radius: 4px; background-color: rgb(248, 89, 89) !important; color: rgb(255, 255, 255); height: 42px; line-height: 42px; width: 100%;">{{@ share.formBottonRender.label }}</button>
                 </div>
-             {{else}}
-
-
-                2222
-             {{/if}}
-        {{/each}}
-        <div validate="name" class="input-group-i">
-                <button type="{{@ share.formBottonRender }}" class="btn-i" style="border-radius: 4px; background-color: rgb(248, 89, 89) !important; color: rgb(255, 255, 255); height: 42px; line-height: 42px; width: 100%;">立即提交</button>
-        </div>
-
-        
+            {{/if}}
+    </form>
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
+    $t.find("#Form01").find(".btn-i").on("click",function(){
+        console.log($t.find("#Form01").serializeJson());
+        var ajaxJson = $t.find("#Form01").serializeJson();
+        $.ajax({
+            //几个参数需要注意一下
+                type: "POST",//方法类型
+	            contentType: "application/json",
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/cmsapi/diyForm/saveDiyFormData" ,//url
+                data: JSON.stringify(ajaxJson),
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.resultCode == 200) {
+                        alert("SUCCESS");
+                    }
+                    ;
+                },
+                error : function() {
+                    alert("异常！");
+                }
+            });
+
+
+
+
+
+
+    });
+
+            $.fn.serializeJson=function(){ 
+                var serializeObj={}; 
+                var array=this.serializeArray(); 
+                // var str=this.serialize(); 
+                $(array).each(function(){ // 遍历数组的每个元素 
+                        if(serializeObj[this.name]){ // 判断对象中是否已经存在 name，如果存在name 
+                            if($.isArray(serializeObj[this.name])){ 
+                                    serializeObj[this.name].push(this.value); // 追加一个值 hobby : ['音乐','体育'] 
+                            }else{ 
+                                    // 将元素变为 数组 ，hobby : ['音乐','体育'] 
+                                    serializeObj[this.name]=[serializeObj[this.name],this.value]; 
+                            } 
+                        }else{ 
+                                serializeObj[this.name]=this.value; // 如果元素name不存在，添加一个属性 name:value 
+                        } 
+                }); 
+                return serializeObj; 
+            }; 
 
 </stage-javascript>
 <stage-css>
@@ -158,6 +247,82 @@ export default {
     padding: 5px 18px;
     position: relative;
     border-collapse: separate;
+}
+.form-piece div, .form-piece span, div.form-piece, span.form-piece {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
+}
+.form-piece .input-style {
+    height: 40px;
+    width: 100%;
+    color: #555;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 6px 12px;
+    display: block;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form-piece.label-style .checkbox-box, .form-piece.label-style .radio-box {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.form-piece.label-style .checkbox-box label, .form-piece.label-style .radio-box label {
+    margin-right: 0!important;
+    height: 32px;
+    line-height: 30px;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.form-piece.label-style .gender-box .radio-item {
+    width: calc(49% - 4px);
+}
+.form-piece.label-style .checkbox-box input[type=checkbox]:checked~span, .form-piece.label-style .checkbox-box input[type=radio]:checked~span, .form-piece.label-style .radio-box input[type=checkbox]:checked~span, .form-piece.label-style .radio-box input[type=radio]:checked~span {
+    border-color: #ff5454;
+    color: #ff5454;
+}
+.form-piece.label-style .checkbox-box input[type=checkbox]~span, .form-piece.label-style .checkbox-box input[type=radio]~span, .form-piece.label-style .radio-box input[type=checkbox]~span, .form-piece.label-style .radio-box input[type=radio]~span {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: block;
+    padding: 0 9px;
+    line-height: 30px;
+    height: 32px;
+    max-width: none;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+}
+.form-piece.label-style .checkbox-box input[type=checkbox], .form-piece.label-style .checkbox-box input[type=radio], .form-piece.label-style .radio-box input[type=checkbox], .form-piece.label-style .radio-box input[type=radio] {
+    visibility: hidden;
+    position: absolute;
+}
+.form-piece div, .form-piece span, div.form-piece, span.form-piece {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
 }
 .form-piece div, .form-piece span, div.form-piece, span.form-piece {
     box-sizing: border-box;
