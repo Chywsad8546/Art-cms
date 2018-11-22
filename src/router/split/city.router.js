@@ -522,16 +522,6 @@ export const aloneRouter = [
             import('@/views/wysiwyg/wys-view/marketing/wys-marketingMain.vue')
     },
     {
-        path: '/marketingMain/one',
-        name: 'one',
-        title: '新建表单',
-        // meta: {
-        //     keepalive: true
-        // },
-        component: () =>
-            import('@/views/wysiwyg/wys-view/marketing/wys-one.vue')
-    },
-    {
         path: '/marketingMain/newlybuildForm',
         name: 'newlybuildForm',
         title: '新建表单',

@@ -16,6 +16,34 @@
                     <Panel name="1">
                         样式调整
                         <p slot="content">
+
+                            <RadioGroup v-model="share.styleList">
+                                <Radio label="clickStyle1">
+                                    <span><img src="http://wap-qn.toutiaofangchan.com/adideas/5d895ba28ede493d9e418a417a03c33c.png" /></span>
+                                </Radio>
+                                <Radio label="clickStyle2">
+                                    <span><img src="http://wap-qn.toutiaofangchan.com/adideas/cbc8841bb9784bc9bf5194bd7eb6952d.png" /></span>
+                                </Radio>
+                            </RadioGroup>
+
+                        </p>
+                    </Panel>
+                </Collapse>
+                <Collapse v-model="foldpanelKey5" style="margin-bottom:10px;">
+                    <Panel name="1">
+                        展示效果
+                        <p slot="content">
+                            <Row style="margin-top:10px;">
+                                <Col span="24">
+                                <FormItem label="展示效果">
+                                    <Select v-model="share.effectType">
+                                        <Option value="1">默认效果</Option>
+                                        <Option value="2">顶部悬浮</Option>
+                                        <Option value="3">底部悬浮</Option>
+                                    </Select>
+                                </FormItem>
+                                </Col>
+                            </Row>
                         </p>
                     </Panel>
                 </Collapse>
@@ -177,8 +205,10 @@ export default {
                 clickWidth: 100,
                 clickHeight: 40,
                 radius: 5,
+                effectType: '1',
                 clickTest: '拨打电话',
                 clickTel: '',
+                styleList: 'clickStyle1',
                 clickFontColor: '#FFFFFF',
                 backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;'
             },
@@ -187,6 +217,7 @@ export default {
             foldpanelKey2: '1',
             foldpanelKey3: '1',
             foldpanelKey4: '1',
+            foldpanelKey5: '1',
             imgViewUrl: '',
             visible: false
         };
@@ -202,7 +233,6 @@ export default {
             this.share.Imgurl = '';
         },
         handleView (imgUrl) {
-            console.log(imgUrl);
             this.imgViewUrl = imgUrl;
             this.visible = true;
         },
@@ -344,12 +374,44 @@ export default {
 </style>
 <stage-template>
 <div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
-    <div validate="name" class="input-group-i" style="text-align:center">
-            <button type="botton" class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">{{@ share.formBottonRender.label }}</button>
+    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">
+            <a href="tel: {{@ share.clickTel }}">
+               
+       {{if share.styleList=='clickStyle1'}}        
+                <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
+                <i><img style="width:25px;" src="http://wap-qn.toutiaofangchan.com/adideas/75701d8abb1a46cd801cab24297975f8.png" /></i>
+                {{@ share.clickTest }}
+                </div>
+        {{else}}
+                <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; height:56px; margin: 0 auto;">
+                <i><img style="width:40px;margin-top: 13px;" src="http://wap-qn.toutiaofangchan.com/adideas/d1e46ccfebfc4d5883ad3b7f94289b4a.png" /></i>
+                </div>
+        {{/if}} 
+            </a>
     </div>
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
+if(<%= share.effectType %> == 1){
+ $t.attr("style","position: relative; width:100%; bottom:auto; top:auto;z-index:30;");
+}
+if(<%= share.effectType %> == 2){
+    if($("#main").length >= 1){
+       $t.attr("style","position: absolute; width:100%; bottom:auto; top:0;z-index:30;");
+    }else{
+        $t.attr("style","position: fixed; width:100%; bottom:auto; top:0;z-index:30;");
+        
+    }
+}
+if(<%= share.effectType %> == 3){
+    if($("#main").length >= 1){
+        $t.attr("style","position: absolute; width:100%; bottom:0; top:auto; z-index:30;");
+      
+    }else{
+         $t.attr("style","position: fixed; width:100%; bottom:0; top:auto; z-index:30;");
+    }
+}
+
 
 $().ready(function() {
     setTimeout(function(){

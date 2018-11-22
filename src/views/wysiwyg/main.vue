@@ -409,7 +409,7 @@ export default {
                     api.saveDiyWebpageHistory(this.formMain).then(response => {
                         this.formMain.id = response.data.data.id;
                         this.qrcodeModal = true;
-                        var url = 'http://newcms.dev.bidewu.com/cmsapi/diyWebpage/diyWebpageHtml?id=' + response.data.data.pid;
+                        var url = 'http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml?id=' + response.data.data.pid;
                         document.getElementById('qrcode10').innerHTML = '';
                         this.qrcode(url);
                     });
@@ -478,10 +478,10 @@ export default {
                 '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
                 '</head><body>';
             var stagereslut = GlobalStage.save();
+
             html += stagereslut.html;
             html += '</body>';
             html += '</html>';
-
             this.formMain.html = html;
             this.formMain.editor = JSON.stringify(stagereslut.stage);
             this.formMain.siteId = this.$route.query.siteid;
