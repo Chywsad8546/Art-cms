@@ -5,17 +5,17 @@ import { router } from '@/router/index';
 import config from '../../build/config.js';
 import _ from 'lodash';
 axios.defaults.baseURL = '/cmsapi';
-if(config.errortip){
+if (config.errortip) {
     let search = window.location.search || '';
-    if(search!=='') {
+    if (search !== '') {
         try {
-            axios.defaults.baseURL = 'http://' + _.trim(search, '?/') + '/'
-        } catch (e) {
-        }
+            axios.defaults.baseURL = 'http://' + _.trim(search, '?/') + '/';
+        } catch (e) {}
     }
 }
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] =
+    'application/x-www-form-urlencoded';
 axios.defaults.timeout = 30000;
 axios.defaults.withCredentials = true;
 /**
@@ -26,60 +26,75 @@ axios.defaults.withCredentials = true;
  *  3，服务器内部错误
  *  4，4xx 错误
  */
-function initInterceptors (store) {
-    axios.interceptors.request.use(function (config) {
-        // Do something before request is sent
-        config["params"]= config["params"] || {}
-        config["params"]["_cache"]=Math.random(new Date().getTime())
-        return config;
-    }, function (error) {
-        // Do something with request error
-        return Promise.reject(error);
-    });
+function initInterceptors(store) {
+    axios.interceptors.request.use(
+        function(config) {
+            // Do something before request is sent
+            config['params'] = config['params'] || {};
+            config['params']['_cache'] = Math.random(new Date().getTime());
+            return config;
+        },
+        function(error) {
+            // Do something with request error
+            return Promise.reject(error);
+        }
+    );
 
-    axios.interceptors.response.use(function (response) {
-        // 拦截器代码不要改动，现在的架构能满足所有情况。
-        if (response.data.code === "success") {
-            return response;
-        }
-        let title = '';
-        let message = '-';
-        if (response.data.code === "fail" || response.data.code=='no-login') {
-            store.commit('setUserName', false);
-            store.commit('setFontPermission', []);
-            router.push({
-                name: 'login'
-            });
-            title = '未登录';
-        }
-        if (title !== '' && config.errortip) {
-            Vue.prototype.$Notice.error({
-                title: title,
-                desc: message
-            });
-        }
-        let error = new Error(title);
-        error = enhanceError(error, response.config, '', response.request, response);
-        // throw error;
-        return Promise.reject(error);
-    }, function (error) {
-        let message = '';
-        if (error.response) {
-            message = error.response.data;
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            message = error.message;
-        }
-        if(config.errortip) {
-            Vue.prototype.$Notice.error({
-                title: '网络异常',
-                desc: message
-            });
-        }
-        // Do something with response error
+    axios.interceptors.response.use(
+        function(response) {
+            // 拦截器代码不要改动，现在的架构能满足所有情况。
+            if (response.data.code === 'success') {
+                return response;
+            }
+            let title = '';
+            let message = '-';
+            if (
+                response.data.code === 'fail' ||
+                response.data.code == 'no-login'
+            ) {
+                store.commit('setUserName', false);
+                store.commit('setFontPermission', []);
+                router.push({
+                    name: 'login'
+                });
+                title = '未登录';
+            }
+            if (title !== '' && config.errortip) {
+                Vue.prototype.$Notice.error({
+                    title: title,
+                    desc: message
+                });
+            }
+            let error = new Error(title);
+            error = enhanceError(
+                error,
+                response.config,
+                '',
+                response.request,
+                response
+            );
+            // throw error;
+            return Promise.reject(error);
+        },
+        function(error) {
+            let message = '';
+            if (error.response) {
+                message = error.response.data;
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                message = error.message;
+            }
+            if (config.errortip) {
+                Vue.prototype.$Notice.error({
+                    title: '网络异常',
+                    desc: message
+                });
+            }
+            // Do something with response error
 
-        return Promise.reject(error);
-    });
+            return Promise.reject(error);
+        }
+    );
 }
 
 /**
@@ -92,7 +107,7 @@ function initInterceptors (store) {
  * @param response
  * @returns {*}
  */
-function enhanceError (error, config, code, request, response) {
+function enhanceError(error, config, code, request, response) {
     error.config = config;
     if (code) {
         error.code = code;
@@ -108,9 +123,9 @@ function enhanceError (error, config, code, request, response) {
  * @param config
  * @returns {AxiosPromise<any>}
  */
-async function get (url, config) {
+async function get(url, config) {
     let response = await axios.get(url, config || {});
-    return response
+    return response;
 }
 
 /**
@@ -119,11 +134,15 @@ async function get (url, config) {
  * @param data
  * @param config
  */
- async function post (url, data, config) {
-     console.log('post')
-    console.log(Qs.stringify(data || {}))
-    let response =await axios.post(url, Qs.stringify(data || {}), config || {});
-    return response
+async function post(url, data, config) {
+    console.log('post');
+    console.log(Qs.stringify(data || {}));
+    let response = await axios.post(
+        url,
+        Qs.stringify(data || {}),
+        config || {}
+    );
+    return response;
 }
 
 /**
@@ -132,11 +151,11 @@ async function get (url, config) {
  * @param data
  * @param config
  */
-async function postJson (url, data, config) {
+async function postJson(url, data, config) {
     config = config || {};
     config['Content-Type'] = 'application/json;charset=UTF-8';
-    let response =  await axios.post(url, data || {}, config);
-    return response
+    let response = await axios.post(url, data || {}, config);
+    return response;
 }
 
 export default {
