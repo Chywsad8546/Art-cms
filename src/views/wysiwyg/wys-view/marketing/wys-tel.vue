@@ -2,78 +2,20 @@
     <Form :label-width="60" class="imgWidthCont">
         <Tabs>
             <TabPane label="内容">
-                <Row class="navdhName">
-                    <Col span="24">
-                    <Select v-model="share.formSelect" @on-change="formSelectClick">
-                        <Option v-for="item in share.formList" :value="item._id" :key="item._id">
-                            {{item.title}}
-                        </Option>
-                    </Select>
-                    </Col>
+                <Row style="margin-top:10px;">
+                    <Col span="5" style="height:30px;line-height:30px;"><span>文本</span></Col>
+                    <Col span="15"><Input v-model="share.clickTest"></Input></Col>
                 </Row>
-                <Row>
-                    <Col span="24">
-                    <div v-if="share.url != ''">
-                        <span style="margin-right:10px;">链接到 {{share.url}}</span>
-                        <a v-if="share.url != ''" @click="share.navVisible = true">
-                            编辑
-                        </a>
-                    </div>
-
-                    <Card style="width:290px;border:0px;">
-                        <a slot="title" @click="newlyForm">
-                            <Icon type="plus-round"></Icon>
-                            新建表单
-                        </a>
-                        <a href="#" slot="extra" @click.prevent="changeLimit">
-                            <Icon type="ios-loop-strong" :class="loading == true ? 'demo-spin-icon-load' : ''"></Icon>
-                        </a>
-                    </Card>
-
-                    </Col>
+                <Row style="margin-top:10px;">
+                    <Col span="5" style="height:30px;line-height:30px;"><span>电话号码</span></Col>
+                    <Col span="15"><Input v-model="share.clickTel"></Input></Col>
                 </Row>
-                <Modal title="URL">
-                    <FormItem label="链接地址">
-                        <Input v-model="share.url" placeholder="http://"></Input>
-                    </FormItem>
-                </Modal>
             </TabPane>
             <TabPane label="样式">
-
-                <Collapse v-model="foldpanelKey1" style="margin-bottom:10px;">
+                <Collapse v-model="foldpanelKey4" style="margin-bottom:10px;">
                     <Panel name="1">
-                        边距
+                        样式调整
                         <p slot="content">
-
-                            <FormItem label="顶">
-                                <Slider v-model="share.top" show-input></Slider>
-                            </FormItem>
-                            <FormItem label="右">
-                                <Slider v-model="share.right" show-input></Slider>
-                            </FormItem>
-                            <FormItem label="底">
-                                <Slider v-model="share.bottom" show-input></Slider>
-                            </FormItem>
-                            <FormItem label="左">
-                                <Slider v-model="share.left" show-input></Slider>
-                            </FormItem>
-
-                        </p>
-                    </Panel>
-                </Collapse>
-                <Collapse v-model="foldpanelKey2" style="margin-bottom:10px;">
-                    <Panel name="1">
-                        文字
-                        <p slot="content">
-
-                            <Row>
-                                <Col span="12"><Input v-model="share.fontColor"></Input></Col>
-                                <Col span="12">
-                                <ColorPicker v-model="share.fontColor" style="margin-left:10px;" size="default"
-                                    recommend />
-                                </Col>
-                            </Row>
-
                         </p>
                     </Panel>
                 </Collapse>
@@ -139,7 +81,7 @@
                 </Collapse>
                 <Collapse v-model="foldpanelKey4" style="margin-bottom:10px;">
                     <Panel name="1">
-                        按钮颜色
+                        基本
                         <p slot="content">
                             <Row>
                                 <Col span="24">
@@ -175,6 +117,27 @@
                                     recommend />
                                 </Col>
                             </Row>
+                        </p>
+                    </Panel>
+                </Collapse>
+                <Collapse v-model="foldpanelKey1" style="margin-bottom:10px;">
+                    <Panel name="1">
+                        边距
+                        <p slot="content">
+
+                            <FormItem label="顶">
+                                <Slider v-model="share.top" show-input></Slider>
+                            </FormItem>
+                            <FormItem label="右">
+                                <Slider v-model="share.right" show-input></Slider>
+                            </FormItem>
+                            <FormItem label="底">
+                                <Slider v-model="share.bottom" show-input></Slider>
+                            </FormItem>
+                            <FormItem label="左">
+                                <Slider v-model="share.left" show-input></Slider>
+                            </FormItem>
+
                         </p>
                     </Panel>
                 </Collapse>
@@ -214,6 +177,8 @@ export default {
                 clickWidth: 100,
                 clickHeight: 40,
                 radius: 5,
+                clickTest: '拨打电话',
+                clickTel: '',
                 clickFontColor: '#FFFFFF',
                 backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;'
             },
@@ -378,80 +343,11 @@ export default {
 }
 </style>
 <stage-template>
-
-{{if share.formRender.length==0}}
-<div class="formlEmpty">
-<img src="http://wap-qn.toutiaofangchan.com/adideas/ea1d511c21b3422596d73093ddff3d6c.png"/>
+<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
+    <div validate="name" class="input-group-i" style="text-align:center">
+            <button type="botton" class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">{{@ share.formBottonRender.label }}</button>
+    </div>
 </div>
-{{else}}
-<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;
-  <%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);
-">
-<div  class="form-piece label-style">
-    <form id="Form01" action="" method="post" class="form-group-i input-style2"> 
-            {{each share.formRender}}
-                {{if $value.optionArr.length==1}}
-                    {{if $value.type=='textarea'}}
-                        <div class="textarea-group">
-                            <span class="textarea-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}</span> 
-                            <textarea required="{{$value.isMandatory}}" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%"></textarea> 
-                        </div>
-                    {{else}}
-                    <div validate="name" class="input-group-i">
-                        <span class="input-group-addon-i warn-star"">{{$value.label}}</span> 
-                        <div class="m-input-text">
-                            <input type="{{$value.optionArr[0].name}}" name="{{$value.name}}"   class="input-style form-input-i" />
-                        </div>
-                    </div>
-                    {{/if}} 
-                {{else}}
-                <div class="gender-group">
-                    {{if $value.type=='checkbox'}}
-                        <div class="checkbox-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}
-                        <span>（可多选）</span></div>
-                    {{else}}
-                        <span class="gender-addon" style="color: rgb(128, 128, 128);">{{$value.label}}</span>
-                    {{/if}} 
-                    {{if $value.type=='select'}}
-                        <div class="selectMulti-wrapper">
-                            <div class="select-wrapper select-list1">
-                                <select class="input-style" name="{{$value.name}}">
-                                    <option value="null">--请选择--</option>
-                                      <%for( j = 0; j < $value.optionArr.length; j++) {%>
-                                            <option value="<%=$value.optionArr[j].name%>"><%=$value.optionArr[j].name%></option>
-                                      <%}%>
-                                </select>
-                            </div>
-                        </div>
-                    {{else}}
-                        <div class="radio-box gender-box">
-                        <%for( j = 0; j < $value.optionArr.length; j++) {%>
-                            {{if j==1}}
-                                <label class="radio-item">
-                                    <input type="{{$value.type == 'sex' ? 'radio' : $value.type}}" value="<%=$value.optionArr[j].name%>" checked="checked" name="{{$value.name}}" class="radio-style">
-                                    <span><%=$value.optionArr[j].name%></span>
-                                </label> 
-                            {{else}}
-                                <label class="radio-item">
-                                    <input type="{{$value.type == 'sex' ? 'radio' : $value.type}}" value="<%=$value.optionArr[j].name%>"  name="{{$value.name}}" class="radio-style">
-                                    <span><%=$value.optionArr[j].name%></span>
-                                </label> 
-                            {{/if}} 
-                        <%}%>
-                        </div>
-                    {{/if}} 
-                    </div>
-                {{/if}}
-            {{/each}}
-            {{if share.formBottonRender}}
-                <div validate="name" class="input-group-i" style="text-align:center">
-                        <button type="{{@ share.formBottonRender.optionArr[0].name }}" class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">{{@ share.formBottonRender.label }}</button>
-                </div>
-            {{/if}}
-    </form>
-</div>
-</div>
-{{/if}} 
 </stage-template>
 <stage-javascript type="text/javascript">
 

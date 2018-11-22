@@ -284,6 +284,14 @@ img {
   margin: 0 auto;
   margin-right: 20px;
 }
+.wysiw_form_Tab {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  color: #2d8cf0;
+  font-size: 16px;
+}
 </style>
 
 <template>
@@ -296,11 +304,9 @@ img {
         <div id="main" class="layout edit">
             <div class="wys-menu-left">
                 <div id="wysiwyg_componentbox">
-                    <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']">
-                        <Submenu name="1">
-                            <MenuItem name="1-1">表单</MenuItem>
-                        </Submenu>
-                    </Menu>
+                    <div class="wysiw_form_Tab">
+                        表单
+                    </div>
                 </div>
             </div>
             <section id="middle" class="workarea-main">
