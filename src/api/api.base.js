@@ -4,7 +4,7 @@ import Qs from 'qs';
 import { router } from '@/router/index';
 import config from '../../build/config.js';
 import _ from 'lodash';
-axios.defaults.baseURL = '/';
+axios.defaults.baseURL = '/cmsapi';
 if(config.errortip){
     let search = window.location.search || '';
     if(search!=='') {
