@@ -273,8 +273,13 @@ img {
         </div>
         <div id="main" class="layout edit">
             <div class="wys-menu-left">
-                <div id="wysiwyg_componentbox" wys-container>
-                    <div class="wysiwyg-contitle">内容模块</div>
+                <div id="wysiwyg_componentbox">
+                    <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']">
+                        <Submenu name="1">
+                            <MenuItem name="1-1">表单</MenuItem>
+
+                        </Submenu>
+                    </Menu>
                 </div>
             </div>
             <section id="middle" class="workarea-main">
@@ -297,7 +302,8 @@ img {
                                 <Col span="2">是否唯一</Col>
                                 <Col span="5">操作</Col>
                             </Row>
-                            <Row v-for="item in formArr" :gutter="16" type="flex" justify="center" align="middle" style="height:50px; text-align:center">
+                            <Row v-for="item,index in formArr" :gutter="16" type="flex" justify="center" align="middle"
+                                style="height:50px; text-align:center">
                                 <Col span="5"><Input v-model="item.label" placeholder="字段名称"></Input></Col>
                                 <Col span="10">
                                 <Select v-model="item.type" @on-change="formSelectClick(item)" style="width:100px;">
@@ -337,6 +343,8 @@ img {
                                 <Checkbox v-model="item.isOnly"></Checkbox>
                                 </Col>
                                 <Col span="5">
+                                <Icon type="arrow-down-c" @click="moveDown(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
+                                <Icon type="arrow-up-c" @click="moveUp(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
                                 <Icon @click="deleteList(item)" style="font-size:20px;" type="ios-trash-outline"></Icon>
                                 </Col>
                             </Row>
@@ -597,6 +605,24 @@ export default {
             }
             if (item.type === 'sex') {
                 item.optionArr.push({ name: '男' }, { name: '女' });
+            }
+        },
+        moveUp: function (index, item) {
+            // 在上一项插入该项
+            this.formArr.splice(index - 1, 0, (this.formArr[index]));
+            // 删除后一项
+            this.formArr.splice(index + 1, 1);
+            if (index == 0) {
+                alert('到顶啦！');
+            }
+        },
+        moveDown: function (index, item) {
+            // 在下一项插入该项
+            this.formArr.splice(index + 2, 0, (this.formArr[index]));
+            // 删除前一项
+            this.formArr.splice(index, 1);
+            if (index == this.formArr.length - 1) {
+                alert('已经是最后一项啦！');
             }
         },
         addJsonPush () {

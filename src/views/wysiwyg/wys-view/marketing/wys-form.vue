@@ -80,17 +80,15 @@ export default {
     methods: {
         newlyForm () {
             this.$router.push({
-                name: 'newlybuildForm'
+                name: 'newlybuildFormList'
                 // query: { newsId: params.row.id }
             });
         },
         formSelectClick (value) {
-            console.log(this.share.formList);
             this.share.formList.forEach(item => {
                 if (item._id === value) {
                     this.share.formRender = JSON.parse(item.form);
                     this.share.formBottonRender = JSON.parse(item.formBotton);
-                    console.log(this.share.formRender);
                 }
             });
         }
@@ -117,8 +115,6 @@ export default {
   padding-right: 20px;
 }
 </style>
-
-
 <stage-template>
 <div  class="form-piece label-style">
     <form id="Form01" action="" method="post" class="form-group-i input-style2"> 
@@ -127,13 +123,13 @@ export default {
                     {{if $value.type=='textarea'}}
                         <div class="textarea-group">
                             <span class="textarea-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}</span> 
-                            <textarea required="required" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%"></textarea> 
+                            <textarea required="{{$value.isMandatory}}" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%"></textarea> 
                         </div>
                     {{else}}
                     <div validate="name" class="input-group-i">
                         <span class="input-group-addon-i warn-star"">{{$value.label}}</span> 
                         <div class="m-input-text">
-                            <input type="{{$value.optionArr[0].name}}" name="{{$value.name}}" required  class="input-style form-input-i" />
+                            <input type="{{$value.optionArr[0].name}}" name="{{$value.name}}"   class="input-style form-input-i" />
                         </div>
                     </div>
                     {{/if}} 
@@ -185,36 +181,52 @@ export default {
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
-    $t.find("#Form01").find(".btn-i").on("click",function(){
-        console.log($t.find("#Form01").serializeJson());
-        var ajaxJson = $t.find("#Form01").serializeJson();
-        $.ajax({
-            //几个参数需要注意一下
-                type: "POST",//方法类型
-	            contentType: "application/json",
-                dataType: "json",//预期服务器返回的数据类型
-                url: "/cmsapi/diyForm/saveDiyFormData" ,//url
-                data: JSON.stringify(ajaxJson),
-                success: function (result) {
-                    console.log(result);//打印服务端返回的数据(调试用)
-                    if (result.resultCode == 200) {
-                        alert("SUCCESS");
-                    }
-                    ;
+
+$().ready(function() {
+    setTimeout(function(){
+        $.validator.setDefaults({
+            submitHandler: function() {
+                var ajaxJson = $t.find("#Form01").serializeJson();
+                $.ajax({
+                    //几个参数需要注意一下
+                        type: "POST",//方法类型
+                        contentType: "application/json",
+                        dataType: "json",//预期服务器返回的数据类型
+                        url: "/cmsapi/diyForm/saveDiyFormData" ,//url
+                        data: JSON.stringify(ajaxJson),
+                        success: function (result) {
+                            if (result.resultCode == 200) {
+                                alert("SUCCESS");
+                            }
+                            ;
+                        },
+                        error : function() {
+                            alert("异常！");
+                        }
+                    });
+            }
+        });
+            $($t.find("#Form01")).validate({
+                rules: {
+
+                    <%for( j = 0; j < share.formRender.length; j++) {%>
+                        <%= share.formRender[j].name%>: {
+                            required: <%= share.formRender[j].isMandatory %>,
+                        },
+
+                    <%}%>
                 },
-                error : function() {
-                    alert("异常！");
+                messages: {
+                    <%for( j = 0; j < share.formRender.length; j++) {%>
+                        <%= share.formRender[j].name%>: {
+                            required: "请输入"+"<%= share.formRender[j].label %>",
+                        },
+                    <%}%>
                 }
             });
-
-
-
-
-
-
-    });
-
-            $.fn.serializeJson=function(){ 
+    },300)
+});
+$.fn.serializeJson=function(){ 
                 var serializeObj={}; 
                 var array=this.serializeArray(); 
                 // var str=this.serialize(); 
@@ -232,8 +244,9 @@ export default {
                 }); 
                 return serializeObj; 
             }; 
-
 </stage-javascript>
+<stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/b82a096a385a4cf88633395c97f7f80b.js</stage-javascript-import>
+
 <stage-css>
 .form-piece .checkbox-addon, .form-piece .city-addon, .form-piece .date-addon, .form-piece .gender-addon, .form-piece .input-group-i .input-group-addon-i, .form-piece .radio-addon, .form-piece .select-addon, .form-piece .textarea-addon {
     font-size: 12px;
@@ -345,5 +358,9 @@ export default {
     padding: 6px 12px;
     display: block;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form-piece .error {
+    font-size: 12px;
+    color: red;
 }
 </stage-css>
