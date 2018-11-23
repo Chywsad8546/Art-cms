@@ -275,7 +275,7 @@ export default {
         },
         getDiyFormStructure () {
             api.getDiyFormStructure().then(response => {
-                this.share.formList = response.data.data;
+                this.share.formList = response.data.data.data;
                 this.loading = false;
             });
         },

@@ -270,6 +270,9 @@ img {
   color: #2d8cf0;
   font-size: 16px;
 }
+.wys-header-left {
+  background: #ffffff;
+}
 </style>
 
 <template>
@@ -315,8 +318,8 @@ img {
                                     <Option v-for="items in inputTypeList" :value="items.value" :key="items.value">{{
                                         items.label }}</Option>
                                 </Select>
-                                <Button v-if="item.type == 'checkbox' || item.type == 'select'" @click="formSelectClick(item)"
-                                    style="width:90px;" type="primary">设置多选数据</Button>
+                                <Button v-if="item.type == 'checkbox' || item.type == 'select'|| item.type == 'radio'"
+                                    @click="formSelectClick(item)" style="width:100px;" type="primary">设置多选数据</Button>
                                 <Modal title="选项设置" ok-text="保存" @on-ok="preserOption(item)" v-model="item.isCheckbox">
                                     <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex"
                                         justify="center" align="middle">
@@ -385,16 +388,7 @@ img {
                         <div class="device">
                             <div class="screen">
                                 <template v-for="(item,index) in formArr">
-                                    <div v-if="item.type == 'radio' || item.type == 'sex' || item.type == 'checkbox'"
-                                        class="form-preview-radio">
-                                        <span class="input-group-addon-i">
-                                            {{item.label}}
-                                        </span>
-                                        <span class="radio-item" v-for="ridItem in item.optionArr">
-                                            <input class="disabled" type="radio" disabled="">
-                                            {{ridItem.name}}
-                                        </span>
-                                    </div>
+
                                     <div v-if="item.type == 'select'" class="input-group-i">
                                         <span class="input-group-addon-i">
                                             {{item.label}}
@@ -402,11 +396,25 @@ img {
                                         <select class="form-control select-list">
                                         </select>
                                     </div>
-                                    <div v-else class="input-group-i">
-                                        <span class="input-group-addon-i">
-                                            {{item.label}}
-                                        </span>
-                                        <input :type="item.optionArr[0].name" class="form-control form-input-i name">
+                                    <div v-else>
+                                        <div v-if="item.type == 'radio' || item.type == 'sex' || item.type == 'checkbox'"
+                                            class="input-group-i">
+                                            <span class="input-group-addon-i">
+                                                {{item.label}}
+                                            </span>
+                                            <span class="radio-item" v-for="ridItem in item.optionArr">
+                                                <input class="disabled" type="radio" disabled="">
+                                                {{ridItem.name}}
+                                            </span>
+                                        </div>
+                                        <div v-else class="input-group-i">
+                                            <span class="input-group-addon-i">
+                                                {{item.label}}
+                                            </span>
+                                            <div v-if="item.optionArr.length>0">
+                                                <input :type="item.optionArr[0].name" class="form-control form-input-i name">
+                                            </div>
+                                        </div>
                                     </div>
                                 </template>
                                 <div style="text-align:center;width:100%;">

@@ -276,8 +276,6 @@ export default {
     </div>
 </div>
 </stage-template>
-<stage-javascript-import>http://wap-qn.bidewu.com/test/1.js</stage-javascript-import>
-<stage-javascript-import>http://wap-qn.bidewu.com/test/2.js</stage-javascript-import>
 <stage-javascript type="text/javascript">
 
 

@@ -372,6 +372,9 @@ img {
 .form-preview .screen .form-preview-radio .radio-item {
   margin-right: 10px;
 }
+.wys-header-left {
+  background: #ffffff;
+}
 </style>
 
 <script>
@@ -421,7 +424,9 @@ export default {
             ],
             formList: [],
             total: 0,
-            searchData: {}
+            searchData: {
+                pageSize: 10
+            }
         };
     },
     methods: {
@@ -431,8 +436,8 @@ export default {
         },
         getDiyFormStructure () {
             api.getDiyFormStructure(this.searchData).then(response => {
-                this.formList = response.data.data;
-                this.total = response.data.count;
+                this.formList = response.data.data.data;
+                this.total = response.data.data.totalNum;
             });
         },
         newlyForm () {

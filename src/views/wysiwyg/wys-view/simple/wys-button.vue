@@ -396,19 +396,23 @@ export default {
 </style>
 <stage-template>
 <div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
-    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">      
-       <a href="{{@share.url}}" target="_blank">   
-        {{if share.styleList=='clickStyle1'}}        
-                  <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
+     
+        
+        {{if share.styleList=='clickStyle1'}}    
+
+
+        
+         <a href="{{@share.url}}" target="_blank"  style=" text-align:center; border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;" class="click-link">     
+     
                   {{@ share.clickTest }}
-                  </div>
+          
+             </a>
           {{else}}
-                  <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;">
+           <a href="{{@share.url}}" target="_blank"  style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;" class="click-link">     
                     {{@ share.clickTest }}
-                  </div>
+           </a>
           {{/if}} 
-        </a>
-    </div>
+
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
@@ -426,7 +430,7 @@ if(<%= share.effectType %> == 2){
 if(<%= share.effectType %> == 3){
     if($("#main").length >= 1){
         $t.attr("style","position: absolute; width:100%; bottom:0; top:auto; z-index:30;");
-      
+
     }else{
          $t.attr("style","position: fixed; width:100%; bottom:0; top:auto; z-index:30;");
     }
@@ -442,4 +446,8 @@ if(<%= share.effectType %> == 3){
  })
 </stage-javascript>
 <stage-css>
+.click-link {
+    display: block;
+    line-height: 0;
+}
 </stage-css>

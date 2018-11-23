@@ -395,10 +395,17 @@ export default {
                 if (valid) {
                     this.addParameter();
                     this.formMain.status = status;
-                    api.saveDiyWebpage(this.formMain).then(response => {
-                        this.formMain.id = response.data.data.id;
-                        this.$Message.success(status == 0 ? '保存成功' : '发布成功');
-                    });
+                    if (this.id) {
+                        this.formMain.id = this.id;
+                        api.updateDiyWebpage(this.formMain).then(response => {
+                            this.$Message.success(status == 0 ? '保存成功' : '发布成功');
+                        });
+                    } else {
+                        api.saveDiyWebpage(this.formMain).then(response => {
+                            this.formMain.id = response.data.data.id;
+                            this.$Message.success(status == 0 ? '保存成功' : '发布成功');
+                        });
+                    }
                 }
             });
         },

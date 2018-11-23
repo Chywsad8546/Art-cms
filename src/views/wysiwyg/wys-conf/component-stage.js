@@ -188,6 +188,9 @@ export default {
                 return { ack: false, dom: null };
             }
         }
+        dom.append(
+            '<span style="position:absolute;top:0px;left:0px;display:inline-block;width:100%;height:100%;z-index:21"></span>'
+        );
         // dom.data('stageCompontHook', stageComponent);
         /**
          * 鼠标经过的时候，增加一个“删除”按钮

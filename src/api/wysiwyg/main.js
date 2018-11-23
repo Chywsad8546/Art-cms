@@ -27,10 +27,21 @@ export default {
             params: params
         });
     },
+    getDiyWebpageHistory(params) {
+        return http.get('/cmsapi/diyWebpageHistory/getDiyWebpageHistory', {
+            params: params
+        });
+    },
     saveDiyFormStructure(params) {
         return http.postJson('/cmsapi/diyForm/saveDiyFormStructure', params);
     },
     delDiyFormStructure(params) {
         return http.post('/cmsapi/diyForm/delDiyFormStructure', params);
+    },
+    updateSite(params) {
+        return http.post('/cmsapi/site/updateSite', params);
+    },
+    updateDiyWebpage(params) {
+        return http.post('/cmsapi/diyWebpage/updateDiyWebpage', params);
     }
 };
