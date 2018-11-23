@@ -18,7 +18,7 @@
                 </FormItem>
             </div>
             <Upload  v-if="share.uploadList <= 0 && !share.isloading"  ref="upload" class="uploadWidth"          
-                    action="/cmsapi/sys/uploadVideo" :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess"
+                    action="/cmsapi/cmsapi/sys/uploadVideo" :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess"
                     :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost" >添加视频</Button>
