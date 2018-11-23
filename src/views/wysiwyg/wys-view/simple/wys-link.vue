@@ -123,7 +123,7 @@ export default {
 <stage-template>
 <div  class="pictureset-box">
     <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;">
-        <a href="http://{{@share.url}}" target="_blank" class="link style1">
+        <a href="{{@share.url}}" target="_blank" class="link style1">
             <span class="link-text">{{@share.name}}</span> 
         </a>
     </section>

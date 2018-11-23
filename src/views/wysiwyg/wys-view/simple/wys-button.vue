@@ -1,11 +1,11 @@
 <template>
-  <Form :label-width='60'>
+  <Form :label-width="60" class="imgWidthCont">
     <Tabs>
       <TabPane label="内容">
         <Row>
           <Col span="20">
           <FormItem label="文本">
-            <Input v-model="share.buttontext" placeholder="按钮文本 "></Input>
+            <Input v-model="share.clickTest" placeholder="按钮内容 "></Input>
           </FormItem>
           </Col>
         </Row>
@@ -31,256 +31,277 @@
         </Row>
       </TabPane>
       <TabPane label="样式">
-        <Collapse simple style="overflow: -webkit-paged-y">
+        <Collapse v-model="foldpanelKey4" style="margin-bottom:10px;">
           <Panel name="1">
             样式调整
-            <div slot="content" class="my-style">
-              <RadioGroup v-model="share.buttonType" vertical>
-                <Radio label="buttonType_1" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/5b878a776f614fa0bf9835930d6c8b93.png">
+            <p slot="content">
+
+              <RadioGroup v-model="share.styleList">
+                <Radio label="clickStyle1">
+                  <span><img src="http://wap-qn.toutiaofangchan.com/adideas/5b878a776f614fa0bf9835930d6c8b93.png" /></span>
                 </Radio>
-                <Radio label="buttonType_2" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/cd2dbe33240248a78c1c5725843cd044.png">
-                </Radio>
-                <Radio label="buttonType_3" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/ce226b4491cd401691d6837d624ad311.png">
-                </Radio>
-                <Radio label="buttonType_4" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/b1e0b9cea36c44678932018550542bab.png">
-                </Radio>
-                <Radio label="buttonType_5" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/70b4b07d65fb43fa9aaeca68d961b9d0.png">
-                </Radio>
-                <Radio label="buttonType_6" style="height: 100px ">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/f2ea77681b544f4f9d11ff969e59de0c.png">
+                <Radio label="clickStyle2">
+                  <span><img src="http://wap-qn.toutiaofangchan.com/adideas/ce226b4491cd401691d6837d624ad311.png" /></span>
                 </Radio>
               </RadioGroup>
-            </div>
+
+            </p>
           </Panel>
-          <Panel name="2">
-            基本
-            <div slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              <FormItem label="宽度" slot="content">
-                <Slider show-input v-model="share.buttonWidth"></Slider>
-              </FormItem>
-              <FormItem label="高度" slot="content">
-                <Slider show-input v-model="share.buttonHeight"> </Slider>
-              </FormItem>
-            </div>
-            <FormItem label="字体大小" slot="content">
-              <Slider show-input v-model="share.fontSize"></Slider>
-            </FormItem>
-            <FormItem label="按钮颜色" slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              <Col span="17">
-              <Input :placeholder="share.buttonColor" v-model="share.buttonColor">
-              </Input>
-              </Col>
-              <Col span="1">
-              <ColorPicker v-model="share.buttonColor" format="rgb" />
-              </Col>
-            </FormItem>
-            <FormItem label="字体颜色" slot="content">
-              <Col span="17">
-              <Input :placeholder="share.fontColor" v-model="share.fontColor">
-              </Input>
-              </Col>
-              <Col span="1">
-              <ColorPicker v-model="share.fontColor" format="rgb" />
-              </Col>
-            </FormItem>
-            <FormItem label="圆角" slot="content" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-              <Slider show-input v-model="share.buttonRadius"> </Slider>
-            </FormItem>
-          </Panel>
-          <Panel name="3">
+        </Collapse>
+        <Collapse v-model="foldpanelKey5" style="margin-bottom:10px;">
+          <Panel name="1">
             展示效果
-            <FormItem label="展示效果" slot="content">
-              <Select v-model="share.position">
-                <Option value="default">默认位置</Option>
-                <Option value="top">顶部悬浮</Option>
-                <Option value="bottom"> 底部悬浮</Option>
-              </Select>
-            </FormItem>
+            <p slot="content">
+              <Row style="margin-top:10px;">
+                <Col span="24">
+                <FormItem label="展示效果">
+                  <Select v-model="share.effectType">
+                    <Option value="1">默认效果</Option>
+                    <Option value="2">顶部悬浮</Option>
+                    <Option value="3">底部悬浮</Option>
+                  </Select>
+                </FormItem>
+                </Col>
+              </Row>
+            </p>
           </Panel>
-          <Panel name="4">
+        </Collapse>
+        <Collapse v-model="foldpanelKey3" style="margin-bottom:10px;">
+          <Panel name="1">
             背景
-            <div slot="content">
-              <FormItem label="背景色">
-                <Col span="17">
-                <Input :placeholder="share.backgroundColor" v-model="share.backgroundColor"></Input>
-                </Col>
-                <Col span="1">
-                <ColorPicker v-model="share.backgroundColor" alpha />
-                </Col>
-              </FormItem>
-              <FormItem>
-                <div class="demo-upload-list" v-for="item in share.uploadList">
-                  <img :src="item.url">
+            <p slot="content">
+              <Row v-if="share.Imgurl">
+                <Col span="24">
+                <div class="demo-upload-list">
+                  <img :src="share.Imgurl">
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                    <Icon type="ios-eye-outline" @click.native="handleView(share.Imgurl)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleRemove()"></Icon>
                   </div>
                 </div>
-              </FormItem>
-              <FormItem v-if="share.uploadList.length>0">
-                当前图片尺寸: {{share.imgInformation}}
-              </FormItem>
-              <FormItem v-if="share.uploadList.length == 0" label="背景图">
-                <Row>
-                  <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
-                    :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
-                    :on-format-error="uploadFormatError" :show-upload-list="false">
-                    <Button type="ghost">添加图片</Button>
-                  </Upload>
-                </Row>
-              </FormItem>
-              <FormItem label="横向">
-                <Select v-model="share.horizontalDir">
-                  <Option value="adapt_hor">适配</Option>
-                  <Option value="repeat_hor">重复</Option>
-                  <Option value="center_hor">居中</Option>
-                </Select>
-              </FormItem>
-              <FormItem label="纵向" v-model="share.verticalDir">
-                <Select v-model="share.verticalDir">
-                  <Option value="adapt_ver">适配</Option>
-                  <Option value="repeat_ver">重复</Option>
-                  <Option value="center_ver">居中</Option>
-                  <Option value="top_ver">置顶</Option>
-                </Select>
-              </FormItem>
-              <!-- <FormItem label="遮罩色" >
-                <Col span="17">
-                  <Input :placeholder="share.maskColor" v-model="share.maskColor"></Input>
                 </Col>
-                <Col span="1">
-                  <ColorPicker v-model="share.maskColor" alpha  />
+              </Row>
+              <Row v-if="share.Imgurl == ''">
+                <Col span="24">
+                <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :format="['jpg','jpeg','png']"
+                  :on-success="uploadSuccess" :on-format-error="uploadFormatError" :show-upload-list="false">
+                  <Button style="width:270px;" type="ghost">添加图片</Button>
+                </Upload>
                 </Col>
-              </FormItem> -->
-              <Modal title="View Image" v-model="visible">
-                <img :src="imgUrl" v-if="visible" style="width: 100%">
-              </Modal>
-            </div>
+              </Row>
+              <Row v-if="share.Imgurl" style="margin-top:10px;">
+                <Col span="24">
+                <FormItem label="横向">
+                  <Select v-model="share.horizontalDir" @on-change='horizonChange'>
+                    <Option value="1">适配</Option>
+                    <Option value="2">重复</Option>
+                    <Option value="3">居中</Option>
+                  </Select>
+                </FormItem>
+                </Col>
+              </Row>
+              <Row v-if="share.Imgurl">
+                <Col span="24">
+                <FormItem label="纵向">
+                  <Select v-model="share.verticalDir" @on-change='verticalChange'>
+                    <Option value="1">适配</Option>
+                    <Option value="2">重复</Option>
+                    <Option value="3">居中</Option>
+                    <Option value="4">置顶</Option>
+                  </Select>
+                </FormItem>
+                </Col>
+              </Row>
+
+              <Row style="margin-top:10px;">
+                <Col span="4" style="height:30px;line-height:30px;"><span>背景色</span></Col>
+                <Col span="10"><Input v-model="share.backColor"></Input></Col>
+                <Col span="10">
+                <ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend />
+                </Col>
+              </Row>
+
+            </p>
           </Panel>
-          <Panel name="5">
+        </Collapse>
+        <Collapse v-model="foldpanelKey2" style="margin-bottom:10px;">
+          <Panel name="1">
+            基本
+            <p slot="content">
+              <Row>
+                <Col span="24">
+                <FormItem label="宽度">
+                  <Slider v-model="share.clickWidth" show-input></Slider>
+                </FormItem>
+                </Col>
+              </Row>
+              <Row>
+                <Col span="24">
+                <FormItem label="高度">
+                  <Slider v-model="share.clickHeight" show-input></Slider>
+                </FormItem>
+                </Col>
+              </Row>
+              <Row style="margin-top:10px;">
+                <Col span="4" style="height:30px;line-height:30px;"><span>圆角</span></Col>
+                <Col span="20"><Input v-model="share.radius"></Input></Col>
+              </Row>
+              <Row style="margin-top:10px;">
+                <Col span="4" style="height:30px;line-height:30px;"><span>按钮色</span></Col>
+                <Col span="10"><Input v-model="share.clickColor"></Input></Col>
+                <Col span="10">
+                <ColorPicker v-model="share.clickColor" style="margin-left:10px;" size="default" recommend />
+                </Col>
+              </Row>
+              <Row style="margin-top:10px;">
+                <Col span="4" style="height:30px;line-height:30px;"><span>文字色</span></Col>
+                <Col span="10"><Input v-model="share.clickFontColor"></Input></Col>
+                <Col span="10">
+                <ColorPicker v-model="share.clickFontColor" style="margin-left:10px;" size="default" recommend />
+                </Col>
+              </Row>
+            </p>
+          </Panel>
+        </Collapse>
+        <Collapse v-model="foldpanelKey1" style="margin-bottom:10px;">
+          <Panel name="1">
             边距
-            <div slot="content">
+            <p slot="content">
+
               <FormItem label="顶">
-                <Slider show-input v-model="share.buttonPaddingTop" :tip-format="format"> </Slider>
+                <Slider v-model="share.top" show-input></Slider>
               </FormItem>
               <FormItem label="右">
-                <Slider show-input v-model="share.buttonPaddingRight" :tip-format="format"> </Slider>
+                <Slider v-model="share.right" show-input></Slider>
               </FormItem>
               <FormItem label="底">
-                <Slider show-input v-model="share.buttonPaddingBottom" :tip-format="format"> </Slider>
+                <Slider v-model="share.bottom" show-input></Slider>
               </FormItem>
               <FormItem label="左">
-                <Slider show-input v-model="share.buttonPaddingLeft" :tip-format="format"> </Slider>
+                <Slider v-model="share.left" show-input></Slider>
               </FormItem>
-            </div>
-          </Panel>
-          <Panel name="6" v-if="share.buttonType === 'buttonType_1' || share.buttonType === 'buttonType_2'">
-            边框
-            <div slot="content">
-              <FormItem label="边框类型">
-                <Select v-model="share.borderType">
-                  <Option value="none">无</Option>
-                  <Option value="solid">实线</Option>
-                  <Option value="dashed">虚线</Option>
-                  <Option value="double">双实线</Option>
-                  <Option value="dotted">点线</Option>
-                </Select>
-              </FormItem>
-              <div slot="content" v-if="share.borderType !== 'none'">
-                <FormItem label="宽度">
-                  <Slider show-input v-model="share.borderSize"> </Slider>
-                </FormItem>
-                <FormItem label="边框颜色">
-                  <Col span="17">
-                  <Input :placeholder="share.borderColor" v-model="share.borderColor"></Input>
-                  </Col>
-                  <Col span="1">
-                  <ColorPicker v-model="share.borderColor" format="rgb" />
-                  </Col>
-                </FormItem>
-              </div>
-            </div>
+
+            </p>
           </Panel>
         </Collapse>
       </TabPane>
     </Tabs>
+    <Modal title="View Image" v-model="visible">
+      <img :src="imgViewUrl" v-if="visible" style="width: 100%">
+    </Modal>
   </Form>
 </template>
+
 <script>
+import api from '../../../../api/wysiwyg/main.js';
+import { setTimeout } from 'timers';
 export default {
+    name: 'wys-img',
     data () {
         return {
             share: {
-                // 内容链接部分
-                androidUrl: '',
-                iosUrl: '',
-                // 控制padding
-                buttonPaddingTop: 10,
-                buttonPaddingBottom: 10,
-                buttonPaddingRight: 0,
-                buttonPaddingLeft: 0,
-                // 标题样式
-                buttonType: 'buttonType_1',
-                // 按钮标题
-                buttontext: '按钮标题',
-                // 按钮大小
-                buttonWidth: 90,
-                buttonHeight: 60,
-                // border相关
-                borderSize: 2,
-                borderColor: 'rgb(232,89,91)',
-                borderType: 'solid',
-                buttonBorderColor: 'rgb(232,89,91)',
-                buttonColor: 'rgb(232,89,91)',
-                fontColor: 'rgb(255,255,255)',
-                fontSize: 17,
-                backgroundColor: 'rgb(255,255,255,0)',
-                buttonBackgroundImg: '',
-                buttonRadius: 8,
-                position: 'default',
+                name: '链接文字',
+                formSelect: '',
+                navVisible: false,
                 url: '',
-                colortext: 'green',
-                // 背景图片部分
-                image: 'http://wap-qn.toutiaofangchan.com/tpzw_image.png',
-                defaultList: [],
-                uploadList: [],
-                imgInformation: '',
-                pic: '',
-                horizontalDir: 'adapt_hor',
-                verticalDir: 'adapt_ver',
-                maskColor: 'rgba(0,0,0,0)',
-                navVisible: false
+                top: 10,
+                right: 15,
+                bottom: 10,
+                left: 15,
+                formList: [],
+                formRender: [],
+                formBottonRender: '',
+                backColor: '',
+                clickColor: '#F85959',
+                fontColor: 'gray',
+                Imgurl: '',
+                horizontalDir: '1',
+                verticalDir: '1',
+                clickWidth: 100,
+                clickHeight: 40,
+                radius: 5,
+                effectType: '1',
+                clickTest: '按钮',
+                clickTel: '',
+                iosUrl: '',
+                androidUrl: '',
+                styleList: 'clickStyle1',
+                clickFontColor: '#FFFFFF',
+                backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;'
             },
-            imgUrl: '',
+            loading: false,
+            foldpanelKey1: '1',
+            foldpanelKey2: '1',
+            foldpanelKey3: '1',
+            foldpanelKey4: '1',
+            foldpanelKey5: '1',
+            imgViewUrl: '',
             visible: false
         };
     },
     methods: {
-        format (val) {
-            return 'Progress:' + val + '%';
+        newlyForm () {
+            this.$router.push({
+                name: 'newlybuildForm'
+                // query: { newsId: params.row.id }
+            });
+        },
+        handleRemove () {
+            this.share.Imgurl = '';
+        },
+        handleView (imgUrl) {
+            this.imgViewUrl = imgUrl;
+            this.visible = true;
+        },
+        horizonChange (value) {
+            if (value == '1') {
+                this.share.backImgStyle = 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;';
+            }
+            if (value == '2') {
+                this.share.backImgStyle = 'background-size: auto 100%; background-position: initial; background-repeat: repeat-x;';
+            }
+            if (value == '3') {
+                this.share.backImgStyle = 'background-size: auto 100%; background-position-x: 50%; background-position-y: initial; background-repeat: no-repeat; ';
+            }
+        },
+        verticalChange (value) {
+            if (value == '1') {
+                this.share.backImgStyle = 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;';
+            }
+            if (value == '2') {
+                this.share.backImgStyle = 'background-size: auto; background-position-x: 50%; background-position-y: initial; background-repeat: repeat-y; ';
+            }
+            if (value == '3') {
+                this.share.backImgStyle = 'background-size: auto; background-position: 50% 50%; background-repeat: no-repeat;';
+            }
+            if (value == '4') {
+                this.share.backImgStyle = 'background-size: auto; background-position: 50% 0%; background-repeat: no-repeat;';
+            }
+        },
+        formSelectClick (value) {
+            this.share.formList.forEach(item => {
+                if (item._id === value) {
+                    this.share.formRender = JSON.parse(item.form);
+                    this.share.formBottonRender = JSON.parse(item.formBotton);
+                }
+            });
+        },
+        getDiyFormStructure () {
+            api.getDiyFormStructure().then(response => {
+                this.share.formList = response.data.data;
+                this.loading = false;
+            });
+        },
+        changeLimit () {
+            this.loading = true;
+            var _self = this;
+            setTimeout(function () {
+                _self.init();
+            }, 500);
         },
         uploadSuccess (res, file) {
             if (res.code === 'success') {
-                console.log(res);
-                console.log(file);
-                this.share.uploadList.push({ name: file.name, url: res.data.url });
-                this.share.pic = res.data.url;
-                console.log(this.share.uploadList);
-                // 创建对象
-                var img = new Image();
-
-                // 改变图片的src
-                img.src = res.data.url;
-                var that = this;
-                // 加载完成执行
-                img.onload = function () {
-                    that.share.imgInformation = img.width + 'px*' + img.height + 'px';
-                };
+                this.share.Imgurl = res.data.url;
             } else {
                 this.$Notice.error({
                     title: '上传失败',
@@ -294,32 +315,78 @@ export default {
                 desc: ''
             });
         },
-        handleView (imgUrl) {
-            this.imgUrl = imgUrl;
-            this.visible = true;
-        },
-        handleRemove (file) {
-            let index = this.share.uploadList.indexOf(file);
-            this.share.uploadList.splice(index, 1);
-            this.share.pic = '';
+        init () {
+            this.getDiyFormStructure();
         }
+    },
+    created: function () {
+        this.init();
+    },
+    mounted () {
     }
 };
 </script>
+
 <style scoped>
-.my-style {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
+.navdhFont {
+  font-size: 20px;
+  border-top: 1px solid #cccccc;
+  margin-right: 20px;
+  padding-top: 10px;
+}
+.navdhName {
+  margin-top: 20px;
+  padding-right: 20px;
+}
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.demo-upload-list {
+  display: inline-block;
+  width: 279px;
+  height: 176px;
+  text-align: center;
+  line-height: 176px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin-right: 4px;
+}
+.demo-upload-list img {
   width: 100%;
   height: 100%;
 }
-.style-button {
-  flex: 0 0 123px;
-  width: 300px;
-  height: 40px;
-  margin-bottom: 10px;
+.demo-upload-list-cover {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.demo-upload-list:hover .demo-upload-list-cover {
+  display: block;
+}
+.demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
 }
 .btn {
   font-size: 12px;
@@ -328,125 +395,51 @@ export default {
 }
 </style>
 <stage-template>
-<div id="{{@ brickid}}" class="button-box">
-  <section class="{{@share.position}} wys-contant {{@share.horizontalDir}}  {{@share.verticalDir}}"  style="padding:{{@share.buttonPaddingTop}}% {{@share.buttonPaddingRight}}% {{@share.buttonPaddingBottom}}% {{@share.buttonPaddingLeft}}%;background:{{@share.backgroundColor}}" >
-    <div class="wys-link">
-      <div class="wys-button {{@share.buttonType}}" style="height:{{@share.buttonHeight}}px; width: {{@share.buttonWidth}}%;background:{{@share.buttonColor}}; line-height:{{@share.buttonHeight}}px; border-radius: {{@share.buttonRadius}}px;color:{{@share.fontColor}};font-size:{{@share.fontSize}}px; border: {{@share.borderSize}}px; border-style: {{@share.borderType}}; border-color: {{@share.borderColor}}">
-          <span>{{@share.buttontext}}</span>
-      </div>
+<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
+    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">      
+       <a href="{{@share.url}}" target="_blank">   
+        {{if share.styleList=='clickStyle1'}}        
+                  <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
+                  {{@ share.clickTest }}
+                  </div>
+          {{else}}
+                  <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;">
+                    {{@ share.clickTest }}
+                  </div>
+          {{/if}} 
+        </a>
     </div>
-  </section>
 </div>
-</stage-template>   
+</stage-template>
 <stage-javascript type="text/javascript">
-  $($t.find(".wys-contant").find(".wys-link")).on("click",function(){
-    window.open("{{@share.url}}")
-  })
+if(<%= share.effectType %> == 1){
+ $t.attr("style","position: relative; width:100%; bottom:auto; top:auto;z-index:30;");
+}
+if(<%= share.effectType %> == 2){
+    if($("#main").length >= 1){
+       $t.attr("style","position: absolute; width:100%; bottom:auto; top:0;z-index:30;");
+    }else{
+        $t.attr("style","position: fixed; width:100%; bottom:auto; top:0;z-index:30;");
+        
+    }
+}
+if(<%= share.effectType %> == 3){
+    if($("#main").length >= 1){
+        $t.attr("style","position: absolute; width:100%; bottom:0; top:auto; z-index:30;");
+      
+    }else{
+         $t.attr("style","position: fixed; width:100%; bottom:0; top:auto; z-index:30;");
+    }
+}
 
-  if("{{@share.position}}" == "top") {
-    $t.removeAttr("botton_bottom")
-    $t.attr("class","botton_top")
-  } 
-  if ("{{@share.position}}" == "bottom") {
-    $t.removeAttr("botton_top")
-    $t.attr("class","botton_bottom")
-  }
+ const ua = window.navigator.userAgent.toLowerCase()
+ $t.on("click",function(){
+    if(ua.indexOf("iphone") !== -1){
+     window.open("{{@share.iosUrl}}")
+    } else {
+      window.open("{{@share.androidUrl}}")
+    }
+ })
 </stage-javascript>
 <stage-css>
-  .wys-contant {
-    box-sizing: border-content;
-    background-image: url(<%= share.pic %>) !important;
-  }
-  .adapt_hor, adapt_ver {
-    background-size: 100% auto !important;
-    background-position:center center !important;
-    background-repeat:no-repeat !important;
-  }
-  .repeat_hor {
-    background-size: 100% auto !important;
-    background-repeat: repeat-x !important;
-  }
-  .center_hor {
-    background-size: 100% auto !important;
-    background-position:center center !important;
-    background-repeat:no-repeat !important;
-  }
-  .repeat_ver {
-    background-repeat: repeat-y !important;
-  }
-  .center_ver {
-    background-position:center center !important;
-    background-repeat:no-repeat !important;
-  }
-  .top_ver {
-    background-position:top center !important;
-    background-repeat:no-repeat !important;
-  }
-  .text {
-    color: <%= share.colortext %>
-  }
-  .button-bottom {
-    bottom: 0;
-  }
-  .wys-link {
-    display: block;
-    text-align: center;
-  }
-  .wys-button{
-    display:inline-block;
-    vertical-align:middle;
-  }
-  .buttonType_1 {
-    width: 93%;
-    height: 20%;
-    color:#fff;
-    font-size:16px;
-    
-  }
-  .buttonType_2 {
-    width: 93% ;
-    height: 20%;
-    color:  rgb(232,89,91) !important;
-    background: rgb(255,255,255) !important;
-    border: <%= share.borderSize%> <%= share.borderType%> <%= share.borderColor%> !important;
-    border-radius:<%= borderRadius%> !important;
-    box-sizing: border-content !important;
-
-  }
-  .buttonType_3 {
-    width: 90px !important;
-    height:90px !important;
-    line-height:90px !important;
-    border-radius: 50% !important;
-    color: #fff !important;
-    background:  rgb(232,89,91) !important; 
-  }
-  .buttonType_4 {
-    box-sizing: border-conent;
-    width: 90px !important;
-    height:90px !important;
-    line-height:90px !important;
-    border-radius: 50% !important;
-    border: 2px solid rgb(289,89,91) !important;
-    color:  rgb(232,89,91) !important;
-    background: #fff !important;
-
-  }
-  .buttonType_5 {
-    width: 90px !important;
-    height:90px !important;
-    color: #fff !important;
-     line-height:90px !important;
-    background: url(http://wap-qn.toutiaofangchan.com/adideas/1c54707463834ef588d05f8722f2ff21.png) no-repeat !important;
-    background-size: 100% !important;
-  }
-  .buttonType_6 {
-    width: 90px !important;
-    height:90px !important;
-    color: #fff !important;
-    line-height:90px !important;
-   background:url(http://wap-qn.toutiaofangchan.com/adideas/940b7f42be3546c4b37437f7aabaf776.png) no-repeat !important;
-   color: #fff !important;
-   background-size:100% !important;
-  }
 </stage-css>
