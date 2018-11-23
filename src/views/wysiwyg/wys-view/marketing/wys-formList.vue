@@ -295,40 +295,40 @@ img {
 </style>
 
 <template>
-    <div style="height:100%">
-        <div class="wys-header">
-            <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
-            </div>
-            <div class="wys-header-content"></div>
-        </div>
-        <div id="main" class="layout edit">
-            <div class="wys-menu-left">
-                <div id="wysiwyg_componentbox">
-                    <div class="wysiw_form_Tab">
-                        表单
-                    </div>
-                </div>
-            </div>
-            <section id="middle" class="workarea-main">
-                <div class="workarea-stage">
-                    <div class="phone-box">
-
-                        <Card>
-                            <p slot="title">
-                                表单列表
-                            </p>
-                            <a href="#" slot="extra" @click.prevent="newlyForm">
-                                <Icon type="plus-circled"></Icon>
-                                新建表单
-                            </a>
-                        </Card>
-                        <Table border :columns="columns7" :data="formList"></Table>
-                        <Page :total="total" show-sizer @on-change="pageChange" style="margin-top:20px;"></Page>
-                    </div>
-                </div>
-            </section>
-        </div>
+  <div style="height:100%">
+    <div class="wys-header">
+      <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
+      </div>
+      <div class="wys-header-content"></div>
     </div>
+    <div id="main" class="layout edit">
+      <div class="wys-menu-left">
+        <div id="wysiwyg_componentbox">
+          <div class="wysiw_form_Tab">
+            表单
+          </div>
+        </div>
+      </div>
+      <section id="middle" class="workarea-main">
+        <div class="workarea-stage">
+          <div class="phone-box">
+
+            <Card>
+              <p slot="title">
+                表单列表
+              </p>
+              <a href="#" slot="extra" @click.prevent="newlyForm">
+                <Icon type="plus-circled"></Icon>
+                新建表单
+              </a>
+            </Card>
+            <Table border :columns="columns7" :data="formList"></Table>
+            <Page :total="total" show-sizer @on-change="pageChange" style="margin-top:20px;"></Page>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 </template>
 <style>
 .form-preview .device {
@@ -406,7 +406,12 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.remove(params.index);
+                                        api.delDiyFormStructure({
+                                            id: params.row._id
+                                        }).then(response => {
+                                            this.$Message.success('删除成功');
+                                            this.init();
+                                        });
                                     }
                                 }
                             }, '删除')

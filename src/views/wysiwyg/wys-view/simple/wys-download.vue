@@ -34,7 +34,7 @@
         </Row>
       </TabPane>
       <TabPane label="样式">
-        <Collapse simple style="overflow: -webkit-paged-y">
+        <Collapse simple style="overflow: -webkit-paged-y" v-model="foldpanelKey1">
           <Panel name="1">
             样式调整
             <div slot="content" class="my-style">
@@ -260,7 +260,11 @@ export default {
                 navVisible: false
             },
             imgUrl: '',
-            visible: false
+            visible: false,
+            foldpanelKey1: '1',
+            foldpanelKey2: '1',
+            foldpanelKey3: '1',
+            foldpanelKey4: '1'
         };
     },
     methods: {
@@ -269,11 +273,8 @@ export default {
         },
         uploadSuccess (res, file) {
             if (res.code === 'success') {
-                console.log(res);
-                console.log(file);
                 this.share.uploadList.push({ name: file.name, url: res.data.url });
                 this.share.pic = res.data.url;
-                console.log(this.share.uploadList);
                 // 创建对象
                 var img = new Image();
 
@@ -388,7 +389,6 @@ export default {
 </div>
 </stage-template>   
 <stage-javascript type="text/javascript">
-console.log($t.children(".wys-contant").children(".wys-link"))
 const ua = window.navigator.userAgent.toLowerCase()
  $($t.find(".wys-contant").find(".wys-link")).on("click",function(){
     if(ua.indexOf("iphone") !== -1){

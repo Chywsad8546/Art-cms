@@ -589,7 +589,6 @@ export default {
         },
         formSelectClick (item) {
             item.optionArr = [];
-            console.log(item.type);
             if (item.type == 'checkbox' || item.type == 'radio' || item.type == 'select') {
                 item.isCheckbox = true;
             }
@@ -650,7 +649,10 @@ export default {
                         form: this.subFormArr,
                         formBotton: this.formbottonArr
                     }).then(response => {
-                        console.log(response);
+                        this.$Message.success('添加成功');
+                        this.$router.push({
+                            name: 'newlybuildFormList'
+                        });
                     });
                 } else {
                     this.$Message.error('Fail!');

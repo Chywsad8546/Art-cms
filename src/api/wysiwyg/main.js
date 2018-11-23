@@ -1,30 +1,36 @@
 import http from '../api.base';
 export default {
-    saveDiyWebpage (params) {
+    saveDiyWebpage(params) {
         return http.post('/cmsapi/diyWebpage/saveDiyWebpage', params);
     },
-    saveSite (params) {
+    saveSite(params) {
         return http.post('/cmsapi/site/saveSite', params);
     },
-    saveDiyWebpageHistory (params) {
-        return http.post('/cmsapi/diyWebpageHistory/saveDiyWebpageHistory', params);
+    saveDiyWebpageHistory(params) {
+        return http.post(
+            '/cmsapi/diyWebpageHistory/saveDiyWebpageHistory',
+            params
+        );
     },
-    getSites (params) {
+    getSites(params) {
         return http.get('/cmsapi/site/getSites', {
             params: params
         });
     },
-    getDiyWebpages (params) {
+    getDiyWebpages(params) {
         return http.get('/cmsapi/diyWebpage/getDiyWebpages', {
             params: params
         });
     },
-    getDiyFormStructure (params) {
+    getDiyFormStructure(params) {
         return http.get('/cmsapi/diyForm/getDiyFormStructure', {
             params: params
         });
     },
-    saveDiyFormStructure (params) {
+    saveDiyFormStructure(params) {
         return http.postJson('/cmsapi/diyForm/saveDiyFormStructure', params);
-    },    
-}
+    },
+    delDiyFormStructure(params) {
+        return http.post('/cmsapi/diyForm/delDiyFormStructure', params);
+    }
+};

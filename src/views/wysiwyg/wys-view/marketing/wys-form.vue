@@ -237,7 +237,6 @@ export default {
             this.share.Imgurl = '';
         },
         handleView (imgUrl) {
-            console.log(imgUrl);
             this.imgViewUrl = imgUrl;
             this.visible = true;
         },

@@ -12,7 +12,7 @@ import wys_tab from './wys-view/simple/wys-tab.vue';
 import wys_title from './wys-view/simple/wys-title.vue';
 import wys_video from './wys-view/simple/wys-video.vue';
 import wys_form from './wys-view/marketing/wys-form.vue';
-import wys_download from './wys-view/simple/wys-download.vue';
+import wys_buttondownload from './wys-view/simple/wys-buttondownload.vue';
 import wys_tel from './wys-view/marketing/wys-tel.vue';
 export default {
     stageComponents: [
@@ -119,8 +119,8 @@ export default {
             icon:
                 'http://wap-qn.toutiaofangchan.com/adideas/d3f56f515b354a6889d1c31ff7b519c5.png',
             title: '下载按钮',
-            component: wys_download,
-            id: 'wys_download'
+            component: wys_buttondownload,
+            id: 'wys_buttondownload'
         },
         {
             icon:
