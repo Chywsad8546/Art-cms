@@ -280,6 +280,9 @@ img {
   top: 0;
   left: 0;
 }
+.wys-header-left {
+  background: #ffffff;
+}
 </style>
 
 <template>
