@@ -344,21 +344,26 @@ img {
             </div>
         </div>
 
-        <Modal v-model="qrcodeModal" width="200">
+        <Modal v-model="qrcodeModal" width="400">
+
             <p slot="header" style="color:#f60;text-align:center">
                 <span></span>
             </p>
             <Tabs type="card">
                 <TabPane label="WEB预览">
                     <div style="text-align:center">
-                        <p class="qrcode" id="qrcode10"></p>
+                        <p class="qrcode" style="width:200px; margin:0 auto;" id="qrcode10"></p>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <span>专题URL</span>
+                        <Input v-model="siteUrl" placeholder="" style="width: 300px"></Input>
                     </div>
                 </TabPane>
             </Tabs>
+
             <div slot="footer">
             </div>
         </Modal>
-
     </div>
 </template>
 <script>
@@ -382,6 +387,7 @@ export default {
             currentEditor: wys_default,
             currentEditorKey: 'wys_default',
             qrcodeModal: false,
+            siteUrl: '',
             formMain: {
                 siteId: '',
                 html: '',
@@ -425,6 +431,7 @@ export default {
                         this.formMain.id = response.data.data.id;
                         this.qrcodeModal = true;
                         var url = 'http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml?id=' + response.data.data.pid;
+                        this.siteUrl = url;
                         document.getElementById('qrcode10').innerHTML = '';
                         this.qrcode(url);
                     });
