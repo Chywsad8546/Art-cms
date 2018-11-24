@@ -11,6 +11,7 @@
         </Row>
         <Row>
           <Row>
+            <col>
             <div href="" class="btn" @click="share.navVisible = true" style="">
               <Icon type="plus-round"></Icon>
               添加链接

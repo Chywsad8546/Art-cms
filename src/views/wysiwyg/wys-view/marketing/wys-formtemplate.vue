@@ -291,96 +291,108 @@ img {
                 </div>
             </div>
             <section id="middle" class="workarea-main">
-                <div class="workarea-stage">
-                    <div class="phone-box">
+                <Card>
+                    <p slot="title">
+                        <Icon type="ios-film-outline"></Icon>
+                        新增表单
+                    </p>
+                    <a href="#" slot="extra" @click.prevent="backFormList">
+                        表单列表
+                    </a>
+                    <div class="workarea-stage">
+                        <div class="phone-box">
 
-                        <Form ref="formValidate" :model="formItem" :rules="ruleValidate" :label-width="80">
-                            <Row>
-                                <Col span="24">
-                                <FormItem label="表单名" prop="title">
-                                    <Input v-model="formItem.title" placeholder="请输入表单名称"></Input>
-                                </FormItem>
-                                </Col>
-                            </Row>
-                            <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex" justify="center"
-                                align="middle">
-                                <Col span="5">字段名</Col>
-                                <Col span="10">类型</Col>
-                                <Col span="2">是否必填</Col>
-                                <Col span="2">是否唯一</Col>
-                                <Col span="5">操作</Col>
-                            </Row>
-                            <Row v-for="item,index in formArr" :gutter="16" type="flex" justify="center" align="middle"
-                                style="height:50px; text-align:center">
-                                <Col span="5"><Input v-model="item.label" placeholder="字段名称"></Input></Col>
-                                <Col span="10">
-                                <Select v-model="item.type" @on-change="formSelectClick(item)" style="width:100px;">
-                                    <Option v-for="items in inputTypeList" :value="items.value" :key="items.value">{{
-                                        items.label }}</Option>
-                                </Select>
-                                <Button v-if="item.type == 'checkbox' || item.type == 'select'|| item.type == 'radio'"
-                                    @click="formSelectClick(item)" style="width:100px;" type="primary">设置多选数据</Button>
-                                <Modal title="选项设置" ok-text="保存" @on-ok="preserOption(item)" v-model="item.isCheckbox">
-                                    <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex"
-                                        justify="center" align="middle">
-                                        <Col span="8">序号</Col>
-                                        <Col span="8">选项名</Col>
-                                        <Col span="8">操作</Col>
-                                    </Row>
-                                    <Row v-for="optItem,index in optionArr" style="height:50px; text-align:center;border:1px solid #ececec;"
-                                        type="flex" justify="center" align="middle">
-                                        <Col span="8">{{index+1}}</Col>
-                                        <Col span="8"><Input v-model="optItem.name" placeholder="请输入表单名称"></Input></Col>
-                                        <Col span="8">
-                                        <Icon @click="delOptionList(optItem)" style="font-size:20px;" type="ios-trash-outline"></Icon>
-                                        </Col>
-                                    </Row>
-                                    <Row style="height:50px; margin-top:20px;">
-                                        <Col span="24">
-                                        <Button style="border:1px solid #60A3F5;color:#60A3F5" @click="addOptionList">
-                                            <Icon type="plus-round"></Icon>增加一项
-                                        </Button>
-                                        </Col>
-                                    </Row>
-                                </Modal>
-                                </Col>
-                                <Col span="2">
-                                <Checkbox v-model="item.isMandatory"></Checkbox>
-                                </Col>
-                                <Col span="2">
-                                <Checkbox v-model="item.isOnly"></Checkbox>
-                                </Col>
-                                <Col span="5">
-                                <Icon type="arrow-down-c" @click="moveDown(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
-                                <Icon type="arrow-up-c" @click="moveUp(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
-                                <Icon @click="deleteList(item)" style="font-size:20px;" type="ios-trash-outline"></Icon>
-                                </Col>
-                            </Row>
-                            <Row type="flex" :gutter="16" justify="center" align="middle" style="height:50px; text-align:center">
-                                <Col span="5"><Input v-model="bottomName" placeholder="请输入按钮名称"></Input></Col>
-                                <Col span="10">提交按钮</Col>
-                                <Col span="2">
-                                </Col>
-                                <Col span="2">
-                                </Col>
-                                <Col span="5">
-                                </Col>
-                            </Row>
-                            <Row style="height:50px;">
-                                <Col span="24">
-                                <Button style="border:1px solid #60A3F5;color:#60A3F5" @click="addForm">
-                                    <Icon type="plus-round"></Icon>增加一项
-                                </Button>
-                                </Col>
-                            </Row>
-                            <Row style="height:50px; text-align:right;padding-right:20px;">
-                                <Col span="24">
-                                <Button type="primary" @click="addJsonPush">创建完成</Button>
-                                </Col>
-                            </Row>
-                        </Form>
+                            <Form ref="formValidate" :model="formItem" :rules="ruleValidate" :label-width="80">
+                                <Row>
+                                    <Col span="24">
+                                    <FormItem label="表单名" prop="title">
+                                        <Input v-model="formItem.title" :disabled="isdisabled" placeholder="请输入表单名称"></Input>
+                                    </FormItem>
+                                    </Col>
+                                </Row>
+                                <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex"
+                                    justify="center" align="middle">
+                                    <Col span="5">字段名</Col>
+                                    <Col span="10">类型</Col>
+                                    <Col span="2">是否必填</Col>
+                                    <Col span="2">是否唯一</Col>
+                                    <Col span="5">操作</Col>
+                                </Row>
+                                <Row v-for="item,index in formArr" :gutter="16" type="flex" justify="center" align="middle"
+                                    style="height:50px; text-align:center">
+                                    <Col span="5"><Input v-model="item.label" :disabled="isdisabled" placeholder="字段名称"></Input></Col>
+                                    <Col span="10">
+                                    <Select v-model="item.type" :disabled="isdisabled" @on-change="formSelectClick(item)"
+                                        style="width:100px;">
+                                        <Option v-for="items in inputTypeList" :value="items.value" :key="items.value">{{
+                                            items.label }}</Option>
+                                    </Select>
+                                    <Button v-if="item.type == 'checkbox' || item.type == 'select'|| item.type == 'radio'"
+                                        @click="formSelectClick(item)" :disabled="isdisabled" style="width:100px;" type="primary">设置多选数据</Button>
+                                    <Modal title="选项设置" ok-text="保存" @on-ok="preserOption(item)" v-model="item.isCheckbox">
+                                        <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex"
+                                            justify="center" align="middle">
+                                            <Col span="8">序号</Col>
+                                            <Col span="8">选项名</Col>
+                                            <Col span="8">操作</Col>
+                                        </Row>
+                                        <Row v-for="optItem,index in optionArr" style="height:50px; text-align:center;border:1px solid #ececec;"
+                                            type="flex" justify="center" align="middle">
+                                            <Col span="8">{{index+1}}</Col>
+                                            <Col span="8"><Input v-model="optItem.name" placeholder="请输入表单名称"></Input></Col>
+                                            <Col span="8">
+                                            <Icon @click="delOptionList(optItem)" style="font-size:20px;" type="ios-trash-outline"></Icon>
+                                            </Col>
+                                        </Row>
+                                        <Row style="height:50px; margin-top:20px;">
+                                            <Col span="24">
+                                            <Button style="border:1px solid #60A3F5;color:#60A3F5" @click="addOptionList">
+                                                <Icon type="plus-round"></Icon>增加一项
+                                            </Button>
+                                            </Col>
+                                        </Row>
+                                    </Modal>
+                                    </Col>
+                                    <Col span="2">
+                                    <Checkbox :disabled="isdisabled" v-model="item.isMandatory"></Checkbox>
+                                    </Col>
+                                    <Col span="2">
+                                    <Checkbox :disabled="isdisabled" v-model="item.isOnly"></Checkbox>
+                                    </Col>
+                                    <Col span="5">
+                                    <Icon type="arrow-down-c" @click="moveDown(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
+                                    <Icon type="arrow-up-c" @click="moveUp(index,item)" style="font-size:20px; margin-right:10px;"></Icon>
+                                    <Icon @click="deleteList(item)" style="font-size:20px;" type="ios-trash-outline"></Icon>
+                                    </Col>
+                                </Row>
+                                <Row type="flex" :gutter="16" justify="center" align="middle" style="height:50px; text-align:center">
+                                    <Col span="5"><Input v-model="bottomName" placeholder="请输入按钮名称"></Input></Col>
+                                    <Col span="10">提交按钮</Col>
+                                    <Col span="2">
+                                    </Col>
+                                    <Col span="2">
+                                    </Col>
+                                    <Col span="5">
+                                    </Col>
+                                </Row>
+                                <Row style="height:50px;">
+                                    <Col span="24">
+                                    <Button style="border:1px solid #60A3F5;color:#60A3F5" :disabled="isdisabled"
+                                        @click="addForm">
+                                        <Icon type="plus-round"></Icon>增加一项
+                                    </Button>
+                                    </Col>
+                                </Row>
+                                <Row style="height:50px; text-align:right;padding-right:20px;">
+                                    <Col span="24">
+                                    <Button type="primary" :disabled="isdisabled" @click="addJsonPush">创建完成</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </div>
                     </div>
-                </div>
+
+                </Card>
             </section>
             <div id="right" class="wys-edit-right">
                 <div class="wysiwyg_rightScroll">
@@ -481,6 +493,7 @@ export default {
             bottomName: '立即提交',
             isCheckbox: false,
             formNum: 1,
+            isdisabled: false,
             formItem: {
 
             },
@@ -595,6 +608,11 @@ export default {
             let index = this.optionArr.indexOf(item);
             this.optionArr.splice(index, 1);
         },
+        backFormList () {
+            this.$router.push({
+                name: 'newlybuildFormList'
+            });
+        },
         formSelectClick (item) {
             item.optionArr = [];
             if (item.type == 'checkbox' || item.type == 'radio' || item.type == 'select') {
@@ -675,6 +693,17 @@ export default {
     mounted () {
     },
     created () {
+        if (this.$route.query.id) {
+            this.formArr = [];
+            this.isdisabled = true;
+            api.getDiyFormStructure({
+                id: this.$route.query.id
+            }).then(response => {
+                this.formItem.title = response.data.data.data[0].title;
+                this.formArr = JSON.parse(response.data.data.data[0].form);
+                console.log(response.data.data.data[0].form);
+            });
+        }
     }
 };
 </script>

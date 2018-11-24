@@ -23,9 +23,22 @@
                 <FormItem label="内容">
                     <Input v-model="item.content"></Input>
                 </FormItem> -->
-                    <FormItem label="链接">
-                        <Input placeholder="http://" v-model="item.httpUrl"></Input>
-                    </FormItem>
+                    <Row>
+                        <Row>
+                            <col>
+                            <div href="" class="btn" @click="item.navVisible = true" style="">
+                                <Icon type="plus-round"></Icon>
+                                添加链接
+                            </div>
+                            </Col>
+                        </Row>
+                        <Modal title="URL" v-model="item.navVisible">
+                            <FormItem label="链接地址" v-if="item.navVisible">
+                                <Input v-model="item.httpUrl" placeholder="http://"></Input>
+                            </FormItem>
+                        </Modal>
+
+                    </Row>
                 </div>
                 <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"
                     ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList"
@@ -168,6 +181,7 @@ export default {
                         name: file.name,
                         url: res.data.url,
                         imgInformation: img.width + 'px*' + img.height + 'px',
+                        navVisible: false,
                         single: false
                     });
                 };
@@ -258,6 +272,11 @@ export default {
 }
 .ivu-form-item {
   padding-right: 10px !important;
+}
+.btn {
+  font-size: 12px;
+  color: #2d8cf0;
+  cursor: pointer;
 }
 </style>
 

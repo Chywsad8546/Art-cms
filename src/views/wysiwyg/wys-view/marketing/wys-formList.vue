@@ -404,8 +404,27 @@ export default {
                         return h('div', [
                             h('Button', {
                                 props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.$router.push({
+                                            name: 'newlybuildForm', query: { id: params.row._id }
+                                        });
+                                    }
+                                }
+                            }, '查看'),
+                            h('Button', {
+                                props: {
                                     type: 'error',
                                     size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
                                 },
                                 on: {
                                     click: () => {

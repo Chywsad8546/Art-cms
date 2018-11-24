@@ -36,15 +36,6 @@
                 <Radio label="title-type_4" style="height: 40px">
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/9083fd8440584d56aed52d82138694c0.png" alt="样式1">
                 </Radio>
-                <Radio label="待定_5" style="height: 40px"></Radio>
-                <Radio label="待定_6" style="height: 40px"></Radio>
-                <Radio label="待定_7" style="height: 40px"></Radio>
-                <Radio label="待定_8" style="height: 40px"></Radio>
-                <Radio label="待定_9" style="height: 40px"></Radio>
-                <Radio label="待定_10" style="height: 40px"></Radio>
-                <Radio label="待定_11" style="height: 40px"></Radio>
-                <Radio label="待定_12" style="height: 40px"></Radio>
-                <Radio label="待定_13" style="height: 40px"></Radio>
               </RadioGroup>
               <FormItem label="装饰颜色">
                 <Col span="17">
