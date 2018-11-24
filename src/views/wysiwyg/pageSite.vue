@@ -9,8 +9,8 @@
             </a>
 
             <Form ref="searchData" :model="searchData" inline :label-width="120">
-                <FormItem label="栏目名称" prop="siteName">
-                    <Input v-model="searchData.siteName" placeholder="请输入站点名称" style="width: 150px"></Input>
+                <FormItem label="站点名称" prop="name">
+                    <Input v-model="searchData.name" placeholder="请输入站点名称" style="width: 150px"></Input>
                 </FormItem>
 
                 <FormItem>

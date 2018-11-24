@@ -228,10 +228,8 @@ export default {
     },
     methods: {
         newlyForm () {
-            this.$router.push({
-                name: 'newlybuildForm'
-                // query: { newsId: params.row.id }
-            });
+            let routeData = this.$router.resolve({ path: '/marketingMain/newlybuildForm' });
+            window.open(routeData.href, '_blank');
         },
         handleRemove () {
             this.share.Imgurl = '';

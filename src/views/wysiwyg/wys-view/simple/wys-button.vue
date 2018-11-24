@@ -278,27 +278,6 @@ export default {
                 this.share.backImgStyle = 'background-size: auto; background-position: 50% 0%; background-repeat: no-repeat;';
             }
         },
-        formSelectClick (value) {
-            this.share.formList.forEach(item => {
-                if (item._id === value) {
-                    this.share.formRender = JSON.parse(item.form);
-                    this.share.formBottonRender = JSON.parse(item.formBotton);
-                }
-            });
-        },
-        getDiyFormStructure () {
-            api.getDiyFormStructure().then(response => {
-                this.share.formList = response.data.data;
-                this.loading = false;
-            });
-        },
-        changeLimit () {
-            this.loading = true;
-            var _self = this;
-            setTimeout(function () {
-                _self.init();
-            }, 500);
-        },
         uploadSuccess (res, file) {
             if (res.code === 'success') {
                 this.share.Imgurl = res.data.url;
@@ -314,13 +293,10 @@ export default {
                 title: '不能上传此格式的文件',
                 desc: ''
             });
-        },
-        init () {
-            this.getDiyFormStructure();
         }
     },
     created: function () {
-        this.init();
+    // this.init();
     },
     mounted () {
     }
@@ -396,23 +372,19 @@ export default {
 </style>
 <stage-template>
 <div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
-     
-        
-        {{if share.styleList=='clickStyle1'}}    
-
-
-        
-         <a href="{{@share.url}}" target="_blank"  style=" text-align:center; border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;" class="click-link">     
-     
+    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">      
+       <a href="{{@share.url}}" target="_blank">   
+        {{if share.styleList=='clickStyle1'}}        
+                  <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
                   {{@ share.clickTest }}
-          
-             </a>
+                  </div>
           {{else}}
-           <a href="{{@share.url}}" target="_blank"  style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;" class="click-link">     
+                  <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;">
                     {{@ share.clickTest }}
-           </a>
+                  </div>
           {{/if}} 
-
+        </a>
+    </div>
 </div>
 </stage-template>
 <stage-javascript type="text/javascript">
@@ -430,24 +402,11 @@ if(<%= share.effectType %> == 2){
 if(<%= share.effectType %> == 3){
     if($("#main").length >= 1){
         $t.attr("style","position: absolute; width:100%; bottom:0; top:auto; z-index:30;");
-
+      
     }else{
          $t.attr("style","position: fixed; width:100%; bottom:0; top:auto; z-index:30;");
     }
 }
-
- const ua = window.navigator.userAgent.toLowerCase()
- $t.on("click",function(){
-    if(ua.indexOf("iphone") !== -1){
-     window.open("{{@share.iosUrl}}")
-    } else {
-      window.open("{{@share.androidUrl}}")
-    }
- })
 </stage-javascript>
 <stage-css>
-.click-link {
-    display: block;
-    line-height: 0;
-}
 </stage-css>

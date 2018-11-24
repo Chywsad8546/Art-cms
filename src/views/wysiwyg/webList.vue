@@ -51,17 +51,23 @@
             </Card>
             <span slot="footer"></span>
         </Modal>
-        <Modal v-model="qrcodeModal" width="200">
+        <Modal v-model="qrcodeModal" width="400">
+
             <p slot="header" style="color:#f60;text-align:center">
                 <span></span>
             </p>
             <Tabs type="card">
                 <TabPane label="WEB预览">
                     <div style="text-align:center">
-                        <p class="qrcode" id="qrcode11"></p>
+                        <p class="qrcode" style="width:200px; margin:0 auto;" id="qrcode11"></p>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <span>专题URL</span>
+                        <Input v-model="siteUrl" placeholder="" style="width: 300px"></Input>
                     </div>
                 </TabPane>
             </Tabs>
+
             <div slot="footer">
             </div>
         </Modal>
@@ -79,6 +85,7 @@ export default {
             stationList: [],
             qrcodeModal: false,
             modalData: [],
+            siteUrl: '',
             modalColums: [
                 {
                     key: 'id',
@@ -128,27 +135,6 @@ export default {
                     align: 'center',
                     render: (h, params) => {
                         return h('div', [
-                            // h(
-                            //     'Button',
-                            //     {
-                            //         props: {
-                            //             type: 'primary',
-                            //             size: 'small'
-                            //         },
-                            //         style: {
-                            //             marginRight: '5px'
-                            //         },
-                            //         on: {
-                            //             click: () => {
-                            //                 this.isTrue = true;
-                            //                 api.getDiyWebpageHistory({ pid: params.row.id }).then(response => {
-                            //                     this.modalData = response.data.data;
-                            //                 });
-                            //             }
-                            //         }
-                            //     },
-                            //     '历史记录'
-                            // ),
                             h(
                                 'Button',
                                 {
@@ -181,8 +167,11 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$router.push({
-                                                name: 'wysiwygmain', query: { siteid: params.row.siteId, id: params.row.id }
+                                            api.delDiyWebpage({
+                                                id: params.row.id
+                                            }).then(response => {
+                                                this.$Message.success('删除成功！');
+                                                this.init();
                                             });
                                         }
                                     }
@@ -203,26 +192,13 @@ export default {
                                     }
                                 },
                                 '预览'
-                            ),
-                            h(
-                                'Button',
-                                {
-                                    props: {
-                                        type: 'text',
-                                        icon: 'plus'
-                                    }
-                                },
-                                '复制地址'
                             )
                         ]);
                     }
                 }
             ],
             searchData: {
-                stationName: '',
-                pageName: '',
-                isDel: '',
-                pageId: ''
+                siteId: this.$route.query.siteid
             },
             data: [],
             total: 0,
@@ -254,6 +230,7 @@ export default {
         previewClick (id) {
             this.qrcodeModal = true;
             var url = 'http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml?id=' + id;
+            this.siteUrl = url;
             document.getElementById('qrcode11').innerHTML = '';
             this.qrcode(url);
         },

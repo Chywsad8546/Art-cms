@@ -273,6 +273,13 @@ img {
   padding-left: 20px;
   margin: 10px 0 10px 0;
 }
+.wys-mask {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 </style>
 
 <template>
@@ -403,6 +410,7 @@ export default {
                     } else {
                         api.saveDiyWebpage(this.formMain).then(response => {
                             this.formMain.id = response.data.data.id;
+                            this.id = response.data.data.id;
                             this.$Message.success(status == 0 ? '保存成功' : '发布成功');
                         });
                     }
@@ -469,10 +477,10 @@ export default {
             });
             dra.on('drop', function (el, target, source, sibling) {
                 // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
-                if ($(target).attr('id') != 'wysiwyg_componentbox' && $(source).attr('id') == 'wysiwyg_componentbox') {
+                if (target && $(target).attr('id') != 'wysiwyg_componentbox' && $(source).attr('id') == 'wysiwyg_componentbox') {
                     var editorregid = $(el).attr('editorregid');
                     GlobalStage.create(editorregid, true);
-                } else if ($(source).attr('id') == 'wysiwyg_stage') {
+                } else if (target && $(source).attr('id') == 'wysiwyg_stage') {
                     $(el).click();
                 }
             });

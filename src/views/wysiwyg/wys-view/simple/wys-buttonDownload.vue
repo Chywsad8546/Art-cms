@@ -275,27 +275,6 @@ export default {
                 this.share.backImgStyle = 'background-size: auto; background-position: 50% 0%; background-repeat: no-repeat;';
             }
         },
-        formSelectClick (value) {
-            this.share.formList.forEach(item => {
-                if (item._id === value) {
-                    this.share.formRender = JSON.parse(item.form);
-                    this.share.formBottonRender = JSON.parse(item.formBotton);
-                }
-            });
-        },
-        getDiyFormStructure () {
-            api.getDiyFormStructure().then(response => {
-                this.share.formList = response.data.data;
-                this.loading = false;
-            });
-        },
-        changeLimit () {
-            this.loading = true;
-            var _self = this;
-            setTimeout(function () {
-                _self.init();
-            }, 500);
-        },
         uploadSuccess (res, file) {
             if (res.code === 'success') {
                 this.share.Imgurl = res.data.url;
@@ -311,13 +290,10 @@ export default {
                 title: '不能上传此格式的文件',
                 desc: ''
             });
-        },
-        init () {
-            this.getDiyFormStructure();
         }
     },
     created: function () {
-        this.init();
+    // this.init();
     },
     mounted () {
     }
@@ -387,7 +363,7 @@ export default {
 }
 </style>
 <stage-template>
-<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
+<div class="downloadContainer" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
     <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">           
        {{if share.styleList=='clickStyle1'}}        
                 <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
@@ -423,7 +399,7 @@ if(<%= share.effectType %> == 3){
 }
 
  const ua = window.navigator.userAgent.toLowerCase()
- $t.on("click",function(){
+ $t.children(".downloadContainer").on("click",function(){
     if(ua.indexOf("iphone") !== -1){
      window.open("{{@share.iosUrl}}")
     } else {

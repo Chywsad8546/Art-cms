@@ -168,6 +168,11 @@ export default {
     _currentComponentChangeEvent: function() {},
     currentComponent: null,
     stageComponentsDict: {},
+    _createMask: function(dom) {
+        if (dom.find('.wys-mask').length == 0) {
+            dom.append('<span class="wys-mask"></span>');
+        }
+    },
     /*
     创建画布上的站位dom，是一个jquery对象
      */
@@ -188,9 +193,13 @@ export default {
                 return { ack: false, dom: null };
             }
         }
-        dom.append(
-            '<span style="position:absolute;top:0px;left:0px;display:inline-block;width:100%;height:100%;z-index:21"></span>'
-        );
+        this._createMask(dom);
+        // let appSpan = $(
+        //     '<span style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;"></span>'
+        // );
+        // setTimeout(function() {
+        //     dom.prepend(appSpan);
+        // }, 1000);
         // dom.data('stageCompontHook', stageComponent);
         /**
          * 鼠标经过的时候，增加一个“删除”按钮
@@ -221,6 +230,7 @@ export default {
             dom.removeClass('wysi_hrive');
             // dom.css("border",'0px solid red');
         });
+
         /**
          * 鼠标点击的时候，设置当前的 高亮
          */
@@ -283,8 +293,17 @@ export default {
                 editor_regid: this.stageComponentsDict[key].editor_regid // vue编辑器组件的注册id
             };
         }
-        var strHtml = $('#wysiwyg_stage').html();
 
+        // var strHtml = $('#wysiwyg_stage')
+        //     .html()
+        //     .find('.wys-mask');
+        //  var strHtml = $('#wysiwyg_stage').clone(true);
+        var strCloneHtml = $('#wysiwyg_stage').clone(true);
+        var maskSpan = strCloneHtml.find('.wys-mask');
+        maskSpan.each(function() {
+            $(this).remove();
+        });
+        var strHtml = strCloneHtml[0].innerHTML;
         var fullhtml = css + strHtml;
         fullhtml = fullhtml + jsincludes + cssincludes + js;
         return {
@@ -377,7 +396,7 @@ export default {
         } else {
             targetStageComponent.dom.html(html); // children('div').eq(0)
         }
-
+        this._createMask(targetStageComponent.dom);
         if (_.trim(js)) {
             js =
                 '<script id="js-' +

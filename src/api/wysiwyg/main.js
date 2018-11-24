@@ -43,5 +43,8 @@ export default {
     },
     updateDiyWebpage(params) {
         return http.post('/cmsapi/diyWebpage/updateDiyWebpage', params);
+    },
+    delDiyWebpage(params) {
+        return http.post('/cmsapi/diyWebpage/delDiyWebpage', params);
     }
 };
