@@ -271,6 +271,7 @@ setTimeout(function(){
         source: "<%= share.videoUrl %>",
         width: "100%",
         height: "500px",
+        
         cover: "<%= share.videoImg %>",
         /* 设置封面时需要将 autoplay 和 preload 设置为 false */
         "autoplay": false,

@@ -16,6 +16,20 @@
                     <FormItem label="标签">
                         <Input v-model="item.label"></Input>
                     </FormItem>
+                    <Col span="24">
+                    <div v-if="item.httpUrl != ''">
+                        <span style="margin-right:10px;">链接到 {{item.httpUrl}}</span>
+                        <a v-if="item.httpUrl != ''" @click="addUrl(item)">
+                            编辑
+                        </a>
+                    </div>
+                    <a v-if="item.httpUrl == ''" class="btn" @click="addUrl(item)">
+                        <Icon type="plus-round"></Icon>
+                        添加链接
+                    </a>
+                    </Col>
+                    <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
+                        v-bind:isBlock="item.navVisible"></wysLink>
                 </div>
                 <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList"
                     :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
@@ -52,8 +66,12 @@
 </template>
 
 <script>
+import wysLink from '../components/link.vue';
 export default {
     name: 'wys-groupdrawing',
+    components: {
+        wysLink
+    },
     data () {
         return {
             share: {
@@ -68,6 +86,7 @@ export default {
                 label: '',
                 position: 'text-label-1'
             },
+            obj: '',
             imgUrl: '',
             visible: false
         };
@@ -85,6 +104,9 @@ export default {
                     that.share.uploadList.push({
                         name: file.name,
                         url: res.data.url,
+                        httpUrl: '',
+                        urlData: {},
+                        navVisible: false,
                         imgInformation: img.width + 'px*' + img.height + 'px',
                         single: false,
                         label: ''
@@ -110,6 +132,21 @@ export default {
         handleRemove (file) {
             let index = this.share.uploadList.indexOf(file);
             this.share.uploadList.splice(index, 1);
+        },
+        addUrl (item) {
+            item.navVisible = true;
+            this.obj = this.share.uploadList[this.share.uploadList.indexOf(item)];
+        },
+        cancelPopup () {
+            this.obj.navVisible = !this.obj.navVisible;
+        },
+        okPopup (data) {
+            this.obj.navVisible = !this.obj.navVisible;
+            this.obj.urlData = data;
+            this.obj.httpUrl = data.url;
+            if (data.id) {
+                this.obj.httpUrl += data.id;
+            }
         }
     },
     created: function () {
@@ -182,7 +219,7 @@ export default {
     {{/if}}
     {{each share.uploadList}}
         <div class="swiper-slide image-con swiperHeight">
-            <a href="{{$value.httpUrl}}" target="_self"  class="link">
+            <a href="{{$value.httpUrl}}" target="_blank"  class="link">
                 <img style="width:100%" id="{{@ share.brickid}}" src="{{$value.url}}"/>   
             </a>
             {{if $value.label!=""}}

@@ -12,17 +12,26 @@
         <Row>
           <Row>
             <col>
-            <div href="" class="btn" @click="share.navVisible = true" style="">
+            <div v-if="share.url != ''">
+              <span style="margin-right:10px;">链接到 {{share.url}}</span>
+              <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
+                编辑
+              </a>
+            </div>
+            <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
               <Icon type="plus-round"></Icon>
               添加链接
-            </div>
+            </a>
             </Col>
           </Row>
-          <Modal title="URL" v-model="share.navVisible">
+          <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
+            v-bind:isBlock="share.navVisible"></wysLink>
+          </Col>
+          <!-- <Modal title="URL" v-model="share.navVisible">
             <FormItem label="链接地址" v-if="share.navVisible">
               <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>
-          </Modal>
+          </Modal> -->
 
           <p><strong>提示</strong></p>
           <p>1. 建议图片宽度在320至640之间;</p>
@@ -196,8 +205,12 @@
 <script>
 import api from '../../../../api/wysiwyg/main.js';
 import { setTimeout } from 'timers';
+import wysLink from '../components/link.vue';
 export default {
     name: 'wys-button',
+    components: {
+        wysLink
+    },
     data () {
         return {
             share: {
@@ -209,6 +222,7 @@ export default {
                 right: 15,
                 bottom: 10,
                 left: 15,
+                urlData: {},
                 formList: [],
                 formRender: [],
                 formBottonRender: '',
@@ -294,6 +308,20 @@ export default {
                 title: '不能上传此格式的文件',
                 desc: ''
             });
+        },
+        addUrl (item) {
+            item.navVisible = true;
+        },
+        cancelPopup () {
+            this.share.navVisible = !this.share.navVisible;
+        },
+        okPopup (data) {
+            this.share.navVisible = !this.share.navVisible;
+            this.share.url = data.url;
+            this.share.urlData = data;
+            if (data.id) {
+                this.share.url += data.id;
+            }
         }
     },
     created: function () {

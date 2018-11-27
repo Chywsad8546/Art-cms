@@ -24,19 +24,22 @@
                     <Input v-model="item.content"></Input>
                 </FormItem> -->
                     <Row>
-                        <Row>
-                            <col>
-                            <div href="" class="btn" @click="item.navVisible = true" style="">
+                        <Row style="padding-bottom:10px;">
+                            <Col span="24">
+                            <div v-if="item.httpUrl != ''">
+                                <span style="margin-right:10px;">链接到 {{item.httpUrl}}</span>
+                                <a v-if="item.httpUrl != ''" @click="addUrl(item)">
+                                    编辑
+                                </a>
+                            </div>
+                            <a v-if="item.httpUrl == ''" class="btn" @click="addUrl(item)">
                                 <Icon type="plus-round"></Icon>
                                 添加链接
-                            </div>
+                            </a>
                             </Col>
                         </Row>
-                        <Modal title="URL" v-model="item.navVisible">
-                            <FormItem label="链接地址" v-if="item.navVisible">
-                                <Input v-model="item.httpUrl" placeholder="http://"></Input>
-                            </FormItem>
-                        </Modal>
+                        <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
+                            v-bind:isBlock="item.navVisible"></wysLink>
 
                     </Row>
                 </div>
@@ -138,9 +141,12 @@
 </template>
 
 <script>
-
+import wysLink from '../components/link.vue';
 export default {
     name: 'wys-pic',
+    components: {
+        wysLink
+    },
     data () {
         return {
             share: {
@@ -180,6 +186,8 @@ export default {
                     that.share.uploadList.push({
                         name: file.name,
                         url: res.data.url,
+                        httpUrl: '',
+                        urlData: {},
                         imgInformation: img.width + 'px*' + img.height + 'px',
                         navVisible: false,
                         single: false
@@ -215,6 +223,21 @@ export default {
             console.log(item);
             // this.share.uploadList[index].content = this.share.content;
             // console.log(this.share.uploadList);
+        },
+        addUrl (item) {
+            item.navVisible = true;
+            this.obj = this.share.uploadList[this.share.uploadList.indexOf(item)];
+        },
+        cancelPopup () {
+            this.obj.navVisible = !this.obj.navVisible;
+        },
+        okPopup (data) {
+            this.obj.navVisible = !this.obj.navVisible;
+            this.obj.urlData = data;
+            this.obj.httpUrl = data.url;
+            if (data.id) {
+                this.obj.httpUrl += data.id;
+            }
         }
     },
     created: function () {
