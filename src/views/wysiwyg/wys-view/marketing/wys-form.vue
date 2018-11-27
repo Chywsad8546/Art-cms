@@ -3,6 +3,7 @@
         <Tabs>
             <TabPane label="内容">
                 <Row class="navdhName">
+
                     <Col span="24">
                     <Checkbox v-model="share.isCheckSingle">隐藏表单</Checkbox>
                     </Col>
@@ -43,22 +44,51 @@
                     </div>
 
                     <Card style="width:290px;border:0px;">
-                        <a slot="title" @click="newlyForm">
+                        <a @click="newlyForm">
                             <Icon type="plus-round"></Icon>
                             新建表单
                         </a>
                         <a href="#" slot="extra" @click.prevent="changeLimit">
                             <Icon type="ios-loop-strong" :class="loading == true ? 'demo-spin-icon-load' : ''"></Icon>
                         </a>
+                        <br />
+                        <br />
+                        <a v-if="share.formRender.length>0" @click="isCheckbox = true">
+                            <Icon type="plus-round"></Icon>
+                            新建隐藏表单
+                        </a>
                     </Card>
-
                     </Col>
                 </Row>
-                <Modal title="URL">
-                    <FormItem label="链接地址">
-                        <Input v-model="share.url" placeholder="http://"></Input>
-                    </FormItem>
+
+                <Modal title="隐藏表单设置" ok-text="保存" @on-ok="formAdd('formHideValidate')" :loading="ModalLoading" v-model="isCheckbox">
+
+                    <Row style="height:50px; text-align:center;border:1px solid #ececec;" type="flex" justify="center"
+                        align="middle">
+                        <Col span="10">name</Col>
+                        <Col span="10">value</Col>
+                        <Col span="4">操作</Col>
+                    </Row>
+                    <Row v-for="item,index in share.formHideList" style="height:50px; text-align:center;border:1px solid #ececec;"
+                        type="flex" justify="center" align="middle">
+                        <Col span="10"><Input v-model="item.name" disabled style="width:120px;" placeholder="请输入表单名称"></Input></Col>
+                        <Col span="10">
+                        <Input v-model="item.value" style="width:120px;" placeholder="请输入表单名称"></Input>
+                        </Col>
+                        <Col span="4">
+                        <Icon @click="delOptionList(item)" style="font-size:20px;" type="ios-trash-outline"></Icon>
+                        </Col>
+                    </Row>
+                    <Row style="height:50px; margin-top:20px;">
+                        <Col span="24">
+                        <Button style="border:1px solid #60A3F5;color:#60A3F5" @click="addOptionList">
+                            <Icon type="plus-round"></Icon>增加一项
+                        </Button>
+                        </Col>
+                    </Row>
+
                 </Modal>
+
             </TabPane>
             <TabPane label="样式">
 
@@ -239,7 +269,8 @@ export default {
                 clickFontColor: '#FFFFFF',
                 backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;',
                 isCheckSingle: false,
-                formImgUrl: ''
+                formImgUrl: '',
+                formHideList: []
             },
             loading: false,
             foldpanelKey1: '1',
@@ -247,7 +278,10 @@ export default {
             foldpanelKey3: '1',
             foldpanelKey4: '1',
             imgViewUrl: '',
-            visible: false
+            visible: false,
+            isCheckbox: false,
+            formNum: 0,
+            ModalLoading: true
         };
     },
     methods: {
@@ -343,6 +377,27 @@ export default {
                 title: '不能上传此格式的文件',
                 desc: ''
             });
+        },
+        delOptionList (item) {
+            let index = this.share.formHideList.indexOf(item);
+            this.share.formHideList.splice(index, 1);
+        },
+        addOptionList () {
+            this.share.formHideList.push({
+                name: this.create_name(),
+                value: ''
+            });
+        },
+        formAdd () {
+            this.ModalLoading = false;
+            this.isCheckbox = false;
+        },
+        create_name () {
+            if (this.formNum < this.share.formRender.length) {
+                this.formNum = this.share.formRender.length;
+            }
+            this.formNum = this.formNum + 1;
+            return 'formName_' + this.formNum; // 生成变量名
         },
         init () {
             this.getDiyFormStructure();
@@ -442,7 +497,7 @@ export default {
                     {{if $value.type=='textarea'}}
                         <div class="textarea-group">
                             <span class="textarea-addon warn-star" style="color: rgb(128, 128, 128);">{{$value.label}}</span> 
-                            <textarea required="{{$value.isMandatory}}" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%"></textarea> 
+                            <textarea required="{{$value.isMandatory}}" rows="5" cols="50" name="{{$value.name}}" placeholder="" style="width:100%;border: 1px solid #ccc;"></textarea> 
                         </div>
                     {{else}}
                     <div validate="name" class="input-group-i">
@@ -496,6 +551,12 @@ export default {
                         <button type="{{@ share.formBottonRender.optionArr[0].name }}" class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">{{@ share.formBottonRender.label }}</button>
                 </div>
             {{/if}}
+
+            <% for(j=0 ; j<share.formHideList.length ; j++){%>
+                  <input type="hidden" name="<%=share.formHideList[j].name%>" value="<%=share.formHideList[j].value%>">
+            <%}%>
+
+
     </form>
 </div>
 </div>
@@ -517,10 +578,9 @@ $().ready(function() {
                         url: "/cmsapi/cmsapi/diyForm/saveDiyFormData" ,//url
                         data: JSON.stringify(ajaxJson),
                         success: function (result) {
-                            if (result.resultCode == 200) {
-                                alert("SUCCESS");
-                            }
-                            ;
+                           if(result.code == "success"){
+                             alert("提交成功");
+                           }
                         },
                         error : function() {
                             alert("异常！");

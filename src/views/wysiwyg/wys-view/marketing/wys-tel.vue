@@ -261,20 +261,6 @@ export default {
                 this.share.backImgStyle = 'background-size: auto; background-position: 50% 0%; background-repeat: no-repeat;';
             }
         },
-        formSelectClick (value) {
-            this.share.formList.forEach(item => {
-                if (item._id === value) {
-                    this.share.formRender = JSON.parse(item.form);
-                    this.share.formBottonRender = JSON.parse(item.formBotton);
-                }
-            });
-        },
-        getDiyFormStructure () {
-            api.getDiyFormStructure().then(response => {
-                this.share.formList = response.data.data;
-                this.loading = false;
-            });
-        },
         changeLimit () {
             this.loading = true;
             var _self = this;
@@ -299,7 +285,6 @@ export default {
             });
         },
         init () {
-            this.getDiyFormStructure();
         }
     },
     created: function () {

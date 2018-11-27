@@ -99,7 +99,7 @@ export default {
             columns: [
                 {
                     key: 'id',
-                    title: '站点id',
+                    title: '专题id',
                     width: 100
                 },
                 {
@@ -119,11 +119,6 @@ export default {
                                 },
                                 style: {
                                     marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.show(params.index);
-                                    }
                                 }
                             }, params.row.status === 0 ? '未上线' : '已上线')
                         ]);
@@ -250,9 +245,12 @@ export default {
             });
         },
         addModeButton () {
-            this.$router.push({
-                name: 'wysiwygmain', query: { siteid: this.$route.query.siteid }
-            });
+            let routeData = this.$router.resolve({ path: '/wysiwyg', query: { siteid: this.$route.query.siteid } });
+            window.open(routeData.href, '_blank');
+
+            // this.$router.push({
+            //     name: 'wysiwygmain', query: { siteid: this.$route.query.siteid }
+            // });
         },
         addNewsChannel () {
             this.$refs['addNewsChannelModalform'].validate((valid) => {

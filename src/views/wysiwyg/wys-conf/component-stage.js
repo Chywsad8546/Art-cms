@@ -236,7 +236,6 @@ export default {
          */
         dom.click(function(event) {
             var tmpid = $(this).prop('id');
-
             if (
                 that.currentComponent &&
                 tmpid != that.currentComponent.component_id

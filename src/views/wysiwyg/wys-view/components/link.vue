@@ -142,18 +142,6 @@ export default {
                 returnUrl.url = this.$refs[tabsValue].model.url;
             }
             return returnUrl;
-            // return this.tabsValue.url;
-            // console.log(this.formValidate.url);
-            // if (tabsValue === 'formValidate') {
-            //     return this.formValidate.url;
-            // }
-
-            // if (tabsValue === 'formValidate1') {
-            //     return this.formValidate1.url;
-            // }
-            // if (tabsValue === 'formValidate2') {
-            //     return this.formValidate2.url + this.formValidate2.id;
-            // }
         }
     },
     created: function () {

@@ -32,11 +32,6 @@
                     </Row>
                     <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
                         v-bind:isBlock="item.navVisible"></wysLink>
-                    <!-- <Modal title="URL" v-model="item.navVisible">
-                        <FormItem label="链接地址" v-if="item.navVisible">
-                            <Input v-model="item.url"></Input>
-                        </FormItem>
-                    </Modal> -->
                 </div>
                 <Button style="width:280px; margin-top:20px;" @click="addNaviPush(item)">
                     <Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加
