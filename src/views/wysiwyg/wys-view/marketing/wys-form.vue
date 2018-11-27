@@ -4,6 +4,28 @@
             <TabPane label="内容">
                 <Row class="navdhName">
                     <Col span="24">
+                    <Checkbox v-model="share.isCheckSingle">隐藏表单</Checkbox>
+                    </Col>
+                    <Col span="24" v-if="share.formImgUrl && share.isCheckSingle === true">
+                    <div class="demo-upload-list">
+                        <img :src="share.formImgUrl">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleView(share.formImgUrl)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(2)"></Icon>
+                        </div>
+                    </div>
+                    </Col>
+                    <Col span="24">
+                    <Upload v-if="share.isCheckSingle === true" ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                        :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadFormSuccess"
+                        :on-format-error="uploadFormFormatError" :show-upload-list="false" style="margin-top:10px;">
+                        <Button style="width:270px;" type="ghost">添加图片</Button>
+                    </Upload>
+                    </Col>
+                </Row>
+
+                <Row class="navdhName">
+                    <Col span="24">
                     <Select v-model="share.formSelect" @on-change="formSelectClick">
                         <Option v-for="item in share.formList" :value="item._id" :key="item._id">
                             {{item.title}}
@@ -87,7 +109,7 @@
                                     <img :src="share.Imgurl">
                                     <div class="demo-upload-list-cover">
                                         <Icon type="ios-eye-outline" @click.native="handleView(share.Imgurl)"></Icon>
-                                        <Icon type="ios-trash-outline" @click.native="handleRemove()"></Icon>
+                                        <Icon type="ios-trash-outline" @click.native="handleRemove(1)"></Icon>
                                     </div>
                                 </div>
                                 </Col>
@@ -198,14 +220,14 @@ export default {
                 formSelect: '',
                 navVisible: false,
                 url: '',
-                top: 10,
+                top: 30,
                 right: 15,
-                bottom: 10,
+                bottom: 30,
                 left: 15,
                 formList: [],
                 formRender: [],
                 formBottonRender: '',
-                backColor: '',
+                backColor: '#FFFFFF',
                 clickColor: '#F85959',
                 fontColor: 'gray',
                 Imgurl: '',
@@ -215,7 +237,9 @@ export default {
                 clickHeight: 40,
                 radius: 5,
                 clickFontColor: '#FFFFFF',
-                backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;'
+                backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;',
+                isCheckSingle: false,
+                formImgUrl: ''
             },
             loading: false,
             foldpanelKey1: '1',
@@ -231,8 +255,12 @@ export default {
             let routeData = this.$router.resolve({ path: '/marketingMain/newlybuildForm' });
             window.open(routeData.href, '_blank');
         },
-        handleRemove () {
-            this.share.Imgurl = '';
+        handleRemove (type) {
+            if (type === 1) {
+                this.share.Imgurl = '';
+            } else {
+                this.share.formImgUrl = '';
+            }
         },
         handleView (imgUrl) {
             this.imgViewUrl = imgUrl;
@@ -283,6 +311,22 @@ export default {
             setTimeout(function () {
                 _self.init();
             }, 500);
+        },
+        uploadFormSuccess (res, file) {
+            if (res.code === 'success') {
+                this.share.formImgUrl = res.data.url;
+            } else {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: res.data.url
+                });
+            }
+        },
+        uploadFormFormatError (file) {
+            this.$Notice.error({
+                title: '不能上传此格式的文件',
+                desc: ''
+            });
         },
         uploadSuccess (res, file) {
             if (res.code === 'success') {
@@ -340,7 +384,6 @@ export default {
 .demo-upload-list {
   display: inline-block;
   width: 279px;
-  height: 176px;
   text-align: center;
   line-height: 176px;
   border: 1px solid transparent;
@@ -378,12 +421,20 @@ export default {
 
 {{if share.formRender.length==0}}
 <div class="formlEmpty">
-<img src="http://wap-qn.toutiaofangchan.com/adideas/ea1d511c21b3422596d73093ddff3d6c.png"/>
+<img  src="{{@share.formImgUrl == '' ? 'http://wap-qn.toutiaofangchan.com/adideas/ea1d511c21b3422596d73093ddff3d6c.png' : share.formImgUrl}} "/>
 </div>
 {{else}}
-<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;
-  <%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);
+
+<div class="formlEmpty"  style="display:{{@share.isCheckSingle == true ? 'block' : 'none'}}">
+    <img id="{{@share.formImgUrl == '' ? '' : 'imgRelationForm'}}" src="{{@share.formImgUrl == '' ? 'http://wap-qn.toutiaofangchan.com/adideas/ea1d511c21b3422596d73093ddff3d6c.png' : share.formImgUrl}} "/>
+</div>
+<div class="pop-form">
+</div>
+<div class="formContent" style="display:{{@share.isCheckSingle == true ? 'none' : 'block'}}">
+<div  style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;
+  <%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>); 
 ">
+<img style="display:{{@share.isCheckSingle == true ? 'block' : 'none'}}" src="http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/195f723db6c745328c1eb29f307303de/pop-form-close.png" class="close-pop" alt="关闭">
 <div  class="form-piece label-style">
     <form id="Form01" action="" method="post" class="form-group-i input-style2"> 
             {{each share.formRender}}
@@ -448,6 +499,7 @@ export default {
     </form>
 </div>
 </div>
+</div>
 {{/if}} 
 </stage-template>
 <stage-javascript type="text/javascript">
@@ -462,7 +514,7 @@ $().ready(function() {
                         type: "POST",//方法类型
                         contentType: "application/json",
                         dataType: "json",//预期服务器返回的数据类型
-                        url: "/cmsapi/diyForm/saveDiyFormData" ,//url
+                        url: "/cmsapi/cmsapi/diyForm/saveDiyFormData" ,//url
                         data: JSON.stringify(ajaxJson),
                         success: function (result) {
                             if (result.resultCode == 200) {
@@ -494,6 +546,19 @@ $().ready(function() {
                     <%}%>
                 }
             });
+
+            $t.find("#imgRelationForm").on("click",function(){
+                $t.find(".pop-form").show();
+                $t.find(".formContent").show();
+                var contentHeight = $t.find(".formContent").height();
+                $t.find(".formContent").attr("style","height:"+contentHeight+"px;width:100%; background: <%= share.backColor %>; margin-top:-"+contentHeight/2+"px; position: fixed; top:50%;z-index:60;");
+            })
+
+             $t.find(".close-pop").on("click",function(){
+                $t.find(".pop-form").hide();
+                $t.find(".formContent").hide();
+             })
+
     },300)
 });
 $.fn.serializeJson=function(){ 
@@ -518,6 +583,12 @@ $.fn.serializeJson=function(){
 <stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/b82a096a385a4cf88633395c97f7f80b.js</stage-javascript-import>
 
 <stage-css>
+.close-pop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+}
 .form-piece .checkbox-addon, .form-piece .city-addon, .form-piece .date-addon, .form-piece .gender-addon, .form-piece .input-group-i .input-group-addon-i, .form-piece .radio-addon, .form-piece .select-addon, .form-piece .textarea-addon {
     font-size: 12px;
     text-align: center;
@@ -634,8 +705,15 @@ $.fn.serializeJson=function(){
     color: red;
 }
 .formlEmpty {
-    height: 100px;
-    line-height:100px;
     text-align: center;
+}
+.pop-form {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 50;
+    background-color: rgba(0,0,0,.7);
 }
 </stage-css>

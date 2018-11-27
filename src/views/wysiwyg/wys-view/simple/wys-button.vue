@@ -197,7 +197,7 @@
 import api from '../../../../api/wysiwyg/main.js';
 import { setTimeout } from 'timers';
 export default {
-    name: 'wys-img',
+    name: 'wys-button',
     data () {
         return {
             share: {

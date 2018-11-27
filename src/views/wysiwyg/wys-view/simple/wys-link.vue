@@ -13,21 +13,23 @@
                     <Col span="24">
                     <div v-if="share.url != ''">
                         <span style="margin-right:10px;">链接到 {{share.url}}</span>
-                        <a v-if="share.url != ''" @click="share.navVisible = true">
+                        <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
                             编辑
                         </a>
                     </div>
-                    <a v-if="share.url == ''" class="btn" @click="share.navVisible = true">
+                    <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
                         <Icon type="plus-round"></Icon>
                         添加链接
                     </a>
+                    <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
+                        v-bind:isBlock="share.navVisible"></wysLink>
                     </Col>
                 </Row>
-                <Modal title="URL" v-model="share.navVisible">
+                <!-- <Modal title="URL" v-model="share.navVisible">
                     <FormItem label="链接地址" v-if="share.navVisible">
                         <Input v-model="share.url" placeholder="http://"></Input>
                     </FormItem>
-                </Modal>
+                </Modal> -->
             </TabPane>
             <TabPane label="样式">
                 <!-- <RadioGroup v-model="share.navVertical" vertical>
@@ -63,20 +65,25 @@
                 </FormItem>
             </TabPane>
         </Tabs>
+
     </Form>
 
 </template>
 
 <script>
-
+import wysLink from '../components/link.vue';
 export default {
     name: 'wys-img',
+    components: {
+        wysLink
+    },
     data () {
         return {
             share: {
                 name: '链接文字',
                 navVisible: false,
                 url: '',
+                urlData: '',
                 top: 10,
                 right: 15,
                 bottom: 10,
@@ -94,9 +101,21 @@ export default {
         },
         addNaviPush () {
             this.share.navigatList.push({ name: '新导航', url: '', navVisible: false });
+        },
+        cancelPopup () {
+            this.share.navVisible = !this.share.navVisible;
+        },
+        okPopup (data) {
+            this.share.navVisible = !this.share.navVisible;
+            this.share.url = data.url;
+            this.share.urlData = data;
+            if (data.id) {
+                this.share.url += data.id;
+            }
         }
     },
     created: function () {
+        console.log(this.share);
         // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
     },
     mounted () {

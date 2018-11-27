@@ -17,7 +17,7 @@
                         <Input v-model="share.httpUrl"></Input>
                     </FormItem>
                 </div>
-                <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" action="/cmsapi/sys/uploadVideo"
+                <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" action="/cmsapi/cmsapi/sys/uploadVideo"
                     :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost">添加视频</Button>
@@ -65,7 +65,7 @@
 <script>
 import apiVoid from '../../../../api/news/index.js';
 export default {
-    name: 'wys-img',
+    name: 'wys-video',
     data () {
         return {
             share: {

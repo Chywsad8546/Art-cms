@@ -89,7 +89,7 @@
 <script>
 
 export default {
-    name: 'wys-img',
+    name: 'wys-imgAtlas',
     data () {
         return {
             share: {

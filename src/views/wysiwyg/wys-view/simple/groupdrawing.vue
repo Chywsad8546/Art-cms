@@ -53,7 +53,7 @@
 
 <script>
 export default {
-    name: 'wys-img',
+    name: 'wys-groupdrawing',
     data () {
         return {
             share: {

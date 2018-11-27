@@ -140,7 +140,7 @@
 <script>
 
 export default {
-    name: 'wys-img',
+    name: 'wys-pic',
     data () {
         return {
             share: {
