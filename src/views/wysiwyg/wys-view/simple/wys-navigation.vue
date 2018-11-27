@@ -20,7 +20,7 @@
                         <Col span="24">
                         <div v-if="item.url != ''">
                             <span style="margin-right:10px;">链接到 {{item.url}}</span>
-                            <a v-if="item.url != ''" @click="item.navVisible = true">
+                            <a v-if="item.url != ''" @click="addUrl(item)">
                                 编辑
                             </a>
                         </div>
@@ -30,12 +30,13 @@
                         </a>
                         </Col>
                     </Row>
-
-                    <Modal title="URL" v-model="item.navVisible">
+                    <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
+                        v-bind:isBlock="item.navVisible"></wysLink>
+                    <!-- <Modal title="URL" v-model="item.navVisible">
                         <FormItem label="链接地址" v-if="item.navVisible">
                             <Input v-model="item.url"></Input>
                         </FormItem>
-                    </Modal>
+                    </Modal> -->
                 </div>
                 <Button style="width:280px; margin-top:20px;" @click="addNaviPush(item)">
                     <Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加
@@ -93,13 +94,14 @@ export default {
                 imgRight: 0,
                 imgBottom: 0,
                 imgLeft: 0,
+                obj: {},
                 navVertical: 'navitem0',
                 backColor: '#F85A58',
                 navigatList: [
-                    { name: '导航1', url: '', navVisible: false },
-                    { name: '导航2', url: '', navVisible: false },
-                    { name: '导航3', url: '', navVisible: false },
-                    { name: '导航4', url: '', navVisible: false }
+                    { name: '导航1', url: '', navVisible: false, urlData: {} },
+                    { name: '导航2', url: '', navVisible: false, urlData: {} },
+                    { name: '导航3', url: '', navVisible: false, urlData: {} },
+                    { name: '导航4', url: '', navVisible: false, urlData: {} }
                 ]
             }
         };
@@ -111,15 +113,21 @@ export default {
         },
         addUrl (item) {
             item.navVisible = true;
+            this.obj = this.share.navigatList[this.share.navigatList.indexOf(item)];
         },
         addNaviPush () {
-            this.share.navigatList.push({ name: '新导航', url: '', navVisible: false });
+            this.share.navigatList.push({ name: '新导航', url: '', navVisible: false, urlData: {} });
         },
         cancelPopup () {
-
+            this.obj.navVisible = !this.obj.navVisible;
         },
-        okPopup () {
-
+        okPopup (data) {
+            this.obj.navVisible = !this.obj.navVisible;
+            this.obj.urlData = data;
+            this.obj.url = data.url;
+            if (data.id) {
+                this.obj.url += data.id;
+            }
         }
     },
     created: function () {
@@ -127,9 +135,7 @@ export default {
     },
     mounted () {
         this.$dragging.$on('dragged', ({ value }) => {
-            console.log(value.item);
-            console.log(value.list);
-            console.log(value.group);
+
         });
     }
 };

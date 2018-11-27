@@ -157,10 +157,14 @@ export default {
         }
     },
     created: function () {
-        this.tabsValue = this.createUrl.urlType;
+        if (this.createUrl.urlType) {
+            this.tabsValue = this.createUrl.urlType;
+        }
     },
     mounted () {
-        this.$refs[this.tabsValue].model.url = this.createUrl.url;
+        if (this.createUrl.url) {
+            this.$refs[this.tabsValue].model.url = this.createUrl.url;
+        }
         if (this.createUrl.id) {
             this.$refs[this.tabsValue].model.id = this.createUrl.id;
         }

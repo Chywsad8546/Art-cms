@@ -83,7 +83,7 @@ export default {
                 name: '链接文字',
                 navVisible: false,
                 url: '',
-                urlData: '',
+                urlData: {},
                 top: 10,
                 right: 15,
                 bottom: 10,
