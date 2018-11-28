@@ -6,8 +6,16 @@ export default {
             share: {}
         };
     },
-    created: function() {
-        console.log('created');
+    created: function() {},
+    activated: function() {
+        console.log('activated start ', this.$vnode.key);
+        console.log(
+            'component_stage.stageComponentsDict',
+            component_stage.stageComponentsDict
+        );
+        // if (this.wys_isdefault_dont_getdata) {
+        //     return;
+        // }
         var dbdata = component_stage.stageComponentsDict[this.$vnode.key];
         for (var key in dbdata.data) {
             try {
@@ -31,8 +39,7 @@ export default {
                 }
             );
         }
-    },
-    activated: function() {
+        // console.log('activated render', this.share, this.$vnode.key, true);
         component_stage.render(this.share, this.$vnode.key, true);
         console.log('activated');
     }

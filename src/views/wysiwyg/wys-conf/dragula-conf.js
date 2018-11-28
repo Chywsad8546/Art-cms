@@ -1,29 +1,37 @@
 import stage from './component-stage';
 export default {
     default: {
-        isContainer: function (el) {
+        isContainer: function(el) {
+            console.log($(el));
             if ($(el).is('[wys-container]')) {
                 return true;
             }
             return false; // only elements in drake.containers will be taken into account
         },
-        moves: function (el, source, handle, sibling) {
+        moves: function(el, source, handle, sibling) {
             // todo 判断是不是拖拽按钮
-            if($(source).attr('id') != 'wysiwyg_componentbox'){
+            if ($(source).attr('id') != 'wysiwyg_componentbox') {
                 return $(handle).hasClass('wysidrag');
             }
             return true; // elements are always draggable by default
         },
-        accepts: function (el, target, source, sibling) {
+        accepts: function(el, target, source, sibling) {
             // console.log($(target).attr("id"))
             if ($(target).attr('id') == 'wysiwyg_componentbox') {
                 return false;
             }
             // todo 子容器是否接受这个组件
             if ($(target).attr('id') != 'wysiwyg_stage') {
-                var editor = stage.canUseEditors.getComponent($(target).closest('[editorregid]').eq(0).attr('editorregid'));
-                if(editor.accepts){
-                    return editor.accepts.indexOf($(el).attr('editorregid'))>-1;
+                var editor = stage.canUseEditors.getComponent(
+                    $(target)
+                        .closest('[editorregid]')
+                        .eq(0)
+                        .attr('editorregid')
+                );
+                if (editor.accepts) {
+                    return (
+                        editor.accepts.indexOf($(el).attr('editorregid')) > -1
+                    );
                 }
             }
 
@@ -31,15 +39,14 @@ export default {
             //     return $(el).attr('editorregid')=='wys_link';
             // }
 
-
             // console.log(el)
             return true; // elements can be dropped in any of the `containers` by default
         },
-        invalid: function (el, handle) {
+        invalid: function(el, handle) {
             return false; // don't prevent any drags from initiating by default
         },
         direction: 'vertical', // Y axis is considered when determining where an element would be dropped
-        copy: function (el, source) {
+        copy: function(el, source) {
             return $(source).attr('id') == 'wysiwyg_componentbox';
         }, // elements are moved by default, not copied
         copySortSource: false, // elements in copy-source containers can be reordered

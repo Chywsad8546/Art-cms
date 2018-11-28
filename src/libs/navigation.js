@@ -1,5 +1,4 @@
-
-function matches (pattern, key) {
+function matches(pattern, key) {
     if (Array.isArray(pattern)) {
         return pattern.indexOf(key) > -1;
     } else if (typeof pattern === 'string') {
@@ -14,42 +13,46 @@ export default {
     props: {
         include: {
             type: Array,
-            default: function () {
+            default: function() {
                 return [];
             }
         }
     },
-    data: () => ({
-    }),
+    data: () => ({}),
     computed: {},
     watch: {
-        include (val) {
+        include(val) {
             for (const key in this.cache) {
-                const cachedNode = this.cache[key]
+                const cachedNode = this.cache[key];
                 if (cachedNode) {
                     if (!matches(val, key)) {
-                        cachedNode.componentInstance.$destroy()
+                        cachedNode.componentInstance.$destroy();
                         delete this.cache[key];
                     }
                 }
             }
         }
     },
-    created () {
+    created() {
         this.cache = {};
     },
-    destroyed () {
+    destroyed() {
         for (const key in this.cache) {
             const vnode = this.cache[key];
             vnode && vnode.componentInstance.$destroy();
         }
     },
-    render () {
+    render() {
         const vnode = this.$slots.default ? this.$slots.default[0] : null;
+        console.log('vnode', vnode);
         if (vnode) {
             // console.log('navigation', vnode.key);
-            if (this.include && this.include.length > 0 && (!vnode.key || !matches(this.include, vnode.key))) {
-                // console.log('navigation','不缓存')
+            if (
+                this.include &&
+                this.include.length > 0 &&
+                (!vnode.key || !matches(this.include, vnode.key))
+            ) {
+                // console.log('navigation', '不缓存');
                 return vnode;
             }
             // vnode.key = vnode.key || (vnode.isComment
@@ -76,13 +79,13 @@ export default {
             const key = vnode.key;
 
             if (this.cache[key]) {
-                // console.log('navigation','取缓存')
+                // console.log('navigation', '取缓存');
                 vnode.componentInstance = this.cache[key].componentInstance;
                 // make current key freshest
                 // remove(keys, key)
                 // keys.push(key)
             } else {
-                // console.log('navigation','重新缓存')
+                // console.log('navigation', '重新缓存');
                 this.cache[key] = vnode;
                 // keys.push(key)
                 // prune oldest entry
@@ -94,5 +97,4 @@ export default {
         }
         return vnode;
     }
-
 };

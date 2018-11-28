@@ -1,38 +1,38 @@
 <template>
-    <Form :label-width="60" class="imgWidthCont">
-        <Tabs>
-            <TabPane label="内容">
-                <Row class="navdhName">
-                    <Col span="24">
-                    <FormItem label="名称">
-                        <Input v-model="share.name"></Input>
-                    </FormItem>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span="24">
-                    <div v-if="share.url != ''">
-                        <span style="margin-right:10px;">链接到 {{share.url}}</span>
-                        <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
-                            编辑
-                        </a>
-                    </div>
-                    <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
-                        <Icon type="plus-round"></Icon>
-                        添加链接
-                    </a>
-                    <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
-                        v-bind:isBlock="share.navVisible"></wysLink>
-                    </Col>
-                </Row>
-                <!-- <Modal title="URL" v-model="share.navVisible">
+  <Form :label-width="60" class="imgWidthCont">
+    <Tabs>
+      <TabPane label="内容">
+        <Row class="navdhName">
+          <Col span="24">
+          <FormItem label="名称">
+            <Input v-model="share.name"></Input>
+          </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="24">
+          <div v-if="share.url != ''">
+            <span style="margin-right:10px;">链接到 {{share.url}}</span>
+            <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
+              编辑
+            </a>
+          </div>
+          <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
+            <Icon type="plus-round"></Icon>
+            添加链接
+          </a>
+          <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
+            v-bind:isBlock="share.navVisible"></wysLink>
+          </Col>
+        </Row>
+        <!-- <Modal title="URL" v-model="share.navVisible">
                     <FormItem label="链接地址" v-if="share.navVisible">
                         <Input v-model="share.url" placeholder="http://"></Input>
                     </FormItem>
                 </Modal> -->
-            </TabPane>
-            <TabPane label="样式">
-                <!-- <RadioGroup v-model="share.navVertical" vertical>
+      </TabPane>
+      <TabPane label="样式">
+        <!-- <RadioGroup v-model="share.navVertical" vertical>
                 <Radio label="navitem0" style="height:50px;">
                     <img src="http://wap-qn.toutiaofangchan.com/adideas/52b561fe138a4bb4a3161e8c3a78ec01.png"/>
                 </Radio>
@@ -46,34 +46,34 @@
                     <img src="http://wap-qn.toutiaofangchan.com/adideas/534d8cb8bbfa448cb0ca3a7de65f73f6.png"/>
                 </Radio> 
             </RadioGroup> -->
-                <Row>
-                    <Col span="24">
-                    边距
-                    </Col>
-                </Row>
-                <FormItem label="顶">
-                    <Slider v-model="share.top" show-input></Slider>
-                </FormItem>
-                <FormItem label="右">
-                    <Slider v-model="share.right" show-input></Slider>
-                </FormItem>
-                <FormItem label="底">
-                    <Slider v-model="share.bottom" show-input></Slider>
-                </FormItem>
-                <FormItem label="左">
-                    <Slider v-model="share.left" show-input></Slider>
-                </FormItem>
-            </TabPane>
-        </Tabs>
+        <Row>
+          <Col span="24">
+          边距
+          </Col>
+        </Row>
+        <FormItem label="顶">
+          <Slider v-model="share.top" show-input></Slider>
+        </FormItem>
+        <FormItem label="右">
+          <Slider v-model="share.right" show-input></Slider>
+        </FormItem>
+        <FormItem label="底">
+          <Slider v-model="share.bottom" show-input></Slider>
+        </FormItem>
+        <FormItem label="左">
+          <Slider v-model="share.left" show-input></Slider>
+        </FormItem>
+      </TabPane>
+    </Tabs>
 
-    </Form>
+  </Form>
 
 </template>
 
 <script>
 import wysLink from '../components/link.vue';
 export default {
-    name: 'wys-img',
+    name: 'wys-link',
     components: {
         wysLink
     },
@@ -116,11 +116,11 @@ export default {
     },
     created: function () {
         console.log(this.share);
-        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+    // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
     },
     mounted () {
-        // console.log(this.$refs.upload.fileList);
-        // this.uploadList = this.$refs.upload.fileList;
+    // console.log(this.$refs.upload.fileList);
+    // this.uploadList = this.$refs.upload.fileList;
     }
 };
 </script>

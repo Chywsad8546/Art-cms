@@ -1,9 +1,9 @@
 <style lang="less">
-@import '../main.less';
-@import '../../styles/common.less';
-@import '../../styles/table.less';
-@import '../../styles/css.less';
-@import '../../../node_modules/dragula/dist/dragula.css';
+@import "../main.less";
+@import "../../styles/common.less";
+@import "../../styles/table.less";
+@import "../../styles/css.less";
+@import "../../../node_modules/dragula/dist/dragula.css";
 img {
   max-width: 100%;
   height: auto;
@@ -36,7 +36,7 @@ img {
   margin: 0 !important;
   z-index: 9999 !important;
   opacity: 1;
-  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
 }
 .gu-hide {
@@ -50,7 +50,7 @@ img {
 }
 .gu-transit {
   opacity: 1;
-  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
 }
 .wys-main {
@@ -286,88 +286,88 @@ img {
 </style>
 
 <template>
-    <div style="height:100%">
-        <div class="wys-header">
-            <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
-            </div>
-            <div class="wys-header-content"></div>
-        </div>
-        <div id="main" class="layout edit">
-            <div class="wys-menu-left">
-                <div id="wysiwyg_componentbox" wys-container>
-                    <div class="wysiwyg-contitle">内容模块</div>
-                    <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents" v-if="!item.hide" :editorregid="item.id">
-                        <img :src="item.icon" />
-                        <p>{{item.title}}</p>
-                    </div>
-                </div>
-            </div>
-            <section id="middle" class="workarea-main">
-                <div class="operate-bar">
-                    <div class="operate-bar-wrap">
-                        <a @click="runBack()" class="btn">
-                            <a class="return_home">返回站点列表</a>
-                        </a>
-                        <span class="btn" @click="fbClick(0)">
-                            <Icon type="compose"></Icon><span>保存</span>
-                        </span>
-                        <span class="btn" @click="previewClick()">
-                            <Icon type="ios-eye"></Icon><span>预览</span>
-                        </span>
-                        <span class="btn" @click="fbClick(1)">
-                            <Icon type="ios-color-filter"></Icon><span>发布</span>
-                        </span>
-                    </div>
-                </div>
-                <div class="workarea-stage">
-                    <div class="phone-box">
-                        <div class="phone-wrapper" style="width: 375px; height: 668px;">
-                            <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png" /></div>
-
-                            <div class="screen-border">
-                                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <div id="right" class="wys-edit-right">
-                <div class="wysiwyg_rightScroll">
-                    <Form ref="formMainValidate" :model="formMain" :rules="ruleMainValidate" :label-width="80">
-                        <FormItem label="标题" prop="title">
-                            <Input v-model="formMain.title" placeholder="请填写标题"></Input>
-                        </FormItem>
-
-                    </Form>
-                    <navigation :include="includeIds">
-                        <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
-                    </navigation>
-                </div>
-            </div>
-        </div>
-
-        <Modal v-model="qrcodeModal" width="400">
-
-            <p slot="header" style="color:#f60;text-align:center">
-                <span></span>
-            </p>
-            <Tabs type="card">
-                <TabPane label="WEB预览">
-                    <div style="text-align:center">
-                        <p class="qrcode" style="width:200px; margin:0 auto;" id="qrcode10"></p>
-                    </div>
-                    <div style="margin-top:20px;">
-                        <span>专题URL</span>
-                        <Input v-model="siteUrl" placeholder="" style="width: 300px"></Input>
-                    </div>
-                </TabPane>
-            </Tabs>
-
-            <div slot="footer">
-            </div>
-        </Modal>
+  <div style="height:100%">
+    <div class="wys-header">
+      <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
+      </div>
+      <div class="wys-header-content"></div>
     </div>
+    <div id="main" class="layout edit">
+      <div class="wys-menu-left">
+        <div id="wysiwyg_componentbox" wys-container>
+          <div class="wysiwyg-contitle">内容模块</div>
+          <div class="wysiwyg-leftIcon" v-for="(item, index) in lefcomponents" v-if="!item.hide" :editorregid="item.id">
+            <img :src="item.icon" />
+            <p>{{item.title}}</p>
+          </div>
+        </div>
+      </div>
+      <section id="middle" class="workarea-main">
+        <div class="operate-bar">
+          <div class="operate-bar-wrap">
+            <a @click="runBack()" class="btn">
+              <a class="return_home">返回站点列表</a>
+            </a>
+            <span class="btn" @click="fbClick(0)">
+              <Icon type="compose"></Icon><span>保存</span>
+            </span>
+            <span class="btn" @click="previewClick()">
+              <Icon type="ios-eye"></Icon><span>预览</span>
+            </span>
+            <span class="btn" @click="fbClick(1)">
+              <Icon type="ios-color-filter"></Icon><span>发布</span>
+            </span>
+          </div>
+        </div>
+        <div class="workarea-stage">
+          <div class="phone-box">
+            <div class="phone-wrapper" style="width: 375px; height: 668px;">
+              <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png" /></div>
+
+              <div class="screen-border">
+                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div id="right" class="wys-edit-right">
+        <div class="wysiwyg_rightScroll">
+          <Form ref="formMainValidate" :model="formMain" :rules="ruleMainValidate" :label-width="80">
+            <FormItem label="标题" prop="title">
+              <Input v-model="formMain.title" placeholder="请填写标题"></Input>
+            </FormItem>
+
+          </Form>
+          <navigation v-if="currentShow" :include="includeIds">
+            <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
+          </navigation>
+        </div>
+      </div>
+    </div>
+
+    <Modal v-model="qrcodeModal" width="400">
+
+      <p slot="header" style="color:#f60;text-align:center">
+        <span></span>
+      </p>
+      <Tabs type="card">
+        <TabPane label="WEB预览">
+          <div style="text-align:center">
+            <p class="qrcode" style="width:200px; margin:0 auto;" id="qrcode10"></p>
+          </div>
+          <div style="margin-top:20px;">
+            <span>专题URL</span>
+            <Input v-model="siteUrl" placeholder="" style="width: 300px"></Input>
+          </div>
+        </TabPane>
+      </Tabs>
+
+      <div slot="footer">
+      </div>
+    </Modal>
+  </div>
 </template>
 <script>
 import navigation from '@/libs/navigation';
@@ -387,6 +387,7 @@ export default {
             wysiwyg_prevent_mixin_isEditorRoot: true,
             includeIds: [],
             lefcomponents: GlobalStage.canUseEditors.coms,
+            currentShow: false,
             currentEditor: wys_default,
             currentEditorKey: 'wys_default',
             qrcodeModal: false,
@@ -455,7 +456,8 @@ export default {
                 lastsavehtml = editor.strhtml;
             }
             // 初始化建站引擎
-            GlobalStage.init(that, function (stageComponent) {
+            GlobalStage.init(that, function (stageComponent, show) {
+                that.currentShow = show;
                 that.currentEditor = stageComponent.editor.component;
                 that.currentEditorKey = stageComponent.component_id;
                 if (!util.oneOf(that.currentEditorKey, that.includeIds)) {
@@ -468,8 +470,6 @@ export default {
             var dra = dragula([document.querySelector('#wysiwyg_componentbox'), document.querySelector('#wysiwyg_stage')], dragula_conf.default);
             window.__drag = dra;
             dra.on('cloned', function (clone, original, type) {
-                // console.log('clone',clone)
-                console.log(!$(clone).hasClass('gu-mirror'));
                 if (!$(clone).hasClass('gu-mirror')) {
                     $(clone).removeClass();
                     $(clone).addClass('wysi_hold');
@@ -487,6 +487,7 @@ export default {
             });
             dra.on('drop', function (el, target, source, sibling) {
                 // if ($(target).attr("id")=='wysiwyg_stage' && $(source).attr("id")=='wysiwyg_componentbox' ) {
+
                 if (target && $(target).attr('id') != 'wysiwyg_componentbox' && $(source).attr('id') == 'wysiwyg_componentbox') {
                     var editorregid = $(el).attr('editorregid');
                     GlobalStage.create(editorregid, true);
@@ -498,10 +499,10 @@ export default {
         addParameter () {
             var html = '';
             html += '<html lang="zh-CN"><head>' +
-                '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
-                '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
-                '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
-                '</head><body style="max-width:640px;margin:0 auto;">';
+        '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
+        '</head><body style="max-width:640px;margin:0 auto;">';
             var stagereslut = GlobalStage.save();
 
             html += stagereslut.html;

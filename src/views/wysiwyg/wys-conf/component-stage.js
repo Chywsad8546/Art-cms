@@ -213,7 +213,12 @@ export default {
             );
             deletebtn.click(function() {
                 if (window.confirm('确定要删除么？')) {
-                    that.delete(stageComponent.component_id);
+                    that.delete(
+                        $(this)
+                            .parent()
+                            .eq(0)
+                            .prop('id')
+                    );
                 }
             });
             dom.prepend(deletebtn);
@@ -236,25 +241,25 @@ export default {
          */
         dom.click(function(event) {
             var tmpid = $(this).prop('id');
-            if (
-                that.currentComponent &&
-                tmpid != that.currentComponent.component_id
-            ) {
-                that.setCurrent(that.stageComponentsDict[$(this).prop('id')]);
-            }
+            // if (
+            //     that.currentComponent &&
+            //     tmpid != that.currentComponent.component_id
+            // ) {
+            that.setCurrent(that.stageComponentsDict[$(this).prop('id')], true);
+            // }
             event.stopPropagation();
             event.preventDefault();
         });
         return { ack: true, dom: dom };
     },
-    setCurrent: function(stageComponent) {
+    setCurrent: function(stageComponent, show) {
         if (!stageComponent) {
             return;
         }
         this.currentComponent = stageComponent;
         this._stage.find('.wysi_active').removeClass('wysi_active');
         this.currentComponent.dom.addClass('wysi_active');
-        this._currentComponentChangeEvent(this.currentComponent);
+        this._currentComponentChangeEvent(this.currentComponent, show);
     },
     save: function() {
         console.log('save');
@@ -437,7 +442,7 @@ export default {
             'wys_default'
         );
         delete this.stageComponentsDict[component_id];
-        this.setCurrent(willdeleteComponent);
+        this.setCurrent(willdeleteComponent, false);
         willdeleteComponent.dom.remove();
     },
     /*
@@ -458,6 +463,7 @@ export default {
                 editor: null // vue编辑器组件
             };
         }
+
         dbStageComponent.component_id = this._createComponentId(
             dbStageComponent.component_id
         );
@@ -473,7 +479,7 @@ export default {
         this.stageComponentsDict[
             dbStageComponent.component_id
         ] = dbStageComponent;
-        this.setCurrent(dbStageComponent);
+        this.setCurrent(dbStageComponent, true);
     },
     _increase: 1,
     /*

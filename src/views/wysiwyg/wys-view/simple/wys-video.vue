@@ -1,65 +1,65 @@
 <template>
-    <Form :label-width="60" class="imgWidthCont">
-        <Tabs>
-            <TabPane label="内容">
-                <div v-for="item,index in share.uploadList">
-                    <div class="demo-upload-list">
-                        <img :src="item.url">
-                        <div class="demo-upload-list-cover">
-                            <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                        </div>
-                    </div>
-                    <FormItem label="大小">
-                        <div>{{share.videoSize}}M</div>
-                    </FormItem>
-                    <FormItem label="标签">
-                        <Input v-model="share.httpUrl"></Input>
-                    </FormItem>
-                </div>
-                <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" action="/cmsapi/cmsapi/sys/uploadVideo"
-                    :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
-                    :show-upload-list="false">
-                    <Button type="ghost">添加视频</Button>
-                </Upload>
+  <Form :label-width="60" class="imgWidthCont">
+    <Tabs>
+      <TabPane label="内容">
+        <div v-for="item,index in share.uploadList">
+          <div class="demo-upload-list">
+            <img :src="item.url">
+            <div class="demo-upload-list-cover">
+              <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
+              <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+            </div>
+          </div>
+          <FormItem label="大小">
+            <div>{{share.videoSize}}M</div>
+          </FormItem>
+          <FormItem label="标签">
+            <Input v-model="share.httpUrl"></Input>
+          </FormItem>
+        </div>
+        <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" action="/cmsapi/cmsapi/sys/uploadVideo"
+          :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
+          :show-upload-list="false">
+          <Button type="ghost">添加视频</Button>
+        </Upload>
 
-                <Col v-if="share.isloading" class="demo-spin-col" span="8">
-                <Spin fix>
-                    <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-                    <div>Loading</div>
-                </Spin>
-                </Col>
+        <Col v-if="share.isloading" class="demo-spin-col" span="8">
+        <Spin fix>
+          <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+          <div>Loading</div>
+        </Spin>
+        </Col>
 
-                <Modal title="View Image" v-model="visible">
-                    <img :src="imgUrl" v-if="visible" style="width: 100%">
-                </Modal>
-            </TabPane>
-            <TabPane label="样式">
-                <FormItem label="标签位置">
-                    <Select v-model="share.position">
-                        <Option value="text-label-0">左上</Option>
-                        <Option value="text-label-1">顶部</Option>
-                        <Option value="text-label-2">右上</Option>
-                        <Option value="text-label-3">左下</Option>
-                        <Option value="text-label-4">底部</Option>
-                        <Option value="text-label-5">右下</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="上边距">
-                    <Slider v-model="share.imgTop" show-input></Slider>
-                </FormItem>
-                <FormItem label="右边距">
-                    <Slider v-model="share.imgRight" show-input></Slider>
-                </FormItem>
-                <FormItem label="下边距">
-                    <Slider v-model="share.imgBottom" show-input></Slider>
-                </FormItem>
-                <FormItem label="左边距">
-                    <Slider v-model="share.imgLeft" show-input></Slider>
-                </FormItem>
-            </TabPane>
-        </Tabs>
-    </Form>
+        <Modal title="View Image" v-model="visible">
+          <img :src="imgUrl" v-if="visible" style="width: 100%">
+        </Modal>
+      </TabPane>
+      <TabPane label="样式">
+        <FormItem label="标签位置">
+          <Select v-model="share.position">
+            <Option value="text-label-0">左上</Option>
+            <Option value="text-label-1">顶部</Option>
+            <Option value="text-label-2">右上</Option>
+            <Option value="text-label-3">左下</Option>
+            <Option value="text-label-4">底部</Option>
+            <Option value="text-label-5">右下</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="上边距">
+          <Slider v-model="share.imgTop" show-input></Slider>
+        </FormItem>
+        <FormItem label="右边距">
+          <Slider v-model="share.imgRight" show-input></Slider>
+        </FormItem>
+        <FormItem label="下边距">
+          <Slider v-model="share.imgBottom" show-input></Slider>
+        </FormItem>
+        <FormItem label="左边距">
+          <Slider v-model="share.imgLeft" show-input></Slider>
+        </FormItem>
+      </TabPane>
+    </Tabs>
+  </Form>
 </template>
 
 <script>
@@ -176,11 +176,11 @@ export default {
         }
     },
     created: function () {
-        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+    // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
     },
     mounted () {
-        // console.log(this.$refs.upload.fileList);
-        // this.uploadList = this.$refs.upload.fileList;
+    // console.log(this.$refs.upload.fileList);
+    // this.uploadList = this.$refs.upload.fileList;
     }
 };
 </script>
@@ -270,23 +270,30 @@ setTimeout(function(){
         id: "player-con",
         source: "<%= share.videoUrl %>",
         width: "100%",
-        height: "500px",
+        height: "275px",
         
         cover: "<%= share.videoImg %>",
         /* 设置封面时需要将 autoplay 和 preload 设置为 false */
-        "autoplay": false,
-        "isLive": false,
-        "rePlay": false,
-        "playsinline": true,
-        "preload": true,
-        "controlBarVisibility": "hover",
-        "useH5Prism": true
+        autoplay: false,
+        isLive: false,
+        rePlay: false,
+        playsinline: true,
+        preload: true,
+        x5_type: 'h5', // 声明启用同层H5播放器，支持的值：h5
+        x5_video_position:'top',
+        controlBarVisibility: 'hover',
+        useH5Prism: true
     }, function (player) {
         console.log("播放器创建成功");
     });
 },1000)
 </stage-javascript>
 <stage-css>
+  video {
+    object-fit: contain !important;
+    width: 100%;
+    object-position: 0% 50% !important;
+  }
     .image-text {
         position: absolute;
     }
