@@ -7,16 +7,26 @@
           <Input style="width: 280px; height: 40px" v-model="share.titleText"></Input>
         </Row>
         <Row>
-          <div class="addLink" @click="addLink">
+          <Col span="24">
+          <div v-if="share.url != ''">
+            <span style="margin-right:10px;">链接到 {{share.url}}</span>
+            <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
+              编辑
+            </a>
+          </div>
+          <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
             <Icon type="plus-round"></Icon>
             添加链接
-          </div>
+          </a>
+          <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
+            v-bind:isBlock="share.navVisible"></wysLink>
+          </Col>
         </Row>
-        <Modal title="URL" v-model="share.navVisible">
+        <!-- <Modal title="URL" v-model="share.navVisible">
           <FormItem label="链接地址" v-if="share.navVisible">
             <Input v-model="share.url" placeholder="http://"></Input>
           </FormItem>
-        </Modal>
+        </Modal> -->
       </TabPane>
       <TabPane label="样式">
         <Collapse simple>
@@ -78,7 +88,11 @@
   </Form>
 </template>
 <script>
+import wysLink from '../components/link.vue';
 export default {
+    components: {
+        wysLink
+    },
     data () {
         return {
             share: {
@@ -91,14 +105,23 @@ export default {
                 titlePaddingRight: 0,
                 titlePaddingLeft: 0,
                 navVisible: false,
+                urlData: {},
                 url: ''
             }
         };
     },
     methods: {
-        addLink: function () {
-            console.log(this);
+
+        cancelPopup () {
             this.share.navVisible = !this.share.navVisible;
+        },
+        okPopup (data) {
+            this.share.navVisible = !this.share.navVisible;
+            this.share.url = data.url;
+            this.share.urlData = data;
+            if (data.id) {
+                this.share.url += data.id;
+            }
         }
     }
 };
