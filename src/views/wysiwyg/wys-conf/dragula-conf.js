@@ -2,7 +2,6 @@ import stage from './component-stage';
 export default {
     default: {
         isContainer: function(el) {
-            console.log($(el));
             if ($(el).is('[wys-container]')) {
                 return true;
             }

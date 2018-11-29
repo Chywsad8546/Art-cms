@@ -292,16 +292,6 @@ setTimeout(function(){
     }, function (player) {
         console.log("播放器创建成功");
     });
-  player.on('x5requestFullScreen',function(){
-
-        window.onresize=function(){
-            player.tag.style.height = 100 + 'vh'
-        };
-        var service = player.fullscreenService
-        if (service.getIsFullScreen()) {
-          service.cancelFullScreen()
-        }
-  });
 },300)
 </stage-javascript>
 <stage-css>
