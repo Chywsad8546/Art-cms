@@ -217,7 +217,7 @@ img {
   position: relative;
 }
 .operate-bar {
-  padding: 8px 25px 13px;
+  padding: 8px 25px 0;
   height: 32px;
   box-sizing: content-box;
 }
@@ -320,7 +320,7 @@ img {
               <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png" /></div>
 
               <div class="screen-border">
-                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 600px;">
+                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
                 </div>
               </div>
             </div>
