@@ -1,9 +1,9 @@
 <style lang="less">
-@import '../../../main.less';
-@import '../../../../styles/common.less';
-@import '../../../../styles/table.less';
-@import '../../../../styles/css.less';
-@import '../../../../../node_modules/dragula/dist/dragula.css';
+@import "../../../main.less";
+@import "../../../../styles/common.less";
+@import "../../../../styles/table.less";
+@import "../../../../styles/css.less";
+@import "../../../../../node_modules/dragula/dist/dragula.css";
 img {
   max-width: 100%;
   height: auto;
@@ -22,7 +22,7 @@ img {
   margin: 0 !important;
   z-index: 9999 !important;
   opacity: 1;
-  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
 }
 .gu-hide {
@@ -36,7 +36,7 @@ img {
 }
 .gu-transit {
   opacity: 1;
-  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   filter: alpha(opacity=100);
 }
 .wys-main {
@@ -110,7 +110,7 @@ img {
   position: relative;
   height: 100%;
   background-color: #f2f3f4;
-  margin: 0 0 0 260px;
+  margin: 0 0 0 0;
   padding-bottom: 1px;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -120,6 +120,7 @@ img {
 }
 .workarea-stage {
   position: relative;
+  padding-bottom: 20px;
   top: 10px;
   height: 100%;
   overflow: hidden;
@@ -128,7 +129,6 @@ img {
   position: relative;
   width: 100%;
   height: 100%;
-  padding-left: 20px;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
@@ -296,19 +296,8 @@ img {
 
 <template>
   <div style="height:100%">
-    <div class="wys-header">
-      <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
-      </div>
-      <div class="wys-header-content"></div>
-    </div>
+
     <div id="main" class="layout edit">
-      <div class="wys-menu-left">
-        <div id="wysiwyg_componentbox">
-          <div class="wysiw_form_Tab">
-            表单
-          </div>
-        </div>
-      </div>
       <section id="middle" class="workarea-main">
         <div class="workarea-stage">
           <div class="phone-box">

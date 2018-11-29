@@ -377,6 +377,26 @@ export const appRouter = [
                 //     keepalive: true
                 // },
                 component: () => import('@/views/wysiwyg/pageSite.vue')
+            },
+            {
+                path: '/marketingMain/newlybuildForm',
+                name: 'newlybuildForm',
+                title: '新建表单',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/wysiwyg/wys-view/marketing/wys-formtemplate.vue')
+            },
+            {
+                path: '/marketingMain/newlybuildFormList',
+                name: 'newlybuildFormList',
+                title: '表单列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () =>
+                    import('@/views/wysiwyg/wys-view/marketing/wys-formList.vue')
             }
             // {
             //     path: 'establishMobileWeb',
@@ -510,36 +530,10 @@ export const aloneRouter = [
         path: '/wysiwyg',
         name: 'wysiwygmain',
         meta: {
-             requireAuth: false,
-             title: '编辑器主页面'
+            requireAuth: false,
+            title: '编辑器主页面'
         },
         component: () => import('@/views/wysiwyg/main.vue')
-    },
-    {
-        path: '/marketingMain',
-        name: 'marketingMain',
-        component: () =>
-            import('@/views/wysiwyg/wys-view/marketing/wys-marketingMain.vue')
-    },
-    {
-        path: '/marketingMain/newlybuildForm',
-        name: 'newlybuildForm',
-        title: '新建表单',
-        // meta: {
-        //     keepalive: true
-        // },
-        component: () =>
-            import('@/views/wysiwyg/wys-view/marketing/wys-formtemplate.vue')
-    },
-    {
-        path: '/marketingMain/newlybuildFormList',
-        name: 'newlybuildFormList',
-        title: '表单列表',
-        // meta: {
-        //     keepalive: true
-        // },
-        component: () =>
-            import('@/views/wysiwyg/wys-view/marketing/wys-formList.vue')
     }
 ];
 

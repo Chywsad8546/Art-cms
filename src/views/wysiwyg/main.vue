@@ -287,11 +287,6 @@ img {
 
 <template>
   <div style="height:100%">
-    <div class="wys-header">
-      <div class="wys-header-left"><img src="http://wap-qn.toutiaofangchan.com/adideas/4fa0cb767c5a42e7af2aa85003704eb1.jpg" />
-      </div>
-      <div class="wys-header-content"></div>
-    </div>
     <div id="main" class="layout edit">
       <div class="wys-menu-left">
         <div id="wysiwyg_componentbox" wys-container>
@@ -325,7 +320,7 @@ img {
               <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png" /></div>
 
               <div class="screen-border">
-                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
+                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 600px;">
                 </div>
               </div>
             </div>
