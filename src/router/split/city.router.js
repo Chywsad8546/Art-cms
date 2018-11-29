@@ -366,7 +366,7 @@ export const appRouter = [
         path: '/cityManageEstablishWeb',
         icon: 'social-buffer',
         name: 'establishWeb',
-        title: '自助建站',
+        title: '专题建站',
         component: Main,
         children: [
             {
