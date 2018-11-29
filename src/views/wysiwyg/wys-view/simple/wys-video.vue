@@ -280,9 +280,6 @@ setTimeout(function(){
         controlBarVisibility: "click",
         showBarTime: 3000,
         useH5Prism: true,
-        x5_type: 'h5', // 声明启用同层H5播放器，支持的值：h5
-        x5_fullscreen: true,
-        x5_orientation:'landscape',
         skinLayout: [
           {
             name: "bigPlayButton",

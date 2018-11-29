@@ -44,7 +44,6 @@ export default {
     },
     render() {
         const vnode = this.$slots.default ? this.$slots.default[0] : null;
-        console.log('vnode', vnode);
         if (vnode) {
             // console.log('navigation', vnode.key);
             if (

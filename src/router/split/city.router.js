@@ -68,33 +68,6 @@ export const otherRouter = {
 
 export const appRouter = [
     //专题建站
-    {
-        path: '/specialtopic',
-        icon: 'social-buffer',
-        name: 'specialtopic',
-        title: '专题建站',
-        component: Main,
-        children: [
-            {
-                path: 'wysiwygmaindemo',
-                name: 'wysiwygmaindemo',
-                title: 'demo',
-                // meta: {
-                //     keepalive: true
-                // },
-                component: () => import('@/views/wysiwyg/main.vue')
-            },
-            {
-                path: 'luodiye',
-                name: 'luodiye',
-                title: '源码专题页',
-                // meta: {
-                //     keepalive: true
-                // },
-                component: () => import('@/views/error-page/blankPage.vue')
-            }
-        ]
-    },
 
     //消息推送
     {
