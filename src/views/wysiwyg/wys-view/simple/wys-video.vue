@@ -270,7 +270,7 @@ setTimeout(function(){
         id: "player-con",
         width: "100%",
         height: "300px",
-        source: "http://vod.bidewu.com/431c8a5439d2471d955386134f1f5ffa/0d02821a489c411d9c765e5a99d5a25d-22e204d55a191380eb29649fcb8254e1-ld.mp4",
+        source: "<%= share.videoUrl %>",
         cover: "<%= share.videoImg %>",
         autoplay: true,
         preload: true,
@@ -292,17 +292,16 @@ setTimeout(function(){
     }, function (player) {
         console.log("播放器创建成功");
     });
-    player.on('x5requestFullScreen',function(){
-        
-        window.onresize = () => {
-          player.tag.style.height = 100 + 'vh'
-         
-        }
-        let service = player.fullscreenService
+  player.on('x5requestFullScreen',function(){
+
+        window.onresize=function(){
+            player.tag.style.height = 100 + 'vh'
+        };
+        var service = player.fullscreenService
         if (service.getIsFullScreen()) {
           service.cancelFullScreen()
         }
-});
+  });
 },300)
 </stage-javascript>
 <stage-css>
