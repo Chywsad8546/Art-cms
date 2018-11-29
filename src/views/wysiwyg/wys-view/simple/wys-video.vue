@@ -257,7 +257,7 @@ export default {
 <stage-template>
 <div style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
     <div class="image-con" style="position: relative;">
-        <div id="player-con"></div>
+        <div class="prism-player" id="player-con"></div>
         <span class="image-text {{@ share.position}}">{{@ share.httpUrl }}</span>
     </div>
 </div>
@@ -268,32 +268,51 @@ export default {
 setTimeout(function(){
     var player = new Aliplayer({
         id: "player-con",
-        source: "<%= share.videoUrl %>",
         width: "100%",
-        height: "275px",
-        
+        height: "300px",
+        source: "http://vod.bidewu.com/431c8a5439d2471d955386134f1f5ffa/0d02821a489c411d9c765e5a99d5a25d-22e204d55a191380eb29649fcb8254e1-ld.mp4",
         cover: "<%= share.videoImg %>",
-        /* 设置封面时需要将 autoplay 和 preload 设置为 false */
-        autoplay: false,
+        autoplay: true,
+        preload: true,
         isLive: false,
         rePlay: false,
         playsinline: true,
-        preload: true,
+        controlBarVisibility: "click",
+        showBarTime: 3000,
+        useH5Prism: true,
         x5_type: 'h5', // 声明启用同层H5播放器，支持的值：h5
-        x5_video_position:'top',
-        controlBarVisibility: 'hover',
-        useH5Prism: true
+        x5_fullscreen: true,
+        x5_orientation:'landscape',
+        skinLayout: [
+          {
+            name: "bigPlayButton",
+            align: "cc"
+          }
+        ]
     }, function (player) {
         console.log("播放器创建成功");
     });
-},1000)
+    player.on('x5requestFullScreen',function(){
+        
+        window.onresize = () => {
+          player.tag.style.height = 100 + 'vh'
+         
+        }
+        let service = player.fullscreenService
+        if (service.getIsFullScreen()) {
+          service.cancelFullScreen()
+        }
+});
+},300)
 </stage-javascript>
 <stage-css>
   video {
     object-fit: contain !important;
     width: 100%;
-    object-position: 0% 50% !important;
   }
+  .prism-player {
+    position: relative;
+}
     .image-text {
         position: absolute;
     }
