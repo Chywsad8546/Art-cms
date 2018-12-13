@@ -4,7 +4,7 @@ import Qs from 'qs';
 import { router } from '@/router/index';
 import config from '../../build/config.js';
 import _ from 'lodash';
-axios.defaults.baseURL = '/cmsapi';
+axios.defaults.baseURL = '/';
 if (config.errortip) {
     let search = window.location.search || '';
     if (search !== '') {
@@ -43,7 +43,7 @@ function initInterceptors(store) {
     axios.interceptors.response.use(
         function(response) {
             // 拦截器代码不要改动，现在的架构能满足所有情况。
-            if (response.data.code === 'success') {
+            if (response.data.code === 'success' || response.status === 200) {
                 return response;
             }
             let title = '';

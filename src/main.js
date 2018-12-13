@@ -18,6 +18,7 @@ import domain from '../build/configdir/domain/domain';
 import valid from '@/libs/valid.js';
 import VueDND from 'awe-dnd';
 import '@/styles/fonts/iconfont.js';
+import cascaderMulti from "cascader-multi";
 
 
 Vue.use(VueI18n);
@@ -25,6 +26,7 @@ Vue.use(iView);
 Vue.use(agentplugin);
 Vue.use(VueQuillEditor)
 Vue.use(VueDND)
+Vue.use(cascaderMulti);
 apibase.interceptors(store);
 Vue.prototype.$domain = domain;
 Vue.prototype.$valid = valid;

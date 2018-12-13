@@ -46,5 +46,10 @@ export default {
     },
     delDiyWebpage(params) {
         return http.post('/cmsapi/diyWebpage/delDiyWebpage', params);
+    },
+    getCityAllInfo(params) {
+        return http.get('/searchapiv2/rest/getCityAllInfo', {
+            params: params
+        });
     }
 };

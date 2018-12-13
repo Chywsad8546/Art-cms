@@ -15,6 +15,8 @@ import wys_form from './wys-view/marketing/wys-form.vue';
 import wys_buttondownload from './wys-view/simple/wys-buttondownload.vue';
 import wys_tel from './wys-view/marketing/wys-tel.vue';
 import wys_text from './wys-view/simple/wys-text.vue';
+import wys_houseList from './wys-view/marketing/wys-houseList.vue';
+
 
 export default {
     stageComponents: [
@@ -137,6 +139,13 @@ export default {
             title: '文本',
             component: wys_text,
             id: 'wys_text'
-        }        
+        },
+        {
+            icon:
+                'http://wap-qn.toutiaofangchan.com/adideas/6cd3cbdef0ee4027b8b36330dc7f77fd.png',
+            title: '房源列表',
+            component: wys_houseList,
+            id: 'wys_houseList'
+        }  
     ]
 };
