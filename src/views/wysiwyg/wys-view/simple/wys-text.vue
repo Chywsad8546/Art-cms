@@ -4,9 +4,7 @@
       <TabPane label="内容">
         <Row class="navdhName">
           <Col span="24">
-          <FormItem label="名称">
-            <Input v-model="share.name"></Input>
-          </FormItem>
+            <Input v-model="share.name" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
           </Col>
         </Row>
         <Row>
@@ -63,6 +61,18 @@
         <FormItem label="左">
           <Slider v-model="share.left" show-input></Slider>
         </FormItem>
+        <Collapse v-model="panelTextKey2" style="margin-bottom:10px;">
+            <Panel name="1">
+                文字
+                <p slot="content">
+                    <Row>
+                        <Col span="12">
+                        </Col>
+                    </Row>
+                </p>
+            </Panel>
+        </Collapse>
+
       </TabPane>
     </Tabs>
 
@@ -88,7 +98,9 @@ export default {
                 right: 15,
                 bottom: 10,
                 left: 15
-            }
+            },
+            panelTextKey2:'1'
+
         };
     },
     methods: {

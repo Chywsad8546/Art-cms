@@ -14,6 +14,8 @@ import wys_video from './wys-view/simple/wys-video.vue';
 import wys_form from './wys-view/marketing/wys-form.vue';
 import wys_buttondownload from './wys-view/simple/wys-buttondownload.vue';
 import wys_tel from './wys-view/marketing/wys-tel.vue';
+import wys_text from './wys-view/simple/wys-text.vue';
+
 export default {
     stageComponents: [
         {
@@ -34,7 +36,7 @@ export default {
             icon:
                 'http://wap-qn.toutiaofangchan.com/adideas/f201497cc5804d7eae6162cb898b62d4.png',
             title: '布局',
-            accepts: ['wys_link', 'wys_splitcharacter'],
+            accepts: ['wys_link', 'wys_splitcharacter', 'wys_pic'],
             component: wys_placeholder,
             id: 'wys_placeholder'
         },
@@ -128,6 +130,13 @@ export default {
             title: '电话',
             component: wys_tel,
             id: 'wys_tel'
-        }
+        },
+        {
+            icon:
+                'http://wap-qn.toutiaofangchan.com/adideas/2bf37fcd6b4a411f95b670adc8621768.png',
+            title: '文本',
+            component: wys_text,
+            id: 'wys_text'
+        }        
     ]
 };

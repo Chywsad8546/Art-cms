@@ -2,16 +2,33 @@
     <Row>
         <Col span="100">
         <Card>
-            <p slot="title">网站列表</p>
+            <p slot="title">站点列表</p>
             <a href="#" slot="extra" @click.prevent="addModeButton">
                 <Icon type="plus-circled"></Icon>
-                添加网站
+                添加站点
             </a>
             <Form ref="searchData" :model="searchData" inline :label-width="120">
-                <FormItem label="专题名称" prop="title">
+                <FormItem label="站点名称" prop="title">
                     <Input v-model="searchData.title" placeholder="请输入站点名称" style="width: 150px"></Input>
                 </FormItem>
-
+                <FormItem label="编辑" prop="title">
+                    <Input v-model="searchData.title" placeholder="请输入编辑名称" style="width: 150px"></Input>
+                </FormItem>
+                <!-- <FormItem label="开始时间">
+                    <Row>
+                        <Col span="24">
+                             <DatePicker type="date" v-model="searchData.beginCreateTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        </Col>
+                    </Row>
+                </FormItem>
+                <FormItem label="结束时间">
+                    <Row>
+                        <Col span="24">
+                        <DatePicker type="date" v-model="searchData.endCreateTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                           
+                        </Col>
+                    </Row>
+                </FormItem>  -->
                 <FormItem>
                     <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                     <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
@@ -93,18 +110,26 @@ export default {
                 },
                 {
                     key: 'title',
-                    title: '专题名称'
+                    title: '站点名称'
                 }
             ],
             columns: [
                 {
                     key: 'id',
-                    title: '专题id',
+                    title: '站点id',
                     width: 100
                 },
                 {
                     key: 'title',
-                    title: '专题名称'
+                    title: '站点名称'
+                },
+                {
+                    key: 'createTime',
+                    title: '建立时间'
+                },
+                {
+                    key: 'creater',
+                    title: '编辑'
                 },
                 {
                     key: 'status',
@@ -193,7 +218,7 @@ export default {
                 }
             ],
             searchData: {
-                siteId: this.$route.query.siteid
+                siteId: this.$route.query.siteid,
             },
             data: [],
             total: 0,
@@ -339,6 +364,7 @@ export default {
         }
     },
     created () {
+        console.log(this.searchData);
         this.init();
     }
 };

@@ -579,7 +579,7 @@ $().ready(function() {
                         data: JSON.stringify(ajaxJson),
                         success: function (result) {
                            if(result.code == "success"){
-                             alert("提交成功");
+                             info("提交成功");
                            }
                         },
                         error : function() {

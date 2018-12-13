@@ -497,6 +497,8 @@ export default {
         '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
         '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/cd521b2d5b81495eab98e43e91015223.js\'><\/script>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/db1c5c1d475448a8b910b421ebc09994.js\'><\/script>' +
         '</head><body style="max-width:640px;margin:0 auto;">';
             var stagereslut = GlobalStage.save();
 
@@ -506,6 +508,7 @@ export default {
             this.formMain.html = html;
             this.formMain.editor = JSON.stringify(stagereslut.stage);
             this.formMain.siteId = this.$route.query.siteid;
+            this.formMain.creater = this.$store.state.app.userName;
         },
         qrcode (url) {
             let qrcode = new QRCode('qrcode10', {
