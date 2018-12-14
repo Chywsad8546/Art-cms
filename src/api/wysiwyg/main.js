@@ -51,5 +51,8 @@ export default {
         return http.get('/searchapiv2/rest/getCityAllInfo', {
             params: params
         });
+    },
+    getSellHouseList(params) {
+        return http.postJson('/searchapiv2/rest/esf/getSellHouseList', params);
     }
 };

@@ -4,33 +4,72 @@
       <TabPane label="内容">
         <Row class="navdhName">
           <Col span="24">
-                    <RadioGroup v-model="share.regionText" @on-change="radioClick">
-                        <Radio label="附近"></Radio>
-                        <Radio label="区域"></Radio>
-                        <Radio label="地铁"></Radio>
-                    </RadioGroup>
+             <h3>区域</h3>
           </Col>
           <Col span="24">
-
-                <!-- <Cascader :data="data" v-model="value2"></Cascader> -->
-                <cascaderMulti v-model="value2" :data="data" placeholder="状态码"></cascaderMulti>
-
-                <!-- <Select v-model="share.districtText" size="small" style="width:100px" v-if="share.regionText ==='区域'">
-                    <Option v-for="item in share.districtInfo" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
-                </Select>
-                <Select v-model="share.distanceText" size="small" style="width:100px"  v-if="share.regionText ==='附近'">
-                    <Option v-for="item in share.distanceItems" :value="item.value" :key="item.value">{{ item.text }}</Option>
-                </Select>
-                <Select v-model="share.subwayText" size="small" style="width:100px"  v-if="share.regionText ==='地铁'">
-                    <Option v-for="item in share.subwayInfo" :value="item.subwayid" :key="item.subwayid">{{ item.name }}</Option>
-                </Select> -->
-                <!-- <Select v-model="share.searchConditionText" size="small" style="width:100px">
-                    <Option v-for="item in share.searchCondition" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
-                </Select> -->
+                <cascaderMulti v-model="share.areaValue" :data="share.areaData" @on-change="areaCascChoice" placeholder="请选择"></cascaderMulti>   
           </Col>
+          <Col span="24">
+             <h3>地铁</h3>
+          </Col>
+          <Col span="24">
+                <cascaderMulti v-model="share.metroValue" :data="share.metroData" @on-change="metroCascChoice" placeholder="请选择"></cascaderMulti>   
+          </Col>
+          <Col span="24">
+             <h3>价格</h3>
+          </Col>
+          <Col span="24">
+            <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
+              <Radio v-for="(item,index) in share.searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+            </RadioGroup>
+         </Col>
+         <Col span="24">
+          <span>自定义：</span>
+          <Input v-model="share.secondDetailParam.beginPrice" number  placeholder="最低价" style="width: 100px"></Input>
+          <span>-</span>
+          <Input v-model="share.secondDetailParam.endPrice"  number  placeholder="最高价" style="width: 100px"></Input>
+          <span>万</span>
+         </Col>
+         <Col span="24">
+         <h3>房型</h3>
+            <CheckboxGroup v-model="share.secondDetailParam.layoutId">
+                <Checkbox v-for="(item,index) in share.searchCondition.layout" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+            </CheckboxGroup>
+         </Col>
+         <Col span="24">
+            <h3>面积</h3>
+            <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
+              <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+            </RadioGroup>
+         </Col>
+         <Col span="24">
+            <h3>朝向</h3>
+            <CheckboxGroup v-model="share.secondDetailParam.forwardId">
+                <Checkbox v-for="(item,index) in share.searchCondition.forward" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+            </CheckboxGroup>
+            <!-- <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
+              <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+            </RadioGroup> -->
+         </Col>
+         <Col span="24">
+            <h3>楼龄</h3>
+            <RadioGroup v-model="share.secondDetailParam.houseYearId" type="button" size="small" @on-change="houseYearChange">
+              <Radio v-for="(item,index) in share.searchCondition.houseYear" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+            </RadioGroup>
+         </Col>
+         <Col span="24">
+            <h3>标签</h3>
+            <CheckboxGroup v-model="share.label" style="float:left;" @on-change="labelChange">
+                <Checkbox v-for="(item,index) in share.searchCondition.label" :key="index" :label="item.value">{{item.text}}</Checkbox>
+            </CheckboxGroup>
+            <CheckboxGroup v-model="share.otherLabel"  @on-change="otherLabelChange">
+                <Checkbox v-for="(item,index) in share.searchCondition.otherLabel" :key="index" :label="item.string" >{{item.text}}</Checkbox>
+            </CheckboxGroup>
+         </Col>
         </Row>
         <Row>
           <Col span="24">
+                <Button type="primary" @click="houseSave">确定</Button>
           </Col>
         </Row>
       </TabPane>
@@ -88,116 +127,98 @@ export default {
                 right: 0,
                 bottom: 0,
                 left: 0,
-                regionText:"区域",
-                regionList:[{
-                        value: '附近',
-                        label: '附近'
-                    },{
-                        value: '区域',
-                        label: '区域'
-                    },{
-                        value: '地铁',
-                        label: '地铁'
-                    }],
-                districtInfo:[],
-                distanceItems:[{ label: "不限", value: "" },{ label: "1000米内", value: 1 },{ label: "2000米内", value: 2 },{ label: "3000米内", value: 3 }]
-                // 条件配置获取
+                areaValue:[],
+                areaData: [],
+                metroData:[],
+                metroValue:[],
+                priceSelect:"",
+                searchCondition:[],
+                minPrice:"",
+                maxPrice:"",
+                apartment:[],
+                secondDataList:[{
+                    area:"丰台"
+                },{
+                    area:"丰台1"
+                }],
+                secondDetailParam:{
+                   pageNum: 1,
+                   pageSize: 10,
+                }
             },
+            districtInfo:[],
+            subwayInfo:[],
             panelTextKey2:'1',
-            value2:[],
-            data: [
-                // {
-                //     value: 'beijing',
-                //     label: '北京',
-                //     children: [
-                //         {
-                //             value: 'gugong',
-                //             label: '故宫'
-                //         },
-                //         {
-                //             value: 'tiantan',
-                //             label: '天坛'
-                //         },
-                //         {
-                //             value: 'wangfujing',
-                //             label: '王府井'
-                //         }
-                //     ]
-                // }, {
-                //     value: 'jiangsu',
-                //     label: '江苏',
-                //     children: [
-                //         {
-                //             value: 'nanjing',
-                //             label: '南京',
-                //             children: [
-                //                 {
-                //                     value: 'fuzimiao',
-                //                     label: '夫子庙',
-                //                 }
-                //             ]
-                //         },
-                //         {
-                //             value: 'suzhou',
-                //             label: '苏州',
-                //             children: [
-                //                 {
-                //                     value: 'zhuozhengyuan',
-                //                     label: '拙政园',
-                //                 },
-                //                 {
-                //                     value: 'shizilin',
-                //                     label: '狮子林',
-                //                 }
-                //             ]
-                //         }
-                //     ],
-                // }
-                ],
-                // end_code: [],
-                // end_codes: [{
-                //     value: 1000,
-                //     label: "接通",
-                //     children: [{
-                //     label: "已报价",
-                //     value: 1100,
-                //     children: [],
-                //     multiple: true //可忽略项，当为true时该项为多选
-                //     }]
-                // }]
+            regionText:"区域",
         };
     },
     methods: {
-        radioClick(){
-            this.data = [];
-            this.value2 = [];
-            if(this.share.regionText === "区域"){
-                this.share.districtInfo.forEach(item=>{
-                    this.data.push({value:item.districtId,label:item.name,children:[]});
-                    item.children.forEach(sItem=>{
-                        this.data.forEach(dataItem=>{
-                            dataItem.children.push({value:sItem.circle,label:sItem.name,multiple: true});
-                        })
-                    })
+        labelChange(data){
+            delete this.share.secondDetailParam.labelId;
+            if(data[0]){
+                this.share.secondDetailParam.labelId = [Number(data[0])];
+            }
+        },
+        otherLabelChange(data){
+            this.share.searchCondition.otherLabel.forEach(item=>{
+                delete this.share.secondDetailParam[item.string];
+                data.forEach(sitem=>{
+                    if(sitem ===  item.string){
+                        this.share.secondDetailParam[sitem]=item.value;
+                    }
                 })
+            })
+        },
+        houseYearChange(data){
+            console.log(data);
+        },
+        areaChange(data){
+                let areaArr = data.split("-");
+                this.share.secondDetailParam.beginArea = Number(areaArr[0]);
+                this.share.secondDetailParam.endArea = Number(areaArr[1]);
+        },
+        conditionChoice(data){
+            if(data.length > 0){
+            let priceArr = data.split("-");
+            this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
+            this.share.secondDetailParam.endPrice = Number(priceArr[1]);
+            this.share.minPrice = priceArr[0];
+            this.share.maxPrice = priceArr[1];
             }
-            if(this.share.regionText === "附近"){
-                this.data = this.share.distanceItems;
+        },
+        areaCascChoice(data){
+            if(data.length > 0){
+            this.share.secondDetailParam.districtId = "";
+            this.share.secondDetailParam.areaId = [];
+            for(var i=0;i<data.length;i++){
+                if(i===0){
+                    this.share.secondDetailParam.districtId = data[i];
+                }else{
+                    this.share.secondDetailParam.areaId.push(data[i]);
+                }
             }
-            if(this.share.regionText === "地铁"){
+            }
 
-                this.share.subwayInfo.forEach(item=>{
-                    console.log(item);
-                     this.data.push({value:item.subwayid,label:item.name,children:[]});
-                    item.children.forEach(sItem=>{
-                        this.data.forEach(dataItem=>{
-                            dataItem.children.push({value:sItem.stationid,label:sItem.station_name,multiple: true});
-                        })
-                    })
-                })
-
+        },
+        metroCascChoice(data){
+            if(data.length > 0){
+            this.share.secondDetailParam.subwayLineId = "";
+            this.share.secondDetailParam.subwayStationId = [];
+            for(var i=0;i<data.length;i++){
+                if(i===0){
+                    this.share.secondDetailParam.subwayLineId = data[i];
+                }else{
+                    this.share.secondDetailParam.subwayStationId.push(data[i]);
+                }
             }
-            console.log(this.share.regionText);
+            }
+        },
+        houseSave(){
+            api.getSellHouseList(this.share.secondDetailParam).then(response=>{
+                this.share.secondDataList = response.data.data;
+                console.log(this.share.secondDataList);
+               // console.log(response.data.data);
+            });
         },
         removeNavigat (item) {
             let index = this.share.navigatList.indexOf(item);
@@ -226,11 +247,21 @@ export default {
             this.share.districtInfo = response.data.cityAllInfos.circleDataList;
             this.share.subwayInfo = response.data.cityAllInfos.subwayDataList;
             this.share.searchCondition = response.data.cityAllInfos.searchConditionData.second;
+            // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
+            // console.log(this.share.label);
             this.share.districtInfo.forEach(item=>{
-                this.data.push({value:item.districtId,label:item.name,children:[]});
+                this.share.areaData.push({value:item.districtId,label:item.name,children:[{value:"",label:"不限",multiple: false}]});
                 item.children.forEach(sItem=>{
-                    this.data.forEach(dataItem=>{
+                    this.share.areaData.forEach(dataItem=>{
                         dataItem.children.push({value:sItem.circle,label:sItem.name,multiple: true});
+                    })
+                })
+            })
+            this.share.subwayInfo.forEach(item=>{
+            this.share.metroData.push({value:item.subwayid,label:item.name,children:[]});
+                item.children.forEach(sItem=>{
+                    this.share.metroData.forEach(dataItem=>{
+                        dataItem.children.push({value:sItem.stationid,label:sItem.station_name,multiple: true});
                     })
                 })
             })
@@ -277,8 +308,9 @@ export default {
 <stage-javascript type="text/javascript">
 var num = 1;
 var asynFlag = true;
+
 $(document).ready(function(){
-    houseList();
+  //  houseList();
 });
 function houseList(){
 var param = {pageNum: num, pageSize: 10};
@@ -294,23 +326,7 @@ $.ajax({
             success: function (result) {
                 asynFlag = true;
                 $t.find(".down4gLoad").hide();
-                for(var i=0;i<result.data.length;i++){
-                    var tempHtml = $t.find("#template").html();
-                    var housePhotoTitle = result.data[i].housePhotoTitle;
-                    var houseTitle = result.data[i].houseTitle;
-                    var houseTotalPrices = result.data[i].houseTotalPrices;
-                    var nearbyDistance =  result.data[i].room+"室"+result.data[i].hall+"厅";
-                    var houseUnitCost = result.data[i].houseUnitCost.toFixed(2);
-                    tempHtml = tempHtml.replace("#housePhotoTitle#",imgSrc(housePhotoTitle,'-dongfangdi400x300'));
-                    tempHtml = tempHtml.replace("#houseTitle#",houseTitle);
-                    tempHtml = tempHtml.replace("#houseTotalPrices#",houseTotalPrices);
-                    tempHtml = tempHtml.replace("#nearbyDistance#",nearbyDistance);
-                    tempHtml = tempHtml.replace("#houseUnitCost#",houseUnitCost);
-                    var maxDiv = $("<div></div>");
-                    maxDiv.html(tempHtml);
-                    var liMaxDom = maxDiv.children("div");	
-                    $t.find(".houseList").append(liMaxDom);
-                }
+                createAppendTemp(result);
                 num++;
             },
             error : function() {
@@ -319,7 +335,25 @@ $.ajax({
         });
 }
 
-
+function createAppendTemp(result){
+    for(var i=0;i<result.data.length;i++){
+        var tempHtml = $t.find("#template").html();
+        var housePhotoTitle = result.data[i].housePhotoTitle;
+        var houseTitle = result.data[i].houseTitle;
+        var houseTotalPrices = result.data[i].houseTotalPrices;
+        var nearbyDistance =  result.data[i].room+"室"+result.data[i].hall+"厅";
+        var houseUnitCost = result.data[i].houseUnitCost.toFixed(2);
+        tempHtml = tempHtml.replace("#housePhotoTitle#",imgSrc(housePhotoTitle,'-dongfangdi400x300'));
+        tempHtml = tempHtml.replace("#houseTitle#",houseTitle);
+        tempHtml = tempHtml.replace("#houseTotalPrices#",houseTotalPrices);
+        tempHtml = tempHtml.replace("#nearbyDistance#",nearbyDistance);
+        tempHtml = tempHtml.replace("#houseUnitCost#",houseUnitCost);
+        var maxDiv = $("<div></div>");
+        maxDiv.html(tempHtml);
+        var liMaxDom = maxDiv.children("div");	
+        $t.find(".houseList").append(liMaxDom);
+    }
+}
 function imgSrc(img,size){
   if (img) {
     let _oldImg = img.split(",");
