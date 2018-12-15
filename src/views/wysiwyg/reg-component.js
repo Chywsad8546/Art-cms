@@ -15,8 +15,10 @@ import wys_form from './wys-view/marketing/wys-form.vue';
 import wys_buttondownload from './wys-view/simple/wys-buttondownload.vue';
 import wys_tel from './wys-view/marketing/wys-tel.vue';
 import wys_text from './wys-view/simple/wys-text.vue';
-import wys_houseList from './wys-view/marketing/wys-houseList.vue';
-
+import wys_secondList from './wys-view/marketing/wys-secondList.vue';
+import wys_rentList from './wys-view/marketing/wys-rentList.vue';
+import wys_newList from './wys-view/marketing/wys-newList.vue';
+import wys_plotList from './wys-view/marketing/wys-plotList.vue';
 
 export default {
     stageComponents: [
@@ -143,9 +145,30 @@ export default {
         {
             icon:
                 'http://wap-qn.toutiaofangchan.com/adideas/6cd3cbdef0ee4027b8b36330dc7f77fd.png',
-            title: '房源列表',
-            component: wys_houseList,
-            id: 'wys_houseList'
-        }  
+            title: '二手房源列表',
+            component: wys_secondList,
+            id: 'wys_secondList'
+        },
+        {
+            icon:
+                'http://wap-qn.toutiaofangchan.com/adideas/6cd3cbdef0ee4027b8b36330dc7f77fd.png',
+            title: '租房列表',
+            component: wys_rentList,
+            id: 'wys_rentList'
+        },
+        {
+            icon:
+                'http://wap-qn.toutiaofangchan.com/adideas/6cd3cbdef0ee4027b8b36330dc7f77fd.png',
+            title: '新房列表',
+            component: wys_newList,
+            id: 'wys_newList'
+        },
+        {
+            icon:
+                'http://wap-qn.toutiaofangchan.com/adideas/6cd3cbdef0ee4027b8b36330dc7f77fd.png',
+            title: '小区列表',
+            component: wys_plotList,
+            id: 'wys_plotList'
+        }
     ]
 };

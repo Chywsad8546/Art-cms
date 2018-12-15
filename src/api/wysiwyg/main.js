@@ -54,5 +54,11 @@ export default {
     },
     getSellHouseList(params) {
         return http.postJson('/searchapiv2/rest/esf/getSellHouseList', params);
+    },
+    getRentHouseSearchList(params) {
+        return http.postJson('/searchapiv2/rest/rent/getRentHouseSearchList', params);
+    },
+    getNewHouseList(params) {
+        return http.postJson('/searchapiv2/rest/newhouse/getNewHouseList', params);
     }
 };

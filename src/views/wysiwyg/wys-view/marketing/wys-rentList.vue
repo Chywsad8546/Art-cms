@@ -2,6 +2,7 @@
   <Form :label-width="60" class="imgWidthCont">
     <Tabs>
       <TabPane label="内容">
+       <Form ref="formValidate" :model="share" :label-width="80">
         <Row class="navdhName">
           <Col span="24">
              <h3>区域</h3>
@@ -21,7 +22,7 @@
           <Col span="24">
             <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
               <Radio v-for="(item,index) in share.searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-            </RadioGroup>
+           </RadioGroup>
          </Col>
          <Col span="24">
           <span>自定义：</span>
@@ -31,16 +32,23 @@
           <span>万</span>
          </Col>
          <Col span="24">
-         <h3>房型</h3>
-            <CheckboxGroup v-model="share.secondDetailParam.layoutId">
-                <Checkbox v-for="(item,index) in share.searchCondition.layout" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
-            </CheckboxGroup>
-         </Col>
-         <Col span="24">
             <h3>面积</h3>
             <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
               <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
             </RadioGroup>
+
+         </Col>
+         <Col span="24">
+            <h3>整租</h3>
+            <CheckboxGroup v-model="share.elo"  @on-change="eloChange">
+                <Checkbox v-for="(item,index) in share.searchCondition.elo" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+            </CheckboxGroup>
+         </Col>
+         <Col span="24">
+            <h3>合租</h3>
+            <CheckboxGroup v-model="share.jlo" @on-change="jloChange">
+                <Checkbox v-for="(item,index) in share.searchCondition.jlo" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+            </CheckboxGroup>
          </Col>
          <Col span="24">
             <h3>朝向</h3>
@@ -50,12 +58,6 @@
             <!-- <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
               <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
             </RadioGroup> -->
-         </Col>
-         <Col span="24">
-            <h3>楼龄</h3>
-            <RadioGroup v-model="share.secondDetailParam.houseYearId" type="button" size="small" @on-change="houseYearChange">
-              <Radio v-for="(item,index) in share.searchCondition.houseYear" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-            </RadioGroup>
          </Col>
          <Col span="24">
             <h3>标签</h3>
@@ -70,8 +72,10 @@
         <Row>
           <Col span="24">
                 <Button type="primary" @click="houseSave">确定</Button>
+                <Button type="primary" @click="emptyOption">重置</Button>
           </Col>
         </Row>
+        </Form>
       </TabPane>
       <TabPane label="样式">
         <Row>
@@ -80,10 +84,10 @@
           </Col>
         </Row>
         <FormItem label="顶">
-          <Slider v-model="share.top" show-input></Slider>
+          <Slider v-model="share.top" :max="500" show-input></Slider>
         </FormItem>
         <FormItem label="右">
-          <Slider v-model="share.right" show-input></Slider>
+          <Slider v-model="share.right"  show-input></Slider>
         </FormItem>
         <FormItem label="底">
           <Slider v-model="share.bottom" show-input></Slider>
@@ -102,7 +106,6 @@
                 </p>
             </Panel>
         </Collapse>
-
       </TabPane>
     </Tabs>
   </Form>
@@ -111,6 +114,7 @@
 <script>
 import api from '../../../../api/wysiwyg/main.js';
 import wysLink from '../components/link.vue';
+import { Script } from 'vm';
 export default {
     name: 'wys-link',
     components: {
@@ -133,14 +137,9 @@ export default {
                 metroValue:[],
                 priceSelect:"",
                 searchCondition:[],
-                minPrice:"",
-                maxPrice:"",
                 apartment:[],
-                secondDataList:[{
-                    area:"丰台"
-                },{
-                    area:"丰台1"
-                }],
+                secondDataList:{},
+                rentDetailUrl:'',
                 secondDetailParam:{
                    pageNum: 1,
                    pageSize: 10,
@@ -153,6 +152,24 @@ export default {
         };
     },
     methods: {
+        jloChange(data){
+            this.share.secondDetailParam.elo = data.join();
+        },
+        eloChange(data){
+            this.share.secondDetailParam.jlo = data.join();
+        },
+        emptyOption(){
+            this.share.secondDetailParam = {
+                pageNum: 1,
+                pageSize: 10,                 
+            }
+            this.share.secondDataList = {};
+            this.share.priceSelect = "";
+            this.share.area = "";
+            this.share.areaValue = [];
+            this.share.metroValue = [];
+            this.$refs["formValidate"].resetFields();
+        },
         labelChange(data){
             delete this.share.secondDetailParam.labelId;
             if(data[0]){
@@ -179,26 +196,23 @@ export default {
         },
         conditionChoice(data){
             if(data.length > 0){
-            let priceArr = data.split("-");
-            this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
-            this.share.secondDetailParam.endPrice = Number(priceArr[1]);
-            this.share.minPrice = priceArr[0];
-            this.share.maxPrice = priceArr[1];
+                let priceArr = data.split("-");
+                this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
+                this.share.secondDetailParam.endPrice = Number(priceArr[1]);
             }
         },
         areaCascChoice(data){
             if(data.length > 0){
             this.share.secondDetailParam.districtId = "";
             this.share.secondDetailParam.areaId = [];
-            for(var i=0;i<data.length;i++){
-                if(i===0){
-                    this.share.secondDetailParam.districtId = data[i];
-                }else{
-                    this.share.secondDetailParam.areaId.push(data[i]);
+                for(var i=0;i<data.length;i++){
+                    if(i===0){
+                        this.share.secondDetailParam.districtId = data[i];
+                    }else{
+                        this.share.secondDetailParam.areaId.push(data[i]);
+                    }
                 }
             }
-            }
-
         },
         metroCascChoice(data){
             if(data.length > 0){
@@ -214,10 +228,9 @@ export default {
             }
         },
         houseSave(){
-            api.getSellHouseList(this.share.secondDetailParam).then(response=>{
-                this.share.secondDataList = response.data.data;
-                console.log(this.share.secondDataList);
-               // console.log(response.data.data);
+            api.getRentHouseSearchList(this.share.secondDetailParam).then(response=>{
+                console.log(response);
+                this.share.secondDataList = response.data;
             });
         },
         removeNavigat (item) {
@@ -243,10 +256,11 @@ export default {
         }
     },
     created: function () {
+        this.share.rentDetailUrl = this.$domain.rentDetailUrl;
         api.getCityAllInfo({cityDomain:"bj"}).then(response=>{
             this.share.districtInfo = response.data.cityAllInfos.circleDataList;
             this.share.subwayInfo = response.data.cityAllInfos.subwayDataList;
-            this.share.searchCondition = response.data.cityAllInfos.searchConditionData.second;
+            this.share.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
             // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
             // console.log(this.share.label);
             this.share.districtInfo.forEach(item=>{
@@ -287,33 +301,41 @@ export default {
 }
 </style>
 <stage-template>
-    <div id="template" style="display:none;">
-        <div class="item">
-            <div class="item_thumb">
-                <img src="#housePhotoTitle#"/>
-            </div>
-            <div class="house_textWidth">
-                <div class="house_title_price"><h3 class="title">#houseTitle#</h3><span>#houseTotalPrices#万</span></div>
-                <div class="house_desc"><div class="desc">#nearbyDistance#</div><span>#houseUnitCost#万/平米</span></div>
-                <div class="house_label"><span class="label">素质住户</span><span class="label">安全性高</span><span class="label">繁华地段</span></div>
-            </div>
-        </div> 
-    </div>
-    <div class="houseOverScroll" style=" top:{{@share.top/100}}rem;left:{{@share.left/100}}rem; right:{{@share.right/100}}rem; bottom:{{@share.bottom/100}}rem;">
-        <div class="houseList">
+    <div class="templateId" style="display:none;">
+        <div class="typeMin_item">
+            <a href="<%= share.rentDetailUrl %>?id=#houseId#" target="_self">
+                <div class="typeMin_item_thumb">
+                    <div class="img-box">
+                        <img src="#houseTitleImg#"/>
+                    </div>
+                </div>
+                <div class="typeMin_house_textWidth">
+                    <div class="typeMin_house_title_price"><span class="#rentLabelClass#">#rentLabelName#</span><h3 class="title">#zufangName#</h3></div>
+                    <p class="price"><span>#rentHousePrice#</span>元/月</p>
+                    <div class="typeMin_house_desc"><div class="desc">#room#室 | #houseArea#㎡ | #forward# </div></div>
+                    <div class="typeMin_house_label">#labelSpan#</div>
+                    <div><span class="typeMin_rent_address">#districtName# #areaName#</span></div>
+                </div>
+            </a>
         </div>
-        <div class="down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">玩命加载中</div>
+    </div>
+    <div class="typeMin_houseOverScroll" style="padding:{{@share.top/100}}rem {{@share.right/100}}rem {{@share.bottom/100}}rem {{@share.left/100}}rem;">
+        <div class="typeMin_rentList">
+        </div>
+        <div class="typeMin_down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">玩命加载中</div>
     </div>
 </stage-template>
 <stage-javascript type="text/javascript">
 var num = 1;
 var asynFlag = true;
-
+var param = <%- $imports.tojson(share.secondDetailParam) %>;
 $(document).ready(function(){
-  //  houseList();
+    var houseArr = <%- $imports.tojson(share.secondDataList) %>;
+    if(JSON.stringify(houseArr) != '{}'){
+        createAppendTemp(houseArr);
+    }
 });
 function houseList(){
-var param = {pageNum: num, pageSize: 10};
 asynFlag = false;
 $t.find(".down4gLoad").show();
 $.ajax({
@@ -321,13 +343,13 @@ $.ajax({
             type: "POST",//方法类型
             contentType: "application/json",
             dataType: "json",//预期服务器返回的数据类型
-            url: "http://app.dev.bidewu.com/searchapiv2/rest/esf/getSellHouseList" ,//url
+            url: "http://app.dev.bidewu.com/searchapiv2/rest/rent/getRentHouseSearchList" ,//url
             data: JSON.stringify(param),
             success: function (result) {
+                console.log(result);
                 asynFlag = true;
                 $t.find(".down4gLoad").hide();
                 createAppendTemp(result);
-                num++;
             },
             error : function() {
                 alert("异常！");
@@ -336,23 +358,57 @@ $.ajax({
 }
 
 function createAppendTemp(result){
-    for(var i=0;i<result.data.length;i++){
-        var tempHtml = $t.find("#template").html();
-        var housePhotoTitle = result.data[i].housePhotoTitle;
-        var houseTitle = result.data[i].houseTitle;
-        var houseTotalPrices = result.data[i].houseTotalPrices;
-        var nearbyDistance =  result.data[i].room+"室"+result.data[i].hall+"厅";
-        var houseUnitCost = result.data[i].houseUnitCost.toFixed(2);
-        tempHtml = tempHtml.replace("#housePhotoTitle#",imgSrc(housePhotoTitle,'-dongfangdi400x300'));
-        tempHtml = tempHtml.replace("#houseTitle#",houseTitle);
-        tempHtml = tempHtml.replace("#houseTotalPrices#",houseTotalPrices);
+    if(result.rentDetailsList <= 0){
+        return false;
+    }
+    for(var i=0;i<result.rentDetailsList.length;i++){
+        var tempHtml = $t.find(".templateId").html();
+        var rentData = result.rentDetailsList[i];
+        var zufangName = rentData.zufangName;
+        var houseTitleImg = rentData.houseTitleImg;
+        var nearbyDistance = rentData.nearbyDistance;
+        var houseArea = rentData.houseArea;
+        var areaName = rentData.areaName;
+        var districtName = rentData.districtName;
+        var forward = rentData.forward;
+        var room = rentData.room;
+        var houseId = rentData.houseId;
+        var rentHousePrice = rentData.rentHousePrice;
+        var rentType = rentData.rentType;
+        var rentHouseTagsName = rentData.rentHouseTagsName.slice(0,2);
+        var labelSpan = "";
+        for(var k=0;k<rentHouseTagsName.length;k++){
+            labelSpan +="<span class=\"label\">"+rentHouseTagsName[k]+"</span>";
+        }
+        var rentLabelName = "";
+        var rentLabelClass = "";
+        if(rentType == 1){
+            rentLabelName = "整租";
+            rentLabelClass = "yellow";
+        }
+        if(rentType == 2){
+            rentLabelName = "合租";
+            rentLabelClass = "green";
+        }
+        tempHtml = tempHtml.replace("#areaName#",areaName);
+        tempHtml = tempHtml.replace("#districtName#",districtName);
+        tempHtml = tempHtml.replace("#zufangName#",zufangName);
+        tempHtml = tempHtml.replace("#rentLabelName#",rentLabelName);
+        tempHtml = tempHtml.replace("#houseTitleImg#",houseTitleImg);
         tempHtml = tempHtml.replace("#nearbyDistance#",nearbyDistance);
-        tempHtml = tempHtml.replace("#houseUnitCost#",houseUnitCost);
+        tempHtml = tempHtml.replace("#rentLabelClass#",rentLabelClass);
+        tempHtml = tempHtml.replace("#houseArea#",houseArea);
+        tempHtml = tempHtml.replace("#houseId#",houseId);
+        tempHtml = tempHtml.replace("#labelSpan#",labelSpan);
+        tempHtml = tempHtml.replace("#room#",room);
+        tempHtml = tempHtml.replace("#rentHousePrice#",rentHousePrice);
+        tempHtml = tempHtml.replace("#forward#",forward);
         var maxDiv = $("<div></div>");
         maxDiv.html(tempHtml);
         var liMaxDom = maxDiv.children("div");	
-        $t.find(".houseList").append(liMaxDom);
+        $t.find(".typeMin_rentList").append(liMaxDom);
     }
+    param.pageNum ++;
 }
 function imgSrc(img,size){
   if (img) {
@@ -369,11 +425,10 @@ function imgSrc(img,size){
 /**
  * 屏幕滚动后加载列表
  */
-$($t.children(".houseOverScroll")).scroll(function(){
-	var conOffset = this.offsetTop; // 头部高度
-    var scrollTop = this.scrollTop;	// 滚动高度		    
-    var scrollHeight = this.scrollHeight; // 文档高度
-	var windowHeight = document.body.clientHeight-conOffset; // 文档窗口高度
+$(document).scroll(function(){
+    var scrollTop = $(document).scrollTop();	// 滚动高度		    
+    var scrollHeight = $(document).height(); // 文档高度
+	var windowHeight = document.body.clientHeight; // 文档窗口高度
 	if (scrollTop + windowHeight >= scrollHeight - 100) {
         if(asynFlag){
             houseList();
@@ -382,12 +437,45 @@ $($t.children(".houseOverScroll")).scroll(function(){
 });
 </stage-javascript>
 <stage-css>
-.house_textWidth {
-    width:6.5rem;
-    margin:0 auto;
-    overflow: hidden;
+.typeMin_tag-list {
+    position: absolute;
+    top: 0.2rem;
+    left: 0;
+    margin-left: 10px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
-.down4gLoad {
+.typeMin_tag {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.4rem;
+    background-size: 100% 100%;
+    margin-left: 0.15rem;
+}
+.typeMin_tag img {
+    width:100%;
+}
+.typeMin_house_textWidth {
+    width:3.6rem;
+    margin:0 auto;
+    float:left;
+    overflow: hidden;
+    position: relative;
+}
+.typeMin_house_Price {
+    position: absolute;
+    right:0;
+    z-index:20;
+    bottom:-0.1rem;
+    color:#FE4D4D;
+    font-size:0.5rem;
+}
+.typeMin_house_Price span {
+    font-size:0.25rem;
+    color:#2E2E2E;
+}
+.typeMin_down4gLoad {
     height: 0.7rem;
     line-height: 0.7rem;
     text-align: center;
@@ -395,103 +483,128 @@ $($t.children(".houseOverScroll")).scroll(function(){
     display: none;
     font-size: 0.24rem;
 }
-.down4gLoad img {
+.typeMin_down4gLoad img {
     width: 0.4rem;
     height: 0.4rem;
     margin-right: 0.1rem;
     margin-bottom: 0.04rem;
 }
-.houseOverScroll {
-    overflow-y: scroll;
-    overflow-x: hidden;
+.typeMin_houseOverScroll {
     width: 7.5rem;
-    height: 600px;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-.houseOverScroll::-webkit-scrollbar-track-piece {
-  background-color: rgba(0, 0, 0, 0);
-  border-left: 1px solid rgba(0, 0, 0, 0);
-}
-.houseOverScroll::-webkit-scrollbar {
-  width: 5px;
-  height: 13px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.houseOverScroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5);
-  background-clip: padding-box;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  min-height: 28px;
-}
-.houseOverScroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-.houseList {
     overflow: hidden;
 }
-.item {
-    width: 6.92rem;
+.typeMin_rentList {
+    overflow: hidden;
+    width:7.5rem;
     background: #FFFFFF;
-    border-radius: 5px;
-    margin:0 auto;
-    margin-top:0.2rem;
-    padding-bottom:0.3rem;
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.02);
 }
-.item_thumb {
-    width:6.5rem;
+.typeMin_item {
+    width: 6.7rem;
+    background: #FFFFFF;
+    margin:0 auto;
+    margin-top:0.3rem;
+    overflow:hidden;
+    padding-bottom:0.35rem;
+    border-bottom:1px solid #EBEBEB;
+}
+.typeMin_item_thumb {
+    width:2.85rem;
     overflow:hidden;
     margin:0 auto;
-    padding-top:0.2rem;
+    float:left;
+    margin-right:0.25rem;
+    position: relative;
 }
-.item_thumb img {
+.typeMin_item_thumb .img-box {
+    width:2.85rem;
+    height:2.1rem;
+    border-radius: 0.1rem;
+    overflow: hidden;
+}
+.typeMin_item_thumb .img-box img {
     width:100%;
 }
-.house_title_price {
-    padding-top:0.3rem;
+.typeMin_house_title_price {
     overflow:hidden;
 }
-.house_title_price h3{
+.typeMin_house_title_price .green {
+    background-color: #37dc9c;
+    color:#FFFFFF;
+    font-size:0.25rem;
+    padding:0.02rem 0.1rem 0.02rem 0.1rem;
+    float:left;
+    margin: 0.1rem 0.12rem 0 0;
+    display:block;
+}
+.typeMin_house_title_price .yellow {
+    background-color: #ffc32f;
+    color:#FFFFFF;
+    font-size:0.25rem;
+    padding:0.02rem 0.1rem 0.02rem 0.1rem;
+    float:left;
+    margin: 0.1rem 0.12rem 0 0;
+    display:block;
+}
+.typeMin_house_title_price h3{
     font-size:0.32rem;
 }
-.house_title_price  .title {
+.typeMin_house_title_price  .title {
+    font-size:0.3rem;
+    color:#282828;
+    line-height: 0.6rem;
+    display: block;
+}
+.typeMin_item .price {
+    margin-top: 0.1rem;
+    font-size: 0.2rem;
+    color:#282828;
+    vertical-align: text-bottom;
+}
+.typeMin_item .price span {
+    display: inline-block;
+    line-height: 1;
+    font-size: 0.32rem;
+    color: #fe4d4d;
+    font-family: DIN-Medium;
+}
+
+.typeMin_rent_address {
+    color:#666666;
+    font-size:0.25rem;
     float:left;
-    width:5.4rem;
+    display:table-cell;
+    vertical-align:bottom;
 }
-.house_title_price  span {
-    color:#EC4A02;
-    font-size:0.35rem;
-    float:right;
+.typeMin_rent_address:before {
+    content: "";
+    display: inline-block;
+    margin-right: 0.1rem;
+    background-size: 100% 100%;
+    width: 0.23rem;
+    height: 0.23rem;
+    background-image: url("http://wap-qn.toutiaofangchan.com/adideas/b7f7bb4d528e4997941f8dabf3916560.png");
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-.house_desc {
+.typeMin_house_desc {
     font-size:0.24rem;
     overflow:hidden;
-    padding-top:0.28rem;
 }
-.house_desc .desc {
+.typeMin_house_desc .desc {
     color:#191919;
     float:left;
 }
-.house_desc span {
+.typeMin_house_desc span {
     float:right;
 }
-.house_label {
-    padding-top:0.2rem;
+.typeMin_house_label {
     overflow:hidden;
 }
-.house_label .label {
-    margin-right:0.15rem;
-    background:#ECFAE6;
-    color:#54BD76;
-    font-size:0.24rem;
+.typeMin_house_label .label {
+    margin-right:0.1rem;
+    background:#EDF9FF;
+    color:#419AB8;
+    font-size:0.22rem;
 }
 </stage-css>

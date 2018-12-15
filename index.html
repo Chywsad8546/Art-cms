@@ -49,10 +49,10 @@
 
 
 	<!-- <script type="text/javascript" src="/dist/version.js"></script> -->
-	<!--<script>-->
-		<!--$(function () {-->
-			<!--console.log($("#id").html());-->
-        <!--});-->
-	<!--</script>-->
+	<script>
+	template.defaults.imports.tojson=function(obj){
+		return JSON.stringify(obj);
+	}
+	</script>
 </body>
 </html>

@@ -17,10 +17,10 @@
                 <Button @click="cancelFun()">取消</Button>
             </div>
         </div>
-        <Upload id="iviewUp" action="/cmsapi/cmsapi/sys/uploadImg" :on-success="successPreview" v-show="uploadFlag">
+        <Upload id="iviewUp" action="/cmsapi/sys/uploadImg" :on-success="successPreview" v-show="uploadFlag">
             <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
         </Upload>
-        <Upload id="iviewUp2" action="/cmsapi/cmsapi/sys/uploadImg" :on-success="successPreviewTrue" v-show="uploadFlag">
+        <Upload id="iviewUp2" action="/cmsapi/sys/uploadImg" :on-success="successPreviewTrue" v-show="uploadFlag">
             <i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
         </Upload>
         <div class="articlePopupBack" @click="uploadImg"></div>

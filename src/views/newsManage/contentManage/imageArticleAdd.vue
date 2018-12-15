@@ -203,7 +203,7 @@
                     ],
                 },
                 // 七牛云的上传地址，根据自己所在地区选择，我这里是华南区
-                domain: '/cmsapi/cmsapi/sys/uploadImg',
+                domain: '/cmsapi/sys/uploadImg',
                 uploadimgList: []
             };
         },
