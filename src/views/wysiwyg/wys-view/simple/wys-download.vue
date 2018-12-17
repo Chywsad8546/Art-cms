@@ -130,7 +130,7 @@
               </FormItem>
               <FormItem v-if="share.uploadList.length == 0" label="背景图">
                 <Row>
-                  <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                  <Upload ref="upload" class="uploadWidth" :action="$domain.uploadFile"
                     :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadSuccess"
                     :on-format-error="uploadFormatError" :show-upload-list="false">
                     <Button type="ghost">添加图片</Button>

@@ -139,6 +139,7 @@ export default {
                 secondDataList:{},
                 secondDetailUrl:'',
                 tempVertical:'templateId',
+                ajaxDomain:'',
                 secondDetailParam:{
                    pageNum: 1,
                    pageSize: 10,
@@ -248,6 +249,7 @@ export default {
         }
     },
     created: function () {
+        this.share.ajaxDomain = this.$domain.ajaxDomain;
         this.share.secondDetailUrl = this.$domain.secondDetailUrl;
         api.getCityAllInfo({cityDomain:"bj"}).then(response=>{
             this.share.districtInfo = response.data.cityAllInfos.circleDataList;
@@ -355,7 +357,7 @@ $.ajax({
             type: "POST",//方法类型
             contentType: "application/json",
             dataType: "json",//预期服务器返回的数据类型
-            url: "http://app.dev.bidewu.com/searchapiv2/rest/esf/getSellHouseList" ,//url
+            url: "<%= share.ajaxDomain %>/searchapiv2/rest/esf/getSellHouseList" ,//url
             data: JSON.stringify(param),
             success: function (result) {
                 asynFlag = true;

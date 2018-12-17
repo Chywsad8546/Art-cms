@@ -398,7 +398,7 @@ img {
                 <div class="img" style="background-color: rgb(255, 255, 255); background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackImgStyle">
                 </div>
                 <Upload 
-                    ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="defaultList"
+                    ref="upload" class="uploadWidth" :action="$domain.uploadFile" :default-file-list="defaultList"
                     :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost" style="width:300px;margin-top:10px;">上传图片</Button>

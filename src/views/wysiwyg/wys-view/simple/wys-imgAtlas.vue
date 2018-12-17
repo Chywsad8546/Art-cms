@@ -38,7 +38,7 @@
                     <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
                         v-bind:isBlock="item.navVisible"></wysLink>
                 </div>
-                <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList"
+                <Upload ref="upload" class="uploadWidth" :action="$domain.uploadFile" :default-file-list="share.defaultList"
                     :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost">添加图片</Button>

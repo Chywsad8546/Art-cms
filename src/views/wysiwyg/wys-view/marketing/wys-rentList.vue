@@ -140,6 +140,7 @@ export default {
                 apartment:[],
                 secondDataList:{},
                 rentDetailUrl:'',
+                ajaxDomain:'',
                 secondDetailParam:{
                    pageNum: 1,
                    pageSize: 10,
@@ -256,6 +257,7 @@ export default {
         }
     },
     created: function () {
+        this.share.ajaxDomain = this.$domain.ajaxDomain;
         this.share.rentDetailUrl = this.$domain.rentDetailUrl;
         api.getCityAllInfo({cityDomain:"bj"}).then(response=>{
             this.share.districtInfo = response.data.cityAllInfos.circleDataList;
@@ -343,7 +345,7 @@ $.ajax({
             type: "POST",//方法类型
             contentType: "application/json",
             dataType: "json",//预期服务器返回的数据类型
-            url: "http://app.dev.bidewu.com/searchapiv2/rest/rent/getRentHouseSearchList" ,//url
+            url: "<%= share.ajaxDomain %>/searchapiv2/rest/rent/getRentHouseSearchList" ,//url
             data: JSON.stringify(param),
             success: function (result) {
                 console.log(result);

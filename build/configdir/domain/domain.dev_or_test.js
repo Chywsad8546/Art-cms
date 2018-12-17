@@ -10,6 +10,8 @@ const rentDetailUrl = "http://m.dev.bidewu.com/bj/detail/rent";
 const plotDetailUrl = "http://m.dev.bidewu.com/bj/detail/plot";
 const newDetailUrl = "http://m.dev.bidewu.com/bj/detail/new";
 const uploadFile = "/cmsapi/upload/uploadimgNoDomainExt";
+const uploadNewsFile = "/cmsapi/sys/uploadImg";
+const ajaxDomain = "http://app.dev.bidewu.com";
 export default {
     jingjirenDomain,
     companyDomain,
@@ -22,5 +24,7 @@ export default {
     rentDetailUrl,
     plotDetailUrl,
     newDetailUrl,
-    uploadFile
+    uploadFile,
+    ajaxDomain,
+    uploadNewsFile
 };
