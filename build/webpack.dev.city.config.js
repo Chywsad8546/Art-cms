@@ -69,6 +69,15 @@ module.exports = merge(webpackBaseConfig, {
         inline: true,
         stats: { colors: true },
         proxy: {
+            '/cmsapi/officedictapi': {
+                // 目标服务器地址
+                target: 'http://cms.dev.bidewu.com/cmsapi/officedictapi',
+                //target: 'http://192.168.1.61:8084',
+                //target: 'http://127.0.0.1:8084/',
+                //路径重写
+                pathRewrite: { '^/cmsapi/officedictapi': '/cmsapi/officedictapi' },
+                changeOrigin: true
+            },
             //匹配代理的url
             '/cmsapi': {
                 // 目标服务器地址
@@ -88,6 +97,7 @@ module.exports = merge(webpackBaseConfig, {
                 pathRewrite: { '^/searchapiv2': '/searchapiv2' },
                 changeOrigin: true
             }
+            
         }
     }
 });

@@ -1,4 +1,5 @@
 import http from '../api.base';
+import httpes from '../api.es.base';
 export default {
     saveDiyWebpage(params) {
         return http.post('/cmsapi/diyWebpage/saveDiyWebpage', params);
@@ -48,17 +49,17 @@ export default {
         return http.post('/cmsapi/diyWebpage/delDiyWebpage', params);
     },
     getCityAllInfo(params) {
-        return http.get('/searchapiv2/rest/getCityAllInfo', {
+        return httpes.get('/searchapiv2/rest/getCityAllInfo', {
             params: params
         });
     },
     getSellHouseList(params) {
-        return http.postJson('/searchapiv2/rest/esf/getSellHouseList', params);
+        return httpes.postJson('/searchapiv2/rest/esf/getSellHouseList', params);
     },
     getRentHouseSearchList(params) {
-        return http.postJson('/searchapiv2/rest/rent/getRentHouseSearchList', params);
+        return httpes.postJson('/searchapiv2/rest/rent/getRentHouseSearchList', params);
     },
     getNewHouseList(params) {
-        return http.postJson('/searchapiv2/rest/newhouse/getNewHouseList', params);
+        return httpes.postJson('/searchapiv2/rest/newhouse/getNewHouseList', params);
     }
 };
