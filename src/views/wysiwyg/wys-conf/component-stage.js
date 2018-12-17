@@ -302,7 +302,7 @@ export default {
         //     .html()
         //     .find('.wys-mask');
         //  var strHtml = $('#wysiwyg_stage').clone(true);
-        var strCloneHtml = $('#wysiwyg_stage').clone(true);
+        var strCloneHtml = $('#saveHtmlId').clone(true);
         var maskSpan = strCloneHtml.find('.wys-mask');
         maskSpan.each(function() {
             $(this).remove();

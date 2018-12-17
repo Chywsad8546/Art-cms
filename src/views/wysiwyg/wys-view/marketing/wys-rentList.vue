@@ -322,7 +322,7 @@ export default {
     <div class="typeMin_houseOverScroll" style="padding:{{@share.top/100}}rem {{@share.right/100}}rem {{@share.bottom/100}}rem {{@share.left/100}}rem;">
         <div class="typeMin_rentList">
         </div>
-        <div class="typeMin_down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">玩命加载中</div>
+        <div class="typeMin_down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">加载中</div>
     </div>
 </stage-template>
 <stage-javascript type="text/javascript">

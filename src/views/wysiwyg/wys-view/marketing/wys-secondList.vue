@@ -78,6 +78,15 @@
         </Form>
       </TabPane>
       <TabPane label="样式">
+        <RadioGroup v-model="share.tempVertical" vertical>
+            <Radio label="templateId">
+                <span>大图样式</span>
+            </Radio>
+            <Radio label="templateId1">
+                <span>小图样式</span>
+            </Radio>
+        </RadioGroup>
+
         <Row>
           <Col span="24">
           边距
@@ -95,17 +104,6 @@
         <FormItem label="左">
           <Slider v-model="share.left" show-input></Slider>
         </FormItem>
-        <Collapse v-model="panelTextKey2" style="margin-bottom:10px;">
-            <Panel name="1">
-                文字
-                <p slot="content">
-                    <Row>
-                        <Col span="12">
-                        </Col>
-                    </Row>
-                </p>
-            </Panel>
-        </Collapse>
       </TabPane>
     </Tabs>
   </Form>
@@ -140,6 +138,7 @@ export default {
                 apartment:[],
                 secondDataList:{},
                 secondDetailUrl:'',
+                tempVertical:'templateId',
                 secondDetailParam:{
                    pageNum: 1,
                    pageSize: 10,
@@ -298,6 +297,9 @@ export default {
         <div class="typeMin_item">
             <a href="<%= share.secondDetailUrl %>?id=#houseId#" target="_self">
                 <div class="typeMin_item_thumb">
+                    <div class="typeMin_tag-list">
+                            #tagList#
+                    </div>
                     <div class="img-box">
                         <img src="#housePhotoTitle#"/>
                     </div>
@@ -306,7 +308,7 @@ export default {
                     <div class="typeMin_house_title_price"><h3 class="title">#plotNameAccurate#</h3></div>
                     <div class="typeMin_house_desc"><div class="desc">#nearbyDistance# | #buildArea#㎡ | #floor#/共#totalFloor#层 </div></div>
                     <div class="typeMin_house_label">#labelSpan#</div>
-                    <div><span class="price">#houseTotalPrices#<span>万</span></span><span class="typeMin_rent_address">#area# #houseBusinessName#</span></div>
+                    <div class="typeMin_secRess"><span class="price">#houseTotalPrices#<span>万</span></span><span class="typeMin_rent_address"> | #area# #houseBusinessName#</span></div>
                 </div>
             </a>
         </div>
@@ -330,9 +332,9 @@ export default {
         </div> 
     </div>
     <div class="houseOverScroll" style="padding:{{@share.top/100}}rem {{@share.right/100}}rem {{@share.bottom/100}}rem {{@share.left/100}}rem;">
-        <div class="houseList">
+        <div class="<%= share.tempVertical == 'templateId' ? 'houseList' : 'houseList houseBackList' %>">
         </div>
-        <div class="down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">玩命加载中</div>
+        <div class="down4gLoad" style="display: none;"><img src="http://img.dafy.com/mall/common/img/20180108/load.gif">加载中</div>
     </div>
 </stage-template>
 <stage-javascript type="text/javascript">
@@ -370,8 +372,9 @@ function createAppendTemp(result){
     if(result.data <= 0){
         return false;
     }
+    var tempId = ".<%= share.tempVertical %>";
     for(var i=0;i<result.data.length;i++){
-        var tempHtml = $t.find(".templateId1").html();
+        var tempHtml = $t.find(tempId).html();
         var housePhotoTitle = result.data[i].housePhotoTitle;
         var houseTitle = result.data[i].houseTitle;
         var plotNameAccurate = result.data[i].plotNameAccurate;
@@ -387,13 +390,19 @@ function createAppendTemp(result){
         for(var t=0;t<houseLableList.length;t++){
             tagList +="<span class=\"tag\"><img src="+houseLableList[t].icon+"></span>";
         }
-        var houseSubjectList = result.data[i].houseSubjectList.slice(0,2);
-        var labelSpan = "";
-
-        for(var k=0;k<houseSubjectList.length;k++){
-            labelSpan +="<span class=\"label\">"+houseSubjectList[k].text+"</span>";
+        if(tempId == ".templateId"){
+            var houseSubjectList = result.data[i].houseSubjectList.slice(0,2);
+            var labelSpan = "";
+            for(var k=0;k<houseSubjectList.length;k++){
+                labelSpan +="<span class=\"label\">"+houseSubjectList[k].text+"</span>";
+            }
+        }else{
+            var tagsName = result.data[i].tagsName.slice(0,4);
+            var labelSpan = "";
+            for(var k=0;k<tagsName.length;k++){
+                labelSpan +="<span class=\"label\">"+tagsName[k]+"</span>";
+            }
         }
-       
         var nearbyDistance =  result.data[i].room+"室"+result.data[i].hall+"厅";
         var houseUnitCost = result.data[i].houseUnitCost.toFixed(2);
         tempHtml = tempHtml.replace("#housePhotoTitle#",imgSrc(housePhotoTitle,'-dongfangdi400x300'));
@@ -412,7 +421,7 @@ function createAppendTemp(result){
         
         var maxDiv = $("<div></div>");
         maxDiv.html(tempHtml);
-        var liMaxDom = maxDiv.children("div");	
+        var liMaxDom = maxDiv.children("div");
         $t.find(".houseList").append(liMaxDom);
     }
     param.pageNum ++;
@@ -527,6 +536,9 @@ $(document).scroll(function(){
 .houseList {
     overflow: hidden;
 }
+.houseBackList {
+    background:#FFFFFF;
+}
 .item {
     width: 7.08rem;
     background: #FFFFFF;
@@ -607,7 +619,7 @@ $(document).scroll(function(){
 
 .typeMin_tag-list {
     position: absolute;
-    top: 0.2rem;
+    top: 0;
     left: 0;
     margin-left: 10px;
     display: flex;
@@ -723,30 +735,32 @@ $(document).scroll(function(){
     display: block;
 }
 .typeMin_item .price {
-    margin-top: 0.1rem;
-    font-size: 0.3rem;
+    font-size: 0.32rem;
     color:#fe4d4d;
     display:block;
     float:left;
+    font-weight: 700;
+    margin-right:0.1rem;
     vertical-align: text-bottom;
 }
 .typeMin_item .price span {
     display: inline-block;
     line-height: 1;
-    font-size: 0.2rem;
+    font-size: 0.25rem;
     color: #fe4d4d;
     font-family: DIN-Medium;
 }
 
 .typeMin_rent_address {
     color:#666666;
-        display:block;
+    display:block;
     float:left;
     font-size:0.25rem;
 }
 .typeMin_house_desc {
     font-size:0.24rem;
     overflow:hidden;
+    margin-top:0.1rem;
 }
 .typeMin_house_desc .desc {
     color:#191919;
@@ -755,8 +769,13 @@ $(document).scroll(function(){
 .typeMin_house_desc span {
     float:right;
 }
+.typeMin_secRess {
+    overflow:hidden;
+    margin-top:0.1rem;
+}
 .typeMin_house_label {
     overflow:hidden;
+    margin-top:0.1rem;
 }
 .typeMin_house_label .label {
     margin-right:0.1rem;

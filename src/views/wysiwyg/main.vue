@@ -283,6 +283,43 @@ img {
 .wys-header-left {
   background: #ffffff;
 }
+.page-control {
+    position: absolute;
+    top: 0;
+    left:0;
+    left: calc(50% + 55px);
+    width: 32px;
+    z-index: 401;
+}
+.page-control .page-settings a {
+    display: inline-block;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #000;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 18px;
+    line-height: 36px;
+}
+.setModelleftImg {
+  width: 300px;
+  overflow: hidden;
+  float: left;
+}
+.setModelleftImg .img {
+  width: 300px;
+  min-height: 260px;
+  border: 1px solid #cccccc;
+
+}
+.setModelRight {
+  width: 230px;
+  margin-left: 10px;
+  float: left;
+}
 </style>
 
 <template>
@@ -317,10 +354,18 @@ img {
         <div class="workarea-stage">
           <div class="phone-box">
             <div class="phone-wrapper" style="width: 375px; height: 668px;">
+            <div class="page-control">
+              <div class="page-settings">
+                <a href="javascript:void(0)" @click="settings" class="snap-tips">
+                   <Icon type="ios-color-filter" />
+                </a> 
+              </div>
+            </div>
               <div class="signal-wrapper" style="width: 375px;"><img src="http://wap-qn.toutiaofangchan.com/adideas/fcdb09632f114c768215e75d06ff48af.png" /></div>
 
               <div class="screen-border">
-                <div class="workarea" id="wysiwyg_stage" wys-container style="width: 375px;height: 625px;">
+                <div class="workarea" id="saveHtmlId" style="width: 375px;height: 625px;">
+                  <div id="wysiwyg_stage" wys-container style="width: 7.5rem;min-height: 625px;background-image: none; background-color:#FFFFFF;  background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackStyle"></div>
                 </div>
               </div>
             </div>
@@ -341,6 +386,56 @@ img {
         </div>
       </div>
     </div>
+    <Modal v-model="settingsModal" width="600">
+      <Tabs  v-model="tabsName"  style="margin-top:20px; height:500px;">
+            <TabPane label="背景色" name="name1">
+                  <Col span="24">
+                    <span>背景颜色：</span><ColorPicker v-model="ztBackgroundColor"  style="width:260px;"/><Input v-model="ztBackgroundColor" style="margin-left:10px;width:100px;"></Input> 
+                  </Col>
+            </TabPane>
+            <TabPane label="上传图片" name="name2">
+              <div class="setModelleftImg">
+                <div class="img" style="background-color: rgb(255, 255, 255); background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackImgStyle">
+                </div>
+                <Upload 
+                    ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="defaultList"
+                    :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
+                    :show-upload-list="false">
+                    <Button type="ghost" style="width:300px;margin-top:10px;">上传图片</Button>
+                </Upload> 
+              </div>
+              <div class="setModelRight">
+                    <Row>
+                        <Col span="24">横向</Col>
+                        <Col span="24">
+                          <Select v-model="transverseImgParam" @on-change="transverseChange" style="width:200px">
+                              <Option value="background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;">适应宽度</Option>
+                              <Option value="background-size: auto 100%; background-position: initial; background-repeat: repeat-x;">重复</Option>
+                              <Option value="background-size: auto 100%; background-position-x: 50%; background-position-y: initial; background-repeat: no-repeat;">剧中</Option>
+                          </Select>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span="24">纵向</Col>
+                        <Col span="24">
+                            <Select v-model="portraitImgParam" @on-change="portraitChange" style="width:200px">
+                                <Option value="background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;">适应宽度</Option>
+                                <Option value="background-position-x: initial; background-position-y: 50%; background-size:100%; background-repeat:repeat-y;">重复</Option>
+                                <Option value="background-position-x: initial; background-position-y: 50%;background-size:100%;">剧中</Option>
+                                <Option value="background-position-x: initial; background-position-y: 0%;background-size:100%;">置顶</Option>
+                            </Select>                       
+                        </Col>
+                    </Row>
+              </div>
+            </TabPane>
+       </Tabs>
+       <Button @click="settingsCancel">取消</Button>
+       <Button @click="settingsConfirm" type="primary">应用更改</Button>
+      <div slot="footer">
+      </div>
+    </Modal>
+
+
 
     <Modal v-model="qrcodeModal" width="400">
 
@@ -387,6 +482,15 @@ export default {
             currentEditorKey: 'wys_default',
             qrcodeModal: false,
             siteUrl: '',
+            settingsModal:false,
+            ztBackgroundColor:'',
+            ztBackgroundImg:'',
+            mainBackStyle:'',
+            mainBackImgStyle:'',
+            tabsName:'name1',
+            defaultList:[],
+            transverseImgParam:'',
+            portraitImgParam:'',
             formMain: {
                 siteId: '',
                 html: '',
@@ -402,6 +506,61 @@ export default {
         };
     },
     methods: {
+        uploadSuccess (res, file) {
+            if (res.code === 'success') {
+                // 创建对象
+                var img = new Image();
+                // 改变图片的src
+                img.src = res.data.url;
+                this.ztBackgroundImg = res.data.url;
+                this.mainBackImgStyle = "background-image:url("+this.ztBackgroundImg+")";
+                var that = this;
+                // 加载完成执行
+                img.onload = function () {
+                    // that.share.uploadList.push({
+                    //     name: file.name,
+                    //     url: res.data.url,
+                    //     httpUrl: '',
+                    //     urlData: {},
+                    //     imgInformation: img.width + 'px*' + img.height + 'px',
+                    //     navVisible: false,
+                    //     single: false
+                    // });
+                };
+            } else {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: res.data.url
+                });
+            }
+        },
+        uploadFormatError (file) {
+            this.$Notice.error({
+                title: '不能上传此格式的文件',
+                desc: ''
+            });
+        },
+        transverseChange(data){
+          this.mainBackImgStyle = "background-image:url("+this.ztBackgroundImg+");"+data+";";
+        },
+        portraitChange(data){
+          this.mainBackImgStyle = "background-image:url("+this.ztBackgroundImg+");"+data+";";
+        },
+        settingsConfirm(){
+           this.settingsModal = false;
+            if(this.tabsName == 'name1'){
+                  this.mainBackStyle = "background-color:"+this.ztBackgroundColor;
+            }else{
+                  this.mainBackStyle = this.mainBackImgStyle;
+            }
+        },
+        settingsCancel(){
+          this.settingsModal = false;
+        },
+        settings(){
+          this.settingsModal = true;
+
+        },
         fbClick (status) {
             this.$refs.formMainValidate.validate((valid) => {
                 if (valid) {
