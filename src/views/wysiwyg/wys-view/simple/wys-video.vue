@@ -256,40 +256,16 @@ export default {
 
 <stage-template>
 <div style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
-    <div class="image-con" style="position: relative;">
-        <div class="prism-player" id="player-con"></div>
-        <span class="image-text {{@ share.position}}">{{@ share.httpUrl }}</span>
-    </div>
+<div   style="margin: 0px auto;">
+<video src="<%= share.videoUrl %>" type="video/mp4" controls="" poster="<%= share.videoImg %>" preload="none" webkit-playsinline="" playsinline="" style="width:100%;">
+</video>
+</div>
 </div>
 </stage-template>
 <stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/55ad396d497544678af4f5c8e42386f6.js</stage-javascript-import>
 <stage-css-import>http://wap-qn.toutiaofangchan.com/adideas/a85bfd05564440409e5ac8026a25ac72.css</stage-css-import>
 <stage-javascript type="text/javascript">
-setTimeout(function(){
-    var player = new Aliplayer({
-        id: "player-con",
-        width: "100%",
-        height: "300px",
-        source: "<%= share.videoUrl %>",
-        cover: "<%= share.videoImg %>",
-        autoplay: true,
-        preload: true,
-        isLive: false,
-        rePlay: false,
-        playsinline: true,
-        controlBarVisibility: "click",
-        showBarTime: 3000,
-        useH5Prism: true,
-        skinLayout: [
-          {
-            name: "bigPlayButton",
-            align: "cc"
-          }
-        ]
-    }, function (player) {
-        console.log("播放器创建成功");
-    });
-},300)
+
 </stage-javascript>
 <stage-css>
   video {
