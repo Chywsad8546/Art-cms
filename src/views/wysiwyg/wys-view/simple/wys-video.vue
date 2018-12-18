@@ -256,10 +256,14 @@ export default {
 
 <stage-template>
 <div style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;">
-<div   style="margin: 0px auto;">
+{{if !share.videoUrl}}
+<img style="width:100%;" src="http://wap-qn.toutiaofangchan.com/adideas/98c38e7e6a04492da19b94b47561e76e.png"/>
+{{else}}
+<div  style="margin: 0px auto;">
 <video src="<%= share.videoUrl %>" type="video/mp4" controls="" poster="<%= share.videoImg %>" preload="none" webkit-playsinline="" playsinline="" style="width:100%;">
 </video>
 </div>
+{{/if}}
 </div>
 </stage-template>
 <stage-javascript-import>http://wap-qn.toutiaofangchan.com/adideas/55ad396d497544678af4f5c8e42386f6.js</stage-javascript-import>
