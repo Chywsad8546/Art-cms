@@ -14,21 +14,21 @@
                 <FormItem label="编辑" prop="title">
                     <Input v-model="searchData.title" placeholder="请输入编辑名称" style="width: 150px"></Input>
                 </FormItem>
-                <!-- <FormItem label="开始时间">
+                 <FormItem label="开始时间">
                     <Row>
                         <Col span="24">
-                             <DatePicker type="date" v-model="searchData.beginCreateTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                             <DatePicker type="date" v-model="searchData.beginCreateTime" show-week-numbers   placeholder="Select date" style="width: 200px"></DatePicker>
                         </Col>
                     </Row>
                 </FormItem>
                 <FormItem label="结束时间">
                     <Row>
                         <Col span="24">
-                        <DatePicker type="date" v-model="searchData.endCreateTime" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+                        <DatePicker type="date" v-model="searchData.endCreateTime" show-week-numbers placeholder="Select date"  style="width: 200px"></DatePicker>
                            
                         </Col>
                     </Row>
-                </FormItem>  -->
+                </FormItem> 
                 <FormItem>
                     <Button type="primary" @click="handleSearch('searchData')">搜索</Button>
                     <Button type="ghost" @click="handleCancel('searchData')" style="margin-left: 8px">清空</Button>
@@ -346,6 +346,19 @@ export default {
         },
         handleSearch () {
             this.searchData.pageNum = 1;
+            if (typeof this.searchData.beginCreateTime !== "string") {
+                this.searchData.beginCreateTime = dutil.dateformat(
+                this.searchData.beginCreateTime,
+                "yyyy-MM-dd"
+                );
+            }
+
+            if (typeof this.searchData.endCreateTime !== "string") {
+                this.searchData.endCreateTime = dutil.dateformat(
+                this.searchData.endCreateTime,
+                "yyyy-MM-dd"
+                );
+            }
             this.init();
         },
         handleCancel (name) {
