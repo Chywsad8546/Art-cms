@@ -11,8 +11,8 @@ const plotDetailUrl = "http://m.bidewu.com/bj/detail/plot";
 const newDetailUrl = "http://m.bidewu.com/bj/detail/new";
 const uploadFile = "/cmsapi/upload/uploadimgNoDomainExt";
 const ajaxDomain = "http://app.bidewu.com";
-const uploadNewsFile = "/cmsapi/sys/uploadImg";
-const wysiwygPreviewUrl = "http://cms.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml";
+const uploadNewsFile = "/cmsapi/cmsapi/sys/uploadImg";
+const wysiwygPreviewUrl = "http://cms.corp.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml";
 
 export default {
     jingjirenDomain,

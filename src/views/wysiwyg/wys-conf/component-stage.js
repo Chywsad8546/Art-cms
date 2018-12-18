@@ -193,7 +193,11 @@ export default {
                 return { ack: false, dom: null };
             }
         }
-        this._createMask(dom);
+
+        if(stageComponent.editor.accepts === undefined){
+ 
+            this._createMask(dom);
+        }
         // let appSpan = $(
         //     '<span style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;"></span>'
         // );
@@ -400,7 +404,11 @@ export default {
         } else {
             targetStageComponent.dom.html(html); // children('div').eq(0)
         }
-        this._createMask(targetStageComponent.dom);
+
+        if(targetStageComponent.editor.accepts === undefined){
+            this._createMask(targetStageComponent.dom);
+        }
+        
         if (_.trim(js)) {
             js =
                 '<script id="js-' +

@@ -100,7 +100,7 @@ export default {
             icon:
                 'http://wap-qn.toutiaofangchan.com/adideas/fe3142c7596d47789df1c2b84d3d88d6.png',
             title: 'Tab',
-            accepts: ['wys_secondList', 'wys_rentList'],
+            accepts: ['wys_link', 'wys_splitcharacter', 'wys_pic'],
             component: wys_tab,
             id: 'wys_tab'
         },

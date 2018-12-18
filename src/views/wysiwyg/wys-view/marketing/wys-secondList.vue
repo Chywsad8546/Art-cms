@@ -484,7 +484,7 @@ $(document).scroll(function(){
     position: absolute;
     right:0;
     z-index:20;
-    bottom:-0.1rem;
+    top:1rem;
     color:#FE4D4D;
     font-size:0.5rem;
 }
