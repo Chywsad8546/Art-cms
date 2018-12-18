@@ -17,7 +17,7 @@
             <Input v-model="share.httpUrl"></Input>
           </FormItem>
         </div>
-        <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" action="/cmsapi/cmsapi/sys/uploadVideo"
+        <Upload v-if="share.uploadList <= 0 && !share.isloading" ref="upload" class="uploadWidth" :action="$domain.uploadVideoFile"
           :format="['mp4','rm','rmvb','wma','avi']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
           :show-upload-list="false">
           <Button type="ghost">添加视频</Button>
