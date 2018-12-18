@@ -64,7 +64,7 @@
                             </Row>
                             <Row v-if="share.Imgurl == ''">
                                 <Col span="24">
-                                <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                                <Upload ref="upload" class="uploadWidth" :action="$domain.uploadFile"
                                     :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                                     :show-upload-list="false">
                                     <Button style="width:270px;" type="ghost">添加图片</Button>

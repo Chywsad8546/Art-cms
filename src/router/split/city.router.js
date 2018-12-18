@@ -343,13 +343,13 @@ export const appRouter = [
         component: Main,
         children: [
             {
-                path: 'cityManageEstablishWeb/establishColumn',
-                name: 'establishColumn',
-                title: '站点列表',
+                path: 'cityManageEstablishWeb/webList',
+                name: 'webList',
+                title: '我的站点',
                 // meta: {
                 //     keepalive: true
                 // },
-                component: () => import('@/views/wysiwyg/pageSite.vue')
+                component: () => import('@/views/wysiwyg/webList.vue')
             },
             {
                 path: '/marketingMain/newlybuildForm',

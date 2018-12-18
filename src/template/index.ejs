@@ -17,6 +17,10 @@
 	<link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[0] %>">
 	<link rel="stylesheet" name="theme" href="">
 	<link rel="shortcut icon" href="http://wap-qn.toutiaofangchan.com/bdw_favicon.ico" type=image/x-icon>
+	<script type="text/javascript" src="http://wap-qn.toutiaofangchan.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js"></script>
+	<link rel="stylesheet" href="http://wap-qn.toutiaofangchan.com/adideas/68593d3e866645efa4bad7928280a26a.css"> 
+	<link rel="icon" href="http://wap-qn.toutiaofangchan.com/bdw_favicon.ico" type="image/x-icon" />
+	<script type="text/javascript" src="http://wap-qn.toutiaofangchan.com/adideas/0b4781cd2065474cafde1eb6c67db355.js"></script>
 	<script>
 		(function (window) {
 			var userAgent = navigator.userAgent;
@@ -47,5 +51,10 @@
 	<script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[2] %>"></script>
 	<script type="text/javascript" src="http://wap-qn.bidewu.com/jquery-3.3.1.min.js"></script>
 	<!-- <script type="text/javascript" src="/dist/version.js"></script>	 -->
+	<script>
+		template.defaults.imports.tojson=function(obj){
+			return JSON.stringify(obj);
+		}
+	</script>
 </body>
 </html>

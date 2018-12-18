@@ -17,7 +17,7 @@
                     </div>
                     </Col>
                     <Col span="24">
-                    <Upload v-if="share.isCheckSingle === true" ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                    <Upload v-if="share.isCheckSingle === true" ref="upload" class="uploadWidth" :action="$domain.uploadFile"
                         :default-file-list="share.defaultList" :format="['jpg','jpeg','png']" :on-success="uploadFormSuccess"
                         :on-format-error="uploadFormFormatError" :show-upload-list="false" style="margin-top:10px;">
                         <Button style="width:270px;" type="ghost">添加图片</Button>
@@ -146,7 +146,7 @@
                             </Row>
                             <Row v-if="share.Imgurl == ''">
                                 <Col span="24">
-                                <Upload ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"
+                                <Upload ref="upload" class="uploadWidth" :action="$domain.uploadFile"
                                     :format="['jpg','jpeg','png']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                                     :show-upload-list="false">
                                     <Button style="width:270px;" type="ghost">添加图片</Button>
@@ -579,7 +579,7 @@ $().ready(function() {
                         data: JSON.stringify(ajaxJson),
                         success: function (result) {
                            if(result.code == "success"){
-                             alert("提交成功");
+                             info("提交成功");
                            }
                         },
                         error : function() {

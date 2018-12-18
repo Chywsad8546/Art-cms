@@ -134,7 +134,7 @@
                                             </FormItem>
                                             <FormItem :label="item.label" v-if="item.type=='upload'" :required="item.required">
                                                 <Poptip trigger="hover" class="iconClass" title="变量名" :content="item.name"><Icon type="help" /></Poptip>
-                                                <Upload class="zswidht" action="cmsapi/upload/uploadimgNoDomainExt" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
+                                                <Upload class="zswidht" :action="$domain.uploadFile" :data="{'hook':item.name}"  :format="item.format" :on-success="uploadSuccess"
                                                         :on-format-error="uploadFormatError"
                                                         :show-upload-list="false">
                                                     <Button type="ghost" icon="ios-cloud-upload-outline">点我上传</Button>

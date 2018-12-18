@@ -8,17 +8,20 @@ const fs = require('fs');
 const package = require('../package.json');
 
 fs.open('./build/configdir/domain/domain.js', 'w', function(err, fd) {
-    const buf = 'import domain from \'./domain.dev_or_test\';\n' +
+    const buf =
+        "import domain from './domain.dev_or_test';\n" +
         'export default domain;\n';
     fs.write(fd, buf, 0, buf.length, 0, function(err, written, buffer) {});
 });
 
 fs.open('./build/env.js', 'w', function(err, fd) {
-    const buf = 'export const errortip  = true;export const xiangmu = "kefu";export default "development";export const qufencity = 1;';
+    const buf =
+        'export const errortip  = true;export const xiangmu = "kefu";export default "development";export const qufencity = 1;';
     fs.write(fd, buf, 0, buf.length, 0, function(err, written, buffer) {});
 });
 fs.open('./build/router.build.hook.js', 'w', function(err, fd) {
-    const buf = 'import router from \'@/router/split/city.router\'\n' +
+    const buf =
+        "import router from '@/router/split/city.router'\n" +
         'export const loginRouter = router.loginRouter;\n' +
         'export const homeRouter = router.homeRouter;\n' +
         'export const otherRouter  = router.otherRouter;\n' +
@@ -48,15 +51,16 @@ module.exports = merge(webpackBaseConfig, {
             filename: '../index.html',
             inject: false
         }),
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin(
+            [
+                {
+                    from: 'src/views/main-components/theme-switch/theme'
+                }
+            ],
             {
-                from: 'src/views/main-components/theme-switch/theme'
+                ignore: ['text-editor.vue']
             }
-        ], {
-            ignore: [
-                'text-editor.vue'
-            ]
-        })
+        )
     ],
     //设置跨域代理
     devServer: {
@@ -65,27 +69,35 @@ module.exports = merge(webpackBaseConfig, {
         inline: true,
         stats: { colors: true },
         proxy: {
+            '/cmsapi/officedictapi': {
+                // 目标服务器地址
+                target: 'http://cms.dev.bidewu.com/cmsapi/officedictapi',
+                //target: 'http://192.168.1.61:8084',
+                //target: 'http://127.0.0.1:8084/',
+                //路径重写
+                pathRewrite: { '^/cmsapi/officedictapi': '/cmsapi/officedictapi' },
+                changeOrigin: true
+            },
             //匹配代理的url
             '/cmsapi': {
                 // 目标服务器地址
-                //target: 'http://newcms.dev.bidewu.com',
-                //target: 'http://192.168.13.241:8084',
+                target: 'http://cms.dev.bidewu.com/',
                 //target: 'http://192.168.1.61:8084',
-                target: 'http://127.0.0.1:8084/cmsapi',
+                //target: 'http://127.0.0.1:8084/',
                 //路径重写
-                pathRewrite: {'^/cmsapi' : '/cmsapi'},
+                pathRewrite: { '^/cmsapi': '/cmsapi' },
                 changeOrigin: true
             },
-            '/cmsapi': {
+            '/searchapiv2': {
                 // 目标服务器地址
-                //target: 'http://newcms.dev.bidewu.com',
-                //target: 'http://192.168.13.241:8084',
+                target: 'http://app.dev.bidewu.com',
                 //target: 'http://192.168.1.61:8084',
-                target: 'http://127.0.0.1:8084/',
+                //target: 'http://127.0.0.1:8084/',
                 //路径重写
-                pathRewrite: {'^/cmsapi' : '/cmsapi'},
+                pathRewrite: { '^/searchapiv2': '/searchapiv2' },
                 changeOrigin: true
             }
+            
         }
     }
 });

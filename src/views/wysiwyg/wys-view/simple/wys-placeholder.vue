@@ -38,7 +38,6 @@ export default {
         countchange: function (val) {
             if (this.share.ids.length > val) {
                 while (this.share.ids.length - val > 0) {
-                    console.log(this.share.ids);
                     var id = this.share.ids.pop();
                     $('#' + id).remove();
                 }
@@ -99,7 +98,7 @@ export default {
 </stage-javascript>
 <stage-css>
 .layout-container-table.edit-page {
-    padding: 5px 1px;
+
 }
 .layout-container-table {
     display: -ms-flexbox;

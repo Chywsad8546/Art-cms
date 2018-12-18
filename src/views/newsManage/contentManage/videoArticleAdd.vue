@@ -28,7 +28,7 @@
                             :on-success="handleSuccess"
                             :format="['mp4','rm','rmvb','wma','avi']"
                             :on-format-error="handleFormatError"
-                            action="/cmsapi/sys/uploadVideo"
+                            :action="$domain.uploadVideoFile"
                             >
                         <img ref="videoUpDom" src="./img/suoluetu.png"/>
                         <Button type="primary">上传视频</Button>

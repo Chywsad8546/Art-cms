@@ -4,20 +4,20 @@ import Qs from 'qs';
 import { router } from '@/router/index';
 import config from '../../build/config.js';
 import _ from 'lodash';
-axios.defaults.baseURL = '/cmsapi';
-if (config.errortip) {
-    let search = window.location.search || '';
-    if (search !== '') {
-        try {
-            axios.defaults.baseURL = 'http://' + _.trim(search, '?/') + '/';
-        } catch (e) {}
-    }
-}
 
-axios.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded';
-axios.defaults.timeout = 30000;
-axios.defaults.withCredentials = true;
+var esapi = axios.create({
+    baseURL: '/',
+    timeout: 30000,
+    headers: {
+        post:{
+            'Content-Type':'application/x-www-form-urlencoded'
+        }
+    },
+    withCredentials:true
+  });
+
+
+
 /**
  * 统一 ajax 错误拦截器
  * 处理范围：
@@ -27,7 +27,7 @@ axios.defaults.withCredentials = true;
  *  4，4xx 错误
  */
 function initInterceptors(store) {
-    axios.interceptors.request.use(
+    esapi.interceptors.request.use(
         function(config) {
             // Do something before request is sent
             config['params'] = config['params'] || {};
@@ -40,7 +40,7 @@ function initInterceptors(store) {
         }
     );
 
-    axios.interceptors.response.use(
+    esapi.interceptors.response.use(
         function(response) {
             // 拦截器代码不要改动，现在的架构能满足所有情况。
             if (response.data.code === 'success' || response.status === 200) {
@@ -124,7 +124,7 @@ function enhanceError(error, config, code, request, response) {
  * @returns {AxiosPromise<any>}
  */
 async function get(url, config) {
-    let response = await axios.get(url, config || {});
+    let response = await esapi.get(url, config || {});
     return response;
 }
 
@@ -137,7 +137,7 @@ async function get(url, config) {
 async function post(url, data, config) {
     console.log('post');
     console.log(Qs.stringify(data || {}));
-    let response = await axios.post(
+    let response = await esapi.post(
         url,
         Qs.stringify(data || {}),
         config || {}
@@ -154,7 +154,7 @@ async function post(url, data, config) {
 async function postJson(url, data, config) {
     config = config || {};
     config['Content-Type'] = 'application/json;charset=UTF-8';
-    let response = await axios.post(url, data || {}, config);
+    let response = await esapi.post(url, data || {}, config);
     return response;
 }
 

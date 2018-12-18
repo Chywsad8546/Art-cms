@@ -44,7 +44,7 @@
                     </Row>
                 </div>
                 <Upload v-if="(share.imgSelect == 'line1' && share.uploadList.length <= 0) || (share.imgSelect == 'line2' && share.uploadList.length <= 1) || (share.imgSelect == 'line3' && share.uploadList.length <= 2) || (share.imgSelect == 'lineAll')"
-                    ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt" :default-file-list="share.defaultList"
+                    ref="upload" class="uploadWidth" :action="$domain.uploadFile" :default-file-list="share.defaultList"
                     :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess" :on-format-error="uploadFormatError"
                     :show-upload-list="false">
                     <Button type="ghost">添加图片</Button>
