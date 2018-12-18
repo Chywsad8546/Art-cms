@@ -1,70 +1,63 @@
 <template>
-    <Form  :label-width="60" class="imgWidthCont">
+    <Form :label-width="60"
+          class="imgWidthCont">
 
-
-                <FormItem label="列数" >
-                    <Select v-model="share.count" @on-change="countchange">
-                        <Option  :value="2" :key="2">2</Option>
-                        <Option  :value="3" :key="3">3</Option>
-                        <Option  :value="4" :key="4">4</Option>
-                        <Option  :value="5" :key="5">5</Option>
-                    </Select>
-                </FormItem>
-
-
-
-
+        <FormItem label="列数">
+            <Select v-model="share.count"
+                    @on-change="countchange">
+                <Option :value="2"
+                        :key="2">2</Option>
+                <Option :value="3"
+                        :key="3">3</Option>
+                <Option :value="4"
+                        :key="4">4</Option>
+                <Option :value="5"
+                        :key="5">5</Option>
+            </Select>
+        </FormItem>
 
     </Form>
-
-
 
 </template>
 
 <script>
-
-    export default {
-        name: 'wys-placeholder',
-        data() {
-            return {
-                share:{
-                    count:2,
-                    ids:[],
-                    increase:1,
-                    width:50,
-
-                }
-            };
-        },
-        methods: {
-            countchange:function (val) {
-
-
-                if(this.share.ids.length>val){
-                    while (this.share.ids.length - val >0){
-                        console.log(this.share.ids)
-                        var id=this.share.ids.pop();
-                        $('#'+id).remove();
-                    }
-                }
-                else if(this.share.ids.length<val){
-                    while (val - this.share.ids.length>0){
-                        this.share.increase += 1;
-                        this.share.ids.push(this.$vnode.key+'-'+this.share.increase);
-                    }
-                }
-                if(this.share.count>0){
-                    this.share.width = parseInt(100/this.share.count);
-                }
+export default {
+    name: 'wys-placeholder',
+    data () {
+        return {
+            share: {
+                count: 2,
+                ids: [],
+                increase: 1,
+                width: 50
 
             }
-        },
-        created: function () {
-            this.countchange(this.share.count);
-        },
-        mounted () {
+        };
+    },
+    methods: {
+        countchange: function (val) {
+            if (this.share.ids.length > val) {
+                while (this.share.ids.length - val > 0) {
+                    var id = this.share.ids.pop();
+                    $('#' + id).remove();
+                }
+            } else if (this.share.ids.length < val) {
+                while (val - this.share.ids.length > 0) {
+                    this.share.increase += 1;
+                    this.share.ids.push(this.$vnode.key + '-' + this.share.increase);
+                }
+            }
+            if (this.share.count > 0) {
+                this.share.width = parseInt(100 / this.share.count);
+            }
         }
-    };
+    },
+    created: function () {
+        this.countchange(this.share.count);
+    },
+    mounted () {
+    }
+};
 </script>
 
 <style scoped>
@@ -105,7 +98,7 @@
 </stage-javascript>
 <stage-css>
 .layout-container-table.edit-page {
-    padding: 5px 1px;
+
 }
 .layout-container-table {
     display: -ms-flexbox;

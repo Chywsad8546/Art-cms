@@ -4,9 +4,22 @@
       <TabPane label="内容">
         <Row class="navdhName">
           <Col span="24">
-          <FormItem label="名称">
-            <Input v-model="share.name"></Input>
-          </FormItem>
+            <FormItem label="字号">
+                 <Select v-model="share.textFontSize" style="width:200px">
+                    <Option value="12px">12</Option>
+                    <Option value="13px">13</Option>
+                    <Option value="14px">14</Option>
+                    <Option value="16px">16</Option>
+                    <Option value="18px">18</Option>
+                    <Option value="24px">24</Option>
+                    <Option value="36px">36</Option>
+                    <Option value="48px">48</Option>
+                    <Option value="64px">64</Option>
+                </Select>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <Input v-model="share.name" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
           </Col>
         </Row>
         <Row>
@@ -25,27 +38,8 @@
             v-bind:isBlock="share.navVisible"></wysLink>
           </Col>
         </Row>
-        <!-- <Modal title="URL" v-model="share.navVisible">
-                    <FormItem label="链接地址" v-if="share.navVisible">
-                        <Input v-model="share.url" placeholder="http://"></Input>
-                    </FormItem>
-                </Modal> -->
       </TabPane>
       <TabPane label="样式">
-        <!-- <RadioGroup v-model="share.navVertical" vertical>
-                <Radio label="navitem0" style="height:50px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/52b561fe138a4bb4a3161e8c3a78ec01.png"/>
-                </Radio>
-                <Radio label="navitem1" style="height:50px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/255342d0548b41e3b77173072bcd5604.png"/>
-                </Radio> 
-                <Radio label="navitem2" style="height:50px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/c134232654ef427584d8622af6e9e519.png"/>
-                </Radio> 
-                 <Radio label="navitem3" style="height:50px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/534d8cb8bbfa448cb0ca3a7de65f73f6.png"/>
-                </Radio> 
-            </RadioGroup> -->
         <Row>
           <Col span="24">
           边距
@@ -80,15 +74,18 @@ export default {
     data () {
         return {
             share: {
-                name: '链接文字',
+                name: '默认文本',
                 navVisible: false,
                 url: '',
                 urlData: {},
                 top: 10,
                 right: 15,
                 bottom: 10,
-                left: 15
-            }
+                left: 15,
+                textFontSize:'12px'
+            },
+            panelTextKey2:'1'
+
         };
     },
     methods: {
@@ -141,7 +138,7 @@ export default {
 
 <stage-template>
 <div  class="pictureset-box">
-    <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;">
+    <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;font-size:{{@share.textFontSize}}">
         <a href="{{@share.url}}" target="_blank" class="link style1">
             <span class="link-text">{{@share.name}}</span> 
         </a>
@@ -152,21 +149,7 @@ export default {
 
 </stage-javascript>
 <stage-css>
-    .link {
-        display: block;
-        cursor: pointer;
-        font-size: 16px;
-        line-height: 22px;
-        color:#5790C9;
-        word-wrap: break-word;
-        word-break: break-all;
-    }
-    .link i {
-        display: none;
-        font-size: 14px;
-    }
-    .link.style1 i:first-child {
-        display: inline;
-    }
-
+.style1 {
+    color:#000000;
+}
 </stage-css>

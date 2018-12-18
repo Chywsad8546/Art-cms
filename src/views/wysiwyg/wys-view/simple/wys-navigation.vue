@@ -1,24 +1,26 @@
 <template>
-       <Form  :label-width="60" class="imgWidthCont">
-    <Tabs>  
-        <TabPane label="内容" >
-            <div v-for="item,index in share.navigatList" v-dragging="{ item: item, list: share.navigatList, group: 'item' }">
-                <Row class="navdhFont">
-                    <Col span="12">导航{{index+1}}</Col>
-                    <Col span="12" style="text-align:right;"><Icon @click.native="removeNavigat(item)" type="trash-a"></Icon></Col>
-                </Row>
-                <Row class="navdhName"> 
-                    <Col span="24">
-                        <FormItem  label="名称">
+    <Form :label-width="60" class="imgWidthCont">
+        <Tabs>
+            <TabPane label="内容">
+                <div v-for="item,index in share.navigatList" v-dragging="{ item: item, list: share.navigatList, group: 'item' }">
+                    <Row class="navdhFont">
+                        <Col span="12">导航{{index+1}}</Col>
+                        <Col span="12" style="text-align:right;">
+                        <Icon @click.native="removeNavigat(item)" type="trash-a"></Icon>
+                        </Col>
+                    </Row>
+                    <Row class="navdhName">
+                        <Col span="24">
+                        <FormItem label="名称">
                             <Input v-model="item.name"></Input>
-                        </FormItem>  
-                    </Col>
-                </Row>
-                <Row style="padding-bottom:10px;">  
-                    <Col span="24">
+                        </FormItem>
+                        </Col>
+                    </Row>
+                    <Row style="padding-bottom:10px;">
+                        <Col span="24">
                         <div v-if="item.url != ''">
                             <span style="margin-right:10px;">链接到 {{item.url}}</span>
-                            <a v-if="item.url != ''"  @click="item.navVisible = true">
+                            <a v-if="item.url != ''" @click="addUrl(item)">
                                 编辑
                             </a>
                         </div>
@@ -26,112 +28,124 @@
                             <Icon type="plus-round"></Icon>
                             添加链接
                         </a>
-                    </Col>
-                </Row>
-                <Modal title="URL" v-model="item.navVisible">
-                    <FormItem  label="链接地址" v-if="item.navVisible">
-                        <Input v-model="item.url"></Input>
-                    </FormItem>  
-                </Modal>
-            </div>
-            <Button style="width:280px; margin-top:20px;" @click="addNaviPush(item)"><Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加</Button>
-        </TabPane>
-        <TabPane label="样式">
-            <RadioGroup v-model="share.navVertical" vertical>
-                <Radio label="navitem0" style="height:100px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/9fa493ff2d81473393c5bb948355aef5.png"/>
-                </Radio>
-                <Radio label="navitem1" style="height:100px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/424fa92804284d0eb247644705cde7b0.png"/>
-                </Radio>
-                <Radio label="navitem2" style="height:100px;">
-                    <img src="http://wap-qn.toutiaofangchan.com/adideas/590d1f5447c0441286150378e3b4d494.png"/>
-                </Radio>
-            </RadioGroup>
-            <FormItem label="顶">
-                <Slider v-model="share.imgTop" show-input></Slider>
-            </FormItem>
+                        </Col>
+                    </Row>
+                    <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="item.urlData"
+                        v-bind:isBlock="item.navVisible"></wysLink>
+                </div>
+                <Button style="width:280px; margin-top:20px;" @click="addNaviPush(item)">
+                    <Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加
+                </Button>
+            </TabPane>
+            <TabPane label="样式">
+                <RadioGroup v-model="share.navVertical" vertical>
+                    <Radio label="navitem0" style="height:100px;">
+                        <img src="http://wap-qn.toutiaofangchan.com/adideas/9fa493ff2d81473393c5bb948355aef5.png" />
+                    </Radio>
+                    <Radio label="navitem1" style="height:100px;">
+                        <img src="http://wap-qn.toutiaofangchan.com/adideas/424fa92804284d0eb247644705cde7b0.png" />
+                    </Radio>
+                    <Radio label="navitem2" style="height:100px;">
+                        <img src="http://wap-qn.toutiaofangchan.com/adideas/590d1f5447c0441286150378e3b4d494.png" />
+                    </Radio>
+                </RadioGroup>
+                <FormItem label="顶">
+                    <Slider v-model="share.imgTop" show-input></Slider>
+                </FormItem>
                 <FormItem label="右">
-                <Slider v-model="share.imgRight" show-input></Slider>
-            </FormItem>
+                    <Slider v-model="share.imgRight" show-input></Slider>
+                </FormItem>
                 <FormItem label="底">
-                <Slider v-model="share.imgBottom" show-input></Slider>
-            </FormItem>
+                    <Slider v-model="share.imgBottom" show-input></Slider>
+                </FormItem>
                 <FormItem label="左">
-                <Slider v-model="share.imgLeft" show-input></Slider>
-            </FormItem>
-            <FormItem label="颜色">
+                    <Slider v-model="share.imgLeft" show-input></Slider>
+                </FormItem>
+                <FormItem label="颜色">
                     <Row>
                         <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
-                        <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend /></Col>
-                    </Row>        
-            </FormItem>
-        </TabPane>
-    </Tabs>
+                        <Col span="12">
+                        <ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend />
+                        </Col>
+                    </Row>
+                </FormItem>
+            </TabPane>
+        </Tabs>
     </Form>
-
-
 
 </template>
 
 <script>
-
-    export default {
-        name: 'wys-img',
-        data() {
-            return {
-                share:{
-                    imgTop:0,
-                    imgRight:0,
-                    imgBottom:0,
-                    imgLeft:0,
-                    navVertical:"navitem0",
-                    backColor:"#F85A58",
-                    navigatList:[
-                        {name:"导航1",url:"",navVisible:false},
-                        {name:"导航2",url:"",navVisible:false},
-                        {name:"导航3",url:"",navVisible:false},
-                        {name:"导航4",url:"",navVisible:false},
-                    ]
-                },
-            };
-        },
-        methods: {
-            removeNavigat(item){
-                let index = this.share.navigatList.indexOf(item);
-                this.share.navigatList.splice(index,1);
-            },
-            addUrl(item){
-                item.navVisible = true;
-            },
-            addNaviPush(){
-                this.share.navigatList.push({name:"新导航",url:"",navVisible:false});
+import wysLink from '../components/link.vue';
+export default {
+    name: 'wys-navigation',
+    components: {
+        wysLink
+    },
+    data () {
+        return {
+            share: {
+                imgTop: 0,
+                imgRight: 0,
+                imgBottom: 0,
+                imgLeft: 0,
+                obj: {},
+                navVertical: 'navitem0',
+                backColor: '#F85A58',
+                navigatList: [
+                    { name: '导航1', url: '', navVisible: false, urlData: {} },
+                    { name: '导航2', url: '', navVisible: false, urlData: {} },
+                    { name: '导航3', url: '', navVisible: false, urlData: {} },
+                    { name: '导航4', url: '', navVisible: false, urlData: {} }
+                ]
             }
+        };
+    },
+    methods: {
+        removeNavigat (item) {
+            let index = this.share.navigatList.indexOf(item);
+            this.share.navigatList.splice(index, 1);
         },
-        created: function () {
-            // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+        addUrl (item) {
+            item.navVisible = true;
+            this.obj = this.share.navigatList[this.share.navigatList.indexOf(item)];
         },
-        mounted() {
-            this.$dragging.$on('dragged', ({ value }) => {
-                console.log(value.item)
-                console.log(value.list)
-                console.log(value.group)
-            });
+        addNaviPush () {
+            this.share.navigatList.push({ name: '新导航', url: '', navVisible: false, urlData: {} });
+        },
+        cancelPopup () {
+            this.obj.navVisible = !this.obj.navVisible;
+        },
+        okPopup (data) {
+            this.obj.navVisible = !this.obj.navVisible;
+            this.obj.urlData = data;
+            this.obj.url = data.url;
+            if (data.id) {
+                this.obj.url += data.id;
+            }
         }
-    };
+    },
+    created: function () {
+        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+    },
+    mounted () {
+        this.$dragging.$on('dragged', ({ value }) => {
+
+        });
+    }
+};
 </script>
 
 <style scoped>
 .navdhFont {
-    font-size: 20px;
-    border-top: 1px solid #cccccc;
-    margin-right: 20px;
-    padding-top: 10px;
+  font-size: 20px;
+  border-top: 1px solid #cccccc;
+  margin-right: 20px;
+  padding-top: 10px;
 }
 .navdhName {
-    margin-top: 20px;
-    padding-right: 20px;
-    
+  margin-top: 20px;
+  padding-right: 20px;
 }
 </style>
 

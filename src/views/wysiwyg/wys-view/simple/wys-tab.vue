@@ -1,119 +1,125 @@
 <template>
-       <Form  :label-width="60" class="imgWidthCont">
-    <Tabs>  
-        <TabPane label="内容" >
-            <div v-for="item,index in share.tabList" v-dragging="{ item: item, list: share.tabList, group: 'item' }" @click="navClick(item)">
-                <Row class="navdhFont">
-                    <Col span="12">Tab{{index+1}}</Col>
-                    <Col span="12" style="text-align:right;"><Icon @click.native="removeNavigat(item)" type="trash-a"></Icon></Col>
-                </Row>
-                <Row class="navdhName"> 
-                    <Col span="24">
-                        <FormItem  label="名称">
+    <Form :label-width="60" class="imgWidthCont">
+        <Tabs>
+            <TabPane label="内容">
+                <div v-for="item,index in share.tabList" v-dragging="{ item: item, list: share.tabList, group: 'item' }"
+                    @click="navClick(item)">
+                    <Row class="navdhFont">
+                        <Col span="12">Tab{{index+1}}</Col>
+                        <Col span="12" style="text-align:right;">
+                        <Icon @click.native="removeNavigat(item)" type="trash-a"></Icon>
+                        </Col>
+                    </Row>
+                    <Row class="navdhName">
+                        <Col span="24">
+                        <FormItem label="名称">
                             <Input v-model="item.name"></Input>
-                        </FormItem>  
-                    </Col>
-                </Row>
-            </div>
-            <Button style="width:280px; margin-top:20px; margin-bottom:200px;" @click="addNaviPush()"><Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加</Button>
-        </TabPane>
-        <TabPane label="样式" >
-            <FormItem label="颜色">
-                <Row>
-                    <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
-                    <Col span="12"><ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend /></Col>
-                </Row>                  
-            </FormItem>
-        </TabPane>
-    </Tabs>
+                        </FormItem>
+                        </Col>
+                    </Row>
+                </div>
+                <Button style="width:280px; margin-top:20px; margin-bottom:200px;" @click="addNaviPush()">
+                    <Icon type="plus-round" style="margin-right:10px;"></Icon>点击添加
+                </Button>
+            </TabPane>
+            <TabPane label="样式">
+                <FormItem label="颜色">
+                    <Row>
+                        <Col span="12"><Input v-model="share.backColor" placeholder="Enter something..."></Input></Col>
+                        <Col span="12">
+                        <ColorPicker v-model="share.backColor" style="margin-left:10px;" size="default" recommend />
+                        </Col>
+                    </Row>
+                </FormItem>
+            </TabPane>
+        </Tabs>
     </Form>
 </template>
 
 <script>
-
-    export default {
-        name: 'wys-img',
-        data() {
-            return {
-                share:{
-                    imgTop:0,
-                    imgRight:0,
-                    imgBottom:0,
-                    imgLeft:0,
-                    navVertical:"navitem0",
-                    tabCount:2,
-                    increase:1,
-                    tabListDomid: "",
-                    backColor: "#f85959",
-                    tabDomid:"",
-                    isDel:false,
-                    tabList:[
-                        // {name:"Tab1",url:"",navVisible:false},
-                        // {name:"Tab2",url:"",navVisible:false},
-                    ]
-                },
-            };
-        },
-        methods: {
-            removeNavigat(item){
-                if($("#"+item.id).attr("class").indexOf("cur") > 0){
-                     this.$Message.error('当前选中对象不能删除');
-                     return false;
-                }
-                $("#"+item.id).remove();
-                $("#"+item.cid).remove();
-                let index = this.share.tabList.indexOf(item);
-                this.share.tabList.splice(index,1);
-                this.share.isDel = true;
-            },
-            addUrl(item){
-                item.navVisible = true;
-            },
-            addNaviPush(){
-                this.share.isDel = true;
-                this.share.increase += 1;
-                this.share.tabCount += 1;
-                this.share.tabList.push({id:this.$vnode.key+'-'+this.share.increase,cid:'con-'+this.$vnode.key+'-'+this.share.increase,name:"新导航",url:"",navVisible:false});
-            },
-            navClick(item){
-                this.share.isDel = false;
-                this.share.tabDomid = item.id;
-                this.share.tabListDomid = item.cid;
-            },
-            tabCreatpush:function () {
-               for (let index = 0; index < this.share.tabCount; index++) {
-                    this.share.increase += 1;
-                    this.share.tabList.push({id:this.$vnode.key+'-'+this.share.increase,cid:'con-'+this.$vnode.key+'-'+this.share.increase,name:"Tab"+index,url:"",navVisible:false});
-               }
-               this.share.tabDomid = this.share.tabList[0].id;
-               this.share.tabListDomid = this.share.tabList[0].cid;
-               this.share.isDel = false;
+export default {
+    name: 'wys-tab',
+    data () {
+        return {
+            share: {
+                imgTop: 0,
+                imgRight: 0,
+                imgBottom: 0,
+                imgLeft: 0,
+                navVertical: 'navitem0',
+                tabCount: 2,
+                increase: 1,
+                tabListDomid: '',
+                backColor: '#f85959',
+                tabDomid: '',
+                isDel: false,
+                tabList: [
+                    // {name:"Tab1",url:"",navVisible:false},
+                    // {name:"Tab2",url:"",navVisible:false},
+                ]
             }
+        };
+    },
+    methods: {
+        removeNavigat (item) {
+            if ($('#' + item.id).attr('class').indexOf('cur') > 0) {
+                this.$Message.error('当前选中对象不能删除');
+                return false;
+            }
+            $('#' + item.id).remove();
+            $('#' + item.cid).remove();
+            let index = this.share.tabList.indexOf(item);
+            this.share.tabList.splice(index, 1);
+            this.share.isDel = true;
         },
-        created: function () {
-            this.tabCreatpush();
-            // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+        addUrl (item) {
+            item.navVisible = true;
         },
-        mounted() {
-            this.$dragging.$on('dragged', ({ value }) => {
-                console.log(value.item)
-                console.log(value.list)
-                console.log(value.group)
-            });
+        addNaviPush () {
+            this.share.isDel = true;
+            this.share.increase += 1;
+            this.share.tabCount += 1;
+            this.share.tabList.push({ id: this.$vnode.key + '-' + this.share.increase, cid: 'con-' + this.$vnode.key + '-' + this.share.increase, name: '新导航', url: '', navVisible: false });
+        },
+        navClick (item) {
+            this.share.isDel = false;
+            this.share.tabDomid = item.id;
+            this.share.tabListDomid = item.cid;
+        },
+        tabCreatpush: function () {
+            for (let index = 0; index < this.share.tabCount; index++) {
+                this.share.increase += 1;
+                this.share.tabList.push({ id: this.$vnode.key + '-' + this.share.increase, cid: 'con-' + this.$vnode.key + '-' + this.share.increase, name: 'Tab' + index, url: '', navVisible: false });
+            }
+            this.share.tabDomid = this.share.tabList[0].id;
+            this.share.tabListDomid = this.share.tabList[0].cid;
+            this.share.isDel = false;
         }
-    };
+    },
+    created: function () {
+        this.tabCreatpush();
+        // console.log('created',this.$options.customOption,this.$options.wysdocs,this.$options) // => 'foo'
+    },
+    mounted () {
+        this.$dragging.$on('dragged', ({ value }) => {
+            console.log(value.item);
+            console.log(value.list);
+            console.log(value.group);
+        });
+    }
+};
 </script>
 
 <style scoped>
 .navdhFont {
-    font-size: 20px;
-    border-top: 1px solid #cccccc;
-    margin-right: 20px;
-    padding-top: 10px;
+  font-size: 20px;
+  border-top: 1px solid #cccccc;
+  margin-right: 20px;
+  padding-top: 10px;
 }
 .navdhName {
-    margin-top: 20px;
-    padding-right: 20px;
+  margin-top: 20px;
+  padding-right: 20px;
 }
 </style>
 

@@ -4,7 +4,12 @@
 
 <script>
     export default {
-        name: "wys-default"
+        name: "wys-default",
+        data () {
+            return {
+                wys_isdefault_dont_getdata:true
+            };
+        }
     }
 </script>
 

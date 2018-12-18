@@ -11,7 +11,7 @@ export default {
         /*
         初始化可用组件，并挂上mixin钩子
          */
-        init: function () {
+        init: function() {
             this.coms.splice(0, this.coms.length);
             this._comsDict = {};
             for (var i = 0; i < regComponentConf.stageComponents.length; i++) {
@@ -25,8 +25,15 @@ export default {
                         com.component.mixins = [wysmixin];
                     } else {
                         var addMixinHook = true;
-                        for (var mixinIndex = 0; mixinIndex < com.component.mixins.length; mixinIndex++) {
-                            if (com.component.mixins[mixinIndex].__wys_mixin_hook) {
+                        for (
+                            var mixinIndex = 0;
+                            mixinIndex < com.component.mixins.length;
+                            mixinIndex++
+                        ) {
+                            if (
+                                com.component.mixins[mixinIndex]
+                                    .__wys_mixin_hook
+                            ) {
                                 addMixinHook = false;
                             }
                         }
@@ -39,9 +46,11 @@ export default {
                      */
                     // console.log('_.trim(com.component.wys_stageTemplate',_.trim(com.component.wys_stageTemplate))
                     if (_.trim(com.component.wys_stageTemplate)) {
-                        com.arttemplate = template.compile(_.trim(com.component.wys_stageTemplate));
+                        com.arttemplate = template.compile(
+                            _.trim(com.component.wys_stageTemplate)
+                        );
                     } else {
-                        com.arttemplate = function () {
+                        com.arttemplate = function() {
                             return '错误 没有定义stage-template模板内容';
                         };
                     }
@@ -50,39 +59,47 @@ export default {
                      */
                     // 运行和保存最终前端js
                     if (_.trim(com.component.wys_stageJavascript)) {
-                        com.artjavascript = template.compile(_.trim(com.component.wys_stageJavascript));
+                        com.artjavascript = template.compile(
+                            _.trim(com.component.wys_stageJavascript)
+                        );
                     } else {
-                        com.artjavascript = function () {
+                        com.artjavascript = function() {
                             return '';
                         };
                     }
                     // 导入外部css
                     if (_.trim(com.component.wys_stageCss_import)) {
-                        var tmpstageCss_import = _.cloneDeep(com.component.wys_stageCss_import);
-                        com.artcssincludes = function () {
+                        let tmpstageCss_import = _.cloneDeep(
+                            com.component.wys_stageCss_import
+                        );
+                        com.artcssincludes = function() {
                             return tmpstageCss_import;
                         };
                     } else {
-                        com.artcssincludes = function () {
+                        com.artcssincludes = function() {
                             return [];
                         };
                     }
                     // 导入外部js
                     if (_.trim(com.component.wys_stageJavascript_import)) {
-                        var tmpstageJavascript_import = _.cloneDeep(com.component.wys_stageJavascript_import);
-                        com.artjavascriptincludes = function () {
+                        let tmpstageJavascript_import = _.cloneDeep(
+                            com.component.wys_stageJavascript_import
+                        );
+                        com.artjavascriptincludes = function() {
                             return tmpstageJavascript_import;
                         };
                     } else {
-                        com.artjavascriptincludes = function () {
+                        com.artjavascriptincludes = function() {
                             return [];
                         };
                     }
                     // 编辑阶段使用的js,不会被保存
                     if (_.trim(com.component.wys_stageJsWys)) {
-                        com.artjavascriptwys = template.compile(_.trim(com.component.wys_stageJsWys));
+                        com.artjavascriptwys = template.compile(
+                            _.trim(com.component.wys_stageJsWys)
+                        );
                     } else {
-                        com.artjavascriptwys = function () {
+                        com.artjavascriptwys = function() {
                             return '';
                         };
                     }
@@ -93,25 +110,30 @@ export default {
                     // console.log('com.component.wys_stageCss', com.component.wys_stageCss);
                     if (_.trim(com.component.wys_stageCss)) {
                         // var tmpcomwysstageCss = com.component.wys_stageCss;
-                        com.artcss = template.compile(_.trim(com.component.wys_stageCss));
+                        com.artcss = template.compile(
+                            _.trim(com.component.wys_stageCss)
+                        );
                     } else {
-                        com.artcss = function () {
+                        com.artcss = function() {
                             return '';
                         };
                     }
 
                     this.coms.push(com);
                 } else {
-                    console.log(this._comsDict, regComponentConf.stageComponents);
+                    console.log(
+                        this._comsDict,
+                        regComponentConf.stageComponents
+                    );
                     throw '错误:重复注册组件 ' + com.id + '';
                 }
             }
         },
-        getComponent: function (editorRegid) {
+        getComponent: function(editorRegid) {
             return this._comsDict[editorRegid];
         }
     },
-    init: function (mainPage, editchangeEvent, stageDomElId, editor, lasthtml) {
+    init: function(mainPage, editchangeEvent, stageDomElId, editor, lasthtml) {
         this._mainPage = mainPage;
         this._currentComponentChangeEvent = editchangeEvent;
         this._stage = $('#' + stageDomElId);
@@ -124,11 +146,15 @@ export default {
             for (var key in editor) {
                 var tmpstagecomponent = editor[key];
                 $('head').append(tmpstagecomponent.css);
-                for(var i=0;i<tmpstagecomponent.jsincludes.length;i++){
-                    $('body').append('<script type="text/javascript" src="' + tmpstagecomponent.jsincludes[i] + '"></script>');
+                for (var i = 0; i < tmpstagecomponent.jsincludes.length; i++) {
+                    $('body').append(
+                        '<script type="text/javascript" src="' +
+                            tmpstagecomponent.jsincludes[i] +
+                            '"></script>'
+                    );
                 }
                 $('body').append(tmpstagecomponent.js);
-                (function (tmpcom) {
+                (function(tmpcom) {
                     that.create(tmpcom.editor_regid, false, tmpcom);
                 })(tmpstagecomponent);
             }
@@ -139,73 +165,107 @@ export default {
     /*
     修改选中组件时回调事件
      */
-    _currentComponentChangeEvent: function () {},
+    _currentComponentChangeEvent: function() {},
     currentComponent: null,
     stageComponentsDict: {},
+    _createMask: function(dom) {
+        if (dom.find('.wys-mask').length == 0) {
+            dom.append('<span class="wys-mask"></span>');
+        }
+    },
     /*
     创建画布上的站位dom，是一个jquery对象
      */
-    _createDom: function (stageComponent, isDragNew) {
+    _createDom: function(stageComponent, isDragNew) {
         var that = this;
         var dom = null;
         if (isDragNew) {
-            dom = $('<div id="' + stageComponent.component_id + '" editorregid="' + stageComponent.editor.id + '" style="position: relative"></div>');
+            dom = $(
+                '<div id="' +
+                    stageComponent.component_id +
+                    '" editorregid="' +
+                    stageComponent.editor.id +
+                    '" style="position: relative"></div>'
+            );
         } else {
             dom = $('#' + stageComponent.component_id);
             if (dom.length < 1) {
-                return {ack: false, dom: null};
+                return { ack: false, dom: null };
             }
         }
+
+        if(stageComponent.editor.accepts === undefined){
+ 
+            this._createMask(dom);
+        }
+        // let appSpan = $(
+        //     '<span style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;"></span>'
+        // );
+        // setTimeout(function() {
+        //     dom.prepend(appSpan);
+        // }, 1000);
         // dom.data('stageCompontHook', stageComponent);
         /**
          * 鼠标经过的时候，增加一个“删除”按钮
          */
-        dom.mouseenter(function () {
+        dom.mouseenter(function() {
             $('.wysiclose').remove();
             $('.wysidrag').remove();
             $('.wysi_hrive').removeClass('wysi_hrive');
-            var deletebtn = $('<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px"><img style="width:20px;" src="http://wap-qn.toutiaofangchan.com/adideas/fae2789c085e47398b716e5adeec32df.png"/></span>');
-            deletebtn.click(function () {
+            var deletebtn = $(
+                '<span class="wysiclose" style="z-index: 1000000;position: absolute;right: 0px;top:0px"><img style="width:20px;" src="http://wap-qn.toutiaofangchan.com/adideas/fae2789c085e47398b716e5adeec32df.png"/></span>'
+            );
+            deletebtn.click(function() {
                 if (window.confirm('确定要删除么？')) {
-                    that.delete(stageComponent.component_id);
+                    that.delete(
+                        $(this)
+                            .parent()
+                            .eq(0)
+                            .prop('id')
+                    );
                 }
             });
             dom.prepend(deletebtn);
             // todo 拖拽按钮
-            var dragbtn = $('<img class="wysidrag" style="z-index: 1000000;position: absolute;left: 50%; margin-left:-20px; top:-2px;width:40px;" src="http://wap-qn.toutiaofangchan.com/adideas/00a75c5ecdd343789003cc3d229cb8dc.png"/>');
+            var dragbtn = $(
+                '<img class="wysidrag" style="z-index: 1000000;position: absolute;left: 50%; margin-left:-20px; top:-2px;width:40px;" src="http://wap-qn.toutiaofangchan.com/adideas/00a75c5ecdd343789003cc3d229cb8dc.png"/>'
+            );
             dom.prepend(dragbtn);
             dom.addClass('wysi_hrive');
         });
-        dom.mouseleave(function () {
+        dom.mouseleave(function() {
             dom.find('.wysiclose').remove();
             dom.find('.wysidrag').remove();
             dom.removeClass('wysi_hrive');
             // dom.css("border",'0px solid red');
         });
+
         /**
          * 鼠标点击的时候，设置当前的 高亮
          */
-        dom.click(function (event) {
-            var  tmpid = $(this).prop('id');
-
-            if (that.currentComponent && tmpid != that.currentComponent.component_id) {
-                that.setCurrent(that.stageComponentsDict[$(this).prop('id')]);
-            }
+        dom.click(function(event) {
+            var tmpid = $(this).prop('id');
+            // if (
+            //     that.currentComponent &&
+            //     tmpid != that.currentComponent.component_id
+            // ) {
+            that.setCurrent(that.stageComponentsDict[$(this).prop('id')], true);
+            // }
             event.stopPropagation();
             event.preventDefault();
         });
-        return {ack: true, dom: dom}; ;
+        return { ack: true, dom: dom };
     },
-    setCurrent: function (stageComponent) {
-        if(!stageComponent) {
+    setCurrent: function(stageComponent, show) {
+        if (!stageComponent) {
             return;
         }
         this.currentComponent = stageComponent;
         this._stage.find('.wysi_active').removeClass('wysi_active');
         this.currentComponent.dom.addClass('wysi_active');
-        this._currentComponentChangeEvent(this.currentComponent);
+        this._currentComponentChangeEvent(this.currentComponent, show);
     },
-    save: function () {
+    save: function() {
         console.log('save');
 
         var jsincludes = '';
@@ -215,10 +275,18 @@ export default {
         var stagedict = {};
         for (var key in this.stageComponentsDict) {
             this.stageComponentsDict[key].jsincludes.forEach(iteminclude => {
-                jsincludes = jsincludes + '<script type="text/javascript" src="' + iteminclude + '"></script>';
+                jsincludes =
+                    jsincludes +
+                    '<script type="text/javascript" src="' +
+                    iteminclude +
+                    '"></script>';
             });
             this.stageComponentsDict[key].cssincludes.forEach(iteminclude => {
-                cssincludes = cssincludes + '<link rel="stylesheet" href="' + iteminclude + '">';
+                cssincludes =
+                    cssincludes +
+                    '<link rel="stylesheet" href="' +
+                    iteminclude +
+                    '">';
             });
             css += this.stageComponentsDict[key].css;
             js += this.stageComponentsDict[key].js;
@@ -233,11 +301,23 @@ export default {
                 editor_regid: this.stageComponentsDict[key].editor_regid // vue编辑器组件的注册id
             };
         }
-        var strHtml = $('#wysiwyg_stage').html();
 
-        var fullhtml  = css + strHtml;
+        // var strHtml = $('#wysiwyg_stage')
+        //     .html()
+        //     .find('.wys-mask');
+        //  var strHtml = $('#wysiwyg_stage').clone(true);
+        var strCloneHtml = $('#saveHtmlId').clone(true);
+        var maskSpan = strCloneHtml.find('.wys-mask');
+        maskSpan.each(function() {
+            $(this).remove();
+        });
+        var strHtml = strCloneHtml[0].innerHTML;
+        var fullhtml = css + strHtml;
         fullhtml = fullhtml + jsincludes + cssincludes + js;
-        return { html: fullhtml, stage: {stagedict:stagedict,strhtml:strHtml}};
+        return {
+            html: fullhtml,
+            stage: { stagedict: stagedict, strhtml: strHtml }
+        };
     },
     /**
      * render方法负责2个事情：
@@ -248,7 +328,12 @@ export default {
      * @param isCreateEventRender
      * @param editorRenderTriggerERROR
      */
-    render: function (data, component_id, isCreateEventRender, editorRenderTriggerERROR) {
+    render: function(
+        data,
+        component_id,
+        isCreateEventRender,
+        editorRenderTriggerERROR
+    ) {
         var targetStageComponent = this.stageComponentsDict[component_id];
         if (!targetStageComponent) {
             return;
@@ -262,24 +347,42 @@ export default {
         var css = '';
         var jswys = '';
         try {
-            html = targetStageComponent.editor.arttemplate({share: data, brickid: 'share' + component_id});
-            js = targetStageComponent.editor.artjavascript({share: data, brickid: 'share' + component_id});
-            css = targetStageComponent.editor.artcss({share: data, brickid: 'share' + component_id});
-            jswys = targetStageComponent.editor.artjavascriptwys({share: data, brickid: 'share' + component_id});
+            html = targetStageComponent.editor.arttemplate({
+                share: data,
+                brickid: 'share' + component_id
+            });
+            js = targetStageComponent.editor.artjavascript({
+                share: data,
+                brickid: 'share' + component_id
+            });
+            css = targetStageComponent.editor.artcss({
+                share: data,
+                brickid: 'share' + component_id
+            });
+            jswys = targetStageComponent.editor.artjavascriptwys({
+                share: data,
+                brickid: 'share' + component_id
+            });
         } catch (e) {
             console.error('arttemplate渲染报错', e);
         }
         if (isCreateEventRender) {
             var artjavascriptincludes = targetStageComponent.editor.artjavascriptincludes();
             for (var i = 0; i < artjavascriptincludes.length; i++) {
-                $('body').append('<script type="text/javascript" src="' + artjavascriptincludes[i] + '"></script>');
+                $('body').append(
+                    '<script type="text/javascript" src="' +
+                        artjavascriptincludes[i] +
+                        '"></script>'
+                );
             }
             targetStageComponent.jsincludes = artjavascriptincludes;
         }
-        if(isCreateEventRender){
+        if (isCreateEventRender) {
             var artcssincludes = targetStageComponent.editor.artcssincludes();
             for (var i = 0; i < artcssincludes.length; i++) {
-                $('head').append('<link rel="stylesheet" href="' + artcssincludes[i] + '">');
+                $('head').append(
+                    '<link rel="stylesheet" href="' + artcssincludes[i] + '">'
+                );
             }
             targetStageComponent.cssincludes = artcssincludes;
         }
@@ -291,13 +394,30 @@ export default {
         }
         // console.log('jswys',jswys)
         if (_.trim(jswys)) {
-            $('body').append('<script  type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + jswys + '});</script>');
+            $('body').append(
+                '<script  type=\'text/javascript\'>$(function() {  var $t = $("#' +
+                    component_id +
+                    '");' +
+                    jswys +
+                    '});</script>'
+            );
         } else {
             targetStageComponent.dom.html(html); // children('div').eq(0)
         }
 
+        if(targetStageComponent.editor.accepts === undefined){
+            this._createMask(targetStageComponent.dom);
+        }
+        
         if (_.trim(js)) {
-            js = '<script id="js-' + component_id + '" type=\'text/javascript\'>$(function() {  var $t = $("#' + component_id + '");' + js + '});</script>';
+            js =
+                '<script id="js-' +
+                component_id +
+                '" type=\'text/javascript\'>$(function() {  var $t = $("#' +
+                component_id +
+                '");' +
+                js +
+                '});</script>';
             $('body').append(js);
         }
         targetStageComponent.js = js;
@@ -307,7 +427,10 @@ export default {
         如果是拖拽产生的新组件，第一次要做一个替换站位div
          */
         if (isCreateEventRender && targetStageComponent.isDragNew) {
-            this._stage.find('.wysi_hold').eq(0).after(targetStageComponent.dom);
+            this._stage
+                .find('.wysi_hold')
+                .eq(0)
+                .after(targetStageComponent.dom);
             this._stage.find('.wysi_hold').remove();
             targetStageComponent.isDragNew = false;
         }
@@ -317,22 +440,24 @@ export default {
      * 删除组件
      * @param component_id
      */
-    delete: function (component_id) {
+    delete: function(component_id) {
         var willdeleteComponent = this.stageComponentsDict[component_id];
         if (!willdeleteComponent) {
             return;
         }
         willdeleteComponent.editor_regid = 'wys_default';
-        willdeleteComponent.editor = this.canUseEditors.getComponent('wys_default');
+        willdeleteComponent.editor = this.canUseEditors.getComponent(
+            'wys_default'
+        );
         delete this.stageComponentsDict[component_id];
-        this.setCurrent(willdeleteComponent);
+        this.setCurrent(willdeleteComponent, false);
         willdeleteComponent.dom.remove();
     },
     /*
     创建 stageComponent
     @param editor_regid 组件的注册id
      */
-    create: function (editor_regid, isDragNew, dbStageComponent) {
+    create: function(editor_regid, isDragNew, dbStageComponent) {
         if (!dbStageComponent) {
             dbStageComponent = {
                 component_id: null, // 组件的唯一编号，方便vue组件的缓存，同时也为stageComponent提供了唯一依据
@@ -346,22 +471,29 @@ export default {
                 editor: null // vue编辑器组件
             };
         }
-        dbStageComponent.component_id = this._createComponentId(dbStageComponent.component_id);
+
+        dbStageComponent.component_id = this._createComponentId(
+            dbStageComponent.component_id
+        );
         dbStageComponent.isDragNew = isDragNew;
-        dbStageComponent.editor = this.canUseEditors.getComponent(dbStageComponent.editor_regid);
+        dbStageComponent.editor = this.canUseEditors.getComponent(
+            dbStageComponent.editor_regid
+        );
         var domres = this._createDom(dbStageComponent, isDragNew);
         dbStageComponent.dom = domres.dom;
         if (!domres.ack) {
             console.error(dbStageComponent.component_id);
         }
-        this.stageComponentsDict[dbStageComponent.component_id] = dbStageComponent;
-        this.setCurrent(dbStageComponent);
+        this.stageComponentsDict[
+            dbStageComponent.component_id
+        ] = dbStageComponent;
+        this.setCurrent(dbStageComponent, true);
     },
     _increase: 1,
     /*
     创建唯一id
      */
-    _createComponentId: function (component_id) {
+    _createComponentId: function(component_id) {
         if (!component_id) {
             this._increase = this._increase + 1;
             return 'wsyblock-' + this._increase;

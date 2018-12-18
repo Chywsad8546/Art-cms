@@ -5,6 +5,15 @@ const cityDomainimg = 'http://appdev.toutiaofangchan.com/#/look/images';
 const hshipinDomainurl = 'http://appdev.toutiaofangchan.com/#/look/hvideo';
 const sshipinDomainurl = 'http://appdev.toutiaofangchan.com/#/look/vvideo';
 const imgDomain = 'http://wap-qn.toutiaofangchan.com/';
+const secondDetailUrl = "http://m.dev.bidewu.com/bj/detail/second";
+const rentDetailUrl = "http://m.dev.bidewu.com/bj/detail/rent";
+const plotDetailUrl = "http://m.dev.bidewu.com/bj/detail/plot";
+const newDetailUrl = "http://m.dev.bidewu.com/bj/detail/new";
+const uploadFile = "/cmsapi/upload/uploadimgNoDomainExt";
+const uploadNewsFile = "/cmsapi/cmsapi/sys/uploadImg";
+const ajaxDomain = "http://app.dev.bidewu.com";
+const wysiwygPreviewUrl = "http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml";
+
 export default {
     jingjirenDomain,
     companyDomain,
@@ -12,5 +21,13 @@ export default {
     imgDomain,
     cityDomainimg,
     hshipinDomainurl,
-    sshipinDomainurl
+    sshipinDomainurl,
+    secondDetailUrl,
+    rentDetailUrl,
+    plotDetailUrl,
+    newDetailUrl,
+    uploadFile,
+    ajaxDomain,
+    uploadNewsFile,
+    wysiwygPreviewUrl
 };

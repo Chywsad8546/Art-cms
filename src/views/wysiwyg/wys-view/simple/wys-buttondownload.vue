@@ -11,33 +11,20 @@
         </Row>
         <Row>
           <Row>
-            <col>
-            <div v-if="share.url != ''">
-              <span style="margin-right:10px;">链接到 {{share.url}}</span>
-              <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
-                编辑
-              </a>
-            </div>
-            <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
-              <Icon type="plus-round"></Icon>
-              添加链接
-            </a>
-            </Col>
+            <Col span="24" style="line-height: 38px">Android链接</Col>
           </Row>
-          <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
-            v-bind:isBlock="share.navVisible"></wysLink>
-          </Col>
-          <!-- <Modal title="URL" v-model="share.navVisible">
+          <Modal title="URL" v-model="share.navVisible">
             <FormItem label="链接地址" v-if="share.navVisible">
               <Input v-model="share.url" placeholder="http://"></Input>
             </FormItem>
-          </Modal> -->
-
-          <p><strong>提示</strong></p>
-          <p>1. 建议图片宽度在320至640之间;</p>
-          <p>2. 图片大小不能超过1M; 支持jpg,jpeg,png,gif等格式;</p>
-          <p>3. 作为按钮的图片宽高比不能低于3:1并且不能高于10:1</p>
-
+          </Modal>
+        </Row>
+        <Row>
+          <textarea style="width: 280px; height: 100px" v-model="share.androidUrl"></textarea>
+        </Row>
+        <Row>
+          <Col span="12" style="line-height: 38px">IOS链接</Col>
+          <textarea style="width: 280px; height: 100px" v-model="share.iosUrl"></textarea>
         </Row>
       </TabPane>
       <TabPane label="样式">
@@ -205,12 +192,8 @@
 <script>
 import api from '../../../../api/wysiwyg/main.js';
 import { setTimeout } from 'timers';
-import wysLink from '../components/link.vue';
 export default {
-    name: 'wys-button',
-    components: {
-        wysLink
-    },
+    name: 'wys-buttonDownload',
     data () {
         return {
             share: {
@@ -222,7 +205,6 @@ export default {
                 right: 15,
                 bottom: 10,
                 left: 15,
-                urlData: {},
                 formList: [],
                 formRender: [],
                 formBottonRender: '',
@@ -236,7 +218,7 @@ export default {
                 clickHeight: 40,
                 radius: 5,
                 effectType: '1',
-                clickTest: '按钮',
+                clickTest: '下载',
                 clickTel: '',
                 iosUrl: '',
                 androidUrl: '',
@@ -308,20 +290,6 @@ export default {
                 title: '不能上传此格式的文件',
                 desc: ''
             });
-        },
-        addUrl (item) {
-            item.navVisible = true;
-        },
-        cancelPopup () {
-            this.share.navVisible = !this.share.navVisible;
-        },
-        okPopup (data) {
-            this.share.navVisible = !this.share.navVisible;
-            this.share.url = data.url;
-            this.share.urlData = data;
-            if (data.id) {
-                this.share.url += data.id;
-            }
         }
     },
     created: function () {
@@ -393,26 +361,19 @@ export default {
   cursor: pointer;
   margin: 0 2px;
 }
-.btn {
-  font-size: 12px;
-  color: #2d8cf0;
-  cursor: pointer;
-}
 </style>
 <stage-template>
-<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
-    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">      
-       <a href="{{@share.url}}" target="_blank">   
-        {{if share.styleList=='clickStyle1'}}        
-                  <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
+<div class="downloadContainer" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
+    <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">           
+       {{if share.styleList=='clickStyle1'}}        
+                <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
+                {{@ share.clickTest }}
+                </div>
+        {{else}}
+                <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;">
                   {{@ share.clickTest }}
-                  </div>
-          {{else}}
-                  <div class="btn-i" style="border-radius: 50%; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>;  width: 56px; line-height:56px; height:56px; margin: 0 auto;">
-                    {{@ share.clickTest }}
-                  </div>
-          {{/if}} 
-        </a>
+                </div>
+        {{/if}} 
     </div>
 </div>
 </stage-template>
@@ -436,6 +397,135 @@ if(<%= share.effectType %> == 3){
          $t.attr("style","position: fixed; width:100%; bottom:0; top:auto; z-index:30;");
     }
 }
+
+ const ua = window.navigator.userAgent.toLowerCase()
+ $t.children(".downloadContainer").on("click",function(){
+    if(ua.indexOf("iphone") !== -1){
+     window.open("{{@share.iosUrl}}")
+    } else {
+      window.open("{{@share.androidUrl}}")
+    }
+ })
 </stage-javascript>
 <stage-css>
+.form-piece .checkbox-addon, .form-piece .city-addon, .form-piece .date-addon, .form-piece .gender-addon, .form-piece .input-group-i .input-group-addon-i, .form-piece .radio-addon, .form-piece .select-addon, .form-piece .textarea-addon {
+    font-size: 12px;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 10px;
+    color: <%= share.fontColor %>;
+    display: inline-block;
+}
+.form-piece .checkbox-group, .form-piece .city-group, .form-piece .date-group, .form-piece .gender-group, .form-piece .input-group-i, .form-piece .radio-group, .form-piece .select-group, .form-piece .selectMulti-group, .form-piece .textarea-group {
+    padding: 5px 18px;
+    position: relative;
+    border-collapse: separate;
+}
+.form-piece div, .form-piece span, div.form-piece, span.form-piece {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
+}
+.form-piece .input-style {
+    height: 40px;
+    width: 100%;
+    color: #555;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 6px 12px;
+    display: block;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form-piece.label-style .checkbox-box, .form-piece.label-style .radio-box {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.form-piece.label-style .checkbox-box label, .form-piece.label-style .radio-box label {
+    margin-right: 0!important;
+    height: 32px;
+    line-height: 30px;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.form-piece.label-style .gender-box .radio-item {
+    width: calc(49% - 4px);
+}
+.form-piece.label-style .checkbox-box input[type=checkbox]:checked~span, .form-piece.label-style .checkbox-box input[type=radio]:checked~span, .form-piece.label-style .radio-box input[type=checkbox]:checked~span, .form-piece.label-style .radio-box input[type=radio]:checked~span {
+    border-color: #ff5454;
+    color: #ff5454;
+}
+.form-piece.label-style .checkbox-box input[type=checkbox]~span, .form-piece.label-style .checkbox-box input[type=radio]~span, .form-piece.label-style .radio-box input[type=checkbox]~span, .form-piece.label-style .radio-box input[type=radio]~span {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: block;
+    padding: 0 9px;
+    line-height: 30px;
+    height: 32px;
+    max-width: none;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+}
+.form-piece.label-style .checkbox-box input[type=checkbox], .form-piece.label-style .checkbox-box input[type=radio], .form-piece.label-style .radio-box input[type=checkbox], .form-piece.label-style .radio-box input[type=radio] {
+    visibility: hidden;
+    position: absolute;
+}
+.form-piece div, .form-piece span, div.form-piece, span.form-piece {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
+}
+.form-piece div, .form-piece span, div.form-piece, span.form-piece {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
+}
+.form-piece .input-style {
+    height: 40px;
+    width: 100%;
+    color: #555;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 6px 12px;
+    display: block;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.form-piece .error {
+    font-size: 12px;
+    color: red;
+}
+.formlEmpty {
+    height: 100px;
+    line-height:100px;
+    text-align: center;
+}
 </stage-css>
