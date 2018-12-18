@@ -12,6 +12,8 @@ const newDetailUrl = "http://m.dev.bidewu.com/bj/detail/new";
 const uploadFile = "/cmsapi/upload/uploadimgNoDomainExt";
 const uploadNewsFile = "/cmsapi/sys/uploadImg";
 const ajaxDomain = "http://app.dev.bidewu.com";
+const wysiwygPreviewUrl = "http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml";
+
 export default {
     jingjirenDomain,
     companyDomain,
@@ -26,5 +28,6 @@ export default {
     newDetailUrl,
     uploadFile,
     ajaxDomain,
-    uploadNewsFile
+    uploadNewsFile,
+    wysiwygPreviewUrl
 };

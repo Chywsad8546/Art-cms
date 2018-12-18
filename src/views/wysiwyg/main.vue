@@ -588,7 +588,7 @@ export default {
                     api.saveDiyWebpageHistory(this.formMain).then(response => {
                         this.formMain.id = response.data.data.id;
                         this.qrcodeModal = true;
-                        var url = 'http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml?id=' + response.data.data.pid;
+                        var url = this.$domain.wysiwygPreviewUrl+'?id=' + response.data.data.pid;
                         this.siteUrl = url;
                         document.getElementById('qrcode10').innerHTML = '';
                         this.qrcode(url);

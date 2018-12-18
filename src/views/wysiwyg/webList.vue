@@ -249,7 +249,7 @@ export default {
         },
         previewClick (id) {
             this.qrcodeModal = true;
-            var url = 'http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml?id=' + id;
+            var url = this.$domain.wysiwygPreviewUrl+'?id=' + id;
             this.siteUrl = url;
             document.getElementById('qrcode11').innerHTML = '';
             this.qrcode(url);
@@ -377,7 +377,6 @@ export default {
         }
     },
     created () {
-        console.log(this.searchData);
         this.init();
     }
 };
