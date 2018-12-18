@@ -195,9 +195,9 @@
         // [{'font': []}],
         [{'align': []}],
         ['link', 'image'],
-        ['clean'],
-                                          // remove formatting button
-    ]
+        ['clean']
+        // remove formatting button
+    ];
     export default {
         name: 'articleAdd',
         components: {
@@ -207,17 +207,17 @@
         },
         data() {
             return {
-                content:null,
+                content: null,
                 uploadFlag: false,
                 dialogImageUrl: '',
                 dialogVisible: false,
                 uploadimgFlag: false,
-                imgDom: "",
-                selectImgSrc: "",
+                imgDom: '',
+                selectImgSrc: '',
                 columnList: [],
                 LabelList: [],
                 parentlabelMsg: [],
-                Lid: {},//修改文章用到
+                Lid: {}, // 修改文章用到
                 uplopopDisplay: false,
                 uploadimgList: [],
                 vshowTimeSelect: false,
@@ -228,72 +228,72 @@
                 isDisable: false,
                 flagPreview: false,
                 tabs: 2,
-                qrcodeModal: false,//二维码弹框
-                isTimeFlag:true,//控制定时发布按钮显示
-                isDraftFlag:true,//控制草稿按钮显示
-                tagsJson:{//保存标签全局json用
-                        "1":[],
-                        "2":[],
-                        "3":[],
-                        "4":[],
-                        "5":[],
-                        "6":[],
-                        "7":[]
+                qrcodeModal: false, // 二维码弹框
+                isTimeFlag: true, // 控制定时发布按钮显示
+                isDraftFlag: true, // 控制草稿按钮显示
+                tagsJson: {// 保存标签全局json用
+                    '1': [],
+                    '2': [],
+                    '3': [],
+                    '4': [],
+                    '5': [],
+                    '6': [],
+                    '7': []
                 },
                 form: {
                     title: '',
                     content: '',
-                    preContent:'',
-                    isPublish: 0,//发布状态(0:待发布,1:已发布,2:草稿，3撤稿) 是
-                    listType:'0',//封面样式(0:大标题,1:单图,2:多图,3:视频) 是
-                    source:'',//文章来源 否
-                    publishAt:'',//发布时间 否
-                    tags:[],  //标签1,2,3  否
+                    preContent: '',
+                    isPublish: 0, // 发布状态(0:待发布,1:已发布,2:草稿，3撤稿) 是
+                    listType: '0', // 封面样式(0:大标题,1:单图,2:多图,3:视频) 是
+                    source: '', // 文章来源 否
+                    publishAt: '', // 发布时间 否
+                    tags: [], // 标签1,2,3  否
                     tagsName: [],
-                    listImg: [], //封面图片数组
-                    type: 0,    //内容类型(0:图文,1:图集,2:视频)
-                    author: '',//作者
-                    topic: [],   //栏目
-                    topicName:[], //栏目名称
-                    recommendLevel:'',//1  2 3 级
-                    tagsJson:{
-                        "1":[],
-                        "2":[],
-                        "3":[],
-                        "4":[],
-                        "5":[],
-                        "6":[],
-                        "7":[]
+                    listImg: [], // 封面图片数组
+                    type: 0, // 内容类型(0:图文,1:图集,2:视频)
+                    author: '', // 作者
+                    topic: [], // 栏目
+                    topicName: [], // 栏目名称
+                    recommendLevel: '', // 1  2 3 级
+                    tagsJson: {
+                        '1': [],
+                        '2': [],
+                        '3': [],
+                        '4': [],
+                        '5': [],
+                        '6': [],
+                        '7': []
                     },
-                    appCode:'',
-                    releaseType:'',
-                    equipmentNumber:''
+                    appCode: '',
+                    releaseType: '',
+                    equipmentNumber: ''
                 },
-                 ruleValidate: {
+                ruleValidate: {
                     title: [
                         { type: 'string', max: 50, message: '已超过50个字', trigger: 'change' }
-                    ],
+                    ]
                 },
                 editorOption: {
                     placeholder: '',
-                    theme: 'snow',  // or 'bubble'
+                    theme: 'snow', // or 'bubble'
                     modules: {
-                            toolbar: '#toolbar'
-                            // toolbar: {
-                            // container: toolbarOptions,  // 工具栏
-                            // handlers: {
-                            //     'image': function (value) {
-                            //         if (value) {
-                            //             document.querySelector('#iviewUp2 input').click();
-                            //         } else {
-                            //             this.quill.format('image', false);
-                            //         }
-                            //     },
-                            //     'cssh1': function (value) {
-                            //         console.log(11111);
-                            //     }
-                            // }
-                            // }
+                        toolbar: '#toolbar'
+                        // toolbar: {
+                        // container: toolbarOptions,  // 工具栏
+                        // handlers: {
+                        //     'image': function (value) {
+                        //         if (value) {
+                        //             document.querySelector('#iviewUp2 input').click();
+                        //         } else {
+                        //             this.quill.format('image', false);
+                        //         }
+                        //     },
+                        //     'cssh1': function (value) {
+                        //         console.log(11111);
+                        //     }
+                        // }
+                        // }
                     }
                 }
             };
@@ -301,10 +301,10 @@
         created() {
             this.newsChaneelList();
             this.Lid.id = this.$route.query.newsId;
-            if(this.Lid.id != undefined){
-                setTimeout(()=>{
+            if (this.Lid.id != undefined) {
+                setTimeout(() => {
                     this.getNewsDetail();
-                },500);
+                }, 500);
             }
         },
         watch: {
@@ -315,11 +315,11 @@
             computedByteLen(str) {
                 return str.replace(/[^\x00-\xff]/g, '01').length;
             },
-            lanmuChange(ids){
-                this.form.topicName=[];
+            lanmuChange(ids) {
+                this.form.topicName = [];
                 ids.forEach(id => {
-                    this.chaneeljmList.forEach(item=>{
-                        if(item.id==id){
+                    this.chaneeljmList.forEach(item => {
+                        if (item.id === id) {
                             this.form.topicName.push(item.title);
                         }
                     });
@@ -332,73 +332,73 @@
                 api.getNewsDetail(this.Lid).then(response => {
                     this.form.title = response.data.data.title;
                     this.form.content = response.data.data.content;
-                    if(response.data.data.topic){
+                    if (response.data.data.topic) {
                         this.form.topic = response.data.data.topic;
                     }
-                    if(response.data.data.tagsJson){
+                    if (response.data.data.tagsJson) {
                         this.tagsJson = JSON.parse(response.data.data.tagsJson);
                         this.parentlabelMsg = JSON.parse(response.data.data.tagsJson);
                     }
                     let isPublish = response.data.data.isPublish;
-                    if(isPublish === 2 || isPublish === 3){
+                    if (isPublish === 2 || isPublish === 3) {
                         this.isTimeFlag = true;
-                    }else {
+                    } else {
                         this.isTimeFlag = false;
                     }
-                    if(isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0){
+                    if (isPublish === 1 || isPublish === '1' || isPublish === '0' || isPublish === 0) {
                         this.isDraftFlag = false;
                     }
-                    this.form.recommendLevel = response.data.data.recommendLevel+'';
+                    this.form.recommendLevel = response.data.data.recommendLevel + '';
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
-                    this.form.listType = response.data.data.listType+'';
-                    if(this.form.listType === 1 || this.form.listType === '1'){
-                        if(response.data.data.listImg){
+                    this.form.listType = response.data.data.listType + '';
+                    if (this.form.listType === 1 || this.form.listType === '1') {
+                        if (response.data.data.listImg) {
                             this.coverImgOne = response.data.data.listImg;
                         }
-                    }else if(this.form.listType === 2 || this.form.listType === '2'){
-                        if(response.data.data.listImg){
+                    } else if (this.form.listType === 2 || this.form.listType === '2') {
+                        if (response.data.data.listImg) {
                             this.coverImgTrue = response.data.data.listImg;
                         }
                     }
-                })
+                });
             },
-            callBacklabelFun(data){
+            callBacklabelFun(data) {
                 this.form.tags = [];
                 this.form.tagsName = [];
                 this.form.showTags = [];
                 this.form.showTagsName = [];
-                let arr = ["1","2","3","4","5","6","7"];
+                let arr = ['1', '2', '3', '4', '5', '6', '7'];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
-                    data[key].forEach(item=> {
-                        if(key != "1" && key != "2"&& key != "3"&& key != "6"){
-                          this.form.showTags.push(item.value);
-                          this.form.showTagsName.push(item.label);
+                    data[key].forEach(item => {
+                        if (key != '1' && key != '2' && key != '3' && key != '6') {
+                            this.form.showTags.push(item.value);
+                            this.form.showTagsName.push(item.label);
                         }
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
-                        //console.log(item);
+                        // console.log(item);
                         this.tagsJson[key].push(item.value);
-                    })
+                    });
                 });
             },
             // 验证文件合法性
             beforeUpload (file) {
-                const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-                const isLt2M = file.size / 1024 / 1024 < 2
+                const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!')
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!')
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
-                return isJPG && isLt2M
+                return isJPG && isLt2M;
             },
-            onEditorBlur(){//失去焦点事件
-              //  console.log(this.content);
+            onEditorBlur() { // 失去焦点事件
+                //  console.log(this.content);
             },
-            onEditorFocus(){//获得焦点事件
+            onEditorFocus() { // 获得焦点事件
 
             },
             callBackTime(callBackValue) {
@@ -421,12 +421,12 @@
                     this.chaneeljmList = response.data.data;
                 }).catch(response => {
                     this.$Notice.warning({
-                        title: "栏目获取失败"
+                        title: '栏目获取失败'
                     });
-                })
+                });
             },
             selectSort(data) {
-                this.uploadimgList.forEach(function(obj){
+                this.uploadimgList.forEach(function(obj) {
                     obj.isActive = false;
                 });
                 data.isActive = !data.isActive;
@@ -439,11 +439,11 @@
             successPreview(file) {
                 let selfQuill = this.$refs.myQuillEditor.quill;
                 selfQuill.focus();
-                if(selfQuill){
+                if (selfQuill) {
                     let length = selfQuill.getSelection().index;
                     selfQuill.insertEmbed(length, 'image', file.data);
                     // 调整光标到最后
-                    selfQuill.setSelection(length + 1)
+                    selfQuill.setSelection(length + 1);
                 }
             },
             coverUpImg() {
@@ -462,175 +462,179 @@
             cancelFun() {
                 this.uploadimgFlag = !this.uploadimgFlag;
             },
-            confirmParEvent(data) {//弹框确定事件
+            confirmParEvent(data) { // 弹框确定事件
                 this.uplopopDisplay = !this.uplopopDisplay;
-                if(this.form.listType === '1' || this.form.listType === 1){
-                    if(this.coverImgOne.length>0){
-                           // this.pitchImgArr.splice(index, 1);
-                           this.coverImgOne.splice(this.coverImgIndex,1,data);
-                    }else{
+                if (this.form.listType === '1' || this.form.listType === 1) {
+                    if (this.coverImgOne.length > 0) {
+                        // this.pitchImgArr.splice(index, 1);
+                        this.coverImgOne.splice(this.coverImgIndex, 1, data);
+                    } else {
                         this.coverImgOne.push(data);
                     }
-                }else if(this.form.listType === '2' || this.form.listType === 2){
-                    if(this.coverImgTrue.length>2){
-                           // this.pitchImgArr.splice(index, 1);
-                           this.coverImgTrue.splice(this.coverImgIndex,1,data);
-                    }else{
+                } else if (this.form.listType === '2' || this.form.listType === 2) {
+                    if (this.coverImgTrue.length > 2) {
+                        // this.pitchImgArr.splice(index, 1);
+                        this.coverImgTrue.splice(this.coverImgIndex, 1, data);
+                    } else {
                         this.coverImgTrue.push(data);
                     }
                 }
             },
-            cancleCallBack() {//弹框取消事件
+            cancleCallBack() { // 弹框取消事件
                 this.uplopopDisplay = !this.uplopopDisplay;
             },
             onEditorChange() {
                 this.form.preContent = this.form.content;
             },
-            releaseNews(type) {//发布按钮
+            releaseNews(type) { // 发布按钮
                 if (this.verification() === false) {
                     return false;
                 }
                 this.preventRepeatClick();
-                this.typeKeepArr(); //通过选项判断封面数组
+                this.typeKeepArr(); // 通过选项判断封面数组
                 this.flagPreview = false;
                 this.form.isPublish = type;
-                console.log(this.form);
-                if(this.Lid.id !== undefined){
+                var typeJson = JSON.parse(this.form.tagsJson);
+                console.log(typeJson["2"][0]);
+                api.getCityId({city: typeJson["2"][0]}).then(response => {
+                    console.log(response.data)
+                });
+             /*   if (this.Lid.id !== undefined) {
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
                         this.prevResponse(response);
                         this.$Message.success('修改成功！');
-                    })
-                }else{
+                    });
+                } else {
                     api.addArticle(this.form).then(response => {
                         this.prevResponse(response);
                         this.$Message.success('发布成功！');
-                    })
-                }
+                    });
+                }*/
             },
             preventRepeatClick() {
                 this.isDisable = true;
                 setTimeout(() => {
-                    this.isDisable = false
-                }, 1000)
+                    this.isDisable = false;
+                }, 1000);
             },
             typeKeepArr() {
-                if(this.form.listType === '1' || this.form.listType === 1){
+                if (this.form.listType === '1' || this.form.listType === 1) {
                     this.form.listImg = this.coverImgOne;
-                }else if(this.form.listType === '2' || this.form.listType === 2){
+                } else if (this.form.listType === '2' || this.form.listType === 2) {
                     this.form.listImg = this.coverImgTrue;
-                }else{
+                } else {
                     this.form.listImg = [];
                 }
                 this.form.tagsJson = JSON.stringify(this.tagsJson);
             },
-            verification() {//验证方法
-                if (this.form.title==="") {
+            verification() { // 验证方法
+                if (this.form.title === '') {
                     this.$Notice.warning({
-                        title: "请输入标题"
+                        title: '请输入标题'
                     });
                     return false;
                 }
-                if(this.computedByteLen(this.form.title) > 50){
-                        this.$Notice.warning({
-                            title: "标题不能超过25字"
-                        });
-                        return false;
-                }
-                if(this.form.content===""){
+                if (this.computedByteLen(this.form.title) > 50) {
                     this.$Notice.warning({
-                        title: "请输入图文"
+                        title: '标题不能超过25字'
                     });
                     return false;
                 }
-                if(this.form.listType === '1' || this.form.listType === 1){
-                    if(this.coverImgOne.length<=0){
+                if (this.form.content === '') {
+                    this.$Notice.warning({
+                        title: '请输入图文'
+                    });
+                    return false;
+                }
+                if (this.form.listType === '1' || this.form.listType === 1) {
+                    if (this.coverImgOne.length <= 0) {
                         this.$Notice.warning({
-                            title: "请上传封面"
+                            title: '请上传封面'
                         });
                         return false;
                     }
                 }
-                if(this.form.listType === '2' || this.form.listType === 2){
-                    if(this.coverImgTrue.length<3){
+                if (this.form.listType === '2' || this.form.listType === 2) {
+                    if (this.coverImgTrue.length < 3) {
                         this.$Notice.warning({
-                            title: "请上传三张封面"
+                            title: '请上传三张封面'
                         });
                         return false;
                     }
                 }
-                if(this.form.topic.length <= 0){
+                if (this.form.topic.length <= 0) {
                     this.$Notice.warning({
-                        title: "请选择栏目"
+                        title: '请选择栏目'
                     });
                     return false;
                 }
-                if(this.form.recommendLevel == ''){
-                        this.$Notice.warning({
-                            title: "请选择图文级别"
-                        });
-                        return false;
+                if (this.form.recommendLevel == '') {
+                    this.$Notice.warning({
+                        title: '请选择图文级别'
+                    });
+                    return false;
                 }
             },
-            previewFun(type) {//预览事件
-                if(this.verification() == false){
+            previewFun(type) { // 预览事件
+                if (this.verification() === false) {
                     return false;
                 }
                 this.preventRepeatClick();
-                this.typeKeepArr();//通过选项判断封面数组
+                this.typeKeepArr();// 通过选项判断封面数组
                 this.flagPreview = true;
                 this.form.isPublish = type;
-                if(this.Lid.id != undefined) {
+                if (this.Lid.id !== undefined) {
                     this.form.id = this.Lid.id;
                 }
                 api.addPreview(this.form).then(response => {
                     this.prevResponse(response);
                 });
             },
-            previewAppFun(type) {//预览事件
-                if(this.verification() == false){
+            previewAppFun(type) { // 预览事件
+                if (this.verification() == false) {
                     return false;
                 }
-                if(this.form.appCode == ''){
+                if (this.form.appCode == '') {
                     this.$Notice.warning({
-                        title: "请输入appCode"
+                        title: '请输入appCode'
                     });
                     return false;
                 }
                 this.preventRepeatClick();
-                this.typeKeepArr();//通过选项判断封面数组
+                this.typeKeepArr();// 通过选项判断封面数组
                 this.form.isPublish = type;
-                if(this.Lid.id != undefined) {
+                if (this.Lid.id != undefined) {
                     this.form.id = this.Lid.id;
                 }
                 api.addPreview(this.form).then(response => {
                     this.prevResponse(response);
-                        this.$Modal.success({
-                            title: '',
-                            content: "保存成功请在APP上预览"
-                        });
-                        this.previewCancel();
+                    this.$Modal.success({
+                        title: '',
+                        content: '保存成功请在APP上预览'
+                    });
+                    this.previewCancel();
                 });
             },
-            prevResponse(response){
-                    this.form.id = response.data.data.id;
-                    this.qrcodeModal = !this.qrcodeModal;
-                    let pre = response.data.data.pre;
-                    let sign = response.data.data.sign;
-                    let id = response.data.data.id;
-                    let timestamp = response.data.data.timestamp;
-                   // let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
-                    let url = this.$domain.cityDomain + '?id='+id+'&pre=1';
-                    document.getElementById("qrcode1").innerHTML = "";
-                    this.qrcode(url);
+            prevResponse(response) {
+                this.form.id = response.data.data.id;
+                this.qrcodeModal = !this.qrcodeModal;
+                let pre = response.data.data.pre;
+                let sign = response.data.data.sign;
+                let id = response.data.data.id;
+                let timestamp = response.data.data.timestamp;
+                // let url = this.$domain.cityDomain + '?id='+id+'&pre='+pre+'&sign='+sign+'&timestamp='+timestamp;
+                let url = this.$domain.cityDomain + '?id=' + id + '&pre=1';
+                document.getElementById('qrcode1').innerHTML = '';
+                this.qrcode(url);
             },
             previewCancel() {
-                if(this.flagPreview == false){
-                    setTimeout(()=>{
+                if (this.flagPreview == false) {
+                    setTimeout(() => {
                         this.$router.push({
-                            name: "newsManageList"
+                            name: 'newsManageList'
                         });
-                    },1000);
+                    }, 1000);
                 }
             },
             qrcode (url) {
@@ -641,7 +645,7 @@
                     // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
                     // background: '#f0f'
                     // foreground: '#ff0'
-                })
+                });
             }
         },
         mounted() {

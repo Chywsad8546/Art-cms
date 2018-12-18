@@ -33,5 +33,10 @@ export default {
     },
     addPreview(params) {
         return http.post('/cmsapi/article/addPreview', params);
+    },
+    getCityId(params) {
+        return http.get('/cmsapi/getCityId', {
+            params: params
+        });
     }
 }
