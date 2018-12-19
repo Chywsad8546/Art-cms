@@ -365,7 +365,7 @@ img {
 
               <div class="screen-border">
                 <div class="workarea" id="saveHtmlId" style="width: 375px;height: 625px;">
-                  <div id="wysiwyg_stage" wys-container style="width: 7.5rem;height: 100%;background-image: none; background-color:#FFFFFF;  background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackStyle"></div>
+                  <div id="wysiwyg_stage" wys-container style="overflow: hidden; width: 7.5rem; min-height: 623px; background-image: none; background-color:#FFFFFF;  background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackStyle"></div>
                 </div>
               </div>
             </div>
