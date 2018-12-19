@@ -49,7 +49,7 @@ export default {
         return http.post('/cmsapi/diyWebpage/delDiyWebpage', params);
     },
     getCityAllInfo(params) {
-        return httpes.get('/searchapiv2/rest/getCityAllInfo', {
+        return httpes.get('/agentv2/rest/getCityAllInfo', {
             params: params
         });
     },
