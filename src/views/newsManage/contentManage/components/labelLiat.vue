@@ -6,8 +6,8 @@
                 <Select  v-model="modelhouse" clearable style="width:100px" :label-in-value = "true" @on-change = "houseSelectFun">
                     <Option v-for="item in houseTypeList" :value="item.id" :key="item.id">{{ item.name }}</Option>
                 </Select>
-            </div> 
-            <div class="room">           
+            </div>
+            <div class="room">
                 城市:
             </div>
             <div class="roomSelect">
@@ -45,7 +45,7 @@
                 <div class="roomList">
                     <CheckboxGroup class="labeldxk" v-model="modeldxpp" @on-change = "orientFun">
                                 <Checkbox  v-for="item in orientList" :label="item.id">{{item.name}}</Checkbox>
-                    </CheckboxGroup> 
+                    </CheckboxGroup>
                 </div>
             </div>
             <div class="roomKeyWorkContiner">
@@ -67,7 +67,7 @@
                                 <Checkbox  v-for="item in keywordList" :label="item.id">{{item.name}}</Checkbox>
                     </CheckboxGroup> -->
             </div>
-    </div>  
+    </div>
 </template>
 <script>
      import api from '../../../../api/news/index.js';
@@ -147,7 +147,7 @@
                 }
                // this.callbackArr7 = [];
             },
-            handleClose2 (index) {//处理标签      
+            handleClose2 (index) {//处理标签
                 this.callbackArr7.splice(index, 1);
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
@@ -185,7 +185,7 @@
                     city.forEach((item, index) =>{
                         if(item.id == obj.value){
                             this.districtList = item.districtList;
-                        }                 
+                        }
                     });
                     this.modelCounty = "";
                     let arr = {"value":obj.value,"label":obj.label};
@@ -213,10 +213,10 @@
                 this.callBackJson["5"] = this.callbackArr5;
                 this.callBackJson["6"] = this.callbackArr6;
                 this.callBackJson["7"] = this.callbackArr7;
-                this.$emit("labelArr-event",this.callBackJson);             
+                this.$emit("labelArr-event",this.callBackJson);
             },
-            districtSelectFun(obj){      
-                this.callbackArr3 = [];        
+            districtSelectFun(obj){
+                this.callbackArr3 = [];
                 if(obj != undefined){
                     let arr = {"value":obj.value,"label":obj.label};
                     this.callbackArr3.push(arr);
@@ -228,7 +228,7 @@
                 this.callBackJson["5"] = this.callbackArr5;
                 this.callBackJson["6"] = this.callbackArr6;
                 this.callBackJson["7"] = this.callbackArr7;
-                this.$emit("labelArr-event",this.callBackJson);               
+                this.$emit("labelArr-event",this.callBackJson);
             },
             fqSelectFun(cid){
                 this.callbackArr4 = [];
@@ -237,8 +237,8 @@
                          if(item.id == id){
                              var arr = {"value":item.id,"label":item.name};
                              this.callbackArr4.push(arr);
-                         }                    
-                    }) 
+                         }
+                    })
                 })
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
@@ -256,9 +256,9 @@
                          if(item.id == id){
                              var arr = {"value":item.id,"label":item.name};
                              this.callbackArr5.push(arr);
-                         }                    
-                    }) 
-                })     
+                         }
+                    })
+                })
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
                 this.callBackJson["3"] = this.callbackArr3;
@@ -266,7 +266,7 @@
                 this.callBackJson["5"] = this.callbackArr5;
                 this.callBackJson["6"] = this.callbackArr6;
                 this.callBackJson["7"] = this.callbackArr7;
-                this.$emit("labelArr-event",this.callBackJson);     
+                this.$emit("labelArr-event",this.callBackJson);
             },
             orientFun(cid){
                 this.callbackArr6 = [];
@@ -275,8 +275,8 @@
                          if(item.id == id){
                              var arr = {"value":item.id,"label":item.name};
                              this.callbackArr6.push(arr);
-                         }                    
-                    }) 
+                         }
+                    })
                 })
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
@@ -294,8 +294,8 @@
                          if(item.id == id){
                              var arr = {"value":item.id,"label":item.name};
                              this.callbackArr7.push(arr);
-                         }                    
-                    }) 
+                         }
+                    })
                 })
                 this.callBackJson["1"] = this.callbackArr1;
                 this.callBackJson["2"] = this.callbackArr2;
@@ -323,9 +323,9 @@
                 city.forEach((item, index) =>{
                     if(item.id == curVal[2][0]){
                         this.districtList = item.districtList;
-                    }                 
+                    }
                 });
-                
+
                 let arrDate = ['1','2','3','4','5','6','7'];
                 arrDate.forEach(key => {
                     curVal[key].forEach(item => {
@@ -333,47 +333,47 @@
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr1.push(xfarr);
-                            }                           
-                        }) 
+                            }
+                        })
                          this.cityList[1].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr2.push(xfarr);
-                            }                           
-                        }) 
+                            }
+                        })
                         if(this.districtList != null){
                             this.districtList.forEach(cityItem => {
                                 if(cityItem.id == item){
                                     let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                     this.callbackArr3.push(xfarr);
-                                }                           
-                            }) 
+                                }
+                            })
                         }
                         this.cityList[2].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr4.push(xfarr);
-                            }                           
-                        }) 
+                            }
+                        })
                         this.cityList[3].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr5.push(xfarr);
-                            }                           
-                        }) 
+                            }
+                        })
                         this.cityList[4].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr6.push(xfarr);
-                            }                           
-                        })  
+                            }
+                        })
                         this.cityList[5].data.forEach(cityItem => {
                             if(cityItem.id == item){
                                 let xfarr = {"value":cityItem.id,"label":cityItem.name};
                                 this.callbackArr7.push(xfarr);
-                            }                           
-                        })                                             
-                    })                  
+                            }
+                        })
+                    })
                 });
                 this.modelCounty = curVal[3][0];
                 this.modelfq = curVal[4];
@@ -384,7 +384,7 @@
             keyWord(curVal,oldVal){
                 if(curVal.length==0){
                     this.keyShow = false;
-                }else{                   
+                }else{
                     api.tagsList({"type":7,"title":curVal}).then(response => {
                         this.keywordList = response.data.data;
                         if(this.keywordList.length > 0){
@@ -415,7 +415,7 @@
     }
     .roomSelect {
         overflow: hidden;
-        float: left;        
+        float: left;
     }
     .roomContiner {
         width: 100%;
@@ -448,7 +448,7 @@
 
         border: 1px solid #cccccc;
         padding-left: 5px;
-        padding-right:5px; 
+        padding-right:5px;
         margin-right: 5px;
     }
     .selectLabel li  .className {
@@ -481,7 +481,7 @@
         z-index: 10;
         height: 150px;
         min-height: 150px;
-        overflow: auto;       
+        overflow: auto;
     }
     .associationKey li {
         padding-left: 10px;

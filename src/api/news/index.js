@@ -1,4 +1,5 @@
 import http from '../api.base';
+import httpAi from '../api.es.base';
 export default {
     //上传图片接口
     uploadImg (params) {
@@ -35,7 +36,12 @@ export default {
         return http.post('/cmsapi/article/addPreview', params);
     },
     getCityId(params) {
-        return http.get('/cmsapi/getCityId', {
+        return httpAi.get('/agentv2/rest/getCityIdByName', {
+            params: params
+        });
+    },
+    getDistrictId(params) {
+        return httpAi.get('/agentv2/rest/getDistrictId', {
             params: params
         });
     }

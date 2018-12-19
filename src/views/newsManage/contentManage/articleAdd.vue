@@ -207,6 +207,7 @@
         },
         data() {
             return {
+                newCityId: '',
                 content: null,
                 uploadFlag: false,
                 dialogImageUrl: '',
@@ -351,6 +352,8 @@
                     this.form.recommendLevel = response.data.data.recommendLevel + '';
                     this.form.source = response.data.data.source;
                     this.form.author = response.data.data.author;
+                    this.form.newCityId = response.data.data.newCityId;
+                    this.form.districtId = response.data.data.districtId;
                     this.form.listType = response.data.data.listType + '';
                     if (this.form.listType === 1 || this.form.listType === '1') {
                         if (response.data.data.listImg) {
@@ -368,6 +371,8 @@
                 this.form.tagsName = [];
                 this.form.showTags = [];
                 this.form.showTagsName = [];
+                this.form.newCityId = '';
+                this.form.districtId = ''
                 let arr = ['1', '2', '3', '4', '5', '6', '7'];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
@@ -376,8 +381,23 @@
                             this.form.showTags.push(item.value);
                             this.form.showTagsName.push(item.label);
                         }
+                        if (key == '2'){
+                            api.getCityId({'cityName': item.label}).then(response => {
+                                this.form.newCityId = response.data;
+                                this.newCityId = response.data;
+                                this.form.districtId = ''
+                            })
+                        }
+
+                        if (key == '3'){
+                            api.getDistrictId({'cityId': this.newCityId, 'districtName': item.label}).then(response => {
+                                console.log(response.data)
+                                this.form.districtId = response.data;
+                            })
+                        }
                         this.form.tags.push(item.value);
                         this.form.tagsName.push(item.label);
+                        this.form.cityId = item.label;
                         // console.log(item);
                         this.tagsJson[key].push(item.value);
                     });
@@ -495,11 +515,7 @@
                 this.flagPreview = false;
                 this.form.isPublish = type;
                 var typeJson = JSON.parse(this.form.tagsJson);
-                console.log(typeJson["2"][0]);
-                api.getCityId({city: typeJson["2"][0]}).then(response => {
-                    console.log(response.data)
-                });
-             /*   if (this.Lid.id !== undefined) {
+                if (this.Lid.id !== undefined) {
                     this.form.id = this.Lid.id;
                     api.editArticle(this.form).then(response => {
                         this.prevResponse(response);
@@ -510,7 +526,7 @@
                         this.prevResponse(response);
                         this.$Message.success('发布成功！');
                     });
-                }*/
+                }
             },
             preventRepeatClick() {
                 this.isDisable = true;
