@@ -96,16 +96,8 @@ module.exports = merge(webpackBaseConfig, {
                 //路径重写
                 pathRewrite: { '^/searchapiv2': '/searchapiv2' },
                 changeOrigin: true
-            },
-            '/agentv2': {
-                // 目标服务器地址
-                target: 'http://app.dev.bidewu.com',
-                //target: 'http://192.168.1.61:8084',
-                //target: 'http://127.0.0.1:8084/',
-                //路径重写
-                pathRewrite: { '^/agentv2': '/agentv2' },
-                changeOrigin: true
-            }            
+            }
+
         }
     }
 });
