@@ -243,6 +243,10 @@ export default {
     },300);
 </stage-javascript>
 <stage-css>
+    .swiper-container-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic {
+        right:0;
+        left:auto;
+    }
     .swiperHeight {
         height: auto !important; 
     }
