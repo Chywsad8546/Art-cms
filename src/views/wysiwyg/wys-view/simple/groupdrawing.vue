@@ -219,7 +219,7 @@ export default {
     {{/if}}
     {{each share.uploadList}}
         <div class="swiper-slide image-con swiperHeight">
-            <a href="{{$value.httpUrl}}" target="_blank"  class="link">
+            <a href="{{$value.httpUrl}}" target="_self"  class="link">
                 <img style="width:100%" id="{{@ share.brickid}}" src="{{$value.url}}"/>   
             </a>
             {{if $value.label!=""}}

@@ -224,7 +224,7 @@ export default {
 
 <stage-template>
 <div  class="pictureset-box">
-   <a href="{{@share.url}}" target="_blank" >
+   <a href="{{@share.url}}" target="_self >
     <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;font-size:{{@share.textFontSize}}">
 {{if share.tempVertical=='temp1'}}
       <div class="atricleLeft">
