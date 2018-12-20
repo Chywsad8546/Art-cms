@@ -14,6 +14,7 @@ const uploadNewsFile = "/cmsapi/cmsapi/sys/uploadImg";
 const uploadVideoFile = "/cmsapi/cmsapi/sys/uploadVideo";
 const ajaxDomain = "http://app.dev.bidewu.com";
 const wysiwygPreviewUrl = "http://cms.dev.bidewu.com/cmsapi/cmsapi/diyWebpage/diyWebpageHtml";
+const mUrl = "http://m.dev.bidewu.com";
 
 export default {
     jingjirenDomain,
@@ -31,5 +32,6 @@ export default {
     ajaxDomain,
     uploadNewsFile,
     wysiwygPreviewUrl,
-    uploadVideoFile
+    uploadVideoFile,
+    mUrl
 };

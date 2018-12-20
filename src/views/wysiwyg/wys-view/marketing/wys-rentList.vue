@@ -72,7 +72,7 @@
             </CheckboxGroup>
          </Col>
         </Row>
-        <Row>
+        <Row style="margin-top:10px;">
           <Col span="24">
                 <Button type="primary" @click="houseSave">确定</Button>
                 <Button type="primary" @click="emptyOption">重置</Button>
