@@ -22,6 +22,9 @@
           <Col span="24">
             <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
               <Radio v-for="(item,index) in share.searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                  不限
+              </Radio>
            </RadioGroup>
          </Col>
          <Col span="24">
@@ -41,6 +44,9 @@
             <h3>面积</h3>
             <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
               <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                  不限
+              </Radio>
             </RadioGroup>
 
          </Col>
@@ -57,6 +63,9 @@
             <h3>楼龄</h3>
             <RadioGroup v-model="share.secondDetailParam.houseYearId" type="button" size="small" @on-change="houseYearChange">
               <Radio v-for="(item,index) in share.searchCondition.houseYear" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                  不限
+              </Radio>
             </RadioGroup>
          </Col>
          <Col span="24">
@@ -181,14 +190,26 @@ export default {
             })
         },
         houseYearChange(data){
-            console.log(data);
+            if(data === '不限'){
+                this.share.secondDetailParam.houseYearId = '';
+            }
         },
         areaChange(data){
+                if(data === '不限'){
+                    this.share.secondDetailParam.beginArea = '';
+                    this.share.secondDetailParam.endArea = '';
+                    return false;
+                }
                 let areaArr = data.split("-");
                 this.share.secondDetailParam.beginArea = Number(areaArr[0]);
                 this.share.secondDetailParam.endArea = Number(areaArr[1]);
         },
         conditionChoice(data){
+            if(data === '不限'){
+                this.share.secondDetailParam.beginPrice = '';
+                this.share.secondDetailParam.endPrice = '';
+                return false;
+            }
             if(data.length > 0){
                 let priceArr = data.split("-");
                 this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
@@ -196,9 +217,9 @@ export default {
             }
         },
         areaCascChoice(data){
-            if(data.length > 0){
             this.share.secondDetailParam.districtId = "";
             this.share.secondDetailParam.areaId = [];
+            if(data.length > 0){
                 for(var i=0;i<data.length;i++){
                     if(i===0){
                         this.share.secondDetailParam.districtId = data[i];
@@ -209,9 +230,9 @@ export default {
             }
         },
         metroCascChoice(data){
-            if(data.length > 0){
             this.share.secondDetailParam.subwayLineId = "";
             this.share.secondDetailParam.subwayStationId = [];
+            if(data.length > 0){
             for(var i=0;i<data.length;i++){
                 if(i===0){
                     this.share.secondDetailParam.subwayLineId = data[i];
@@ -326,8 +347,8 @@ export default {
                 </div>
                 <div class="house_textWidth">
                     <div class="house_Price">#houseTotalPrices#<span>万/套</span></div>
-                    <div class="house_title_price"><h3 class="title">#plotNameAccurate#</h3><span class="address">#area# #houseBusinessName#</span></div>
-                    <div class="house_desc"><div class="desc">#nearbyDistance# | #buildArea#㎡ | #floor#/共#totalFloor#层</div></div>
+                    <div class="house_title_price"><h3 class="title">#plotNameAccurate#</h3></div>
+                    <div class="house_desc"><div class="desc"><span class="address">#area# #houseBusinessName#</span>#nearbyDistance# | #buildArea#㎡ | #floor#/共#totalFloor#层</div></div>
                     <div class="house_label">#labelSpan#</div>
                 </div>
             </a>
@@ -484,12 +505,13 @@ $(document).scroll(function(){
     position: absolute;
     right:0;
     z-index:20;
-    top:1rem;
+    top:0.2rem;
     color:#FE4D4D;
     font-size:0.5rem;
 }
 .house_Price span {
     font-size:0.25rem;
+    margin-left:0.1rem;
     color:#2E2E2E;
 }
 .down4gLoad {
@@ -572,17 +594,14 @@ $(document).scroll(function(){
     font-size:0.4rem;
     color:#282828;
 }
-.house_title_price .address {
+.house_desc .desc .address {
     color:#666666;
-    font-size:0.25rem;
     float:left;
     display:table-cell;
     vertical-align:bottom;
-    height:0.5rem;
-    line-height:0.7rem;
-    margin-left:0.25rem;
+    margin-right:0.2rem;
 }
-.house_title_price .address:before {
+.house_desc .desc .address:before {
     content: "";
     display: inline-block;
     margin-right: 0.1rem;
@@ -597,10 +616,10 @@ $(document).scroll(function(){
 .house_desc {
     font-size:0.24rem;
     overflow:hidden;
-    padding-top:0.28rem;
+    padding-top:0.2rem;
 }
 .house_desc .desc {
-    color:#191919;
+    color:#666666;
     float:left;
 }
 .house_desc span {

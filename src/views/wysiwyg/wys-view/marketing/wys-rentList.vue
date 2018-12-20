@@ -22,6 +22,9 @@
           <Col span="24">
             <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
               <Radio v-for="(item,index) in share.searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                  不限
+              </Radio>
            </RadioGroup>
          </Col>
          <Col span="24">
@@ -35,6 +38,9 @@
             <h3>面积</h3>
             <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
               <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                  不限
+              </Radio>
             </RadioGroup>
 
          </Col>
@@ -55,9 +61,6 @@
             <CheckboxGroup v-model="share.secondDetailParam.forwardId">
                 <Checkbox v-for="(item,index) in share.searchCondition.forward" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
             </CheckboxGroup>
-            <!-- <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
-              <Radio v-for="(item,index) in share.searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-            </RadioGroup> -->
          </Col>
          <Col span="24">
             <h3>标签</h3>
@@ -191,11 +194,21 @@ export default {
             console.log(data);
         },
         areaChange(data){
+                if(data === '不限'){
+                    this.share.secondDetailParam.beginArea = '';
+                    this.share.secondDetailParam.endArea = '';
+                    return false;
+                }           
                 let areaArr = data.split("-");
                 this.share.secondDetailParam.beginArea = Number(areaArr[0]);
                 this.share.secondDetailParam.endArea = Number(areaArr[1]);
         },
         conditionChoice(data){
+            if(data === '不限'){
+                this.share.secondDetailParam.beginPrice = '';
+                this.share.secondDetailParam.endPrice = '';
+                return false;
+            }
             if(data.length > 0){
                 let priceArr = data.split("-");
                 this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
@@ -203,9 +216,9 @@ export default {
             }
         },
         areaCascChoice(data){
-            if(data.length > 0){
             this.share.secondDetailParam.districtId = "";
             this.share.secondDetailParam.areaId = [];
+            if(data.length > 0){
                 for(var i=0;i<data.length;i++){
                     if(i===0){
                         this.share.secondDetailParam.districtId = data[i];
@@ -216,16 +229,16 @@ export default {
             }
         },
         metroCascChoice(data){
-            if(data.length > 0){
             this.share.secondDetailParam.subwayLineId = "";
             this.share.secondDetailParam.subwayStationId = [];
-            for(var i=0;i<data.length;i++){
-                if(i===0){
-                    this.share.secondDetailParam.subwayLineId = data[i];
-                }else{
-                    this.share.secondDetailParam.subwayStationId.push(data[i]);
+            if(data.length > 0){
+                for(var i=0;i<data.length;i++){
+                    if(i===0){
+                        this.share.secondDetailParam.subwayLineId = data[i];
+                    }else{
+                        this.share.secondDetailParam.subwayStationId.push(data[i]);
+                    }
                 }
-            }
             }
         },
         houseSave(){
