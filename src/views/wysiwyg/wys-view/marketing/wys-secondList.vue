@@ -505,7 +505,7 @@ $(document).scroll(function(){
     position: absolute;
     right:0;
     z-index:20;
-    top:0.2rem;
+    top:0.28rem;
     color:#FE4D4D;
     font-size:0.5rem;
 }
