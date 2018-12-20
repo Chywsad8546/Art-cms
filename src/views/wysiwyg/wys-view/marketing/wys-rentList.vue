@@ -545,7 +545,7 @@ $(document).scroll(function(){
     background-color: #37dc9c;
     color:#FFFFFF;
     font-size:0.25rem;
-    padding:0.02rem 0.1rem 0.02rem 0.1rem;
+    padding:0 0.1rem 0.02rem 0.1rem;
     float:left;
     margin: 0.1rem 0.12rem 0 0;
     display:block;
@@ -554,7 +554,7 @@ $(document).scroll(function(){
     background-color: #ffc32f;
     color:#FFFFFF;
     font-size:0.25rem;
-    padding:0.02rem 0.1rem 0.02rem 0.1rem;
+    padding:0 0.1rem 0.02rem 0.1rem;
     float:left;
     margin: 0.1rem 0.12rem 0 0;
     display:block;
@@ -565,7 +565,7 @@ $(document).scroll(function(){
 .typeMin_house_title_price  .title {
     font-size:0.3rem;
     color:#282828;
-    line-height: 0.6rem;
+    margin-top:0.05rem;
     display: block;
 }
 .typeMin_item .price {
@@ -614,6 +614,7 @@ $(document).scroll(function(){
 }
 .typeMin_house_label {
     overflow:hidden;
+    margin-top:0.05rem;
 }
 .typeMin_house_label .label {
     margin-right:0.1rem;
