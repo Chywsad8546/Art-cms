@@ -207,7 +207,7 @@
         },
         data() {
             return {
-                newCityId: '',
+                newCityId: 0,
                 content: null,
                 uploadFlag: false,
                 dialogImageUrl: '',
@@ -371,8 +371,8 @@
                 this.form.tagsName = [];
                 this.form.showTags = [];
                 this.form.showTagsName = [];
-                this.form.newCityId = '';
-                this.form.districtId = ''
+                this.form.newCityId = 0;
+                this.form.districtId = 0;
                 let arr = ['1', '2', '3', '4', '5', '6', '7'];
                 arr.forEach(key => {
                     this.tagsJson[key] = [];
@@ -385,7 +385,7 @@
                             api.getCityId({'cityName': item.label}).then(response => {
                                 this.form.newCityId = response.data;
                                 this.newCityId = response.data;
-                                this.form.districtId = ''
+                                this.form.districtId = 0
                             })
                         }
 
