@@ -588,7 +588,7 @@ export default {
                     api.saveDiyWebpageHistory(this.formMain).then(response => {
                         this.formMain.id = response.data.data.id;
                         this.qrcodeModal = true;
-                        var url = this.$domain.wysiwygPreviewUrl+'?id=' + response.data.data.pid;
+                        var url = this.$domain.wysiwygPreviewUrl + response.data.data.pid + '.html';
                         this.siteUrl = url;
                         document.getElementById('qrcode10').innerHTML = '';
                         this.qrcode(url);

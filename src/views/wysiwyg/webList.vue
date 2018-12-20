@@ -249,7 +249,7 @@ export default {
         },
         previewClick (id) {
             this.qrcodeModal = true;
-            var url = this.$domain.wysiwygPreviewUrl+'?id=' + id;
+            var url = this.$domain.wysiwygPreviewUrl + response.data.data.pid + '.html';
             this.siteUrl = url;
             document.getElementById('qrcode11').innerHTML = '';
             this.qrcode(url);
