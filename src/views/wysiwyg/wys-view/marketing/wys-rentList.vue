@@ -352,7 +352,7 @@ $(document).ready(function(){
 });
 function houseList(){
 asynFlag = false;
-$t.find(".down4gLoad").show();
+$t.find(".typeMin_down4gLoad").show();
 $.ajax({
         //几个参数需要注意一下
             type: "POST",//方法类型
@@ -361,9 +361,8 @@ $.ajax({
             url: "<%= share.ajaxDomain %>/searchapiv2/rest/rent/getRentHouseSearchList" ,//url
             data: JSON.stringify(param),
             success: function (result) {
-                console.log(result);
                 asynFlag = true;
-                $t.find(".down4gLoad").hide();
+                $t.find(".typeMin_down4gLoad").hide();
                 createAppendTemp(result);
             },
             error : function() {
