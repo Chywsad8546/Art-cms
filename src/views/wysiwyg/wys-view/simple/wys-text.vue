@@ -1,65 +1,61 @@
 <template>
   <Form :label-width="60" class="imgWidthCont">
-    <Tabs>
-      <TabPane label="内容">
-        <Row class="navdhName">
-          <Col span="24">
-            <FormItem label="字号">
-                 <Select v-model="share.textFontSize" style="width:200px">
-                    <Option value="12px">12</Option>
-                    <Option value="13px">13</Option>
-                    <Option value="14px">14</Option>
-                    <Option value="16px">16</Option>
-                    <Option value="18px">18</Option>
-                    <Option value="24px">24</Option>
-                    <Option value="36px">36</Option>
-                    <Option value="48px">48</Option>
-                    <Option value="64px">64</Option>
-                </Select>
-            </FormItem>
-          </Col>
-          <Col span="24">
-            <Input v-model="share.name" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
-          </Col>
-        </Row>
-        <Row>
-          <Col span="24">
-          <div v-if="share.url != ''">
-            <span style="margin-right:10px;">链接到 {{share.url}}</span>
-            <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
-              编辑
-            </a>
-          </div>
-          <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
-            <Icon type="plus-round"></Icon>
-            添加链接
+      <Row class="navdhName">
+        <Col span="24">
+          <FormItem label="字号">
+                <Select v-model="share.textFontSize" style="width:200px">
+                  <Option value="12px">12</Option>
+                  <Option value="13px">13</Option>
+                  <Option value="14px">14</Option>
+                  <Option value="16px">16</Option>
+                  <Option value="18px">18</Option>
+                  <Option value="24px">24</Option>
+                  <Option value="36px">36</Option>
+                  <Option value="48px">48</Option>
+                  <Option value="64px">64</Option>
+              </Select>
+          </FormItem>
+          <FormItem label="颜色">
+            <ColorPicker v-model="share.font_color" />
+          </FormItem>
+        </Col>
+        <Col span="24">
+          <Input v-model="share.name" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+        <div v-if="share.url != ''">
+          <span style="margin-right:10px;">链接到 {{share.url}}</span>
+          <a v-if="share.url != ''" @click="share.navVisible = !share.navVisible">
+            编辑
           </a>
-          <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
-            v-bind:isBlock="share.navVisible"></wysLink>
-          </Col>
-        </Row>
-      </TabPane>
-      <TabPane label="样式">
-        <Row>
-          <Col span="24">
-          边距
-          </Col>
-        </Row>
-        <FormItem label="顶">
-          <Slider v-model="share.top" show-input></Slider>
-        </FormItem>
-        <FormItem label="右">
-          <Slider v-model="share.right" show-input></Slider>
-        </FormItem>
-        <FormItem label="底">
-          <Slider v-model="share.bottom" show-input></Slider>
-        </FormItem>
-        <FormItem label="左">
-          <Slider v-model="share.left" show-input></Slider>
-        </FormItem>
-      </TabPane>
-    </Tabs>
-
+        </div>
+        <a v-if="share.url == ''" class="btn" @click="share.navVisible = !share.navVisible">
+          <Icon type="plus-round"></Icon>
+          添加链接
+        </a>
+        <wysLink @link-cancelEvent="cancelPopup" @link-okEvent="okPopup" v-bind:createUrl="share.urlData"
+          v-bind:isBlock="share.navVisible"></wysLink>
+        </Col>
+      </Row>
+      <Row>
+      <Col span="24">
+        边距
+        </Col>
+      </Row>
+      <FormItem label="顶">
+        <Slider v-model="share.top" show-input></Slider>
+      </FormItem>
+      <FormItem label="右">
+        <Slider v-model="share.right" show-input></Slider>
+      </FormItem>
+      <FormItem label="底">
+        <Slider v-model="share.bottom" show-input></Slider>
+      </FormItem>
+      <FormItem label="左">
+        <Slider v-model="share.left" show-input></Slider>
+      </FormItem>
   </Form>
 
 </template>
@@ -82,7 +78,8 @@ export default {
                 right: 15,
                 bottom: 10,
                 left: 15,
-                textFontSize:'12px'
+                textFontSize:'12px',
+                font_color:'#000000'
             },
             panelTextKey2:'1'
 
@@ -150,6 +147,6 @@ export default {
 </stage-javascript>
 <stage-css>
 .style1 {
-    color:#000000;
+    color:<%= share.font_color %>;
 }
 </stage-css>

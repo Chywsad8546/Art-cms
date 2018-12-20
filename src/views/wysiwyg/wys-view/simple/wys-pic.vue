@@ -11,18 +11,6 @@
                         </div>
                     </div>
                     <div>当前图片尺寸: {{item.imgInformation}}</div>
-                    <!-- <CheckboxGroup>
-                    <Checkbox v-model="item.single" label="提示按钮"></Checkbox>
-                </CheckboxGroup>
-                <FormItem label="按钮内容" v-if="item.single">
-                    <Input v-model="item.buttonText"></Input>
-                </FormItem>
-                <FormItem label="标题">
-                    <Input v-model="item.title"></Input>
-                </FormItem>
-                <FormItem label="内容">
-                    <Input v-model="item.content"></Input>
-                </FormItem> -->
                     <Row>
                         <Row style="padding-bottom:10px;">
                             <Col span="24">
@@ -88,56 +76,9 @@
                     </Row>
 
                 </FormItem>
-
-                <!-- <ColorPicker v-model="share.backColor" recommend /> -->
             </TabPane>
         </Tabs>
     </Form>
-
-    <!-- <Form  class="imgWidthCont">
-    <Tabs>
-    
-        <TabPane label="内容" :label-width="80">
- 
-                <FormItem label="" prop="title">
-                        <div v-for="item,index in share.uploadList">
-                            <div class="demo-upload-list">
-                                    <img :src="item.url">
-                                    <div class="demo-upload-list-cover">
-                                        <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                                        <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                                    </div>
-                            </div>
-                            <div>当前图片尺寸: {{item.imgInformation}}</div>
-                            <CheckboxGroup v-model="item.single">
-                                <Checkbox label="提示按钮"></Checkbox>
-                            </CheckboxGroup>
-                            <FormItem label="按钮内容" v-if="item.single">
-                                <Input v-model="item.buttonText"></Input>
-                            </FormItem>
-                            <FormItem label="标题">
-                                <Input v-model="item.title"></Input>
-                            </FormItem>
-                            <FormItem label="内容">
-                                <Input v-model="item.content"></Input>
-                            </FormItem>
-                            <FormItem label="链接">
-                                <Input v-model="item.httpUrl"></Input>
-                            </FormItem>
-                        </div>
-                        <Upload  ref="upload" class="uploadWidth" action="cmsapi/upload/uploadimgNoDomainExt"   :default-file-list="share.defaultList"  :format="['jpg','jpeg','png','js','css']" :on-success="uploadSuccess"
-                                :on-format-error="uploadFormatError"
-                                :show-upload-list="false">
-                            <Button type="ghost" >添加图片</Button>
-                        </Upload>
-                </FormItem>
-                <Modal title="View Image" v-model="visible">
-                    <img :src="imgUrl" v-if="visible" style="width: 100%">
-                </Modal>
-
-        </TabPane>  
-    </Tabs>
-    </Form> -->
 </template>
 
 <script>
@@ -309,10 +250,10 @@ export default {
     <div class="specialListUl {{@share.imgSelect}}">
         <ul style="{{@share.backColor != "" ? "background:"+share.backColor : ""}}">
           {{if share.uploadList==0}}
-             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="javascript:void(0)" target="_blank"  class="link"><img src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/></a></li>
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="javascript:void(0)" target="_self"  class="link"><img src="http://wap-qn.toutiaofangchan.com/tpzw_image.png"/></a></li>
           {{/if}}
           {{each share.uploadList}}
-             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="{{$value.httpUrl}}" target="_blank"  class="link"><img src="{{$value.url}}"/></a></li>
+             <li style="padding: {{@share.imgTop}}px {{@share.imgRight}}px {{@share.imgBottom}}px {{@share.imgLeft}}px;  {{@share.imgSelect == "lineAll" ? "width:"+share.imgWidth+"%" : ""}};"><a href="{{$value.httpUrl}}" target="_self"  class="link"><img src="{{$value.url}}"/></a></li>
           {{/each}} 
         </ul>
     </div>

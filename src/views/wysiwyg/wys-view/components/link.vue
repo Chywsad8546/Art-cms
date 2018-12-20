@@ -78,37 +78,37 @@ export default {
             navVisible: false,
             columnList: [
                 {
-                    value: 'http://m.bidewu.com/#/bj/list/secondHand',
+                    value: this.$domain.mUrl+'/bj/list/second',
                     label: '二手房列表'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/list/rent',
+                    value: this.$domain.mUrl+'/bj/list/rent',
                     label: '租房列表'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/list/newHouse',
+                    value: this.$domain.mUrl+'/bj/list/new',
                     label: '新房列表'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/lsit',
+                    value: this.$domain.mUrl+'/bj/list/plot',
                     label: '小区列表'
                 }
             ],
             roomDetailList: [
                 {
-                    value: 'http://m.bidewu.com/#/bj/details/secondHand?houseId=', // ?houseId=6431657
+                    value: this.$domain.mUrl+'/bj/detail/second?id=', // ?houseId=6431657
                     label: '二手房详情'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/details/rent?rentId=', // ?rentId=FY369081&navIndex=2
+                    value: this.$domain.mUrl+'/bj/detail/rent?id=', // ?rentId=FY369081&navIndex=2
                     label: '租房详情'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/details/newHouse?newCode=', // ?newCode=11122587
+                    value: this.$domain.mUrl+'/bj/detail/new?id=', // ?newCode=11122587
                     label: '新房详情'
                 },
                 {
-                    value: 'http://m.bidewu.com/#/bj/details/community?plotId=', // ?plotId=11111374
+                    value: this.$domain.mUrl+'/bj/detail/plot?id=', // ?plotId=11111374
                     label: '小区详情'
                 }
             ]
