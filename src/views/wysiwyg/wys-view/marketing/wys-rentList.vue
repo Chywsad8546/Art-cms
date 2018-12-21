@@ -184,10 +184,10 @@ export default {
             });
         },
         jloChange(data){
-            this.share.secondDetailParam.elo = data.join();
+            this.share.secondDetailParam.jlo = data.join();
         },
         eloChange(data){
-            this.share.secondDetailParam.jlo = data.join();
+            this.share.secondDetailParam.elo = data.join();
         },
         emptyOption(){
             this.share.secondDetailParam = {
@@ -394,6 +394,9 @@ $.ajax({
 function createAppendTemp(result){
     if(result.rentDetailsList <= 0){
         return false;
+    }
+    if(param.pageNum == 1){
+        $t.find(".typeMin_rentList").html("");
     }
     for(var i=0;i<result.rentDetailsList.length;i++){
         var tempHtml = $t.find(".templateId").html();

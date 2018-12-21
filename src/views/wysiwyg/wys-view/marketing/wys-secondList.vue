@@ -415,6 +415,9 @@ function createAppendTemp(result){
     if(result.data <= 0){
         return false;
     }
+    if(param.pageNum == 1){
+        $t.find(".houseList").html("");
+    }
     var tempId = ".<%= share.tempVertical %>";
     for(var i=0;i<result.data.length;i++){
         var tempHtml = $t.find(tempId).html();
