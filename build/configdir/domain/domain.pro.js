@@ -13,7 +13,8 @@ const uploadFile = "/cmsapi/upload/uploadimgNoDomainExt";
 const ajaxDomain = "http://cms.corp.bidewu.com";
 const uploadNewsFile = "/cmsapi/cmsapi/sys/uploadImg";
 const uploadVideoFile = "/cmsapi/cmsapi/sys/uploadVideo";
-const wysiwygPreviewUrl = "http://zt.bidewu.com/cmsv2/website/";
+const wysiwygPreviewUrl = "http://zt.bidewu.com/websiteHistory/";
+const wysiwygztUrl = "http://zt.bidewu.com/cmsv2/website/";
 const mUrl = "http://m.bidewu.com";
 
 export default {
@@ -33,5 +34,6 @@ export default {
     uploadNewsFile,
     wysiwygPreviewUrl,
     uploadVideoFile,
-    mUrl
+    mUrl,
+    wysiwygztUrl
 };

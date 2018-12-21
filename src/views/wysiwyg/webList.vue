@@ -168,7 +168,7 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$router.push({
-                                                name: 'wysiwygmain', query: { siteid: params.row.siteId, id: params.row.id }
+                                                name: 'wysiwygmain', query: {id: params.row.id }
                                             });
                                         }
                                     }
@@ -249,7 +249,7 @@ export default {
         },
         previewClick (id) {
             this.qrcodeModal = true;
-            var url = this.$domain.wysiwygPreviewUrl + response.data.data.pid + '.html';
+            var url = this.$domain.wysiwygztUrl + id + '.html';
             this.siteUrl = url;
             document.getElementById('qrcode11').innerHTML = '';
             this.qrcode(url);
@@ -308,7 +308,6 @@ export default {
                 title: '更改状态',
                 content: tip,
                 onOk: () => {
-                    console.log(delDate);
                     adapi.updateStation(delDate).then(response => {
                         if (response.data.data > 0) {
                             this.$Message.success('更改成功！');

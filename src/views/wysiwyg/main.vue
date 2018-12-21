@@ -584,15 +584,15 @@ export default {
         previewClick () {
             this.$refs.formMainValidate.validate((valid) => {
                 if (valid) {
-                    this.addParameter();
-                    api.saveDiyWebpageHistory(this.formMain).then(response => {
-                        this.formMain.id = response.data.data.id;
-                        this.qrcodeModal = true;
-                        var url = this.$domain.wysiwygPreviewUrl + response.data.data.pid + '.html';
-                        this.siteUrl = url;
-                        document.getElementById('qrcode10').innerHTML = '';
-                        this.qrcode(url);
-                    });
+                      this.addParameter();
+                      api.saveDiyWebpageHistory(this.formMain).then(response => {
+                          this.formMain.id = response.data.data.id;
+                          this.qrcodeModal = true;
+                          var url = this.$domain.wysiwygPreviewUrl + response.data.data.id + '.html';
+                          this.siteUrl = url;
+                          document.getElementById('qrcode10').innerHTML = '';
+                          this.qrcode(url);
+                      });
                 }
             });
         },
