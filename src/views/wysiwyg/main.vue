@@ -586,7 +586,8 @@ export default {
                 if (valid) {
                       this.addParameter();
                       api.saveDiyWebpageHistory(this.formMain).then(response => {
-                          this.formMain.id = response.data.data.id;
+                          this.formMain.pid = response.data.data.pid;
+                          this.formMain.id = response.data.data.pid;
                           this.qrcodeModal = true;
                           var url = this.$domain.wysiwygPreviewUrl + response.data.data.id + '.html';
                           this.siteUrl = url;
