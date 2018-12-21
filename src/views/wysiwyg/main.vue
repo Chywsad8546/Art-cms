@@ -585,6 +585,9 @@ export default {
             this.$refs.formMainValidate.validate((valid) => {
                 if (valid) {
                       this.addParameter();
+                      if (this.id) {
+                         this.formMain.pid = this.id;
+                      }
                       api.saveDiyWebpageHistory(this.formMain).then(response => {
                           this.formMain.pid = response.data.data.pid;
                           this.formMain.id = response.data.data.pid;
