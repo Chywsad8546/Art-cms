@@ -4,93 +4,102 @@
       <TabPane label="内容">
        <Form ref="formValidate" :model="share" :label-width="80">
         <Row class="navdhName">
-          <Col span="24">
-             <h3>区域</h3>
+           <Col span="24">
+             <h3>城市</h3>
           </Col>
           <Col span="24">
-                <Select v-model="share.areaValue" style="width:100px" @on-change="districtSelect">
-                    <Option v-for="item in districtInfo" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
-                </Select>
-                <Select v-model="share.areaChildren" multiple style="width:150px">
-                    <Option v-for="item in districtChildren" :value="item.circle" :key="item.circle">{{ item.name }}</Option>
-                </Select> 
-          </Col>
-          <Col span="24">
-             <h3>地铁</h3>
-          </Col>
-          <Col span="24">
-                <Select v-model="share.metroValue" style="width:100px" @on-change="metroSelect">
-                    <Option v-for="item in subwayInfo" :value="item.subwayid" :key="item.subwayid">{{ item.name }}</Option>
-                </Select>
-               <Select v-model="share.metroChildren" multiple style="width:150px">
-                    <Option v-for="item in subwayChildren" :value="item.stationid" :key="item.stationid">{{ item.station_name }}</Option>
-                </Select> 
-          </Col>
-          <Col span="24">
-             <h3>价格</h3>
-          </Col>
-          <Col span="24">
-            <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
-              <Radio v-for="(item,index) in searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
-                  不限
-              </Radio>
-           </RadioGroup>
-         </Col>
-         <Col span="24">
-          <span>自定义：</span>
-          <Input v-model="share.secondDetailParam.beginPrice" number  placeholder="最低价" style="width: 100px"></Input>
-          <span>-</span>
-          <Input v-model="share.secondDetailParam.endPrice"  number  placeholder="最高价" style="width: 100px"></Input>
-          <span>万</span>
-         </Col>
-         <Col span="24">
-         <h3>房型</h3>
-            <CheckboxGroup v-model="share.secondDetailParam.layoutId">
-                <Checkbox v-for="(item,index) in searchCondition.layout" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
-            </CheckboxGroup>
-         </Col>
-         <Col span="24">
-            <h3>面积</h3>
-            <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
-              <Radio v-for="(item,index) in searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
-                  不限
-              </Radio>
-            </RadioGroup>
+            <Select v-model="share.apiCity" style="width:100px" @on-change="cityChange">
+                <Option v-for="item in cityList" :value="item.city_domain" :key="item.city_domain">{{ item.city_name }}</Option>
+            </Select>
+          </Col>           
+        </Row>
 
-         </Col>
-         <Col span="24">
-            <h3>朝向</h3>
-            <CheckboxGroup v-model="share.secondDetailParam.forwardId">
-                <Checkbox v-for="(item,index) in searchCondition.forward" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
-            </CheckboxGroup>
-         </Col>
-         <Col span="24">
-            <h3>楼龄</h3>
-            <RadioGroup v-model="share.secondDetailParam.houseYearId" type="button" size="small" @on-change="houseYearChange">
-              <Radio v-for="(item,index) in searchCondition.houseYear" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
-              <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
-                  不限
-              </Radio>
+        <Row class="navdhName" v-if="share.apiCity">
+            <Col span="24">
+                <h3>区域</h3>
+            </Col>
+            <Col span="24">
+                    <Select v-model="share.areaValue" style="width:100px" @on-change="districtSelect">
+                        <Option v-for="item in districtInfo" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
+                    </Select>
+                    <Select v-model="share.areaChildren" multiple style="width:150px">
+                        <Option v-for="item in districtChildren" :value="item.circle" :key="item.circle">{{ item.name }}</Option>
+                    </Select> 
+            </Col>
+            <Col span="24">
+                <h3>地铁</h3>
+            </Col>
+            <Col span="24">
+                    <Select v-model="share.metroValue" style="width:100px" @on-change="metroSelect">
+                        <Option v-for="item in subwayInfo" :value="item.subwayid" :key="item.subwayid">{{ item.name }}</Option>
+                    </Select>
+                <Select v-model="share.metroChildren" multiple style="width:150px">
+                        <Option v-for="item in subwayChildren" :value="item.stationid" :key="item.stationid">{{ item.station_name }}</Option>
+                    </Select> 
+            </Col>
+            <Col span="24">
+                <h3>价格</h3>
+            </Col>
+            <Col span="24">
+                <RadioGroup v-model="share.priceSelect" type="button" size="small" @on-change="conditionChoice">
+                <Radio v-for="(item,index) in searchCondition.price" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+                <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                    不限
+                </Radio>
             </RadioGroup>
-         </Col>
-         <Col span="24">
-            <h3>标签</h3>
-            <CheckboxGroup v-model="share.label" style="float:left;" @on-change="labelChange">
-                <Checkbox v-for="(item,index) in searchCondition.label" :key="index" :label="item.value">{{item.text}}</Checkbox>
-            </CheckboxGroup>
-            <CheckboxGroup v-model="share.otherLabel"  @on-change="otherLabelChange">
-                <Checkbox v-for="(item,index) in searchCondition.otherLabel" :key="index" :label="item.string" >{{item.text}}</Checkbox>
-            </CheckboxGroup>
-         </Col>
-        </Row>
-        <Row style="margin-top:10px;">
-          <Col span="24">
-                <Button type="primary" @click="houseSave">确定</Button>
-                <Button type="primary" @click="emptyOption">重置</Button>
-          </Col>
-        </Row>
+            </Col>
+            <Col span="24">
+            <span>自定义：</span>
+            <Input v-model="share.secondDetailParam.beginPrice" number  placeholder="最低价" style="width: 100px"></Input>
+            <span>-</span>
+            <Input v-model="share.secondDetailParam.endPrice"  number  placeholder="最高价" style="width: 100px"></Input>
+            <span>万</span>
+            </Col>
+            <Col span="24">
+            <h3>房型</h3>
+                <CheckboxGroup v-model="share.secondDetailParam.layoutId">
+                    <Checkbox v-for="(item,index) in searchCondition.layout" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+                </CheckboxGroup>
+            </Col>
+            <Col span="24">
+                <h3>面积</h3>
+                <RadioGroup v-model="share.area" type="button" size="small" @on-change="areaChange">
+                <Radio v-for="(item,index) in searchCondition.area" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+                <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                    不限
+                </Radio>
+                </RadioGroup>
+
+            </Col>
+            <Col span="24">
+                <h3>朝向</h3>
+                <CheckboxGroup v-model="share.secondDetailParam.forwardId">
+                    <Checkbox v-for="(item,index) in searchCondition.forward" :key="index" :label="Number(item.value)">{{item.text}}</Checkbox>
+                </CheckboxGroup>
+            </Col>
+            <Col span="24">
+                <h3>楼龄</h3>
+                <RadioGroup v-model="share.secondDetailParam.houseYearId" type="button" size="small" @on-change="houseYearChange">
+                <Radio v-for="(item,index) in searchCondition.houseYear" :key="index" :label="item.value" style="margin-left:5px;margin-bottom:5px;">{{item.text}}</Radio>
+                <Radio  label="不限" style="margin-left:5px;margin-bottom:5px;">
+                    不限
+                </Radio>
+                </RadioGroup>
+            </Col>
+            <Col span="24">
+                <h3>标签</h3>
+                <CheckboxGroup v-model="share.label" style="float:left;" @on-change="labelChange">
+                    <Checkbox v-for="(item,index) in searchCondition.label" :key="index" :label="item.value">{{item.text}}</Checkbox>
+                </CheckboxGroup>
+                <CheckboxGroup v-model="share.otherLabel"  @on-change="otherLabelChange">
+                    <Checkbox v-for="(item,index) in searchCondition.otherLabel" :key="index" :label="item.string" >{{item.text}}</Checkbox>
+                </CheckboxGroup>
+            </Col>
+             <Col span="24"  style="margin-top:10px;">
+                    <Button type="primary" @click="houseSave">确定</Button>
+                    <Button type="primary" @click="emptyOption">重置</Button>
+            </Col>           
+            </Row>
         </Form>
       </TabPane>
       <TabPane label="样式">
@@ -146,6 +155,7 @@ export default {
                 right: 0,
                 bottom: 0,
                 left: 0,
+                apiCity:'',
                 areaValue:'',
                 metroValue:[],
                 areaChildren:'',
@@ -170,10 +180,40 @@ export default {
             subwayChildren:[],
             panelTextKey2:'1',
             regionText:"区域",
+            cityList:[],
             id: this.$route.query.id
         };
     },
     methods: {
+        getWapCity(){
+            api.getWapCity().then(response=>{
+                response.data.wapCityList.forEach(cityItem=>{
+                    cityItem.cityJson.forEach(jsonItem=>{
+                         this.cityList.push(jsonItem);
+                    });
+                });
+            })
+        },
+        cityChange(data){
+            this.share.secondDetailParam.apiCity = data;
+            api.getCityAllInfo({cityDomain:data}).then(response=>{
+                this.districtInfo = response.data.cityAllInfos.circleDataList;
+                this.subwayInfo = response.data.cityAllInfos.subwayDataList;
+                this.searchCondition = response.data.cityAllInfos.searchConditionData.second;
+                // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
+                // console.log(this.share.label);
+                this.districtInfo.forEach(item=>{
+                    if(item.districtId === this.share.areaValue){
+                        this.districtChildren = item.children;
+                    }
+                })
+                this.subwayInfo.forEach(item=>{
+                    if(item.subwayid === this.share.metroValue){
+                        this.subwayChildren = item.children;
+                    }
+                })
+            });
+        },
         metroSelect(value){
             this.subwayInfo.forEach(item=>{
                 if(item.subwayid === value){
@@ -300,24 +340,30 @@ export default {
     },
     created: function () {
         this.share.ajaxDomain = this.$domain.ajaxDomain;
-        this.share.secondDetailUrl = this.$domain.secondDetailUrl;
-        api.getCityAllInfo({cityDomain:"bj"}).then(response=>{
-            this.districtInfo = response.data.cityAllInfos.circleDataList;
-            this.subwayInfo = response.data.cityAllInfos.subwayDataList;
-            this.searchCondition = response.data.cityAllInfos.searchConditionData.second;
-            // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
-            // console.log(this.share.label);
-            this.districtInfo.forEach(item=>{
-                if(item.districtId === this.share.areaValue){
-                    this.districtChildren = item.children;
-                }
-            })
-            this.subwayInfo.forEach(item=>{
-                if(item.subwayid === this.share.metroValue){
-                    this.subwayChildren = item.children;
-                }
-            })
-        });
+        this.share.secondDetailUrl = this.$domain.mUrl;
+        this.getWapCity();
+        var that = this;
+        setTimeout(function(){
+            if(that.share.apiCity){
+                api.getCityAllInfo({cityDomain:that.share.apiCity}).then(response=>{
+                    that.districtInfo = response.data.cityAllInfos.circleDataList;
+                    that.subwayInfo = response.data.cityAllInfos.subwayDataList;
+                    that.searchCondition = response.data.cityAllInfos.searchConditionData.second;
+                    // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
+                    // console.log(this.share.label);
+                    that.districtInfo.forEach(item=>{
+                        if(item.districtId === that.share.areaValue){
+                            that.districtChildren = item.children;
+                        }
+                    })
+                    that.subwayInfo.forEach(item=>{
+                        if(item.subwayid === that.share.metroValue){
+                            that.subwayChildren = item.children;
+                        }
+                    })
+                });
+            }
+        },500);
     },
     mounted () {
     }
@@ -338,7 +384,7 @@ export default {
 <stage-template>
     <div class="templateId1" style="display:none;">
         <div class="typeMin_item">
-            <a href="<%= share.secondDetailUrl %>?id=#houseId#" target="_self">
+            <a href="<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id=#houseId#" target="_self">
                 <div class="typeMin_item_thumb">
                     <div class="typeMin_tag-list">
                             #tagList#
@@ -358,7 +404,7 @@ export default {
     </div>
     <div class="templateId" style="display:none;">
         <div class="item">
-            <a href="<%= share.secondDetailUrl %>?id=#houseId#" target="_self">
+            <a href="<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id=#houseId#" target="_self">
                 <div class="item_thumb">
                         <div class="tag-list">
                             #tagList#

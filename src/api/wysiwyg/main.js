@@ -53,6 +53,11 @@ export default {
             params: params
         });
     },
+    getWapCity(params) {
+        return httpes.get('/agentv2/rest/getWapCity', {
+            params: params
+        });
+    },
     getSellHouseList(params) {
         return httpes.postJson('/searchapiv2/rest/esf/getSellHouseList', params);
     },

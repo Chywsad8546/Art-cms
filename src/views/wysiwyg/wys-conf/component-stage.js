@@ -133,12 +133,16 @@ export default {
             return this._comsDict[editorRegid];
         }
     },
-    init: function(mainPage, editchangeEvent, stageDomElId, editor, lasthtml) {
+    init: function(mainPage, editchangeEvent, stageDomElId, editor, lasthtml, backStyle) {
         this._mainPage = mainPage;
         this._currentComponentChangeEvent = editchangeEvent;
         this._stage = $('#' + stageDomElId);
         if (lasthtml) {
             this._stage.html(lasthtml);
+        }
+        if(backStyle){
+            console.log(backStyle);
+            this._stage.attr("style",backStyle);
         }
         this.canUseEditors.init();
         var that = this;
@@ -306,17 +310,21 @@ export default {
         //     .html()
         //     .find('.wys-mask');
         //  var strHtml = $('#wysiwyg_stage').clone(true);
-        var strCloneHtml = $('#saveHtmlId').clone(true);
+        var strCloneHtml = $('#wysiwyg_stage').clone(true);
         var maskSpan = strCloneHtml.find('.wys-mask');
+        var wysBackStyle = $('#wysiwyg_stage').attr("style");
         maskSpan.each(function() {
             $(this).remove();
         });
         var strHtml = strCloneHtml[0].innerHTML;
         var fullhtml = css + strHtml;
         fullhtml = fullhtml + jsincludes + cssincludes + js;
+        var jqDom = $("<div></div>");
+        jqDom.attr("style",wysBackStyle);
+        jqDom.html(fullhtml);
         return {
-            html: fullhtml,
-            stage: { stagedict: stagedict, strhtml: strHtml }
+            html: $(jqDom)[0].outerHTML,
+            stage: { stagedict: stagedict, strhtml: strHtml, mainBackStyle: wysBackStyle }
         };
     },
     /**

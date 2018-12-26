@@ -365,7 +365,7 @@ img {
 
               <div class="screen-border">
                 <div class="workarea" id="saveHtmlId" style="width: 375px;height: 625px;">
-                  <div id="wysiwyg_stage" wys-container style="overflow: hidden; width: 7.5rem; min-height: 623px; background-image: none; background-color:#FFFFFF;  background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackStyle"></div>
+                  <div id="wysiwyg_stage" wys-container style="overflow: hidden; width: 7.5rem; min-height: 100%; background-image: none; background-color:#FFFFFF;  background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;" :style="mainBackStyle"></div>
                 </div>
               </div>
             </div>
@@ -609,9 +609,11 @@ export default {
             var that = this;
             var stagedict = null;
             var lastsavehtml = null;
+            var mainBackStyle = null;
             if (editor) {
                 stagedict = editor.stagedict;
                 lastsavehtml = editor.strhtml;
+                mainBackStyle = editor.mainBackStyle;
             }
             // 初始化建站引擎
             GlobalStage.init(that, function (stageComponent, show) {
@@ -621,7 +623,7 @@ export default {
                 if (!util.oneOf(that.currentEditorKey, that.includeIds)) {
                     that.includeIds.push(that.currentEditorKey);
                 }
-            }, 'wysiwyg_stage', stagedict, lastsavehtml);
+            }, 'wysiwyg_stage', stagedict, lastsavehtml,mainBackStyle);
             if (window.__drag) {
                 window.__drag.destroy();
             }

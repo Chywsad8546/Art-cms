@@ -154,7 +154,16 @@ async function post(url, data, config) {
 async function postJson(url, data, config) {
     config = config || {};
     config['Content-Type'] = 'application/json;charset=UTF-8';
-    let response = await esapi.post(url, data || {}, config);
+    let response = await esapi.post(url, data || {},     
+        Object.assign(
+        {},
+        {
+          headers: {
+            city: data.apiCity
+          }
+        },
+        config
+      ));
     return response;
 }
 

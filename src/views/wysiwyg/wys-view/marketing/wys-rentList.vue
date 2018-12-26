@@ -3,7 +3,17 @@
     <Tabs>
       <TabPane label="内容">
        <Form ref="formValidate" :model="share" :label-width="80">
-        <Row class="navdhName">
+        <Row>
+          <Col span="24">
+             <h3>城市</h3>
+          </Col>
+          <Col span="24">
+            <Select v-model="share.apiCity" style="width:100px" @on-change="cityChange">
+                <Option v-for="item in cityList" :value="item.city_domain" :key="item.city_domain">{{ item.city_name }}</Option>
+            </Select>
+          </Col>
+        </Row>
+        <Row class="navdhName" v-if="share.apiCity">
           <Col span="24">
              <h3>区域</h3>
           </Col>
@@ -82,12 +92,10 @@
                 <Checkbox v-for="(item,index) in searchCondition.otherLabel" :key="index" :label="item.string" >{{item.text}}</Checkbox>
             </CheckboxGroup>
          </Col>
-        </Row>
-        <Row style="margin-top:10px;">
-          <Col span="24">
+         <Col span="24" style="margin-top:10px;">
                 <Button type="primary" @click="houseSave">确定</Button>
                 <Button type="primary" @click="emptyOption">重置</Button>
-          </Col>
+         </Col>        
         </Row>
         </Form>
       </TabPane>
@@ -129,6 +137,7 @@
 import api from '../../../../api/wysiwyg/main.js';
 import wysLink from '../components/link.vue';
 import { Script } from 'vm';
+import { setTimeout } from 'timers';
 export default {
     name: 'wys-link',
     components: {
@@ -152,11 +161,13 @@ export default {
                 secondDataList:{},
                 rentDetailUrl:'',
                 ajaxDomain:'',
+                apiCity:'',
                 secondDetailParam:{
                    pageNum: 1,
                    pageSize: 10,
                 }
             },
+            cityList:[],
             searchCondition:[],
             metroData:[],
             areaData: [],
@@ -169,6 +180,33 @@ export default {
         };
     },
     methods: {
+        getWapCity(){
+            api.getWapCity().then(response=>{
+                response.data.wapCityList.forEach(cityItem=>{
+                    cityItem.cityJson.forEach(jsonItem=>{
+                         this.cityList.push(jsonItem);
+                    });
+                });
+            })
+        },
+        cityChange(data){
+            this.share.secondDetailParam.apiCity = data;
+            api.getCityAllInfo({cityDomain:data}).then(response=>{
+                this.districtInfo = response.data.cityAllInfos.circleDataList;
+                this.subwayInfo = response.data.cityAllInfos.subwayDataList;
+                this.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
+                this.districtInfo.forEach(item=>{
+                    if(item.districtId === this.share.areaValue){
+                        this.districtChildren = item.children;
+                    }
+                })
+                this.subwayInfo.forEach(item=>{
+                    if(item.subwayid === this.share.metroValue){
+                        this.subwayChildren = item.children;
+                    }
+                })
+            });
+        },
         metroSelect(value){
             this.subwayInfo.forEach(item=>{
                 if(item.subwayid === value){
@@ -270,7 +308,6 @@ export default {
         },
         houseSave(){
             api.getRentHouseSearchList(this.share.secondDetailParam).then(response=>{
-                console.log(response);
                 this.share.secondDataList = response.data;
             });
         },
@@ -298,28 +335,30 @@ export default {
     },
     created: function () {
         this.share.ajaxDomain = this.$domain.ajaxDomain;
-        this.share.rentDetailUrl = this.$domain.rentDetailUrl;
-
-
-        api.getCityAllInfo({cityDomain:"bj"}).then(response=>{
-            this.districtInfo = response.data.cityAllInfos.circleDataList;
-            this.subwayInfo = response.data.cityAllInfos.subwayDataList;
-            this.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
-            this.districtInfo.forEach(item=>{
-                if(item.districtId === this.share.areaValue){
-                    this.districtChildren = item.children;
-                }
-            })
-            this.subwayInfo.forEach(item=>{
-                if(item.subwayid === this.share.metroValue){
-                    this.subwayChildren = item.children;
-                }
-            })
-        });
+        this.share.rentDetailUrl = this.$domain.mUrl;
+        this.getWapCity();
+        var that = this;
+        setTimeout(function(){
+            if(that.share.apiCity){
+                api.getCityAllInfo({cityDomain:that.share.apiCity}).then(response=>{
+                    that.districtInfo = response.data.cityAllInfos.circleDataList;
+                    that.subwayInfo = response.data.cityAllInfos.subwayDataList;
+                    that.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
+                    that.districtInfo.forEach(item=>{
+                        if(item.districtId === that.share.areaValue){
+                            that.districtChildren = item.children;
+                        }
+                    })
+                    that.subwayInfo.forEach(item=>{
+                        if(item.subwayid === that.share.metroValue){
+                            that.subwayChildren = item.children;
+                        }
+                    })
+                });
+            }
+        },500);
     },
     mounted () {
-    // console.log(this.$refs.upload.fileList);
-    // this.uploadList = this.$refs.upload.fileList;
     }
 };
 </script>
@@ -338,7 +377,7 @@ export default {
 <stage-template>
     <div class="templateId" style="display:none;">
         <div class="typeMin_item">
-            <a href="<%= share.rentDetailUrl %>?id=#houseId#" target="_self">
+            <a href="<%= share.rentDetailUrl %>/<%= share.apiCity %>/detail/rent?id=#houseId#" target="_self">
                 <div class="typeMin_item_thumb">
                     <div class="img-box">
                         <img src="#houseTitleImg#"/>
