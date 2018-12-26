@@ -18,10 +18,10 @@
              <h3>区域</h3>
           </Col>
           <Col span="24">
-                <Select v-model="share.areaValue" style="width:100px" @on-change="districtSelect">
+                <Select v-model="share.secondDetailParam.districtId" clearable style="width:100px" @on-change="districtSelect">
                     <Option v-for="item in districtInfo" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
                 </Select>
-                <Select v-model="share.areaChildren" multiple style="width:150px">
+                <Select v-model="share.secondDetailParam.areaId" multiple style="width:150px">
                     <Option v-for="item in districtChildren" :value="item.circle" :key="item.circle">{{ item.name }}</Option>
                 </Select> 
                 <!-- <cascaderMulti v-model="share.areaValue" :data="areaData" @on-change="areaCascChoice" placeholder="请选择"></cascaderMulti>    -->
@@ -30,10 +30,10 @@
              <h3>地铁</h3>
           </Col>
           <Col span="24">
-                <Select v-model="share.metroValue" style="width:100px" @on-change="metroSelect">
+                <Select v-model="share.secondDetailParam.subwayLineId" clearable style="width:100px" @on-change="metroSelect">
                     <Option v-for="item in subwayInfo" :value="item.subwayid" :key="item.subwayid">{{ item.name }}</Option>
                 </Select>
-                <Select v-model="share.metroChildren" multiple style="width:150px">
+                <Select v-model="share.secondDetailParam.subwayStationId" multiple style="width:150px">
                     <Option v-for="item in subwayChildren" :value="item.stationid" :key="item.stationid">{{ item.station_name }}</Option>
                 </Select> 
           </Col>
@@ -196,12 +196,12 @@ export default {
                 this.subwayInfo = response.data.cityAllInfos.subwayDataList;
                 this.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
                 this.districtInfo.forEach(item=>{
-                    if(item.districtId === this.share.areaValue){
+                    if(item.districtId === this.share.secondDetailParam.districtId){
                         this.districtChildren = item.children;
                     }
                 })
                 this.subwayInfo.forEach(item=>{
-                    if(item.subwayid === this.share.metroValue){
+                    if(item.subwayid === this.share.secondDetailParam.subwayLineId){
                         this.subwayChildren = item.children;
                     }
                 })
@@ -235,8 +235,8 @@ export default {
             this.share.secondDataList = {};
             this.share.priceSelect = "";
             this.share.area = "";
-            this.share.areaValue = [];
-            this.share.metroValue = [];
+            this.share.secondDetailParam.districtId = '';
+            this.share.secondDetailParam.subwayLineId = [];
             this.$refs["formValidate"].resetFields();
         },
         labelChange(data){
@@ -345,12 +345,12 @@ export default {
                     that.subwayInfo = response.data.cityAllInfos.subwayDataList;
                     that.searchCondition = response.data.cityAllInfos.searchConditionData.rent;
                     that.districtInfo.forEach(item=>{
-                        if(item.districtId === that.share.areaValue){
+                        if(item.districtId === that.share.secondDetailParam.districtId){
                             that.districtChildren = item.children;
                         }
                     })
                     that.subwayInfo.forEach(item=>{
-                        if(item.subwayid === that.share.metroValue){
+                        if(item.subwayid === that.share.secondDetailParam.subwayLineId){
                             that.subwayChildren = item.children;
                         }
                     })

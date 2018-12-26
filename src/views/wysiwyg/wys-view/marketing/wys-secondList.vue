@@ -8,7 +8,7 @@
              <h3>城市</h3>
           </Col>
           <Col span="24">
-            <Select v-model="share.apiCity" style="width:100px" @on-change="cityChange">
+            <Select v-model="share.apiCity" style="width:100px"  @on-change="cityChange">
                 <Option v-for="item in cityList" :value="item.city_domain" :key="item.city_domain">{{ item.city_name }}</Option>
             </Select>
           </Col>           
@@ -19,10 +19,10 @@
                 <h3>区域</h3>
             </Col>
             <Col span="24">
-                    <Select v-model="share.areaValue" style="width:100px" @on-change="districtSelect">
+                    <Select v-model="share.secondDetailParam.districtId" clearable  style="width:100px" @on-change="districtSelect">
                         <Option v-for="item in districtInfo" :value="item.districtId" :key="item.districtId">{{ item.name }}</Option>
                     </Select>
-                    <Select v-model="share.areaChildren" multiple style="width:150px">
+                    <Select v-model="share.secondDetailParam.areaId" multiple style="width:150px">
                         <Option v-for="item in districtChildren" :value="item.circle" :key="item.circle">{{ item.name }}</Option>
                     </Select> 
             </Col>
@@ -30,10 +30,10 @@
                 <h3>地铁</h3>
             </Col>
             <Col span="24">
-                    <Select v-model="share.metroValue" style="width:100px" @on-change="metroSelect">
+                    <Select v-model="share.secondDetailParam.subwayLineId" clearable  style="width:100px" @on-change="metroSelect">
                         <Option v-for="item in subwayInfo" :value="item.subwayid" :key="item.subwayid">{{ item.name }}</Option>
                     </Select>
-                <Select v-model="share.metroChildren" multiple style="width:150px">
+                <Select v-model="share.secondDetailParam.subwayStationId" multiple style="width:150px">
                         <Option v-for="item in subwayChildren" :value="item.stationid" :key="item.stationid">{{ item.station_name }}</Option>
                     </Select> 
             </Col>
@@ -203,12 +203,12 @@ export default {
                 // this.share.label = this.share.searchCondition.label.concat(this.share.searchCondition.otherLabel);
                 // console.log(this.share.label);
                 this.districtInfo.forEach(item=>{
-                    if(item.districtId === this.share.areaValue){
+                    if(item.districtId === this.share.secondDetailParam.districtId){
                         this.districtChildren = item.children;
                     }
                 })
                 this.subwayInfo.forEach(item=>{
-                    if(item.subwayid === this.share.metroValue){
+                    if(item.subwayid === this.share.secondDetailParam.subwayLineId){
                         this.subwayChildren = item.children;
                     }
                 })
@@ -237,8 +237,8 @@ export default {
             this.share.secondDataList = {};
             this.share.priceSelect = "";
             this.share.area = "";
-            this.share.areaValue = [];
-            this.share.metroValue = [];
+            this.share.secondDetailParam.districtId = '';
+            this.share.secondDetailParam.subwayLineId = '';
             this.$refs["formValidate"].resetFields();
         },
         labelChange(data){
@@ -282,20 +282,6 @@ export default {
                 let priceArr = data.split("-");
                 this.share.secondDetailParam.beginPrice = Number(priceArr[0]);
                 this.share.secondDetailParam.endPrice = Number(priceArr[1]);
-            }
-        },
-        areaCascChoice(){
-
-            this.share.secondDetailParam.districtId = "";
-            this.share.secondDetailParam.areaId = [];
-            if(this.share.areaValue.length > 0){
-                for(var i=0;i<this.share.areaValue.length;i++){
-                    if(i===0){
-                        this.share.secondDetailParam.districtId = this.share.areaValue[i];
-                    }else{
-                        this.share.secondDetailParam.areaId.push(this.share.areaValue[i]);
-                    }
-                }
             }
         },
         metroCascChoice(data){
@@ -357,7 +343,7 @@ export default {
                         }
                     })
                     that.subwayInfo.forEach(item=>{
-                        if(item.subwayid === that.share.metroValue){
+                        if(item.subwayid === that.share.secondDetailParam.subwayLineId){
                             that.subwayChildren = item.children;
                         }
                     })
