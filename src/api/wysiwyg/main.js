@@ -49,12 +49,12 @@ export default {
         return http.post('/cmsapi/diyWebpage/delDiyWebpage', params);
     },
     getCityAllInfo(params) {
-        return httpes.get('/agentv2/rest/getCityAllInfo', {
+        return httpes.get('http://app.dev.bidewu.com/agentv2/rest/getCityAllInfo', {
             params: params
         });
     },
     getWapCity(params) {
-        return httpes.get('/agentv2/rest/getWapCity', {
+        return httpes.get('http://app.dev.bidewu.com/agentv2/rest/getWapCity', {
             params: params
         });
     },
