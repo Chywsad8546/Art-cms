@@ -447,10 +447,10 @@ img {
           <div style="text-align:center">
             <p class="qrcode" style="width:200px; margin:0 auto;" id="qrcode10"></p>
           </div>
-          <div style="margin-top:20px;">
+          <!-- <div style="margin-top:20px;">
             <span>专题URL</span>
             <Input v-model="siteUrl" placeholder="" style="width: 300px"></Input>
-          </div>
+          </div> -->
         </TabPane>
       </Tabs>
 
