@@ -416,6 +416,9 @@ $.ajax({
         //几个参数需要注意一下
             type: "POST",//方法类型
             contentType: "application/json",
+            headers: {
+                city: "<%= share.apiCity %>"
+            },
             dataType: "json",//预期服务器返回的数据类型
             url: "<%= share.ajaxDomain %>/searchapiv2/rest/rent/getRentHouseSearchList" ,//url
             data: JSON.stringify(param),
