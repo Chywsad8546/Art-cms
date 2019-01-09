@@ -158,7 +158,7 @@ export default {
                 metroValue:[],
                 priceSelect:"",
                 apartment:[],
-                //secondDataList:{},
+                secondDataList:{},
                 rentDetailUrl:'',
                 ajaxDomain:'',
                 apiCity:'',
@@ -232,7 +232,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10,                 
             }
-           // this.share.secondDataList = {};
+            this.share.secondDataList = {};
             this.share.priceSelect = "";
             this.share.area = "";
             this.share.secondDetailParam.districtId = '';
@@ -307,9 +307,9 @@ export default {
             }
         },
         houseSave(){
-            // api.getRentHouseSearchList(this.share.secondDetailParam).then(response=>{
-            //    // this.share.secondDataList = response.data;
-            // });
+            api.getRentHouseSearchList(this.share.secondDetailParam).then(response=>{
+                this.share.secondDataList = response.data;
+            });
         },
         removeNavigat (item) {
             let index = this.share.navigatList.indexOf(item);
@@ -404,7 +404,10 @@ var num = 1;
 var asynFlag = true;
 var param = <%- $imports.tojson(share.secondDetailParam) %>;
 $(document).ready(function(){
-    $t.find(".typeMin_rentList").html("");
+    // var houseArr = <%- $imports.tojson(share.secondDataList) %>;
+    // if(JSON.stringify(houseArr) != '{}'){
+    //     createAppendTemp(houseArr);
+    // }
     houseList();
 });
 function houseList(){
