@@ -378,7 +378,26 @@ img {
             <FormItem label="标题" prop="title">
               <Input v-model="formMain.title" placeholder="请填写标题"></Input>
             </FormItem>
-
+            <FormItem label="分享" prop="isShare">
+              <Checkbox v-model="formMain.isShare">是否分享</Checkbox>
+            </FormItem>
+            <div v-if="formMain.isShare" >
+              <FormItem label="分享标题" prop="linkTitle">
+                <Input v-model="formMain.linkTitle" placeholder="请填写分享标题"></Input>
+              </FormItem>
+              <FormItem label="分享内容" prop="linkContent">
+                <Input v-model="formMain.linkContent" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+              </FormItem>
+              <FormItem label="分享图片" prop="iconURL">
+                  <img v-if="formMain.iconURL" :src="formMain.iconURL"/>
+                  <Upload
+                      ref="upload" class="uploadWidth" :action="$domain.uploadFile" :default-file-list="defaultList"
+                      :format="['jpg','jpeg','png']" :on-success="shareUploadSuccess" :on-format-error="uploadFormatError"
+                      :show-upload-list="false">
+                      <Button type="ghost" style="width:300px;margin-top:10px;">上传图片</Button>
+                  </Upload>
+              </FormItem>
+            </div>
           </Form>
           <navigation v-if="currentShow" :include="includeIds">
             <component v-bind:is="currentEditor" :key="currentEditorKey"></component>
@@ -495,11 +514,19 @@ export default {
                 siteId: '',
                 html: '',
                 title: '',
-                editor: ''
+                editor: '',
+                isShare:false,
+                iconURL:"",
+                linkContent: "",
+                linkTitle: "",
+                share:{},
             },
             ruleMainValidate: {
                 title: [
                     { required: true, message: '请输入标题', trigger: 'blur' }
+                ],
+                linkTitle:[
+                  { required: true, message: '请输入分享标题', trigger: 'blur'}
                 ]
             },
             id: this.$route.query.id
@@ -516,17 +543,16 @@ export default {
                 this.mainBackImgStyle = "background-image:url("+this.ztBackgroundImg+")";
                 var that = this;
                 // 加载完成执行
-                img.onload = function () {
-                    // that.share.uploadList.push({
-                    //     name: file.name,
-                    //     url: res.data.url,
-                    //     httpUrl: '',
-                    //     urlData: {},
-                    //     imgInformation: img.width + 'px*' + img.height + 'px',
-                    //     navVisible: false,
-                    //     single: false
-                    // });
-                };
+            } else {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: res.data.url
+                });
+            }
+        },
+        shareUploadSuccess(res, file){
+            if (res.code === 'success') {
+                this.formMain.iconURL = res.data.url;
             } else {
                 this.$Notice.error({
                     title: '上传失败',
@@ -664,9 +690,29 @@ export default {
         '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/cd521b2d5b81495eab98e43e91015223.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/db1c5c1d475448a8b910b421ebc09994.js\'><\/script>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.toutiaofangchan.com/adideas/5ae2427b4345471abceeeee9db85e9fc.js\'><\/script>' +
+        '<script>'+
+        "var param = {"+
+           "htmlTitle: \""+this.formMain.title+"\","+
+           "htmlTitleShare:{}"+
+        "};"+
+        "if("+this.formMain.isShare+"){"+
+            "param.htmlTitleShare.type = 'URL';"+
+            "param.htmlTitleShare.iconURL = '"+this.formMain.iconURL+"';"+
+            "param.htmlTitleShare.linkTitle = '"+this.formMain.linkTitle+"';"+
+            "param.htmlTitleShare.linkContent = '"+this.formMain.linkContent+"';"+
+            "param.htmlTitleShare.linkURL= location.href;"+
+        "}"+
+        "var UA = navigator.userAgent.toLowerCase();"+
+        "if (UA.indexOf(\"dongfangdi\") > -1) {"+
+          "window.mcAPI.hasClientTitle(true, JSON.stringify(param));"+
+        "}"+
+        "window.loadFinish = function(){"+
+          "window.mcAPI.hasClientTitle(true, JSON.stringify(param));"+
+        "}"+
+        '<\/script>'+
         '</head><body style="max-width:640px;margin:0 auto;">';
             var stagereslut = GlobalStage.save();
-
             html += stagereslut.html;
             html += '</body>';
             html += '</html>';
@@ -674,6 +720,13 @@ export default {
             this.formMain.editor = JSON.stringify(stagereslut.stage);
             this.formMain.siteId = this.$route.query.siteid;
             this.formMain.creater = this.$store.state.app.userName;
+            var shareObj = {};
+            shareObj.isShare = this.formMain.isShare;
+            shareObj.htmlTitle = this.formMain.title;
+            shareObj.iconURL = this.formMain.iconURL;
+            shareObj.linkContent = this.formMain.linkContent;
+            shareObj.linkTitle = this.formMain.linkTitle;
+            this.formMain.share = JSON.stringify(shareObj);
         },
         qrcode (url) {
             let qrcode = new QRCode('qrcode10', {
@@ -694,6 +747,11 @@ export default {
             }).then(response => {
                 that.formMain.title = response.data.data[0].title;
                 that.initStage(JSON.parse(response.data.data[0].editor));
+                var shareObj = JSON.parse(response.data.data[0].share);
+                that.formMain.isShare = shareObj.isShare;
+                that.formMain.iconURL = shareObj.iconURL;
+                that.formMain.linkTitle = shareObj.linkTitle;
+                that.formMain.linkContent = shareObj.linkContent;
             });
         } else {
             that.initStage();
