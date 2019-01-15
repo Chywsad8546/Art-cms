@@ -471,7 +471,7 @@ function createAppendTemp(result){
         tempHtml = tempHtml.replace("#districtName#",districtName);
         tempHtml = tempHtml.replace("#zufangName#",zufangName);
         tempHtml = tempHtml.replace("#rentLabelName#",rentLabelName);
-        tempHtml = tempHtml.replace("#houseTitleImg#",houseTitleImg);
+        tempHtml = tempHtml.replace("#houseTitleImg#",imgSrc(houseTitleImg,'-dfdo400x300'));
         tempHtml = tempHtml.replace("#nearbyDistance#",nearbyDistance);
         tempHtml = tempHtml.replace("#rentLabelClass#",rentLabelClass);
         tempHtml = tempHtml.replace("#houseArea#",houseArea);
