@@ -67,15 +67,13 @@
         </RadioGroup>
         <FormItem label="字号">
             <Select v-model="share.textFontSize" style="width:200px">
-                <Option value="12px">12</Option>
-                <Option value="14px">14</Option>
-                <Option value="16px">16</Option>
-                <Option value="18px">18</Option>
-                <Option value="20px">20</Option>
-                <Option value="22px">22</Option>
-                <Option value="30px">30</Option>
-                <Option value="32px">32</Option>
-                <Option value="36px">36</Option>
+                <Option value="0.12rem">12</Option>
+                <Option value="0.26rem">14</Option>
+                <Option value="0.28rem">16</Option>
+                <Option value="0.3rem">18</Option>
+                <Option value="0.32rem">20</Option>
+                <Option value="0.34rem">22</Option>
+                <Option value="0.36rem">24</Option>
             </Select>
         </FormItem>
         <Row>
@@ -117,7 +115,7 @@ export default {
                 left: 15,
                 label:'热',
                 defaultList:[],
-                textFontSize:'12px',
+                textFontSize:'0.12rem',
                 tempVertical:'temp1',
                 uploadList:[]
             },

@@ -4,15 +4,13 @@
         <Col span="24">
           <FormItem label="字号">
                 <Select v-model="share.textFontSize" style="width:200px">
-                  <Option value="12px">12</Option>
-                  <Option value="13px">13</Option>
-                  <Option value="14px">14</Option>
-                  <Option value="16px">16</Option>
-                  <Option value="18px">18</Option>
-                  <Option value="24px">24</Option>
-                  <Option value="36px">36</Option>
-                  <Option value="48px">48</Option>
-                  <Option value="64px">64</Option>
+                <Option value="0.12rem">12</Option>
+                <Option value="0.26rem">14</Option>
+                <Option value="0.28rem">16</Option>
+                <Option value="0.3rem">18</Option>
+                <Option value="0.32rem">20</Option>
+                <Option value="0.34rem">22</Option>
+                <Option value="0.36rem">24</Option>
               </Select>
           </FormItem>
            <FormItem label="加粗">
@@ -88,7 +86,7 @@ export default {
                 right: 15,
                 bottom: 10,
                 left: 15,
-                textFontSize:'12px',
+                textFontSize:'0.12rem',
                 font_color:'#000000',
                 thickening:false,
                 fontAlign:'left'
