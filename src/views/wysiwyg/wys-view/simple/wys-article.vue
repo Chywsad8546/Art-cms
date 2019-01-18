@@ -67,15 +67,15 @@
         </RadioGroup>
         <FormItem label="字号">
             <Select v-model="share.textFontSize" style="width:200px">
-                <Option value="0.12rem">12</Option>
-                <Option value="0.14rem">14</Option>
-                <Option value="0.16rem">16</Option>
-                <Option value="0.18rem">18</Option>
-                <Option value="0.2rem">20</Option>
-                <Option value="0.22rem">22</Option>
-                <Option value="0.3rem">30</Option>
-                <Option value="0.32rem">32</Option>
-                <Option value="0.36rem">36</Option>
+                <Option value="12px">12</Option>
+                <Option value="14px">14</Option>
+                <Option value="16px">16</Option>
+                <Option value="18px">18</Option>
+                <Option value="20px">20</Option>
+                <Option value="22px">22</Option>
+                <Option value="30px">30</Option>
+                <Option value="32px">32</Option>
+                <Option value="36px">36</Option>
             </Select>
         </FormItem>
         <Row>
@@ -117,7 +117,7 @@ export default {
                 left: 15,
                 label:'热',
                 defaultList:[],
-                textFontSize:'0.12rem',
+                textFontSize:'12px',
                 tempVertical:'temp1',
                 uploadList:[]
             },
@@ -237,7 +237,7 @@ export default {
 
 <stage-template>
 <div  class="pictureset-box">
-   <a href="{{@share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block; font-size:0.12rem;">
+   <a href="{{@share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block;">
         {{if share.tempVertical=='temp1'}}
             <div class="atricleLeft">
                 <div class="title" style="font-size:{{@share.textFontSize}}"><span>{{@share.title}}</span></div>
@@ -254,7 +254,7 @@ export default {
             {{/each}}
             {{else}}
             <div class="atricleLeft" style="width:100%;">
-                <div class="title"><span>{{@share.title}}</span></div>
+                <div class="title" style="font-size:{{@share.textFontSize}}"><span>{{@share.title}}</span></div>
                 <div class="imgs">
                     <ul class="clearfix">
                     {{each share.uploadList}}
@@ -278,7 +278,6 @@ export default {
 
 .pictureset-box .atricleLeft .title {
     color: #222;
-    font-size:0.16rem;
     line-height: 20px;
     font-weight: 400;
     word-wrap:break-word;
@@ -345,7 +344,6 @@ export default {
 .atricleLeft {
     display: inline-block;
     width: 68%;
-    font-size:0.12rem;
     box-sizing: border-box;
     vertical-align: middle;
 }
