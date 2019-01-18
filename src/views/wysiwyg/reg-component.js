@@ -43,7 +43,7 @@ export default {
             icon:
                 'http://wap-qn.toutiaofangchan.com/adideas/f201497cc5804d7eae6162cb898b62d4.png',
             title: '布局',
-            accepts: ['wys_link', 'wys_splitcharacter', 'wys_pic'],
+            accepts: ['wys_link', 'wys_splitcharacter', 'wys_pic', 'wys_text'],
             component: wys_placeholder,
             id: 'wys_placeholder'
         },

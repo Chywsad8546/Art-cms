@@ -65,6 +65,19 @@
                 <span>样式2</span>
             </Radio>
         </RadioGroup>
+        <FormItem label="字号">
+            <Select v-model="share.textFontSize" style="width:200px">
+                <Option value="0.12rem">12</Option>
+                <Option value="0.14rem">14</Option>
+                <Option value="0.16rem">16</Option>
+                <Option value="0.18rem">18</Option>
+                <Option value="0.2rem">20</Option>
+                <Option value="0.22rem">22</Option>
+                <Option value="0.3rem">30</Option>
+                <Option value="0.32rem">32</Option>
+                <Option value="0.36rem">36</Option>
+            </Select>
+        </FormItem>
         <Row>
           <Col span="24">
           边距
@@ -104,7 +117,7 @@ export default {
                 left: 15,
                 label:'热',
                 defaultList:[],
-                textFontSize:'12px',
+                textFontSize:'0.12rem',
                 tempVertical:'temp1',
                 uploadList:[]
             },
@@ -224,40 +237,37 @@ export default {
 
 <stage-template>
 <div  class="pictureset-box">
-   <a href="{{@share.url}}" target="_self >
-    <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;font-size:{{@share.textFontSize}}">
-{{if share.tempVertical=='temp1'}}
-      <div class="atricleLeft">
-          <div class="title"><span>{{@share.title}}</span></div>
-          <div class="desc">
-            <span class="label-desc">{{@share.source}}</span> 
-            {{if share.label}}
-            <span class="label-text" style="color: rgb(248, 89, 89); border-color: rgb(248, 89, 89);">{{@share.label}}</span>
-            {{/if}}
-          </div>
-      </div>
-      {{each share.uploadList}}
-      <div class="right-content" style="background-image: url({{$value.url}});">
-      </div>
-      {{/each}}
-      {{else}}
-      <div class="atricleLeft" style="width:100%;">
-          <div class="title"><span>{{@share.title}}</span></div>
-
-          <div class="imgs">
-            <ul class="clearfix">
-              {{each share.uploadList}}
-                  <li class="list-img-holder" style="background-image: url({{$value.url}});"></li>
-              {{/each}}      
-            </ul>
-          </div>
-          <div class="desc">
-            <span class="label-desc">{{@share.source}}</span> 
-            <span class="label-text" style="color: rgb(248, 89, 89); border-color: rgb(248, 89, 89);">热</span>
-          </div>
-      </div>
-{{/if}}
-    </section>
+   <a href="{{@share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block; font-size:0.12rem;">
+        {{if share.tempVertical=='temp1'}}
+            <div class="atricleLeft">
+                <div class="title" style="font-size:{{@share.textFontSize}}"><span>{{@share.title}}</span></div>
+                <div class="desc">
+                    <span class="label-desc">{{@share.source}}</span> 
+                    {{if share.label}}
+                    <span class="label-text" style="color: rgb(248, 89, 89); border-color: rgb(248, 89, 89);">{{@share.label}}</span>
+                    {{/if}}
+                </div>
+            </div>
+            {{each share.uploadList}}
+            <div class="right-content" style="background-image: url({{$value.url}});">
+            </div>
+            {{/each}}
+            {{else}}
+            <div class="atricleLeft" style="width:100%;">
+                <div class="title"><span>{{@share.title}}</span></div>
+                <div class="imgs">
+                    <ul class="clearfix">
+                    {{each share.uploadList}}
+                        <li class="list-img-holder" style="background-image: url({{$value.url}});"></li>
+                    {{/each}}      
+                    </ul>
+                </div>
+                <div class="desc">
+                    <span class="label-desc">{{@share.source}}</span> 
+                    <span class="label-text" style="color: rgb(248, 89, 89); border-color: rgb(248, 89, 89);">热</span>
+                </div>
+            </div>
+        {{/if}}
     </a>
 </div>
 </stage-template>
@@ -268,15 +278,15 @@ export default {
 
 .pictureset-box .atricleLeft .title {
     color: #222;
-    font-size: 19px;
-    line-height: 25px;
+    font-size:0.16rem;
+    line-height: 20px;
     font-weight: 400;
 }
 .pictureset-box .atricleLeft .desc .label-desc {
     float: left;
     position: relative;
     top: 1px;
-        font-size: 12px;
+    font-size: 12px;
     color: #999;
     line-height: 14px;
 }
@@ -306,6 +316,7 @@ export default {
     overflow: hidden;
     width: 28%;
     height: 67px;
+    box-sizing: border-box;
     display: inline-block;
     vertical-align: middle;
     background-position: 50%;
@@ -332,7 +343,9 @@ export default {
 }
 .atricleLeft {
     display: inline-block;
-    width: 70%;
+    width: 68%;
+    font-size:0.12rem;
+    box-sizing: border-box;
     vertical-align: middle;
 }
 .atricleRight {

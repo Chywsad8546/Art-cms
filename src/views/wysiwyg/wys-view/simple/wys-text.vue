@@ -15,6 +15,16 @@
                   <Option value="64px">64</Option>
               </Select>
           </FormItem>
+           <FormItem label="加粗">
+           <Checkbox v-model="share.thickening">加粗</Checkbox>
+           </FormItem>
+           <FormItem label="加粗">
+            <Select v-model="share.fontAlign" style="width:200px">
+                <Option value="left">左对齐</Option>
+                <Option value="center">居中</Option>
+                <Option value="right">右对齐</Option>
+            </Select>
+          </FormItem>
           <FormItem label="颜色">
             <ColorPicker v-model="share.font_color" />
           </FormItem>
@@ -79,7 +89,9 @@ export default {
                 bottom: 10,
                 left: 15,
                 textFontSize:'12px',
-                font_color:'#000000'
+                font_color:'#000000',
+                thickening:false,
+                fontAlign:'left'
             },
             panelTextKey2:'1'
 
@@ -129,15 +141,16 @@ export default {
 .navdhName {
   margin-top: 20px;
   padding-right: 20px;
+  
 }
 </style>
 
 
 <stage-template>
 <div  class="pictureset-box">
-    <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;font-size:{{@share.textFontSize}}">
-        <a href="{{@share.url}}" target="_self" class="link style1">
-            <span class="link-text">{{@share.name}}</span> 
+    <section style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px;font-size:{{@share.textFontSize}};text-align:{{@share.fontAlign}}">
+        <a href="{{@share.url == '' ? 'javascript:void(0)' : share.url}}" target="_self" class="link style1">
+            <span class="link-text" style="font-weight:{{@share.thickening==true?'bold':''}}">{{@share.name}}</span> 
         </a>
     </section>
 </div>

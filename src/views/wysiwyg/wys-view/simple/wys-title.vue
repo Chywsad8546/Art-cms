@@ -41,10 +41,10 @@
                   <img src="http://wap-qn.toutiaofangchan.com/adideas/58fe98e8b8ad41b0963bb61f400606ec.png" alt="样式1">
                 </Radio>
                 <Radio label="title-type_3" style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/1e148826a99b480b8b781cddea2bd47b.png" alt="样式1">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/9083fd8440584d56aed52d82138694c0.png" alt="样式1">
                 </Radio>
                 <Radio label="title-type_4" style="height: 40px">
-                  <img src="http://wap-qn.toutiaofangchan.com/adideas/9083fd8440584d56aed52d82138694c0.png" alt="样式1">
+                  <img src="http://wap-qn.toutiaofangchan.com/adideas/1e148826a99b480b8b781cddea2bd47b.png" alt="样式1">
                 </Radio>
               </RadioGroup>
               <FormItem label="装饰颜色">
