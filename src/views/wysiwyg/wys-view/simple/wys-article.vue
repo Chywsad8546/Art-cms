@@ -5,13 +5,13 @@
         <Row class="navdhName">
           <Col span="24">
             <FormItem label="标题">
-              <Input v-model="share.title" placeholder="请输入标题" style="width: 300px" />
+              <Input v-model="share.title" placeholder="请输入标题" style="width: 200px" />
             </FormItem>
             <FormItem label="来源">
-              <Input v-model="share.source" placeholder="请输入标题" style="width: 300px" />
+              <Input v-model="share.source" placeholder="请输入标题" style="width: 200px" />
             </FormItem>
             <FormItem label="标签文字">
-              <Input v-model="share.label" placeholder="请输入标签" style="width: 300px" />
+              <Input v-model="share.label" placeholder="请输入标签" style="width: 200px" />
             </FormItem>
           </Col>
         </Row>
@@ -281,6 +281,7 @@ export default {
     font-size:0.16rem;
     line-height: 20px;
     font-weight: 400;
+    word-wrap:break-word;
 }
 .pictureset-box .atricleLeft .desc .label-desc {
     float: left;
