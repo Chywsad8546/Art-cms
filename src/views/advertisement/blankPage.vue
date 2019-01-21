@@ -51,7 +51,7 @@
             </div>
 
     <Table border :columns="columblankPage" :data="blankPageListData" :loading="searchLoading"></Table>
-    <Page :total="total"  show-total  @on-change="pageChange" style="margin-top:10px;"></Page>
+    <Page :total="total" :current.sync="curNum"  show-total  @on-change="pageChange" style="margin-top:10px;"></Page>
 
     <Modal v-model="showPlan" title="选择创意" scrollable width="850" @on-visible-change="visiblechange">
         <planselector :positionId="selectPostionId" :date="selectDate"  :showseed="showseed" @closeme="showPlan=false"></planselector>
@@ -108,6 +108,7 @@
                 ],
                 blankPageListData: [],
                 total: 0,
+                curNum:1,
                 searchLoading: false,
                 tempList: {},
                 zhandianList: [],
@@ -204,7 +205,6 @@
                         that.blankPageListDataDictus[row['positionId']] = row;
                     });
                     that.total = response.data.count;
-
                     api.getPaiqiList({
                         positionIds: that.joinIds(that.blankPageListData),
                         startTime: that.startTime,
@@ -258,6 +258,7 @@
             },
             queryBlank(flag) {
                 this.formItem.pageNum = 1;
+                this.curNum = 1;
                 // if (flag) {
                 this.search();
                 // } else {
