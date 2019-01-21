@@ -74,6 +74,15 @@
                 <Option value="0.32rem">20</Option>
                 <Option value="0.34rem">22</Option>
                 <Option value="0.36rem">24</Option>
+                <Option value="0.38rem">26</Option>
+                <Option value="0.40rem">28</Option>
+                <Option value="0.42rem">30</Option>
+                <Option value="0.44rem">32</Option>
+                <Option value="0.46rem">34</Option>
+                <Option value="0.48rem">36</Option>
+                <Option value="0.5rem">38</Option>
+                <Option value="0.52rem">40</Option>
+                <Option value="0.54rem">42</Option>
             </Select>
         </FormItem>
         <Row>
@@ -115,13 +124,12 @@ export default {
                 left: 15,
                 label:'热',
                 defaultList:[],
-                textFontSize:'0.12rem',
+                textFontSize:'0.5rem',
                 tempVertical:'temp1',
                 uploadList:[]
             },
             visible:false,
             panelTextKey2:'1'
-
         };
     },
     methods: {
@@ -235,9 +243,9 @@ export default {
 
 <stage-template>
 <div  class="pictureset-box">
-   <a href="{{@share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block;">
+   <a href="{{@share.url == '' ? 'javascript:void(0)' : share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block;">
         {{if share.tempVertical=='temp1'}}
-            <div class="atricleLeft">
+            <div class="atricleLeft" style="width:{{@share.uploadList.length <= 0 ? '100%' : '68%'}}">
                 <div class="title" style="font-size:{{@share.textFontSize}}"><span>{{@share.title}}</span></div>
                 <div class="desc">
                     <span class="label-desc">{{@share.source}}</span> 
@@ -276,9 +284,11 @@ export default {
 
 .pictureset-box .atricleLeft .title {
     color: #222;
-    line-height: 20px;
+    line-height: 25px;
     font-weight: 400;
     word-wrap:break-word;
+    margin-bottom:0.1rem;
+    text-align: justify;
 }
 .pictureset-box .atricleLeft .desc .label-desc {
     float: left;
