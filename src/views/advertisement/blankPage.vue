@@ -166,7 +166,7 @@
             },
             pageChange(page) {
                 this.formItem.pageNum = page;
-                this.queryBlank();
+                this.search();
             },
             joinIds(data) {
                 var ids = [];
@@ -257,6 +257,7 @@
                 });
             },
             queryBlank(flag) {
+                this.formItem.pageNum = 1;
                 // if (flag) {
                 this.search();
                 // } else {
