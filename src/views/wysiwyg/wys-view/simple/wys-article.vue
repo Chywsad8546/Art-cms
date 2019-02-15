@@ -245,7 +245,7 @@ export default {
 <div  class="pictureset-box">
    <a href="{{@share.url == '' ? 'javascript:void(0)' : share.url}}" target="_self" style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; display: block;">
         {{if share.tempVertical=='temp1'}}
-            <div class="atricleLeft" style="width:{{@share.uploadList.length <= 0 ? '100%' : '68%'}}">
+            <div class="atricleLeft" style="width:{{@share.uploadList.length <= 0 ? '100%' : '67%'}}">
                 <div class="title" style="font-size:{{@share.textFontSize}}"><span>{{@share.title}}</span></div>
                 <div class="desc">
                     <span class="label-desc">{{@share.source}}</span> 
@@ -284,7 +284,7 @@ export default {
 
 .pictureset-box .atricleLeft .title {
     color: #222;
-    line-height: 25px;
+    line-height: 0.6rem;
     font-weight: 400;
     word-wrap:break-word;
     margin-bottom:0.1rem;
