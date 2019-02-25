@@ -270,7 +270,8 @@ export default {
                 backImgStyle: 'background-size: 100% 100%; background-position: initial; background-repeat: no-repeat;',
                 isCheckSingle: false,
                 formImgUrl: '',
-                formHideList: []
+                formHideList: [],
+                formId:""
             },
             loading: false,
             foldpanelKey1: '1',
@@ -329,6 +330,7 @@ export default {
             this.share.formList.forEach(item => {
                 if (item._id === value) {
                     this.share.formRender = JSON.parse(item.form);
+                    this.share.formId = item._id;
                     this.share.formBottonRender = JSON.parse(item.formBotton);
                 }
             });
@@ -555,7 +557,7 @@ export default {
             <% for(j=0 ; j<share.formHideList.length ; j++){%>
                   <input type="hidden" name="<%=share.formHideList[j].name%>" value="<%=share.formHideList[j].value%>">
             <%}%>
-
+            <input type="hidden" name="formId" value="<%=share.formId %>">
 
     </form>
 </div>
