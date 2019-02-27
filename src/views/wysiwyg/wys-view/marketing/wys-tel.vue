@@ -360,7 +360,7 @@ export default {
 <stage-template>
 <div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
     <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">
-            <a href="tel: {{@ share.clickTel }}">
+            <a href="tel:{{@ share.clickTel }}">
                
        {{if share.styleList=='clickStyle1'}}        
                 <div class="btn-i" style="border-radius: <%= share.radius %>px; background-color: <%= share.clickColor %> !important; color: <%= share.clickFontColor %>; height: <%= share.clickHeight %>px;  margin: 0 auto; line-height: <%= share.clickHeight %>px; width: <%= share.clickWidth %>%;">
