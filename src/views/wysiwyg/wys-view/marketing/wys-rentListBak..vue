@@ -377,7 +377,7 @@ export default {
 <stage-template>
     <div class="templateId" style="display:none;">
         <div class="typeMin_item">
-            <a href="javascript:void(0)" target="_self">
+            <a href="<%= share.rentDetailUrl %>/<%= share.apiCity %>/detail/rent?id=#houseId#" target="_self">
                 <div class="typeMin_item_thumb">
                     <div class="img-box">
                         <img src="#houseTitleImg#"/>
@@ -407,41 +407,6 @@ $(document).ready(function(){
     $t.find(".typeMin_rentList").html("");
     houseList();
 });
-
-function openUrl(houseId){
-    var UA = navigator.userAgent.toLowerCase();
-    var href = "<%= share.rentDetailUrl %>/<%= share.apiCity %>/detail/rent?id="+houseId;
-    if (UA.indexOf("dongfangdi") > -1) {
-        var version = UA.split("_")[2];
-        var isNewVersion = versionCmp(version, '3.0.2');
-        if(isNewVersion){
-            window.mcAPI.routerJump(
-                "dfrouter://com.bidewu/rentdetail?rentid="+houseId+"&source="+document.title+"专题列表"
-            );
-        }else{
-            window.location.href = href
-        }
-    }else{
-        window.location.href = href
-    }
-}
-function versionCmp(s1, s2) {
-    var a = s1.split('.')
-    var b = s2.split('.')
-    var idx = 0;
-    var minLength = Math.min(a.length, b.length);
-    var diff = 0;
-    while (idx < minLength && (diff = a[idx].length - b[idx].length) == 0 && (diff = a[idx] > b[idx] ? 1 : (a[idx] < b[idx] ? -1 : 0)) == 0) {
-        ++ idx;
-    }
-    diff = (diff != 0) ? diff: a.length - b.length;
-    if (diff > 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 function houseList(){
 asynFlag = false;
 $t.find(".typeMin_down4gLoad").show();
@@ -518,11 +483,6 @@ function createAppendTemp(result){
         var maxDiv = $("<div></div>");
         maxDiv.html(tempHtml);
         var liMaxDom = maxDiv.children("div");	
-        (function(liMaxDom,houseId){				
-            liMaxDom.on("click",function(){
-                openUrl(houseId);
-            });
-        })(liMaxDom,houseId);
         $t.find(".typeMin_rentList").append(liMaxDom);
     }
     param.pageNum ++;

@@ -161,7 +161,7 @@ export default {
                 areaChildren:'',
                 priceSelect:"",
                 apartment:[],
-                secondDataList:{},
+              //  secondDataList:{},
                 secondDetailUrl:'',
                 tempVertical:'templateId',
                 ajaxDomain:'',
@@ -234,7 +234,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10,                 
             }
-            this.share.secondDataList = {};
+            //this.share.secondDataList = {};
             this.share.priceSelect = "";
             this.share.area = "";
             this.share.secondDetailParam.districtId = '';
@@ -298,9 +298,9 @@ export default {
             }
         },
         houseSave(){
-            api.getSellHouseList(this.share.secondDetailParam).then(response=>{
-                this.share.secondDataList = response.data;
-            });
+            // api.getSellHouseList(this.share.secondDetailParam).then(response=>{
+            //   //  this.share.secondDataList = response.data;
+            // });
         },
         removeNavigat (item) {
             let index = this.share.navigatList.indexOf(item);
@@ -417,12 +417,19 @@ var num = 1;
 var asynFlag = true;
 var param = <%- $imports.tojson(share.secondDetailParam) %>;
 $(document).ready(function(){
-    // var houseArr = <%- $imports.tojson(share.secondDataList) %>;
-    // if(JSON.stringify(houseArr) != '{}'){
-    //     createAppendTemp(houseArr);
-    // }
+
+    $t.find(".houseList").html("");
     houseList();
 });
+function openUrl(houseId){
+    var UA = navigator.userAgent.toLowerCase();
+    if (UA.indexOf("dongfangdi") > -1) {
+        var version = UA.split("_")[2];
+        var versionNum = version.split(".");
+        var verNum = Number(versionNum[0]+versionNum[1]+versionNum[2]);
+        alert(verNum);
+    }
+}
 function houseList(){
 asynFlag = false;
 $t.find(".down4gLoad").show();

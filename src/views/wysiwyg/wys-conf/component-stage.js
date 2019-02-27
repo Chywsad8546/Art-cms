@@ -266,7 +266,9 @@ export default {
         }
         this.currentComponent = stageComponent;
         this._stage.find('.wysi_active').removeClass('wysi_active');
-        this.currentComponent.dom.addClass('wysi_active');
+        if(this.currentComponent.dom){
+            this.currentComponent.dom.addClass('wysi_active');
+        }
         this._currentComponentChangeEvent(this.currentComponent, show);
     },
     save: function() {

@@ -370,7 +370,7 @@ export default {
 <stage-template>
     <div class="templateId1" style="display:none;">
         <div class="typeMin_item">
-            <a href="<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id=#houseId#" target="_self">
+            <a href="javascript:void(0)"  target="_self">
                 <div class="typeMin_item_thumb">
                     <div class="typeMin_tag-list">
                             #tagList#
@@ -390,7 +390,7 @@ export default {
     </div>
     <div class="templateId" style="display:none;">
         <div class="item">
-            <a href="<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id=#houseId#" target="_self">
+            <a href="javascript:void(0)" target="_self">
                 <div class="item_thumb">
                         <div class="tag-list">
                             #tagList#
@@ -420,6 +420,39 @@ $(document).ready(function(){
     $t.find(".houseList").html("");
     houseList();
 });
+function openUrl(houseId){
+    var UA = navigator.userAgent.toLowerCase();
+    var href = "<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id="+houseId;
+    if (UA.indexOf("dongfangdi") > -1) {
+        var version = UA.split("_")[2];
+        var isNewVersion = versionCmp(version, '3.0.2');
+        if(isNewVersion){
+            window.mcAPI.routerJump(
+                "dfrouter://com.bidewu/esfdetail?houseid="+houseId+"&source="+document.title+"专题列表"
+            );
+        }else{
+            window.location.href = href
+        }
+    }else{
+        window.location.href = href
+    }
+}
+function versionCmp(s1, s2) {
+    var a = s1.split('.')
+    var b = s2.split('.')
+    var idx = 0;
+    var minLength = Math.min(a.length, b.length);
+    var diff = 0;
+    while (idx < minLength && (diff = a[idx].length - b[idx].length) == 0 && (diff = a[idx] > b[idx] ? 1 : (a[idx] < b[idx] ? -1 : 0)) == 0) {
+        ++ idx;
+    }
+    diff = (diff != 0) ? diff: a.length - b.length;
+    if (diff > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 function houseList(){
 asynFlag = false;
 $t.find(".down4gLoad").show();
@@ -498,9 +531,17 @@ function createAppendTemp(result){
         tempHtml = tempHtml.replace("#buildArea#",buildArea);
         tempHtml = tempHtml.replace("#houseId#",houseId);
         
+        
         var maxDiv = $("<div></div>");
         maxDiv.html(tempHtml);
         var liMaxDom = maxDiv.children("div");
+        (function(liMaxDom,houseId){				
+
+            liMaxDom.on("click",function(){
+                openUrl(houseId);
+            });
+            
+        })(liMaxDom,houseId);
         $t.find(".houseList").append(liMaxDom);
     }
     param.pageNum ++;
