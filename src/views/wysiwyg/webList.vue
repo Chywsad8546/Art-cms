@@ -128,6 +128,10 @@ export default {
                     title: '建立时间'
                 },
                 {
+                    key: 'views',
+                    title: '阅读量'
+                },
+                {
                     key: 'creater',
                     title: '编辑'
                 },

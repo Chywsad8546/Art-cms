@@ -376,7 +376,7 @@ export default {
                             #tagList#
                     </div>
                     <div class="img-box">
-                        <img src="#housePhotoTitle#"/>
+                        #housePhotoTitle#
                     </div>
                 </div>
                 <div class="typeMin_house_textWidth">
@@ -395,7 +395,7 @@ export default {
                         <div class="tag-list">
                             #tagList#
                         </div>
-                    <img src="#housePhotoTitle#"/>
+                        #housePhotoTitle#
                 </div>
                 <div class="house_textWidth">
                     <div class="house_Price">#houseTotalPrices#<span>万/套</span></div>
@@ -517,7 +517,7 @@ function createAppendTemp(result){
         }
         var nearbyDistance =  result.data[i].room+"室"+result.data[i].hall+"厅";
         var houseUnitCost = result.data[i].houseUnitCost.toFixed(2);
-        tempHtml = tempHtml.replace("#housePhotoTitle#",imgSrc(housePhotoTitle,'-dongfangdi400x300'));
+        tempHtml = tempHtml.replace("#housePhotoTitle#","<img src="+imgSrc(housePhotoTitle,'-dongfangdi400x300')+">");
         tempHtml = tempHtml.replace("#plotNameAccurate#",plotNameAccurate);
         tempHtml = tempHtml.replace("#labelSpan#",labelSpan);
         tempHtml = tempHtml.replace("#tagList#",tagList);

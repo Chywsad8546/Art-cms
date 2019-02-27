@@ -380,7 +380,7 @@ export default {
             <a href="javascript:void(0)" target="_self">
                 <div class="typeMin_item_thumb">
                     <div class="img-box">
-                        <img src="#houseTitleImg#"/>
+                        #houseTitleImg#
                     </div>
                 </div>
                 <div class="typeMin_house_textWidth">
@@ -506,7 +506,7 @@ function createAppendTemp(result){
         tempHtml = tempHtml.replace("#districtName#",districtName);
         tempHtml = tempHtml.replace("#zufangName#",zufangName);
         tempHtml = tempHtml.replace("#rentLabelName#",rentLabelName);
-        tempHtml = tempHtml.replace("#houseTitleImg#",imgSrc(houseTitleImg,'-dfdo400x300'));
+        tempHtml = tempHtml.replace("#houseTitleImg#", "<img src="+imgSrc(houseTitleImg,'-dfdo400x300')+">");
         tempHtml = tempHtml.replace("#nearbyDistance#",nearbyDistance);
         tempHtml = tempHtml.replace("#rentLabelClass#",rentLabelClass);
         tempHtml = tempHtml.replace("#houseArea#",houseArea);
