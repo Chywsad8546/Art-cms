@@ -424,7 +424,8 @@ function openUrl(houseId){
     var UA = navigator.userAgent.toLowerCase();
     var href = "<%= share.secondDetailUrl %>/<%= share.apiCity %>/detail/second?id="+houseId;
     if (UA.indexOf("dongfangdi") > -1) {
-        var version = UA.split("_")[2];
+        var versionAll = UA.split("_");
+        var version = versionAll[versionAll.length - 2];
         var isNewVersion = versionCmp(version, '3.0.2');
         if(isNewVersion){
             window.mcAPI.routerJump(
