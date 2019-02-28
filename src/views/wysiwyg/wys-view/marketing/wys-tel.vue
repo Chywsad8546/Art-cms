@@ -358,7 +358,7 @@ export default {
 }
 </style>
 <stage-template>
-<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>);">
+<div style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;<%= share.backImgStyle %> ">
     <div validate="name" class="input-group-i" style="text-align:center;font-size:14px;">
             <a href="tel:{{@ share.clickTel }}">
                

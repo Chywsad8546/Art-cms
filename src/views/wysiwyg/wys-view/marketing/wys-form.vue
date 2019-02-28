@@ -489,7 +489,7 @@ export default {
 </div>
 <div class="formContent" style="display:{{@share.isCheckSingle == true ? 'none' : 'block'}}">
 <div  style="padding: {{@share.top}}px {{@share.right}}px {{@share.bottom}}px {{@share.left}}px; background:<%= share.backColor %>;
-  <%= share.backImgStyle %> background-image: url(<%= share.Imgurl %>); 
+  <%= share.backImgStyle %>); 
 ">
 <img style="display:{{@share.isCheckSingle == true ? 'block' : 'none'}}" src="http://wap-qn.toutiaofangchan.com/adideas/luodiyesucai/195f723db6c745328c1eb29f307303de/pop-form-close.png" class="close-pop" alt="关闭">
 <div  class="form-piece label-style">

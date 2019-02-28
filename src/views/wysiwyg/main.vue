@@ -688,7 +688,7 @@ export default {
         '<title>' + this.formMain.title + '</title><meta name=\'viewport\' content=\'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\'><meta name=\'format-detection\' content=\'telephone=no\'><link rel=\'stylesheet\' href=\'https://wap-qn.bidewu.com/adideas/fe83f8f268b84936b36ec0d568b89875.css\'><link rel=\'stylesheet\' href=\'https://wap-qn.bidewu.com/adideas/68593d3e866645efa4bad7928280a26a.css\'>' +
         '<script type=\'text/javascript\' src=\'https://wap-qn.bidewu.com/adideas/856c0e7ed84b4e32b3bdb79f5d2fb359.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'https://wap-qn.bidewu.com/jquery-3.3.1.min.js\'><\/script>' +
-        '<script type=\'text/javascript\' src=\'https://wap-qn.bidewu.com/adideas/cd521b2d5b81495eab98e43e91015223.js\'><\/script>' +
+        '<script type=\'text/javascript\' src=\'http://wap-qn.bidewu.com/adideas/4cc7ffa78600450b91e7cea71db30d08.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'https://wap-qn.bidewu.com/adideas/db1c5c1d475448a8b910b421ebc09994.js\'><\/script>' +
         '<script type=\'text/javascript\' src=\'https://wap-qn.bidewu.com/adideas/5ae2427b4345471abceeeee9db85e9fc.js\'><\/script>' +
         '<script>'+
