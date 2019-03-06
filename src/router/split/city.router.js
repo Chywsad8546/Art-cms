@@ -68,7 +68,24 @@ export const otherRouter = {
 
 export const appRouter = [
     //专题建站
-
+    {
+        path: '/ttzhuanhua',
+        icon: 'social-buffer',
+        name: 'ttzhuanhua',
+        title: '头条转化跟踪',
+        component: Main,
+        children: [
+            {
+                path: 'zhuanhualist',
+                name: 'zhuanhualist',
+                title: '转化跟踪',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () => import('@/views/toutiaozhuanhua/toutiaozhuanhuaList.vue')
+            }
+        ]
+    },
     //消息推送
     {
         path: '/pushmessage',
