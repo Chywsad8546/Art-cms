@@ -1,6 +1,18 @@
 <template>
   <Row>
     <Col span="100">
+    <Alert show-icon>
+      安卓：监测地址
+      <Icon type="social-android" slot="icon"></Icon>
+      <template slot="desc">
+        <Input v-model="androidurl" ></Input>
+      </template>
+    </Alert>
+    <Alert show-icon>
+      IOS：监测地址
+      <Icon type="social-apple" slot="icon"></Icon>
+      <template slot="desc"><Input v-model="iosurl" ></Input> </template>
+    </Alert>
     <Card>
       <p slot="title">头条转化列表</p>
       <a href="#" slot="extra" @click.prevent="addModeButton">
@@ -8,6 +20,7 @@
         设置转化跟踪
       </a>
       <Row class="margin-top-10 searchable-table-con1">
+
         <Form ref="searchData" :model="searchData" inline :label-width="120">
           <FormItem label="转化ID" prop="id">
             <Input v-model.trim="searchData.zhid" style="width:140px" />
@@ -55,6 +68,8 @@ export default {
   data() {
 
     return {
+        androidurl:"http://app2.bidewu.com/cmsv2/monitor/ttpush?adid=__AID__&cid=__CID__&callback=__CALLBACK_PARAM__&imei=__IMEI__&mac=__MAC__&androidid=__ANDROIDID1__&timestamp=__TS__&ip=__IP__&ua=__UA__&os=__OS__&convertid=__CONVERT_ID__",
+        iosurl:"http://app2.bidewu.com/cmsv2/monitor/ttpush?adid=__AID__&cid=__CID__&idfa=__IDFA__&mac=__MAC__&timestamp=__TS__&ip=__IP__&ua=__UA__&os=__OS__&callback=__CALLBACK_PARAM__&convertid=__CONVERT_ID__",
         pushForm:{
             zhid:"",
             key:"",
