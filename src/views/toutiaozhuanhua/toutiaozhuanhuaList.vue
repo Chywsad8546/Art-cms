@@ -19,7 +19,7 @@
         </Form>
 
         <Table border :columns="columns" :data="data"></Table>
-        <Page :total="total" :current="searchData.pageindex" show-total  @on-change="pageChange" :page-size="2" style="margin-top:10px; text-align:right"></Page>
+        <Page :total="total" :current="searchData.pageindex" show-total  @on-change="pageChange"  style="margin-top:10px; text-align:right"></Page>
       </Row>
     </Card>
 
@@ -99,7 +99,7 @@ export default {
           },
 
       ],
-      searchData: {zhid:"",pageindex:1,pagesize:2},
+      searchData: {zhid:"",pageindex:1,pagesize:10},
       data: [],
       total: 0
     };
