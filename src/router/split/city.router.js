@@ -67,7 +67,34 @@ export const otherRouter = {
 };
 
 export const appRouter = [
-    //专题建站
+    //任务系统
+    {
+        path: '/dalaran',
+        icon: 'social-buffer',
+        name: 'dalaran',
+        title: '任务调度系统',
+        component: Main,
+        children: [
+            {
+                path: 'dalaranjoblist',
+                name: 'dalaranjoblist',
+                title: '任务列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () => import('@/views/dalaran/jobs.vue')
+            },
+            {
+                path: 'dalaranlog',
+                name: 'dalaranlog',
+                title: '任务日志',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () => import('@/views/dalaran/logs.vue')
+            }
+        ]
+    },
     {
         path: '/ttzhuanhua',
         icon: 'social-buffer',

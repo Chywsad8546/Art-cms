@@ -69,6 +69,15 @@ module.exports = merge(webpackBaseConfig, {
         inline: true,
         stats: { colors: true },
         proxy: {
+            '/dalaran': {
+                // 目标服务器地址
+                target: 'http://127.0.0.1:5000/',
+                //target: 'http://192.168.1.61:8084',
+                //target: 'http://127.0.0.1:8084/',
+                //路径重写
+                pathRewrite: { '^/dalaran': '' },
+                changeOrigin: true
+            },
             '/cmsapi/officedictapi': {
                 // 目标服务器地址
                 target: 'http://cms.dev.bidewu.com/cmsapi/officedictapi',
