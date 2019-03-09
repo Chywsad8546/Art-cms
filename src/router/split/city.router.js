@@ -62,6 +62,15 @@ export const otherRouter = {
             name: 'wysiwygWebList',
             title: '网站列表',
             component: () => import('@/views/wysiwyg/webList.vue')
+        },
+        {
+            path: 'dalaranlog',
+            name: 'dalaranlog',
+            title: '任务日志',
+            // meta: {
+            //     keepalive: true
+            // },
+            component: () => import('@/views/dalaran/logs.vue')
         }
     ]
 };
@@ -84,15 +93,7 @@ export const appRouter = [
                 // },
                 component: () => import('@/views/dalaran/jobs.vue')
             },
-            {
-                path: 'dalaranlog',
-                name: 'dalaranlog',
-                title: '任务日志',
-                // meta: {
-                //     keepalive: true
-                // },
-                component: () => import('@/views/dalaran/logs.vue')
-            }
+
         ]
     },
     {
