@@ -9,9 +9,10 @@
       </Option>
     </Select>
     <Button type="primary"  @click="typechange" >查询</Button>
+    <Button type="primary"  @click="init" >刷新</Button>
     <Card >
       <Table border :columns="columns" :data="data"></Table>
-      <Page :total="total" show-total  @on-change="pageChange" :page-size="20" style="margin-top:10px; text-align:right"></Page>
+      <Page :total="total" show-total  @on-change="pageChange" :current="pageparam.pageindex" :page-size="20" style="margin-top:10px; text-align:right"></Page>
     </Card>
 
     </Col>
