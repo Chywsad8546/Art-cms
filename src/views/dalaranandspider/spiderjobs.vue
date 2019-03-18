@@ -141,13 +141,7 @@ export default {
               width: 100,
               render:(h, params) =>  {
                   let that=this;
-                  let enable="";
-                  let yanse="";
-                  if (params.row.enable==1){
-                      enable="已定时";
-                      yanse="green";
 
-                  }
                   let coms=[];
                   let startenablebtn=h(
                       'Poptip',
@@ -222,7 +216,7 @@ export default {
                 }
                 else if (param.row.status==2){
                     enable="运行中";
-                    yanse="green";
+                    yanse="#19be6b";
 
                 }
                 else if (param.row.status==3){
