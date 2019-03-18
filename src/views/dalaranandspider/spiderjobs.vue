@@ -252,15 +252,28 @@ export default {
               width: 100,
           },
           {
-              key: "nexttime",
+              // key: "nexttime",
               title: "下一次运行时间",
               width: 150,
+              render:function (h, param) {
+                  let enable="";
+                  if (param.row.status==0 || param.row.status==2){
+                      enable=param.row.nexttime;
+                  }
+                  else if(param.row.status==1){
+                      enable='';
+                  }
+
+
+                  return h("span",enable);
+              }
           },
           {
-              key: "now_mashines",
-              title: "运行中的机器数量",
+              key: "min_step",
+              title: "运行间隔(秒)",
               width: 80,
           },
+
           {
               width: 150,
               title:"操作",
@@ -345,6 +358,11 @@ export default {
                       },
                   },param.row.reason)
               }
+          },
+          {
+              key: "now_mashines",
+              title: "运行中的机器数量",
+              width: 80,
           },
           {
               key: "starttime",
