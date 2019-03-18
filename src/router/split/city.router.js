@@ -70,7 +70,7 @@ export const otherRouter = {
             // meta: {
             //     keepalive: true
             // },
-            component: () => import('@/views/dalaran/logs.vue')
+            component: () => import('@/views/dalaranandspider/logs.vue')
         }
     ]
 };
@@ -87,11 +87,20 @@ export const appRouter = [
             {
                 path: 'dalaranjoblist',
                 name: 'dalaranjoblist',
-                title: '任务列表',
+                title: '定时任务列表',
                 // meta: {
                 //     keepalive: true
                 // },
-                component: () => import('@/views/dalaran/jobs.vue')
+                component: () => import('@/views/dalaranandspider/jobs.vue')
+            },
+            {
+                path: 'spiderjoblist',
+                name: 'spiderjoblist',
+                title: '爬虫列表',
+                // meta: {
+                //     keepalive: true
+                // },
+                component: () => import('@/views/dalaranandspider/spiderjobs.vue')
             },
 
         ]
