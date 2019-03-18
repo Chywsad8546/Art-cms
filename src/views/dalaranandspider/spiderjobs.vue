@@ -74,10 +74,16 @@ export default {
         pushLoading:true,
       columns: [
           {
+              title: "ID",
+              key:"id",
+              width: 80,
+              fixed: 'left',
+          },
+          {
               title: "任务名称",
               key:"name",
               fixed: 'left',
-              width: 200,
+              width: 100,
           },
           {
               title: "类型",
@@ -129,14 +135,10 @@ export default {
                   return h("span",name);
               }
           },
-          {
-              title: "ID",
-              key:"id",
-              width: 80,
-          },
+
           {
               title: "定时执行",
-              width: 160,
+              width: 100,
               render:(h, params) =>  {
                   let that=this;
                   let enable="";
@@ -255,7 +257,12 @@ export default {
               width: 150,
           },
           {
-              width: 230,
+              key: "now_mashines",
+              title: "运行中的机器数量",
+              width: 80,
+          },
+          {
+              width: 150,
               title:"操作",
               render:(h, params) =>  {
                   let stopbutton = h(
@@ -321,10 +328,23 @@ export default {
                   return h('div', btns);
               }
           },
+
           {
-              key: "now_mashines",
-              title: "运行中的机器数量",
-              width: 150,
+              // key:'reason',
+              title: "最近一次停止原因",
+              width: 200,
+              render: (h, param)=> {
+                  let yanse='black';
+                  if(param.row.reason!='正常停止'){
+                      yanse="red";
+                  }
+                  return h('span',{
+                      style: {
+                          marginRight: '5px',
+                          color:yanse
+                      },
+                  },param.row.reason)
+              }
           },
           {
               key: "starttime",
@@ -336,25 +356,7 @@ export default {
               title: "最近一次结束时间",
               width: 150,
           },
-          {
-              key:'reason',
-              title: "原因",
-              width: 200,
-              // render: (h, param)=> {
-              //     return h('Button',{
-              //         attrs: {
-              //             title:param.row.reason
-              //         },
-              //         on:{
-              //             click:()=>{
-              //                 this.$router.push({
-              //                     name: 'dalaranlog', query: {id: param.row.id }
-              //                 });
-              //             }
-              //         }
-              //     },'详细')
-              // }
-          },
+
 
 
       ],
